@@ -2,6 +2,9 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
+    <RootNamespace>OXGaming.TibiaAPI</RootNamespace>
+    <Authors>jo3bingham</Authors>
+    <Company>OXGaming</Company>
   </PropertyGroup>
 
 </Project>
