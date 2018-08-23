@@ -5,13 +5,15 @@ using System.Text;
 namespace OXGaming.TibiaAPI.Network
 {
     /// <summary>
-    /// The NetworkMessage class contains methods for reading from, and writing to, a fix-sized byte array.
-    /// This is useful for parsing, and creating, Tibia packets.
+    /// The <see cref="NetworkMessage"/> class contains methods for reading from, and writing to, a fix-sized byte array.
     /// </summary>
+    /// <remarks>
+    /// This is useful for parsing, and creating, Tibia packets.
+    /// </remarks>
     public class NetworkMessage
     {
         /// <summary>
-        /// The full length of a Tibia packet is both stored in two bytes at the beginning of the packet.
+        /// The full length of a Tibia packet is stored in two bytes at the beginning of the packet.
         /// This means that a Tibia packet can never be larger than 65535 + 2. Using a max size of 65535
         /// ensures that limit is never exceeded.
         /// </summary>
@@ -25,7 +27,7 @@ namespace OXGaming.TibiaAPI.Network
         /// Gets the message data from the underlying buffer.
         /// </value>
         /// <remarks>
-        /// Call this only when necessary as it creates a new byte array, copies the valid data from the
+        /// Get this only when necessary as it creates a new byte array, copies the valid data from the
         /// underlying buffer into it, then returns it.
         /// </remarks>
         public byte[] Data
@@ -58,7 +60,7 @@ namespace OXGaming.TibiaAPI.Network
         }
 
         /// <summary>
-        /// Slices the specified number of bytes from the buffer into a ReadOnlySpan of bytes
+        /// Reads the specified number of bytes from the buffer into an array of bytes
         /// and advances the position by that number of bytes.
         /// </summary>
         /// <param name="count">
@@ -66,7 +68,7 @@ namespace OXGaming.TibiaAPI.Network
         /// This value must be greater than 0 or an exception will occur.
         /// </param>
         /// <returns>
-        /// A ReadOnlySpan of bytes containing the data read from the buffer.
+        /// An array of bytes containing the data read from the buffer.
         /// </returns>
         /// <exception cref="ArgumentOutOfRangeException">
         /// Thrown when the 'count' parameter is less-than-or-equal-to 0.
@@ -286,7 +288,8 @@ namespace OXGaming.TibiaAPI.Network
         public void Write(ulong value) => Write(BitConverter.GetBytes(value));
 
         /// <summary>
-        /// Writes an unsigned byte (precision), followed by a 4-byte unsigned integer based on arithmetic done on 'value', to the buffer and advances the position by five.
+        /// Writes an unsigned byte (precision), followed by a 4-byte unsigned integer based on arithmetic done on 'value',
+        /// to the buffer and advances the position by five.
         /// </summary>
         /// <param name="value">
         /// The eight-byte floating point value to write.
