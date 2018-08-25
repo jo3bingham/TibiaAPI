@@ -41,6 +41,8 @@ namespace OXGaming.TibiaAPI.Network
 
         private TcpListener _tcpListener;
 
+        private Xtea _xtea;
+
         private bool _isStarted;
         private bool _isSendingToClient = false;
         private bool _isSendingToServer = false;
@@ -127,6 +129,7 @@ namespace OXGaming.TibiaAPI.Network
                 // TODO: Log exception.
             }
 
+            _xtea = null;
             _isStarted = false;
         }
 
@@ -145,20 +148,20 @@ namespace OXGaming.TibiaAPI.Network
             lock (_clientSendLock)
             {
                 _clientSendQueue.Enqueue(message.Data);
-            }
 
-            if (!_isSendingToClient)
-            {
-                try
+                if (!_isSendingToClient)
                 {
-                    _isSendingToClient = true;
-                    _clientSendThread = new Thread(new ThreadStart(ClientSend));
-                    _clientSendThread.Start();
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine(ex.ToString());
-                    // TODO: Log exception.
+                    try
+                    {
+                        _isSendingToClient = true;
+                        _clientSendThread = new Thread(new ThreadStart(ClientSend));
+                        _clientSendThread.Start();
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine(ex.ToString());
+                        // TODO: Log exception.
+                    }
                 }
             }
         }
@@ -210,7 +213,6 @@ namespace OXGaming.TibiaAPI.Network
             if (_clientSocket != null)
             {
                 _clientSocket.Close();
-                _clientSocket = null;
             }
 
             lock (_serverSendLock)
@@ -221,7 +223,6 @@ namespace OXGaming.TibiaAPI.Network
             if (_serverSocket != null)
             {
                 _serverSocket.Close();
-                _serverSocket = null;
             }
         }
 
@@ -503,7 +504,7 @@ namespace OXGaming.TibiaAPI.Network
                 _serverSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
                 _serverSocket.Connect(world.ExternalAddressProtected, world.ExternalPortProtected);
                 _serverSocket.Send(_clientMessage.GetBuffer(), 0, count, SocketFlags.None);
-                _serverSocket.BeginReceive(_serverMessage.GetBuffer(), 0, 2, SocketFlags.None, new AsyncCallback(BeginReceiveServerCallback), null);
+                _serverSocket.BeginReceive(_serverMessage.GetBuffer(), 0, 2, SocketFlags.None, new AsyncCallback(BeginReceiveServerCallback), 0);
             }
             catch (SocketException)
             {
@@ -561,7 +562,25 @@ namespace OXGaming.TibiaAPI.Network
                         throw new Exception("[Connection.BeginReceiveClientCallback] RSA decryption failed.");
                     }
 
+                    var xteaKey = new uint[4];
+                    for (var i = 0; i < xteaKey.Length; ++i)
+                    {
+                        xteaKey[i] = _clientMessage.ReadUInt32();
+                    }
+                    _xtea = new Xtea(xteaKey);
+
                     _rsa.TibiaEncrypt(_clientMessage, 18);
+                }
+                else if (_xtea != null)
+                {
+                    if (!_xtea.Decrypt(_clientMessage))
+                    {
+                        Console.WriteLine("BeginReceiveClientCallback: Failed to decrypt!");
+                    }
+                    if (!_xtea.Encrypt(_clientMessage))
+                    {
+                        Console.WriteLine("BeginReceiveClientCallback: Failed to encrypt!");
+                    }
                 }
 
                 SendToServer(_clientMessage);
@@ -613,8 +632,24 @@ namespace OXGaming.TibiaAPI.Network
                     count += read;
                 }
 
+                var protocol = (int)ar.AsyncState;
+                if (protocol != 0)
+                {
+                    if (_xtea != null)
+                    {
+                        if (!_xtea.Decrypt(_serverMessage))
+                        {
+                            Console.WriteLine("BeginReceiveServerCallback: Failed to decrypt!");
+                        }
+                        if (!_xtea.Encrypt(_serverMessage))
+                        {
+                            Console.WriteLine("BeginReceiveServerCallback: Failed to encrypt!");
+                        }
+                    }
+                }
+
                 SendToClient(_serverMessage);
-                _serverSocket.BeginReceive(_serverMessage.GetBuffer(), 0, 2, SocketFlags.None, new AsyncCallback(BeginReceiveServerCallback), null);
+                _serverSocket.BeginReceive(_serverMessage.GetBuffer(), 0, 2, SocketFlags.None, new AsyncCallback(BeginReceiveServerCallback), 1);
             }
             catch (SocketException)
             {
