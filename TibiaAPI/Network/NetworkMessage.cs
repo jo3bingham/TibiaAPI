@@ -17,9 +17,9 @@ namespace OXGaming.TibiaAPI.Network
         /// This means that a Tibia packet can never be larger than 65535 + 2. Using a max size of 65535
         /// ensures that limit is never exceeded.
         /// </summary>
-        public const int MaxMessageSize = ushort.MaxValue;
+        public const ushort MaxMessageSize = ushort.MaxValue;
 
-        private const int PayloadDataPosition = 8;
+        private const uint PayloadDataPosition = 8;
 
         private readonly byte[] _buffer = new byte[MaxMessageSize];
 
@@ -43,12 +43,12 @@ namespace OXGaming.TibiaAPI.Network
         /// <value>
         /// Gets the current position in the buffer.
         /// </value>
-        public int Position { get; private set; } = PayloadDataPosition;
+        public uint Position { get; private set; } = PayloadDataPosition;
 
         /// <value>
         /// Get/set the size of the message.
         /// </value>
-        public int Size { get; set; } = PayloadDataPosition;
+        public uint Size { get; set; } = PayloadDataPosition;
 
         /// <summary>
         /// Gets the underlying buffer.
@@ -76,12 +76,12 @@ namespace OXGaming.TibiaAPI.Network
         /// <exception cref="IndexOutOfRangeException">
         /// Thrown when the position + the 'count' parameter exceeds the bounds of the buffer.
         /// </exception>
-        public byte[] ReadBytes(int count)
+        public byte[] ReadBytes(uint count)
         {
-            if (count <= 0)
+            if (count == 0)
             {
-                throw new ArgumentOutOfRangeException($"[NetworkMessage.ReadBytes] " +
-                    $"'count' must be greater than 0. count:{count}");
+                throw new ArgumentOutOfRangeException("[NetworkMessage.ReadBytes] " +
+                    "'count' must be greater than 0.");
             }
 
             if (Position + count > _buffer.Length)
@@ -92,7 +92,7 @@ namespace OXGaming.TibiaAPI.Network
             }
 
             var data = new byte[count];
-            Array.Copy(_buffer, data, count);
+            Array.Copy(_buffer, Position, data, 0, count);
             Position += count;
             return data;
         }
@@ -203,8 +203,8 @@ namespace OXGaming.TibiaAPI.Network
         {
             if (value == null)
             {
-                throw new ArgumentException($"[NetworkMessage.Write] " +
-                    $"'value' is null!");
+                throw new ArgumentException("[NetworkMessage.Write] " +
+                    "'value' cannot be null.");
             }
 
             if (Position + value.Length > _buffer.Length)
@@ -216,7 +216,7 @@ namespace OXGaming.TibiaAPI.Network
 
             Array.Copy(value, 0, _buffer, Position, value.Length);
 
-            Position += value.Length;
+            Position += (uint)value.Length;
             if (Position > Size)
             {
                 Size = Position;
@@ -321,7 +321,7 @@ namespace OXGaming.TibiaAPI.Network
         /// Sets the position of the buffer.
         /// </summary>
         /// <param name="offset">
-        /// The offset, from the origin, to set the position.
+        /// The offset, from the <paramref name="origin"/>, to set the position.
         /// </param>
         /// <param name="origin">
         /// The position in the buffer to seek from. Can be the beginning of the buffer, the current position, or the end of the buffer.
@@ -335,7 +335,7 @@ namespace OXGaming.TibiaAPI.Network
                     throw new ArgumentOutOfRangeException($"");
                 }
 
-                Position = offset;
+                Position = (uint)offset;
             }
             else if (origin == SeekOrigin.Current)
             {
@@ -344,7 +344,14 @@ namespace OXGaming.TibiaAPI.Network
                     throw new ArgumentOutOfRangeException($"");
                 }
 
-                Position += offset;
+                if (offset >= 0)
+                {
+                    Position += (uint)offset;
+                }
+                else
+                {
+                    Position -= (uint)offset;
+                }
             }
             else if (origin == SeekOrigin.End)
             {
@@ -353,7 +360,7 @@ namespace OXGaming.TibiaAPI.Network
                     throw new ArgumentOutOfRangeException($"");
                 }
 
-                Position = MaxMessageSize + offset;
+                Position = MaxMessageSize - (uint)offset - 1;
             }
         }
     }

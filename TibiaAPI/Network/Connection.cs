@@ -29,6 +29,8 @@ namespace OXGaming.TibiaAPI.Network
         private readonly Queue<byte[]> _clientSendQueue = new Queue<byte[]>();
         private readonly Queue<byte[]> _serverSendQueue = new Queue<byte[]>();
 
+        private readonly Rsa _rsa = new Rsa();
+
         private LoginData _loginData;
 
         private Socket _clientSocket;
@@ -442,7 +444,7 @@ namespace OXGaming.TibiaAPI.Network
 
                 _clientSocket = tcpListener.EndAcceptSocket(ar);
                 _clientSocket.LingerState = new LingerOption(true, 2);
-                _clientSocket.BeginReceive(_clientMessage.GetBuffer(), 0, 1, SocketFlags.None, new AsyncCallback(BeinReceiveWorldNameCallback), null);
+                _clientSocket.BeginReceive(_clientMessage.GetBuffer(), 0, 1, SocketFlags.None, new AsyncCallback(BeginReceiveWorldNameCallback), null);
 
                 _tcpListener.BeginAcceptSocket(new AsyncCallback(BeginAcceptTcpClientCallback), _tcpListener);
             }
@@ -460,7 +462,7 @@ namespace OXGaming.TibiaAPI.Network
         /// <param name="ar">
         /// An <see cref="IAsyncResult"/> object that indicates the status of the asynchronous operation.
         /// </param>
-        private void BeinReceiveWorldNameCallback(IAsyncResult ar)
+        private void BeginReceiveWorldNameCallback(IAsyncResult ar)
         {
             try
             {
@@ -483,7 +485,7 @@ namespace OXGaming.TibiaAPI.Network
                     var read = _clientSocket.Receive(_clientMessage.GetBuffer(), count, 1, SocketFlags.None);
                     if (read <= 0)
                     {
-                        throw new Exception("Client connection broken.");
+                        throw new Exception("[Connection.BeginReceiveWorldNameCallback] Client connection broken.");
                     }
 
                     count += read;
@@ -493,7 +495,7 @@ namespace OXGaming.TibiaAPI.Network
                 var world = _loginData.PlayData.Worlds.Find(w => w.Name.Equals(worldName, StringComparison.CurrentCultureIgnoreCase));
                 if (world == null)
                 {
-                    throw new Exception($"Login data not found for world: {worldName}.");
+                    throw new Exception($"[Connection.BeginReceiveWorldNameCallback] Login data not found for world: {worldName}.");
                 }
 
                 _clientSocket.BeginReceive(_clientMessage.GetBuffer(), 0, 2, SocketFlags.None, new AsyncCallback(BeginReceiveClientCallback), 0);
@@ -537,16 +539,29 @@ namespace OXGaming.TibiaAPI.Network
                     return;
                 }
 
-                _clientMessage.Size = BitConverter.ToUInt16(_clientMessage.GetBuffer(), 0) + 2;
+                _clientMessage.Size = (uint)BitConverter.ToUInt16(_clientMessage.GetBuffer(), 0) + 2;
                 while (count < _clientMessage.Size)
                 {
-                    var read = _clientSocket.Receive(_clientMessage.GetBuffer(), count, (_clientMessage.Size - count), SocketFlags.None);
+                    var read = _clientSocket.Receive(_clientMessage.GetBuffer(), count, (int)(_clientMessage.Size - count), SocketFlags.None);
                     if (read <= 0)
                     {
-                        throw new Exception("Client connection broken.");
+                        throw new Exception("[Connection.BeginReceiveClientCallback] Client connection broken.");
                     }
 
                     count += read;
+                }
+
+                var protocol = (int)ar.AsyncState;
+                if (protocol == 0)
+                {
+                    _rsa.OpenTibiaDecrypt(_clientMessage, 18);
+                    _clientMessage.Seek(18, SeekOrigin.Begin);
+                    if (_clientMessage.ReadByte() != 0)
+                    {
+                        throw new Exception("[Connection.BeginReceiveClientCallback] RSA decryption failed.");
+                    }
+
+                    _rsa.TibiaEncrypt(_clientMessage, 18);
                 }
 
                 SendToServer(_clientMessage);
@@ -586,13 +601,13 @@ namespace OXGaming.TibiaAPI.Network
                     return;
                 }
 
-                _serverMessage.Size = BitConverter.ToUInt16(_serverMessage.GetBuffer(), 0) + 2;
+                _serverMessage.Size = (uint)BitConverter.ToUInt16(_serverMessage.GetBuffer(), 0) + 2;
                 while (count < _serverMessage.Size)
                 {
-                    var read = _serverSocket.Receive(_serverMessage.GetBuffer(), count, (_serverMessage.Size - count), SocketFlags.None);
+                    var read = _serverSocket.Receive(_serverMessage.GetBuffer(), count, (int)(_serverMessage.Size - count), SocketFlags.None);
                     if (read <= 0)
                     {
-                        throw new Exception("Server connection broken.");
+                        throw new Exception("[Connection.BeginReceiveServerCallback] Server connection broken.");
                     }
 
                     count += read;

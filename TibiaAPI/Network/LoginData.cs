@@ -5,8 +5,8 @@ using Newtonsoft.Json;
 namespace OXGaming.TibiaAPI.Network
 {
     /// <summary>
-    /// The <see cref="LoginData"/> class is used to deserialize the JSON response
-    /// from CipSoft's web service when the client requests a character list.
+    /// The <see cref="LoginData"/> class is used when deserializing the JSON response
+    /// from CipSoft's web service when the client POSTs a login request.
     /// </summary>
     public class LoginData
     {
@@ -17,7 +17,7 @@ namespace OXGaming.TibiaAPI.Network
     }
 
     /// <summary>
-    /// The <see cref="Session"/> class is used to relevant data for a given login session.
+    /// The <see cref="Session"/> class is used to hold relevant data for a given login session.
     /// </summary>
     public class Session
     {
@@ -81,7 +81,7 @@ namespace OXGaming.TibiaAPI.Network
     }
 
     /// <summary>
-    /// The <see cref="Character"/> class is used to store data (e.g., name) for each character of an account.
+    /// The <see cref="Character"/> class is used to store data (e.g., name) for a character.
     /// </summary>
     public class Character
     {
