@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
+using ComponentAce.Compression.Libs.zlib;
 using Newtonsoft.Json;
 
 namespace OXGaming.TibiaAPI.Network
@@ -30,6 +31,8 @@ namespace OXGaming.TibiaAPI.Network
         private readonly Queue<byte[]> _serverSendQueue = new Queue<byte[]>();
 
         private readonly Rsa _rsa = new Rsa();
+
+        private ZStream _zStream = new ZStream();
 
         private LoginData _loginData;
 
@@ -88,6 +91,8 @@ namespace OXGaming.TibiaAPI.Network
 
             try
             {
+                _zStream.inflateInit(-15);
+
                 _httpListener.Start();
                 _httpListener.BeginGetContext(new AsyncCallback(BeginGetContextCallback), _httpListener);
 
@@ -118,6 +123,7 @@ namespace OXGaming.TibiaAPI.Network
 
             try
             {
+                _zStream.inflateEnd();
                 _httpListener.Close();
                 _tcpListener.Stop();
                 _clientSocket.Close();
@@ -224,6 +230,9 @@ namespace OXGaming.TibiaAPI.Network
             {
                 _serverSocket.Close();
             }
+
+            _zStream.inflateEnd();
+            _zStream.inflateInit(-15);
         }
 
         /// <summary>
@@ -639,11 +648,34 @@ namespace OXGaming.TibiaAPI.Network
                     {
                         if (!_xtea.Decrypt(_serverMessage))
                         {
-                            Console.WriteLine("BeginReceiveServerCallback: Failed to decrypt!");
+                            throw new Exception("[Connection.BeginReceiveServerCallback] XTEA decryption failed.");
                         }
+
+                        if ((BitConverter.ToUInt32(_serverMessage.GetBuffer(), 2) & 0xC0000000) != 0)
+                        {
+                            var compressedSize = BitConverter.ToUInt16(_serverMessage.GetBuffer(), 6);
+                            var inBuffer = new byte[compressedSize];
+                            var outBuffer = new byte[NetworkMessage.MaxMessageSize];
+
+                            Array.Copy(_serverMessage.GetBuffer(), 8, inBuffer, 0, compressedSize);
+
+                            _zStream.next_in = inBuffer;
+                            _zStream.next_in_index = 0;
+                            _zStream.avail_in = inBuffer.Length;
+                            _zStream.next_out = outBuffer;
+                            _zStream.next_out_index = 0;
+                            _zStream.avail_out = outBuffer.Length;
+
+                            var ret = _zStream.inflate(2);
+                            if (ret != zlibConst.Z_OK)
+                            {
+                                throw new Exception($"[Connection.BeginReceiveServerCallback] zlib inflation failed: {ret}");
+                            }
+                        }
+
                         if (!_xtea.Encrypt(_serverMessage))
                         {
-                            Console.WriteLine("BeginReceiveServerCallback: Failed to encrypt!");
+                            throw new Exception("[Connection.BeginReceiveServerCallback] XTEA encryption failed.");
                         }
                     }
                 }
