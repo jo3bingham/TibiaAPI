@@ -81,21 +81,21 @@ namespace OXGaming.TibiaAPI.Network
         /// <param name="message">The <see cref="NetworkMessage"/> containing the block of data to be processed.</param>
         /// <param name="index">Index of the underlying <see cref="NetworkMessage"/> buffer to start from.</param>
         /// <param name="engine">The RSA engine to use.</param>
-        private void ProcessBlock(NetworkMessage message, int index, RsaEngine engine)
+        private static void ProcessBlock(NetworkMessage message, int index, RsaEngine engine)
         {
             if (message == null)
             {
-                throw new ArgumentNullException("[Rsa.ProcessBlock] 'message' must not be null.");
+                throw new ArgumentNullException(nameof(message), "[Rsa.ProcessBlock] 'message' must not be null.");
             }
 
             if (index < 0)
             {
-                throw new ArgumentOutOfRangeException("[Rsa.ProcessBlock] Index cannot be less than 0.");
+                throw new ArgumentOutOfRangeException(nameof(index), "[Rsa.ProcessBlock] Index cannot be less than 0.");
             }
 
             if (engine == null)
             {
-                throw new ArgumentNullException("[Rsa.ProcessBlock] 'engine' must not be null.");
+                throw new ArgumentNullException(nameof(engine), "[Rsa.ProcessBlock] 'engine' must not be null.");
             }
 
             try

@@ -42,10 +42,10 @@ namespace OXGaming.TibiaAPI.Network
         {
             if (message == null)
             {
-                throw new ArgumentNullException("[Xtea.Decrypt] 'message' must not be null.");
+                throw new ArgumentNullException(nameof(message), "[Xtea.Decrypt] 'message' must not be null.");
             }
 
-            if (index >= message.Size || ((message.Size - index) % 8) > 0)
+            if (index >= message.Size || ((message.Size - index) % BlockSize) > 0)
             {
                 return false;
             }
@@ -83,7 +83,7 @@ namespace OXGaming.TibiaAPI.Network
         {
             if (message == null)
             {
-                throw new ArgumentNullException("[Xtea.Encrypt] 'message' must not be null.");
+                throw new ArgumentNullException(nameof(message), "[Xtea.Encrypt] 'message' must not be null.");
             }
 
             if (index >= message.Size)
@@ -92,10 +92,10 @@ namespace OXGaming.TibiaAPI.Network
             }
 
             var encryptSize = message.Size - index;
-            var padding = encryptSize % 8;
+            var padding = encryptSize % BlockSize;
             if (padding > 0)
             {
-                encryptSize += 8 - padding;
+                encryptSize += BlockSize - padding;
                 var newSize = index + encryptSize;
                 if (newSize > NetworkMessage.MaxMessageSize)
                 {

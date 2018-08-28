@@ -147,7 +147,7 @@ namespace OXGaming.TibiaAPI.Network
         {
             lock (_clientSendLock)
             {
-                _clientSendQueue.Enqueue(message.Data);
+                _clientSendQueue.Enqueue(message.GetData());
 
                 if (!_isSendingToClient)
                 {
@@ -180,7 +180,7 @@ namespace OXGaming.TibiaAPI.Network
         {
             lock (_serverSendLock)
             {
-                _serverSendQueue.Enqueue(message.Data);
+                _serverSendQueue.Enqueue(message.GetData());
 
                 if (!_isSendingToServer)
                 {
