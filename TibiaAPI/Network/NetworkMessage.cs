@@ -10,7 +10,7 @@ namespace OXGaming.TibiaAPI.Network
     /// <remarks>
     /// This is useful for parsing, and creating, Tibia packets.
     /// </remarks>
-    public class NetworkMessage
+    internal class NetworkMessage
     {
         /// <summary>
         /// The full length of a Tibia packet is stored in two bytes at the beginning of the packet.
@@ -22,23 +22,6 @@ namespace OXGaming.TibiaAPI.Network
         private const uint PayloadDataPosition = 8;
 
         private readonly byte[] _buffer = new byte[MaxMessageSize];
-
-        /// <value>
-        /// Gets the message data from the underlying buffer.
-        /// </value>
-        /// <remarks>
-        /// Get this only when necessary as it creates a new byte array, copies the valid data from the
-        /// underlying buffer into it, then returns it.
-        /// </remarks>
-        public byte[] Data
-        {
-            get
-            {
-                var data = new byte[Size];
-                Array.Copy(_buffer, data, Size);
-                return data;
-            }
-        }
 
         /// <value>
         /// Gets the current position in the buffer.
@@ -57,6 +40,20 @@ namespace OXGaming.TibiaAPI.Network
         public byte[] GetBuffer()
         {
             return _buffer;
+        }
+
+        /// <value>
+        /// Gets the message data from the underlying buffer.
+        /// </value>
+        /// <remarks>
+        /// Get this only when necessary as it creates a new byte array, copies the valid data from the
+        /// underlying buffer into it, then returns it.
+        /// </remarks>
+        public byte[] GetData()
+        {
+            var data = new byte[Size];
+            Array.Copy(_buffer, data, Size);
+            return data;
         }
 
         /// <summary>
@@ -80,8 +77,8 @@ namespace OXGaming.TibiaAPI.Network
         {
             if (count == 0)
             {
-                throw new ArgumentOutOfRangeException("[NetworkMessage.ReadBytes] " +
-                    "'count' must be greater than 0.");
+                throw new ArgumentOutOfRangeException(nameof(count),
+                    "[NetworkMessage.ReadBytes] 'count' must be greater than 0.");
             }
 
             if (Position + count > _buffer.Length)

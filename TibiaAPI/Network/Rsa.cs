@@ -13,11 +13,10 @@ namespace OXGaming.TibiaAPI.Network
     /// Decryption can only be done on data encrypted with the Open-Tibia private key.
     /// Encryption can be done on data with both the Open-Tibia and Tibia public keys.
     /// </remarks>
-    public class Rsa
+    internal class Rsa
     {
         private const string Exponent = "65537";
         private const string OpenTibiaModulus = "109120132967399429278860960508995541528237502902798129123468757937266291492576446330739696001110603907230888610072655818825358503429057592827629436413108566029093628212635953836686562675849720620786279431090218017681061521755056710823876476444260558147179707119674283982419152118103759076030616683978566631413";
-        private const string OpenTibiaD = "46730330223584118622160180015036832148732986808519344675210555262940258739805766860224610646919605860206328024326703361630109888417839241959507572247284807035235569619173792292786907845791904955103601652822519121908367187885509270025388641700821735345222087940578381210879116823013776808975766851829020659073";
         private const string OpenTibiaP = "14299623962416399520070177382898895550795403345466153217470516082934737582776038882967213386204600674145392845853859217990626450972452084065728686565928113";
         private const string OpenTibiaQ = "7630979195970404721891201847792002125535401292779123937207447574596692788513647179235335529307251350570728407373705564708871762033017096809910315212884101";
         private const string OpenTibiaDP = "11141736698610418925078406669215087697114858422461871124661098818361832856659225315773346115219673296375487744032858798960485665997181641221483584094519937";
@@ -82,21 +81,21 @@ namespace OXGaming.TibiaAPI.Network
         /// <param name="message">The <see cref="NetworkMessage"/> containing the block of data to be processed.</param>
         /// <param name="index">Index of the underlying <see cref="NetworkMessage"/> buffer to start from.</param>
         /// <param name="engine">The RSA engine to use.</param>
-        private void ProcessBlock(NetworkMessage message, int index, RsaEngine engine)
+        private static void ProcessBlock(NetworkMessage message, int index, RsaEngine engine)
         {
             if (message == null)
             {
-                throw new ArgumentNullException("[Rsa.ProcessBlock] 'message' must not be null.");
+                throw new ArgumentNullException(nameof(message), "[Rsa.ProcessBlock] 'message' must not be null.");
             }
 
             if (index < 0)
             {
-                throw new ArgumentOutOfRangeException("[Rsa.ProcessBlock] Index cannot be less than 0.");
+                throw new ArgumentOutOfRangeException(nameof(index), "[Rsa.ProcessBlock] Index cannot be less than 0.");
             }
 
             if (engine == null)
             {
-                throw new ArgumentNullException("[Rsa.ProcessBlock] 'engine' must not be null.");
+                throw new ArgumentNullException(nameof(engine), "[Rsa.ProcessBlock] 'engine' must not be null.");
             }
 
             try

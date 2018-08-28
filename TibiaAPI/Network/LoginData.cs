@@ -8,7 +8,7 @@ namespace OXGaming.TibiaAPI.Network
     /// The <see cref="LoginData"/> class is used when deserializing the JSON response
     /// from CipSoft's web service when the client POSTs a login request.
     /// </summary>
-    public class LoginData
+    internal class LoginData
     {
         [JsonProperty("session")]
         public Session Session { get; set; }
@@ -19,7 +19,7 @@ namespace OXGaming.TibiaAPI.Network
     /// <summary>
     /// The <see cref="Session"/> class is used to hold relevant data for a given login session.
     /// </summary>
-    public class Session
+    internal class Session
     {
         [JsonProperty("sessionkey")]
         public string SessionKey { get; set; }
@@ -47,7 +47,7 @@ namespace OXGaming.TibiaAPI.Network
     /// The <see cref="PlayData"/> class is used to store the characters, and their game worlds, of the
     /// account for a given login session.
     /// </summary>
-    public class PlayData
+    internal class PlayData
     {
         [JsonProperty("worlds")]
         public List<World> Worlds { get; set; }
@@ -58,7 +58,7 @@ namespace OXGaming.TibiaAPI.Network
     /// <summary>
     /// The <see cref="World"/> class is used to store data (i.e., name, ip, port, etc.) for a game world.
     /// </summary>
-    public class World
+    internal class World
     {
         [JsonProperty("id")]
         public int Id { get; set; }
@@ -83,7 +83,7 @@ namespace OXGaming.TibiaAPI.Network
     /// <summary>
     /// The <see cref="Character"/> class is used to store data (e.g., name) for a character.
     /// </summary>
-    public class Character
+    internal class Character
     {
         [JsonProperty("worldid")]
         public int WorldId { get; set; }
