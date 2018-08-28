@@ -584,11 +584,14 @@ namespace OXGaming.TibiaAPI.Network
                 {
                     if (!_xtea.Decrypt(_clientMessage))
                     {
-                        Console.WriteLine("BeginReceiveClientCallback: Failed to decrypt!");
+                        throw new Exception("[Connection.BeginReceiveClientCallback] XTEA decryption failed.");
                     }
+
+                    Communication.ParseClientMessage(_clientMessage);
+
                     if (!_xtea.Encrypt(_clientMessage))
                     {
-                        Console.WriteLine("BeginReceiveClientCallback: Failed to encrypt!");
+                        throw new Exception("[Connection.BeginReceiveClientCallback] XTEA encryption failed.");
                     }
                 }
 
@@ -672,6 +675,8 @@ namespace OXGaming.TibiaAPI.Network
                                 throw new Exception($"[Connection.BeginReceiveServerCallback] zlib inflation failed: {ret}");
                             }
                         }
+
+                        Communication.ParseServerMessage(_serverMessage);
 
                         if (!_xtea.Encrypt(_serverMessage))
                         {
