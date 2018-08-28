@@ -10,7 +10,7 @@ namespace OXGaming.TibiaAPI.Network
     /// <remarks>
     /// This is useful for parsing, and creating, Tibia packets.
     /// </remarks>
-    internal class NetworkMessage
+    public class NetworkMessage
     {
         /// <summary>
         /// The full length of a Tibia packet is stored in two bytes at the beginning of the packet.
@@ -106,7 +106,8 @@ namespace OXGaming.TibiaAPI.Network
         /// Reads the next byte from the buffer and advances the position by one.
         /// </summary>
         /// <returns>
-        /// A boolean value indicating whether the read byte was 0 or not. 0 returns false, anything else returns true.
+        /// A boolean value indicating whether the read byte was 0 or not.
+        /// 0 returns false, anything else returns true.
         /// </returns>
         public bool ReadBool() => ReadByte() != 0;
 
@@ -312,6 +313,132 @@ namespace OXGaming.TibiaAPI.Network
 
             Write((ushort)value.Length);
             Write(Encoding.ASCII.GetBytes(value));
+        }
+
+        /// <summary>
+        /// Reads the specified number of bytes from the buffer into an array of bytes.
+        /// </summary>
+        /// <param name="count">
+        /// The number of bytes to read.
+        /// This value must be greater than 0 or an exception will occur.
+        /// </param>
+        /// <returns>
+        /// An array of bytes containing the data read from the buffer.
+        /// </returns>
+        /// <exception cref="ArgumentOutOfRangeException">
+        /// Thrown when the 'count' parameter is less-than-or-equal-to 0.
+        /// </exception>
+        /// <exception cref="IndexOutOfRangeException">
+        /// Thrown when the position + the 'count' parameter exceeds the bounds of the buffer.
+        /// </exception>
+        public byte[] PeekBytes(uint count)
+        {
+            if (count == 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(count),
+                    "[NetworkMessage.PeekBytes] 'count' must be greater than 0.");
+            }
+
+            if (Position + count > _buffer.Length)
+            {
+                throw new IndexOutOfRangeException($"[NetworkMessage.PeekBytes] " +
+                    $"'count' cannot exceed buffer size from current index. " +
+                    $"index:{Position}, count:{count}, size:{Size}");
+            }
+
+            var data = new byte[count];
+            Array.Copy(_buffer, Position, data, 0, count);
+            return data;
+        }
+
+        /// <summary>
+        /// Reads the next byte from the buffer.
+        /// </summary>
+        /// <returns>
+        /// The next byte Peek from the buffer.
+        /// </returns>
+        public byte PeekByte() => PeekBytes(1)[0];
+
+        /// <summary>
+        /// Reads the next byte from the buffer.
+        /// </summary>
+        /// <returns>
+        /// A boolean value indicating whether the read byte was 0 or not.
+        /// 0 returns false, anything else returns true.
+        /// </returns>
+        public bool PeekBool() => PeekByte() != 0;
+
+        /// <summary>
+        /// Reads a 2-byte signed integer from the buffer.
+        /// </summary>
+        /// <returns>
+        /// The 2-byte signed integer read from the buffer.
+        /// </returns>
+        public short PeekInt16() => BitConverter.ToInt16(PeekBytes(2), 0);
+
+        /// <summary>
+        /// Reads a 4-byte signed integer from the buffer.
+        /// </summary>
+        /// <returns>
+        /// The 4-byte signed integer read from the buffer.
+        /// </returns>
+        public int PeekInt32() => BitConverter.ToInt32(PeekBytes(4), 0);
+
+        /// <summary>
+        /// Reads an 8-byte signed integer from the buffer.
+        /// </summary>
+        /// <returns>
+        /// The 8-byte signed integer read from the buffer.
+        /// </returns>
+        public long PeekInt64() => BitConverter.ToInt64(PeekBytes(8), 0);
+
+        /// <summary>
+        /// Reads a 2-byte unsigned integer from the buffer.
+        /// </summary>
+        /// <returns>
+        /// The 2-byte unsigned integer read from the buffer.
+        /// </returns>
+        public ushort PeekUInt16() => BitConverter.ToUInt16(PeekBytes(2), 0);
+
+        /// <summary>
+        /// Reads a 4-byte unsigned integer from the buffer.
+        /// </summary>
+        /// <returns>
+        /// The 4-byte unsigned integer read from the buffer.
+        /// </returns>
+        public uint PeekUInt32() => BitConverter.ToUInt32(PeekBytes(4), 0);
+
+        /// <summary>
+        /// Reads an 8-byte unsigned integer from the buffer.
+        /// </summary>
+        /// <returns>
+        /// The 8-byte unsigned integer read from the buffer.
+        /// </returns>
+        public ulong PeekUInt64() => BitConverter.ToUInt64(PeekBytes(8), 0);
+
+        /// <summary>
+        /// Reads the next byte and the following 4-byte unsigned integer from the buffer.
+        /// </summary>
+        /// <returns>
+        /// A double value based on arithmetic done on the byte and 4-byte unsigned integer read from the buffer.
+        /// </returns>
+        public double PeekDouble()
+        {
+            var num1 = PeekByte();
+            var num2 = PeekUInt32();
+            return (num2 - int.MaxValue) / Math.Pow(10, num1);
+        }
+
+        /// <summary>
+        /// Reads a string from the buffer. The string is prefixed with the length in a 2-byte unsigned integer.
+        /// </summary>
+        /// <returns>
+        /// An ASCII encoded string based on the bytes read from the buffer.
+        /// </returns>
+        public string PeekString()
+        {
+            var length = PeekUInt16();
+            return Encoding.ASCII.GetString(PeekBytes(length));
         }
 
         /// <summary>

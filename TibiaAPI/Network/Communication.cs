@@ -15,7 +15,7 @@ namespace OXGaming.TibiaAPI.Network
 
             while (message.Position < message.Size)
             {
-                var type = (ClientPacketType)message.ReadByte();
+                var type = (ClientPacketType)message.PeekByte();
                 switch (type)
                 {
                     case ClientPacketType.Login:
@@ -277,7 +277,7 @@ namespace OXGaming.TibiaAPI.Network
 
             while (message.Position < message.Size)
             {
-                var type = (ServerPacketType)message.ReadByte();
+                var type = (ServerPacketType)message.PeekByte();
                 switch (type)
                 {
                     case ServerPacketType.CreatureData:
