@@ -10,7 +10,7 @@ namespace OXGaming.TibiaAPI.Network
     /// <remarks>
     /// This is useful for parsing, and creating, Tibia packets.
     /// </remarks>
-    public class NetworkMessage
+    internal class NetworkMessage
     {
         /// <summary>
         /// The full length of a Tibia packet is stored in two bytes at the beginning of the packet.

@@ -5,7 +5,7 @@ namespace OXGaming.TibiaAPI.Network
     /// <summary>
     /// The <see cref="Xtea"/> class contains methods for encrypting and decrypting Tibia packets using the XTEA algorithm.
     /// </summary>
-    public class Xtea
+    internal class Xtea
     {
         private const uint Delta = 0x9E3779B9;
         private const uint BlockSize = 8;

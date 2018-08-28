@@ -15,7 +15,7 @@ namespace OXGaming.TibiaAPI.Network
     /// <summary>
     /// The <see cref="Connection"/> class is used to create a proxy between the Tibia client and the game server.
     /// </summary>
-    public class Connection : IDisposable
+    internal class Connection : IDisposable
     {
         private readonly object _clientSendLock = new object();
         private readonly object _serverSendLock = new object();
