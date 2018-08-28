@@ -6,7 +6,7 @@ namespace OXGaming.TibiaAPI.Network
 {
     internal static class Communication
     {
-        public static void ParseClientMessage(NetworkMessage message)
+        internal static void ParseClientMessage(NetworkMessage message)
         {
             if (message == null)
             {
@@ -268,7 +268,7 @@ namespace OXGaming.TibiaAPI.Network
             }
         }
 
-        public static void ParseServerMessage(NetworkMessage message)
+        internal static void ParseServerMessage(NetworkMessage message)
         {
             if (message == null)
             {
