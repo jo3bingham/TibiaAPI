@@ -153,6 +153,10 @@ namespace ComponentAce.Compression.Libs.zlib
                 q = write; m = (int)(q < read ? read - q - 1 : end - q);
             }
 
+            // This is needed to inflate Tibia packets properly.
+            // There's probably a more elegant solution, but this works for now.
+            mode = TYPE;
+
             // process input based on current state
             while (true)
             {
