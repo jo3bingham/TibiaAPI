@@ -2,11 +2,11 @@
 
 namespace OXGaming.TibiaAPI.Network.ClientPackets
 {
-    public class Login : ClientPacket
+    public class OpenRewardWall : ClientPacket
     {
-        public Login()
+        public OpenRewardWall()
         {
-            Type = ClientPacketType.Login;
+            Type = ClientPacketType.OpenRewardWall;
         }
 
         public override bool ParseMessage(NetworkMessage message)
@@ -21,7 +21,7 @@ namespace OXGaming.TibiaAPI.Network.ClientPackets
 
         public override void AppendToMessage(NetworkMessage message)
         {
-            message.Write((byte)ClientPacketType.Login);
+            message.Write((byte)ClientPacketType.OpenRewardWall);
         }
     }
 }

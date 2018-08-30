@@ -2,11 +2,15 @@
 
 namespace OXGaming.TibiaAPI.Network.ClientPackets
 {
-    public class Login : ClientPacket
+    public class EquipObject : ClientPacket
     {
-        public Login()
+        public ushort ObjectId { get; set; }
+
+        public byte Data { get; set; }
+
+        public EquipObject()
         {
-            Type = ClientPacketType.Login;
+            Type = ClientPacketType.EquipObject;
         }
 
         public override bool ParseMessage(NetworkMessage message)
@@ -16,12 +20,16 @@ namespace OXGaming.TibiaAPI.Network.ClientPackets
                 return false;
             }
 
+            ObjectId = message.ReadUInt16();
+            Data = message.ReadByte();
             return true;
         }
 
         public override void AppendToMessage(NetworkMessage message)
         {
-            message.Write((byte)ClientPacketType.Login);
+            message.Write((byte)ClientPacketType.EquipObject);
+            message.Write(ObjectId);
+            message.Write(Data);
         }
     }
 }

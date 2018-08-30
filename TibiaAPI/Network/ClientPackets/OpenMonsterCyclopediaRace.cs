@@ -2,11 +2,13 @@
 
 namespace OXGaming.TibiaAPI.Network.ClientPackets
 {
-    public class Login : ClientPacket
+    public class OpenMonsterCyclopediaRace : ClientPacket
     {
-        public Login()
+        public ushort Id { get; set; }
+
+        public OpenMonsterCyclopediaRace()
         {
-            Type = ClientPacketType.Login;
+            Type = ClientPacketType.OpenMonsterCyclopediaRace;
         }
 
         public override bool ParseMessage(NetworkMessage message)
@@ -16,12 +18,14 @@ namespace OXGaming.TibiaAPI.Network.ClientPackets
                 return false;
             }
 
+            Id = message.ReadUInt16();
             return true;
         }
 
         public override void AppendToMessage(NetworkMessage message)
         {
-            message.Write((byte)ClientPacketType.Login);
+            message.Write((byte)ClientPacketType.OpenMonsterCyclopediaRace);
+            message.Write(Id);
         }
     }
 }

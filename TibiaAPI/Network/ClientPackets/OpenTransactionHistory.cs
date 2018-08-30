@@ -2,11 +2,13 @@
 
 namespace OXGaming.TibiaAPI.Network.ClientPackets
 {
-    public class Login : ClientPacket
+    public class OpenTransactionHistory : ClientPacket
     {
-        public Login()
+        public byte EntriesPerPage { get; set; }
+
+        public OpenTransactionHistory()
         {
-            Type = ClientPacketType.Login;
+            Type = ClientPacketType.OpenTransactionHistory;
         }
 
         public override bool ParseMessage(NetworkMessage message)
@@ -16,12 +18,14 @@ namespace OXGaming.TibiaAPI.Network.ClientPackets
                 return false;
             }
 
+            EntriesPerPage = message.ReadByte();
             return true;
         }
 
         public override void AppendToMessage(NetworkMessage message)
         {
-            message.Write((byte)ClientPacketType.Login);
+            message.Write((byte)ClientPacketType.OpenTransactionHistory);
+            message.Write(EntriesPerPage);
         }
     }
 }

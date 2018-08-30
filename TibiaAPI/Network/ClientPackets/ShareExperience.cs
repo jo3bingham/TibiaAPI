@@ -2,11 +2,13 @@
 
 namespace OXGaming.TibiaAPI.Network.ClientPackets
 {
-    public class Login : ClientPacket
+    public class ShareExperience : ClientPacket
     {
-        public Login()
+        public bool EnableSharedExperience { get; set; }
+
+        public ShareExperience()
         {
-            Type = ClientPacketType.Login;
+            Type = ClientPacketType.ShareExperience;
         }
 
         public override bool ParseMessage(NetworkMessage message)
@@ -16,12 +18,14 @@ namespace OXGaming.TibiaAPI.Network.ClientPackets
                 return false;
             }
 
+            EnableSharedExperience = message.ReadBool();
             return true;
         }
 
         public override void AppendToMessage(NetworkMessage message)
         {
-            message.Write((byte)ClientPacketType.Login);
+            message.Write((byte)ClientPacketType.ShareExperience);
+            message.Write(EnableSharedExperience);
         }
     }
 }

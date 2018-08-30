@@ -2,11 +2,14 @@
 
 namespace OXGaming.TibiaAPI.Network.ClientPackets
 {
-    public class Login : ClientPacket
+    public class LookTrade : ClientPacket
     {
-        public Login()
+        public byte Index { get; set; }
+        public byte Side { get; set; }
+
+        public LookTrade()
         {
-            Type = ClientPacketType.Login;
+            Type = ClientPacketType.LookTrade;
         }
 
         public override bool ParseMessage(NetworkMessage message)
@@ -16,12 +19,16 @@ namespace OXGaming.TibiaAPI.Network.ClientPackets
                 return false;
             }
 
+            Side = message.ReadByte();
+            Index = message.ReadByte();
             return true;
         }
 
         public override void AppendToMessage(NetworkMessage message)
         {
-            message.Write((byte)ClientPacketType.Login);
+            message.Write((byte)ClientPacketType.LookTrade);
+            message.Write(Side);
+            message.Write(Index);
         }
     }
 }

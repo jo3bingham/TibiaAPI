@@ -56,6 +56,12 @@ namespace OXGaming.TibiaAPI.Network
             return data;
         }
 
+        public void Reset()
+        {
+            Position = PayloadDataPosition;
+            Size = PayloadDataPosition;
+        }
+
         /// <summary>
         /// Reads the specified number of bytes from the buffer into an array of bytes
         /// and advances the position by that number of bytes.

@@ -2,11 +2,15 @@
 
 namespace OXGaming.TibiaAPI.Network.ClientPackets
 {
-    public class Login : ClientPacket
+    public class EditText : ClientPacket
     {
-        public Login()
+        public string Text { get; set; }
+
+        public uint WindowId { get; set; }
+
+        public EditText()
         {
-            Type = ClientPacketType.Login;
+            Type = ClientPacketType.EditText;
         }
 
         public override bool ParseMessage(NetworkMessage message)
@@ -16,12 +20,16 @@ namespace OXGaming.TibiaAPI.Network.ClientPackets
                 return false;
             }
 
+            WindowId = message.ReadUInt32();
+            Text = message.ReadString();
             return true;
         }
 
         public override void AppendToMessage(NetworkMessage message)
         {
-            message.Write((byte)ClientPacketType.Login);
+            message.Write((byte)ClientPacketType.EditText);
+            message.Write(WindowId);
+            message.Write(Text);
         }
     }
 }

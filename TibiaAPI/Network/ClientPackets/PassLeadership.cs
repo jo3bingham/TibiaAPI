@@ -2,11 +2,13 @@
 
 namespace OXGaming.TibiaAPI.Network.ClientPackets
 {
-    public class Login : ClientPacket
+    public class PassLeadership : ClientPacket
     {
-        public Login()
+        public uint PlayerId { get; set; }
+
+        public PassLeadership()
         {
-            Type = ClientPacketType.Login;
+            Type = ClientPacketType.PassLeadership;
         }
 
         public override bool ParseMessage(NetworkMessage message)
@@ -16,12 +18,14 @@ namespace OXGaming.TibiaAPI.Network.ClientPackets
                 return false;
             }
 
+            PlayerId = message.ReadUInt32();
             return true;
         }
 
         public override void AppendToMessage(NetworkMessage message)
         {
-            message.Write((byte)ClientPacketType.Login);
+            message.Write((byte)ClientPacketType.PassLeadership);
+            message.Write(PlayerId);
         }
     }
 }

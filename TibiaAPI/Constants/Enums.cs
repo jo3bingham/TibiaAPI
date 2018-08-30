@@ -1,7 +1,119 @@
 ﻿namespace OXGaming.TibiaAPI.Constants
 {
+    public enum MarketOfferType
+    {
+        Buy = 0,
+        Sell = 1
+    }
+
+    public enum PreyActionType
+    {
+        ListReroll = 0,
+        BonusReroll = 1,
+        MonsterSelection = 2
+    }
+
+    public enum ReportType
+    {
+        Name = 0,
+        Statement = 1,
+        Bot = 2
+    }
+
+    public enum BugCategory
+    {
+        Map = 0,
+        Typo = 1,
+        Technical = 2,
+        Other = 3
+    }
+
+    public enum ResourceType
+    {
+        BankGold = 0,
+        InventoryGold = 1,
+        PreyBonusRerolls = 10,
+        CollectionTokens = 20,
+        CharmPoints = 30
+    }
+
+    public enum StoreServiceType
+    {
+        Unknown = 0,
+        CharacterNameChange = 1,
+        Premium = 2,
+        Outfits = 3,
+        Mounts = 4,
+        Blessings = 5,
+        XpBoost = 6,
+        Prey = 7
+    }
+
+    public enum Direction
+    {
+        None = 0,
+        East = 1,
+        NorthEast = 2,
+        North = 3,
+        NorthWest = 4,
+        West = 5,
+        SouthWest = 6,
+        South = 7,
+        SouthEast = 8
+    }
+
+    public enum MessageModeType
+    {
+        None = 0,
+        Say = 1,
+        Whisper = 2,
+        Yell = 3,
+        PrivateFrom = 4,
+        PrivateTo = 5,
+        ChannelManagement = 6,
+        Channel = 7,
+        ChannelHighlight = 8,
+        Spell = 9,
+        NpcFromStartBlock = 10,
+        NpcFrom = 11,
+        NpcTo = 12,
+        GamemasterBroadcast = 13,
+        GamemasterChannel = 14,
+        GamemasterPrivateFrom = 15,
+        GamemasterPrivateTo = 16,
+        Login = 17,
+        Admin = 18,
+        Game = 19,
+        GameHighlight = 20,
+        Failure = 21,
+        Look = 22,
+        DamageDealed = 23,
+        DamageReceived = 24,
+        Heal = 25,
+        Exp = 26,
+        DamageOthers = 27,
+        HealOthers = 28,
+        ExpOthers = 29,
+        Status = 30,
+        Loot = 31,
+        TradeNpc = 32,
+        Guild = 33,
+        PartyManagement = 34,
+        Party = 35,
+        BarkLow = 36,
+        BarkLoud = 37,
+        Report = 38,
+        HotkeyUse = 39,
+        TutorialHint = 40,
+        ThankYou = 41,
+        Market = 42,
+        Mana = 43,
+        BeyondLast = 44
+    }
+
     public enum ClientPacketType
     {
+        Invalid = 0x00,
         Login = 0x0A,
         SecondaryLogin = 0x0B,
         EnterWorld = 0x0F,
@@ -128,6 +240,7 @@
 
     public enum ServerPacketType
     {
+        Invalid = 0x00,
         CreatureData = 0x03,
         PendingStateEntered = 0x0A,
         ReadyForSecondaryConnection = 0x0B,

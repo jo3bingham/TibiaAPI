@@ -2,11 +2,13 @@
 
 namespace OXGaming.TibiaAPI.Network.ClientPackets
 {
-    public class Login : ClientPacket
+    public class PrivateChannel : ClientPacket
     {
-        public Login()
+        public string PlayerName { get; set; }
+
+        public PrivateChannel()
         {
-            Type = ClientPacketType.Login;
+            Type = ClientPacketType.PrivateChannel;
         }
 
         public override bool ParseMessage(NetworkMessage message)
@@ -16,12 +18,14 @@ namespace OXGaming.TibiaAPI.Network.ClientPackets
                 return false;
             }
 
+            PlayerName = message.ReadString();
             return true;
         }
 
         public override void AppendToMessage(NetworkMessage message)
         {
-            message.Write((byte)ClientPacketType.Login);
+            message.Write((byte)ClientPacketType.PrivateChannel);
+            message.Write(PlayerName);
         }
     }
 }

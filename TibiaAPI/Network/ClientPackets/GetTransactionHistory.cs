@@ -1,0 +1,35 @@
+﻿using OXGaming.TibiaAPI.Constants;
+
+namespace OXGaming.TibiaAPI.Network.ClientPackets
+{
+    public class GetTransactionHistory : ClientPacket
+    {
+        public uint CurrentPage { get; set; }
+
+        public byte EntriesPerPage { get; set; }
+
+        public GetTransactionHistory()
+        {
+            Type = ClientPacketType.GetTransactionHistory;
+        }
+
+        public override bool ParseMessage(NetworkMessage message)
+        {
+            if (message.ReadByte() != (byte)Type)
+            {
+                return false;
+            }
+
+            CurrentPage = message.ReadUInt32();
+            EntriesPerPage = message.ReadByte();
+            return true;
+        }
+
+        public override void AppendToMessage(NetworkMessage message)
+        {
+            message.Write((byte)ClientPacketType.GetTransactionHistory);
+            message.Write(CurrentPage);
+            message.Write(EntriesPerPage);
+        }
+    }
+}

@@ -2,11 +2,13 @@
 
 namespace OXGaming.TibiaAPI.Network.ClientPackets
 {
-    public class Login : ClientPacket
+    public class Mount : ClientPacket
     {
-        public Login()
+        public bool EnableMount { get; set; }
+
+        public Mount()
         {
-            Type = ClientPacketType.Login;
+            Type = ClientPacketType.Mount;
         }
 
         public override bool ParseMessage(NetworkMessage message)
@@ -16,12 +18,14 @@ namespace OXGaming.TibiaAPI.Network.ClientPackets
                 return false;
             }
 
+            EnableMount = message.ReadBool();
             return true;
         }
 
         public override void AppendToMessage(NetworkMessage message)
         {
-            message.Write((byte)ClientPacketType.Login);
+            message.Write((byte)ClientPacketType.Mount);
+            message.Write(EnableMount);
         }
     }
 }

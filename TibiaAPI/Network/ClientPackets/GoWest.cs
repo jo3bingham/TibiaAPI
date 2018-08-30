@@ -2,11 +2,11 @@
 
 namespace OXGaming.TibiaAPI.Network.ClientPackets
 {
-    public class Login : ClientPacket
+    public class GoWest : ClientPacket
     {
-        public Login()
+        public GoWest()
         {
-            Type = ClientPacketType.Login;
+            Type = ClientPacketType.GoWest;
         }
 
         public override bool ParseMessage(NetworkMessage message)
@@ -21,7 +21,7 @@ namespace OXGaming.TibiaAPI.Network.ClientPackets
 
         public override void AppendToMessage(NetworkMessage message)
         {
-            message.Write((byte)ClientPacketType.Login);
+            message.Write((byte)ClientPacketType.GoWest);
         }
     }
 }

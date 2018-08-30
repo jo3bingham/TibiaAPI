@@ -2,11 +2,13 @@
 
 namespace OXGaming.TibiaAPI.Network.ClientPackets
 {
-    public class Login : ClientPacket
+    public class CloseContainer : ClientPacket
     {
-        public Login()
+        public byte ContainerId { get; set; }
+
+        public CloseContainer()
         {
-            Type = ClientPacketType.Login;
+            Type = ClientPacketType.CloseContainer;
         }
 
         public override bool ParseMessage(NetworkMessage message)
@@ -16,12 +18,14 @@ namespace OXGaming.TibiaAPI.Network.ClientPackets
                 return false;
             }
 
+            ContainerId = message.ReadByte();
             return true;
         }
 
         public override void AppendToMessage(NetworkMessage message)
         {
-            message.Write((byte)ClientPacketType.Login);
+            message.Write((byte)ClientPacketType.CloseContainer);
+            message.Write(ContainerId);
         }
     }
 }

@@ -2,11 +2,13 @@
 
 namespace OXGaming.TibiaAPI.Network.ClientPackets
 {
-    public class Login : ClientPacket
+    public class GetQuestLine : ClientPacket
     {
-        public Login()
+        public ushort QuestLineId { get; set; }
+
+        public GetQuestLine()
         {
-            Type = ClientPacketType.Login;
+            Type = ClientPacketType.GetQuestLine;
         }
 
         public override bool ParseMessage(NetworkMessage message)
@@ -16,12 +18,14 @@ namespace OXGaming.TibiaAPI.Network.ClientPackets
                 return false;
             }
 
+            QuestLineId = message.ReadUInt16();
             return true;
         }
 
         public override void AppendToMessage(NetworkMessage message)
         {
-            message.Write((byte)ClientPacketType.Login);
+            message.Write((byte)ClientPacketType.GetQuestLine);
+            message.Write(QuestLineId);
         }
     }
 }

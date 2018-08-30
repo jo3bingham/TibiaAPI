@@ -2,11 +2,11 @@
 
 namespace OXGaming.TibiaAPI.Network.ClientPackets
 {
-    public class Login : ClientPacket
+    public class DisbandParty : ClientPacket
     {
-        public Login()
+        public DisbandParty()
         {
-            Type = ClientPacketType.Login;
+            Type = ClientPacketType.DisbandParty;
         }
 
         public override bool ParseMessage(NetworkMessage message)
@@ -21,7 +21,7 @@ namespace OXGaming.TibiaAPI.Network.ClientPackets
 
         public override void AppendToMessage(NetworkMessage message)
         {
-            message.Write((byte)ClientPacketType.Login);
+            message.Write((byte)ClientPacketType.DisbandParty);
         }
     }
 }

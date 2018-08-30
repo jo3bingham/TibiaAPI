@@ -16,7 +16,7 @@ namespace OXGaming.TibiaAPI.Network
     /// <summary>
     /// The <see cref="Connection"/> class is used to create a proxy between the Tibia client and the game server.
     /// </summary>
-    internal class Connection : IDisposable
+    internal class Connection : Communication, IDisposable
     {
         private readonly object _clientSendLock = new object();
         private readonly object _serverSendLock = new object();
@@ -24,8 +24,10 @@ namespace OXGaming.TibiaAPI.Network
         private readonly HttpClient _httpClient = new HttpClient();
         private readonly HttpListener _httpListener = new HttpListener();
 
-        private readonly NetworkMessage _clientMessage = new NetworkMessage();
-        private readonly NetworkMessage _serverMessage = new NetworkMessage();
+        private readonly NetworkMessage _clientInMessage = new NetworkMessage();
+        private readonly NetworkMessage _clientOutMessage = new NetworkMessage();
+        private readonly NetworkMessage _serverInMessage = new NetworkMessage();
+        private readonly NetworkMessage _serverOutMessage = new NetworkMessage();
 
         private readonly Queue<byte[]> _clientSendQueue = new Queue<byte[]>();
         private readonly Queue<byte[]> _serverSendQueue = new Queue<byte[]>();
@@ -49,6 +51,8 @@ namespace OXGaming.TibiaAPI.Network
         private bool _isStarted;
         private bool _isSendingToClient = false;
         private bool _isSendingToServer = false;
+
+        public bool IsPacketParsingEnabled { get; set; } = true;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Connection"/> class that acts as a proxy
@@ -91,6 +95,7 @@ namespace OXGaming.TibiaAPI.Network
 
             try
             {
+                _zStream.deflateInit(zlibConst.Z_DEFAULT_COMPRESSION, -15);
                 _zStream.inflateInit(-15);
 
                 _httpListener.Start();
@@ -123,6 +128,7 @@ namespace OXGaming.TibiaAPI.Network
 
             try
             {
+                _zStream.deflateEnd();
                 _zStream.inflateEnd();
                 _httpListener.Close();
                 _tcpListener.Stop();
@@ -231,6 +237,8 @@ namespace OXGaming.TibiaAPI.Network
                 _serverSocket.Close();
             }
 
+            _zStream.deflateEnd();
+            _zStream.deflateInit(zlibConst.Z_DEFAULT_COMPRESSION, -15);
             _zStream.inflateEnd();
             _zStream.inflateInit(-15);
         }
@@ -454,7 +462,7 @@ namespace OXGaming.TibiaAPI.Network
 
                 _clientSocket = tcpListener.EndAcceptSocket(ar);
                 _clientSocket.LingerState = new LingerOption(true, 2);
-                _clientSocket.BeginReceive(_clientMessage.GetBuffer(), 0, 1, SocketFlags.None, new AsyncCallback(BeginReceiveWorldNameCallback), null);
+                _clientSocket.BeginReceive(_clientInMessage.GetBuffer(), 0, 1, SocketFlags.None, new AsyncCallback(BeginReceiveWorldNameCallback), null);
 
                 _tcpListener.BeginAcceptSocket(new AsyncCallback(BeginAcceptTcpClientCallback), _tcpListener);
             }
@@ -490,9 +498,9 @@ namespace OXGaming.TibiaAPI.Network
 
                 // The first message the client sends to the game server is the world name without a length.
                 // Read from the socket one byte at a time until the end of the string (\n) is read.
-                while (_clientMessage.GetBuffer()[count - 1] != Convert.ToByte('\n'))
+                while (_clientInMessage.GetBuffer()[count - 1] != Convert.ToByte('\n'))
                 {
-                    var read = _clientSocket.Receive(_clientMessage.GetBuffer(), count, 1, SocketFlags.None);
+                    var read = _clientSocket.Receive(_clientInMessage.GetBuffer(), count, 1, SocketFlags.None);
                     if (read <= 0)
                     {
                         throw new Exception("[Connection.BeginReceiveWorldNameCallback] Client connection broken.");
@@ -501,19 +509,19 @@ namespace OXGaming.TibiaAPI.Network
                     count += read;
                 }
 
-                var worldName = Encoding.UTF8.GetString(_clientMessage.GetBuffer(), 0, count - 1);
+                var worldName = Encoding.UTF8.GetString(_clientInMessage.GetBuffer(), 0, count - 1);
                 var world = _loginData.PlayData.Worlds.Find(w => w.Name.Equals(worldName, StringComparison.CurrentCultureIgnoreCase));
                 if (world == null)
                 {
                     throw new Exception($"[Connection.BeginReceiveWorldNameCallback] Login data not found for world: {worldName}.");
                 }
 
-                _clientSocket.BeginReceive(_clientMessage.GetBuffer(), 0, 2, SocketFlags.None, new AsyncCallback(BeginReceiveClientCallback), 0);
+                _clientSocket.BeginReceive(_clientInMessage.GetBuffer(), 0, 2, SocketFlags.None, new AsyncCallback(BeginReceiveClientCallback), 0);
 
                 _serverSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
                 _serverSocket.Connect(world.ExternalAddressProtected, world.ExternalPortProtected);
-                _serverSocket.Send(_clientMessage.GetBuffer(), 0, count, SocketFlags.None);
-                _serverSocket.BeginReceive(_serverMessage.GetBuffer(), 0, 2, SocketFlags.None, new AsyncCallback(BeginReceiveServerCallback), 0);
+                _serverSocket.Send(_clientInMessage.GetBuffer(), 0, count, SocketFlags.None);
+                _serverSocket.BeginReceive(_serverInMessage.GetBuffer(), 0, 2, SocketFlags.None, new AsyncCallback(BeginReceiveServerCallback), 0);
             }
             catch (SocketException)
             {
@@ -549,10 +557,13 @@ namespace OXGaming.TibiaAPI.Network
                     return;
                 }
 
-                _clientMessage.Size = (uint)BitConverter.ToUInt16(_clientMessage.GetBuffer(), 0) + 2;
-                while (count < _clientMessage.Size)
+                _clientInMessage.Reset();
+                _clientOutMessage.Reset();
+
+                _clientInMessage.Size = (uint)BitConverter.ToUInt16(_clientInMessage.GetBuffer(), 0) + 2;
+                while (count < _clientInMessage.Size)
                 {
-                    var read = _clientSocket.Receive(_clientMessage.GetBuffer(), count, (int)(_clientMessage.Size - count), SocketFlags.None);
+                    var read = _clientSocket.Receive(_clientInMessage.GetBuffer(), count, (int)(_clientInMessage.Size - count), SocketFlags.None);
                     if (read <= 0)
                     {
                         throw new Exception("[Connection.BeginReceiveClientCallback] Client connection broken.");
@@ -564,9 +575,9 @@ namespace OXGaming.TibiaAPI.Network
                 var protocol = (int)ar.AsyncState;
                 if (protocol == 0)
                 {
-                    _rsa.OpenTibiaDecrypt(_clientMessage, 18);
-                    _clientMessage.Seek(18, SeekOrigin.Begin);
-                    if (_clientMessage.ReadByte() != 0)
+                    _rsa.OpenTibiaDecrypt(_clientInMessage, 18);
+                    _clientInMessage.Seek(18, SeekOrigin.Begin);
+                    if (_clientInMessage.ReadByte() != 0)
                     {
                         throw new Exception("[Connection.BeginReceiveClientCallback] RSA decryption failed.");
                     }
@@ -574,29 +585,35 @@ namespace OXGaming.TibiaAPI.Network
                     var xteaKey = new uint[4];
                     for (var i = 0; i < xteaKey.Length; ++i)
                     {
-                        xteaKey[i] = _clientMessage.ReadUInt32();
+                        xteaKey[i] = _clientInMessage.ReadUInt32();
                     }
                     _xtea = new Xtea(xteaKey);
 
-                    _rsa.TibiaEncrypt(_clientMessage, 18);
+                    _rsa.TibiaEncrypt(_clientInMessage, 18);
                 }
-                else if (_xtea != null)
+                else if (IsPacketParsingEnabled && _xtea != null)
                 {
-                    if (!_xtea.Decrypt(_clientMessage))
+                    if (!_xtea.Decrypt(_clientInMessage))
                     {
                         throw new Exception("[Connection.BeginReceiveClientCallback] XTEA decryption failed.");
                     }
 
-                    Communication.ParseClientMessage(_clientMessage);
+                    _clientInMessage.Size = (uint)(BitConverter.ToUInt16(_clientInMessage.GetBuffer(), 6) + 8);
 
-                    if (!_xtea.Encrypt(_clientMessage))
+                    ParseClientMessage(_clientInMessage, _clientOutMessage);
+
+                    if (!_xtea.Encrypt(_clientInMessage))
                     {
                         throw new Exception("[Connection.BeginReceiveClientCallback] XTEA encryption failed.");
                     }
+
+                    SendToServer(_clientInMessage);
+                    _clientSocket.BeginReceive(_clientInMessage.GetBuffer(), 0, 2, SocketFlags.None, new AsyncCallback(BeginReceiveClientCallback), 1);
+                    return;
                 }
 
-                SendToServer(_clientMessage);
-                _clientSocket.BeginReceive(_clientMessage.GetBuffer(), 0, 2, SocketFlags.None, new AsyncCallback(BeginReceiveClientCallback), 1);
+                SendToServer(_clientInMessage);
+                _clientSocket.BeginReceive(_clientInMessage.GetBuffer(), 0, 2, SocketFlags.None, new AsyncCallback(BeginReceiveClientCallback), 1);
             }
             catch (SocketException)
             {
@@ -632,10 +649,13 @@ namespace OXGaming.TibiaAPI.Network
                     return;
                 }
 
-                _serverMessage.Size = (uint)BitConverter.ToUInt16(_serverMessage.GetBuffer(), 0) + 2;
-                while (count < _serverMessage.Size)
+                _serverInMessage.Reset();
+                _serverOutMessage.Reset();
+
+                _serverInMessage.Size = (uint)BitConverter.ToUInt16(_serverInMessage.GetBuffer(), 0) + 2;
+                while (count < _serverInMessage.Size)
                 {
-                    var read = _serverSocket.Receive(_serverMessage.GetBuffer(), count, (int)(_serverMessage.Size - count), SocketFlags.None);
+                    var read = _serverSocket.Receive(_serverInMessage.GetBuffer(), count, (int)(_serverInMessage.Size - count), SocketFlags.None);
                     if (read <= 0)
                     {
                         throw new Exception("[Connection.BeginReceiveServerCallback] Server connection broken.");
@@ -645,48 +665,72 @@ namespace OXGaming.TibiaAPI.Network
                 }
 
                 var protocol = (int)ar.AsyncState;
-                if (protocol != 0)
+                if (protocol == 1 && IsPacketParsingEnabled && _xtea != null)
                 {
-                    if (_xtea != null)
+                    if (!_xtea.Decrypt(_serverInMessage))
                     {
-                        if (!_xtea.Decrypt(_serverMessage))
+                        throw new Exception("[Connection.BeginReceiveServerCallback] XTEA decryption failed.");
+                    }
+
+                    var isCompressed = (BitConverter.ToUInt32(_serverInMessage.GetBuffer(), 2) & 0xC0000000) != 0;
+                    if (isCompressed)
+                    {
+                        var compressedSize = BitConverter.ToUInt16(_serverInMessage.GetBuffer(), 6);
+                        var inBuffer = new byte[compressedSize];
+                        var outBuffer = new byte[NetworkMessage.MaxMessageSize];
+
+                        Array.Copy(_serverInMessage.GetBuffer(), 8, inBuffer, 0, compressedSize);
+
+                        _zStream.next_in = inBuffer;
+                        _zStream.next_in_index = 0;
+                        _zStream.avail_in = inBuffer.Length;
+                        _zStream.next_out = outBuffer;
+                        _zStream.next_out_index = 0;
+                        _zStream.avail_out = outBuffer.Length;
+
+                        var ret = _zStream.inflate(zlibConst.Z_SYNC_FLUSH);
+                        if (ret != zlibConst.Z_OK)
                         {
-                            throw new Exception("[Connection.BeginReceiveServerCallback] XTEA decryption failed.");
-                        }
-
-                        if ((BitConverter.ToUInt32(_serverMessage.GetBuffer(), 2) & 0xC0000000) != 0)
-                        {
-                            var compressedSize = BitConverter.ToUInt16(_serverMessage.GetBuffer(), 6);
-                            var inBuffer = new byte[compressedSize];
-                            var outBuffer = new byte[NetworkMessage.MaxMessageSize];
-
-                            Array.Copy(_serverMessage.GetBuffer(), 8, inBuffer, 0, compressedSize);
-
-                            _zStream.next_in = inBuffer;
-                            _zStream.next_in_index = 0;
-                            _zStream.avail_in = inBuffer.Length;
-                            _zStream.next_out = outBuffer;
-                            _zStream.next_out_index = 0;
-                            _zStream.avail_out = outBuffer.Length;
-
-                            var ret = _zStream.inflate(2);
-                            if (ret != zlibConst.Z_OK)
-                            {
-                                throw new Exception($"[Connection.BeginReceiveServerCallback] zlib inflation failed: {ret}");
-                            }
-                        }
-
-                        Communication.ParseServerMessage(_serverMessage);
-
-                        if (!_xtea.Encrypt(_serverMessage))
-                        {
-                            throw new Exception("[Connection.BeginReceiveServerCallback] XTEA encryption failed.");
+                            throw new Exception($"[Connection.BeginReceiveServerCallback] zlib inflate failed: {ret}");
                         }
                     }
+
+                    //ParseServerMessage(_serverInMessage, _serverOutMessage);
+
+                    //if (isCompressed)
+                    //{
+                    //    var uncompressedSize = _serverInMessage.Size - 8;
+                    //    var inBuffer = new byte[uncompressedSize];
+                    //    var outBuffer = new byte[NetworkMessage.MaxMessageSize];
+
+                    //    Array.Copy(_serverInMessage.GetBuffer(), 8, inBuffer, 0, uncompressedSize);
+
+                    //    _zStream.next_in = inBuffer;
+                    //    _zStream.next_in_index = 0;
+                    //    _zStream.avail_in = inBuffer.Length;
+                    //    _zStream.next_out = outBuffer;
+                    //    _zStream.next_out_index = 0;
+                    //    _zStream.avail_out = outBuffer.Length;
+
+                    //    var ret = _zStream.deflate(zlibConst.Z_SYNC_FLUSH);
+                    //    if (ret != zlibConst.Z_OK)
+                    //    {
+                    //        throw new Exception($"[Connection.BeginReceiveServerCallback] zlib deflate failed: {ret}");
+                    //    }
+                    //}
+
+                    if (!_xtea.Encrypt(_serverInMessage))
+                    {
+                        throw new Exception("[Connection.BeginReceiveServerCallback] XTEA encryption failed.");
+                    }
+
+                    SendToClient(_serverInMessage);
+                    _serverSocket.BeginReceive(_serverInMessage.GetBuffer(), 0, 2, SocketFlags.None, new AsyncCallback(BeginReceiveServerCallback), 1);
+                    return;
                 }
 
-                SendToClient(_serverMessage);
-                _serverSocket.BeginReceive(_serverMessage.GetBuffer(), 0, 2, SocketFlags.None, new AsyncCallback(BeginReceiveServerCallback), 1);
+                SendToClient(_serverInMessage);
+                _serverSocket.BeginReceive(_serverInMessage.GetBuffer(), 0, 2, SocketFlags.None, new AsyncCallback(BeginReceiveServerCallback), 1);
             }
             catch (SocketException)
             {

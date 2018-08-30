@@ -2,11 +2,11 @@
 
 namespace OXGaming.TibiaAPI.Network.ClientPackets
 {
-    public class Login : ClientPacket
+    public class RotateSouth : ClientPacket
     {
-        public Login()
+        public RotateSouth()
         {
-            Type = ClientPacketType.Login;
+            Type = ClientPacketType.RotateSouth;
         }
 
         public override bool ParseMessage(NetworkMessage message)
@@ -21,7 +21,7 @@ namespace OXGaming.TibiaAPI.Network.ClientPackets
 
         public override void AppendToMessage(NetworkMessage message)
         {
-            message.Write((byte)ClientPacketType.Login);
+            message.Write((byte)ClientPacketType.RotateSouth);
         }
     }
 }

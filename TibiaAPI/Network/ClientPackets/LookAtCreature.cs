@@ -2,11 +2,13 @@
 
 namespace OXGaming.TibiaAPI.Network.ClientPackets
 {
-    public class Login : ClientPacket
+    public class LookAtCreature : ClientPacket
     {
-        public Login()
+        public uint CreatureId { get; set; }
+
+        public LookAtCreature()
         {
-            Type = ClientPacketType.Login;
+            Type = ClientPacketType.LookAtCreature;
         }
 
         public override bool ParseMessage(NetworkMessage message)
@@ -16,12 +18,14 @@ namespace OXGaming.TibiaAPI.Network.ClientPackets
                 return false;
             }
 
+            CreatureId = message.ReadUInt32();
             return true;
         }
 
         public override void AppendToMessage(NetworkMessage message)
         {
-            message.Write((byte)ClientPacketType.Login);
+            message.Write((byte)ClientPacketType.LookAtCreature);
+            message.Write(CreatureId);
         }
     }
 }

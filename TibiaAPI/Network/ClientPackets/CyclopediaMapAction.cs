@@ -2,11 +2,11 @@
 
 namespace OXGaming.TibiaAPI.Network.ClientPackets
 {
-    public class Login : ClientPacket
+    public class CyclopediaMapAction : ClientPacket
     {
-        public Login()
+        public CyclopediaMapAction()
         {
-            Type = ClientPacketType.Login;
+            Type = ClientPacketType.CyclopediaMapAction;
         }
 
         public override bool ParseMessage(NetworkMessage message)
@@ -21,7 +21,7 @@ namespace OXGaming.TibiaAPI.Network.ClientPackets
 
         public override void AppendToMessage(NetworkMessage message)
         {
-            message.Write((byte)ClientPacketType.Login);
+            message.Write((byte)ClientPacketType.CyclopediaMapAction);
         }
     }
 }

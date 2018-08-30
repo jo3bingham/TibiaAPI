@@ -2,11 +2,13 @@
 
 namespace OXGaming.TibiaAPI.Network.ClientPackets
 {
-    public class Login : ClientPacket
+    public class ApplyClearingCharm : ClientPacket
     {
-        public Login()
+        public byte Slot { get; set; }
+
+        public ApplyClearingCharm()
         {
-            Type = ClientPacketType.Login;
+            Type = ClientPacketType.ApplyClearingCharm;
         }
 
         public override bool ParseMessage(NetworkMessage message)
@@ -16,12 +18,14 @@ namespace OXGaming.TibiaAPI.Network.ClientPackets
                 return false;
             }
 
+            Slot = message.ReadByte();
             return true;
         }
 
         public override void AppendToMessage(NetworkMessage message)
         {
-            message.Write((byte)ClientPacketType.Login);
+            message.Write((byte)ClientPacketType.ApplyClearingCharm);
+            message.Write(Slot);
         }
     }
 }

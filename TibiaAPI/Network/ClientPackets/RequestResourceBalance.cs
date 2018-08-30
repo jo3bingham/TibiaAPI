@@ -2,11 +2,13 @@
 
 namespace OXGaming.TibiaAPI.Network.ClientPackets
 {
-    public class Login : ClientPacket
+    public class RequestResourceBalance : ClientPacket
     {
-        public Login()
+        public ResourceType ResourceType { get; set; }
+
+        public RequestResourceBalance()
         {
-            Type = ClientPacketType.Login;
+            Type = ClientPacketType.RequestResourceBalance;
         }
 
         public override bool ParseMessage(NetworkMessage message)
@@ -16,12 +18,14 @@ namespace OXGaming.TibiaAPI.Network.ClientPackets
                 return false;
             }
 
+            ResourceType = (ResourceType)message.ReadByte();
             return true;
         }
 
         public override void AppendToMessage(NetworkMessage message)
         {
-            message.Write((byte)ClientPacketType.Login);
+            message.Write((byte)ClientPacketType.RequestResourceBalance);
+            message.Write((byte)ResourceType);
         }
     }
 }

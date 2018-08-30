@@ -2,11 +2,13 @@
 
 namespace OXGaming.TibiaAPI.Network.ClientPackets
 {
-    public class Login : ClientPacket
+    public class EditGuildMessage : ClientPacket
     {
-        public Login()
+        public string GuildMotd { get; set; }
+
+        public EditGuildMessage()
         {
-            Type = ClientPacketType.Login;
+            Type = ClientPacketType.EditGuildMessage;
         }
 
         public override bool ParseMessage(NetworkMessage message)
@@ -16,12 +18,14 @@ namespace OXGaming.TibiaAPI.Network.ClientPackets
                 return false;
             }
 
+            GuildMotd = message.ReadString();
             return true;
         }
 
         public override void AppendToMessage(NetworkMessage message)
         {
-            message.Write((byte)ClientPacketType.Login);
+            message.Write((byte)ClientPacketType.EditGuildMessage);
+            message.Write(GuildMotd);
         }
     }
 }

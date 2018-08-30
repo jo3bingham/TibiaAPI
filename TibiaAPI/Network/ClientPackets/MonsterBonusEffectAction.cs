@@ -2,11 +2,11 @@
 
 namespace OXGaming.TibiaAPI.Network.ClientPackets
 {
-    public class Login : ClientPacket
+    public class MonsterBonusEffectAction : ClientPacket
     {
-        public Login()
+        public MonsterBonusEffectAction()
         {
-            Type = ClientPacketType.Login;
+            Type = ClientPacketType.MonsterBonusEffectAction;
         }
 
         public override bool ParseMessage(NetworkMessage message)
@@ -21,7 +21,7 @@ namespace OXGaming.TibiaAPI.Network.ClientPackets
 
         public override void AppendToMessage(NetworkMessage message)
         {
-            message.Write((byte)ClientPacketType.Login);
+            message.Write((byte)ClientPacketType.MonsterBonusEffectAction);
         }
     }
 }

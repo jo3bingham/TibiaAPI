@@ -2,11 +2,13 @@
 
 namespace OXGaming.TibiaAPI.Network.ClientPackets
 {
-    public class Login : ClientPacket
+    public class LeaveChannel : ClientPacket
     {
-        public Login()
+        public ushort ChannelId { get; set; }
+
+        public LeaveChannel()
         {
-            Type = ClientPacketType.Login;
+            Type = ClientPacketType.LeaveChannel;
         }
 
         public override bool ParseMessage(NetworkMessage message)
@@ -16,12 +18,14 @@ namespace OXGaming.TibiaAPI.Network.ClientPackets
                 return false;
             }
 
+            ChannelId = message.ReadUInt16();
             return true;
         }
 
         public override void AppendToMessage(NetworkMessage message)
         {
-            message.Write((byte)ClientPacketType.Login);
+            message.Write((byte)ClientPacketType.LeaveChannel);
+            message.Write(ChannelId);
         }
     }
 }

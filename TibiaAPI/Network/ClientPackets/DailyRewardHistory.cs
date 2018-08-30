@@ -2,11 +2,11 @@
 
 namespace OXGaming.TibiaAPI.Network.ClientPackets
 {
-    public class Login : ClientPacket
+    public class DailyRewardHistory : ClientPacket
     {
-        public Login()
+        public DailyRewardHistory()
         {
-            Type = ClientPacketType.Login;
+            Type = ClientPacketType.DailyRewardHistory;
         }
 
         public override bool ParseMessage(NetworkMessage message)
@@ -21,7 +21,7 @@ namespace OXGaming.TibiaAPI.Network.ClientPackets
 
         public override void AppendToMessage(NetworkMessage message)
         {
-            message.Write((byte)ClientPacketType.Login);
+            message.Write((byte)ClientPacketType.DailyRewardHistory);
         }
     }
 }

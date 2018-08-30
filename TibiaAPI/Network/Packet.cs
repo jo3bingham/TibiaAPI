@@ -4,12 +4,14 @@ namespace OXGaming.TibiaAPI.Network
 {
     public class Packet
     {
-        public virtual Packet FromNetworkMessage(NetworkMessage message)
+        public bool Forward { get; set; } = true;
+
+        public virtual bool ParseMessage(NetworkMessage message)
         {
             throw new NotImplementedException();
         }
 
-        public virtual NetworkMessage ToNetworkMessage()
+        public virtual void AppendToMessage(NetworkMessage message)
         {
             throw new NotImplementedException();
         }

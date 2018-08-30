@@ -2,11 +2,13 @@
 
 namespace OXGaming.TibiaAPI.Network.ClientPackets
 {
-    public class Login : ClientPacket
+    public class MarketBrowse : ClientPacket
     {
-        public Login()
+        public ushort ObjectId { get; set; }
+
+        public MarketBrowse()
         {
-            Type = ClientPacketType.Login;
+            Type = ClientPacketType.MarketBrowse;
         }
 
         public override bool ParseMessage(NetworkMessage message)
@@ -16,12 +18,14 @@ namespace OXGaming.TibiaAPI.Network.ClientPackets
                 return false;
             }
 
+            ObjectId = message.ReadUInt16();
             return true;
         }
 
         public override void AppendToMessage(NetworkMessage message)
         {
-            message.Write((byte)ClientPacketType.Login);
+            message.Write((byte)ClientPacketType.MarketBrowse);
+            message.Write(ObjectId);
         }
     }
 }

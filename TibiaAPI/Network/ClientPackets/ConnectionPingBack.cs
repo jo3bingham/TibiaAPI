@@ -2,11 +2,11 @@
 
 namespace OXGaming.TibiaAPI.Network.ClientPackets
 {
-    public class Login : ClientPacket
+    public class ConnectionPingBack : ClientPacket
     {
-        public Login()
+        public ConnectionPingBack()
         {
-            Type = ClientPacketType.Login;
+            Type = ClientPacketType.ConnectionPingBack;
         }
 
         public override bool ParseMessage(NetworkMessage message)
@@ -21,7 +21,7 @@ namespace OXGaming.TibiaAPI.Network.ClientPackets
 
         public override void AppendToMessage(NetworkMessage message)
         {
-            message.Write((byte)ClientPacketType.Login);
+            message.Write((byte)ClientPacketType.ConnectionPingBack);
         }
     }
 }

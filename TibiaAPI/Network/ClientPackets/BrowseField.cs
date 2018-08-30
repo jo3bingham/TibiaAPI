@@ -2,11 +2,13 @@
 
 namespace OXGaming.TibiaAPI.Network.ClientPackets
 {
-    public class Login : ClientPacket
+    public class BrowseField : ClientPacket
     {
-        public Login()
+        //public Position Position { get; set; }
+
+        public BrowseField()
         {
-            Type = ClientPacketType.Login;
+            Type = ClientPacketType.BrowseField;
         }
 
         public override bool ParseMessage(NetworkMessage message)
@@ -16,12 +18,14 @@ namespace OXGaming.TibiaAPI.Network.ClientPackets
                 return false;
             }
 
+            //Position = message.ReadPosition();
             return true;
         }
 
         public override void AppendToMessage(NetworkMessage message)
         {
-            message.Write((byte)ClientPacketType.Login);
+            message.Write((byte)ClientPacketType.BrowseField);
+            //message.WritePosition(Position);
         }
     }
 }
