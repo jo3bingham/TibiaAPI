@@ -16,10 +16,12 @@ namespace OXGaming.TibiaAPI.Network
     /// <summary>
     /// The <see cref="Connection"/> class is used to create a proxy between the Tibia client and the game server.
     /// </summary>
-    internal class Connection : Communication, IDisposable
+    public class Connection : Communication, IDisposable
     {
         private readonly object _clientSendLock = new object();
         private readonly object _serverSendLock = new object();
+        private readonly object _clientSequenceNumberLock = new object();
+        private readonly object _ServerSequenceNumberLock = new object();
 
         private readonly HttpClient _httpClient = new HttpClient();
         private readonly HttpListener _httpListener = new HttpListener();
@@ -27,12 +29,13 @@ namespace OXGaming.TibiaAPI.Network
         private readonly NetworkMessage _clientInMessage = new NetworkMessage();
         private readonly NetworkMessage _clientOutMessage = new NetworkMessage();
         private readonly NetworkMessage _serverInMessage = new NetworkMessage();
-        private readonly NetworkMessage _serverOutMessage = new NetworkMessage();
 
         private readonly Queue<byte[]> _clientSendQueue = new Queue<byte[]>();
         private readonly Queue<byte[]> _serverSendQueue = new Queue<byte[]>();
 
         private readonly Rsa _rsa = new Rsa();
+
+        private uint[] _xteaKey;
 
         private ZStream _zStream = new ZStream();
 
@@ -46,7 +49,8 @@ namespace OXGaming.TibiaAPI.Network
 
         private TcpListener _tcpListener;
 
-        private Xtea _xtea;
+        private uint _clientSequenceNumber = 1;
+        private uint _serverSequenceNumber = 1;
 
         private bool _isStarted;
         private bool _isSendingToClient = false;
@@ -62,22 +66,129 @@ namespace OXGaming.TibiaAPI.Network
         /// The Tibia client's web service address needs to be changed to http://127.0.0.1/ so
         /// that it will connect to this proxy. The Tibia client connects over port 80, and the proxy
         /// listens on port 80, so there's no need to specify a port. However, since the proxy listens
-        /// on port 80, that means it needs to be ran in an elevated environment (i.e., root or administrator).
+        /// on port 80, that means it needs to be ran in an elevated environment (i.e., root/administrator).
         /// </remarks>
         public Connection()
         {
-            try
-            {
-                _tcpListener = new TcpListener(IPAddress.Loopback, 0);
+        }
 
-                // The HTTP listener must be listening on port 80 as the
-                // Tibia client sends HTTP requests over port 80.
-                _httpListener.Prefixes.Add("http://127.0.0.1:80/");
-            }
-            catch (Exception ex)
+        public void SendToClient(Packet packet)
+        {
+            var message = new NetworkMessage();
+            packet.AppendToNetworkMessage(message);
+            SendToClient(message);
+        }
+
+        public void SendToClient(NetworkMessage message)
+        {
+            if (message.Size <= 8)
             {
-                Console.WriteLine(ex.ToString());
-                // TODO: Log exception.
+                return;
+            }
+
+            lock (_clientSequenceNumberLock)
+            {
+                message.PrepareToSend(_xteaKey, ref _clientSequenceNumber);
+            }
+
+            SendToClient(message.GetData());
+        }
+
+        /// <summary>
+        /// Sends a packet to the Tibia client.
+        /// </summary>
+        /// <param name="message">
+        /// The <see cref="NetworkMessage"/> object containing the packet data to be sent.
+        /// </param>
+        /// <remarks>
+        /// There are no sanity checks done on <paramref name="message"/>, so a malformed,
+        /// or invalid, packet will cause the connection to be terminated.
+        /// </remarks>
+        public void SendToClient(byte[] data)
+        {
+            if (data.Length <= 8)
+            {
+                return;
+            }
+
+            lock (_clientSendLock)
+            {
+                _clientSendQueue.Enqueue(data);
+
+                if (!_isSendingToClient)
+                {
+                    try
+                    {
+                        _isSendingToClient = true;
+                        _clientSendThread = new Thread(new ThreadStart(ClientSend));
+                        _clientSendThread.Start();
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine(ex.ToString());
+                        // TODO: Log exception.
+                    }
+                }
+            }
+        }
+
+        public void SendToServer(ClientPacket packet)
+        {
+            var message = new NetworkMessage();
+            packet.AppendToNetworkMessage(message);
+            SendToServer(message);
+        }
+
+        public void SendToServer(NetworkMessage message)
+        {
+            if (message.Size <= 8)
+            {
+                return;
+            }
+
+            lock (_ServerSequenceNumberLock)
+            {
+                message.PrepareToSend(_xteaKey, ref _serverSequenceNumber);
+            }
+
+            SendToServer(message.GetData());
+        }
+
+        /// <summary>
+        /// Sends a packet to the game server.
+        /// </summary>
+        /// <param name="packet">
+        /// The <see cref="ClientPacket"/> containing the data to be sent.
+        /// </param>
+        /// <remarks>
+        /// There are no sanity checks done on <paramref name="packet"/>, except on it's Size.
+        /// So a malformed, or invalid, packet will cause the connection to be terminated.
+        /// </remarks>
+        public void SendToServer(byte[] data)
+        {
+            if (data.Length <= 8)
+            {
+                return;
+            }
+
+            lock (_serverSendLock)
+            {
+                _serverSendQueue.Enqueue(data);
+
+                if (!_isSendingToServer)
+                {
+                    try
+                    {
+                        _isSendingToServer = true;
+                        _serverSendThread = new Thread(new ThreadStart(ServerSend));
+                        _serverSendThread.Start();
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine(ex.ToString());
+                        // TODO: Log exception.
+                    }
+                }
             }
         }
 
@@ -86,7 +197,7 @@ namespace OXGaming.TibiaAPI.Network
         /// connection requests from the Tibia client.
         /// </summary>
         /// <returns></returns>
-        public bool Start()
+        internal bool Start()
         {
             if (_isStarted)
             {
@@ -95,6 +206,18 @@ namespace OXGaming.TibiaAPI.Network
 
             try
             {
+                if (_tcpListener == null)
+                {
+                    _tcpListener = new TcpListener(IPAddress.Loopback, 0);
+                }
+
+                if (!_httpListener.Prefixes.Contains("http://127.0.0.1:80/"))
+                {
+                    // The HTTP listener must be listening on port 80 as the
+                    // Tibia client sends HTTP requests over port 80.
+                    _httpListener.Prefixes.Add("http://127.0.0.1:80/");
+                }
+
                 _zStream.deflateInit(zlibConst.Z_DEFAULT_COMPRESSION, -15);
                 _zStream.inflateInit(-15);
 
@@ -119,7 +242,7 @@ namespace OXGaming.TibiaAPI.Network
         /// Closes any open connections between the Tibia client and game server, and stops listening for any
         /// new incoming HTTP or TCP connection requests.
         /// </summary>
-        public void Stop()
+        internal void Stop()
         {
             if (!_isStarted)
             {
@@ -141,74 +264,8 @@ namespace OXGaming.TibiaAPI.Network
                 // TODO: Log exception.
             }
 
-            _xtea = null;
             _isStarted = false;
-        }
-
-        /// <summary>
-        /// Sends a packet to the Tibia client.
-        /// </summary>
-        /// <param name="message">
-        /// The <see cref="NetworkMessage"/> object containing the packet data to be sent.
-        /// </param>
-        /// <remarks>
-        /// There are no sanity checks done on <paramref name="message"/>, so a malformed,
-        /// or invalid, packet will cause the connection to be terminated.
-        /// </remarks>
-        public void SendToClient(NetworkMessage message)
-        {
-            lock (_clientSendLock)
-            {
-                _clientSendQueue.Enqueue(message.GetData());
-
-                if (!_isSendingToClient)
-                {
-                    try
-                    {
-                        _isSendingToClient = true;
-                        _clientSendThread = new Thread(new ThreadStart(ClientSend));
-                        _clientSendThread.Start();
-                    }
-                    catch (Exception ex)
-                    {
-                        Console.WriteLine(ex.ToString());
-                        // TODO: Log exception.
-                    }
-                }
-            }
-        }
-
-        /// <summary>
-        /// Sends a packet to the game server.
-        /// </summary>
-        /// <param name="message">
-        /// The <see cref="NetworkMessage"/> object containing the packet data to be sent.
-        /// </param>
-        /// <remarks>
-        /// There are no sanity checks done on <paramref name="message"/>, so a malformed,
-        /// or invalid, packet will cause the connection to be terminated.
-        /// </remarks>
-        public void SendToServer(NetworkMessage message)
-        {
-            lock (_serverSendLock)
-            {
-                _serverSendQueue.Enqueue(message.GetData());
-
-                if (!_isSendingToServer)
-                {
-                    try
-                    {
-                        _isSendingToServer = true;
-                        _serverSendThread = new Thread(new ThreadStart(ServerSend));
-                        _serverSendThread.Start();
-                    }
-                    catch (Exception ex)
-                    {
-                        Console.WriteLine(ex.ToString());
-                        // TODO: Log exception.
-                    }
-                }
-            }
+            _xteaKey = null;
         }
 
         /// <summary>
@@ -241,6 +298,9 @@ namespace OXGaming.TibiaAPI.Network
             _zStream.deflateInit(zlibConst.Z_DEFAULT_COMPRESSION, -15);
             _zStream.inflateEnd();
             _zStream.inflateInit(-15);
+
+            _clientSequenceNumber = 1;
+            _xteaKey = null;
         }
 
         /// <summary>
@@ -248,6 +308,11 @@ namespace OXGaming.TibiaAPI.Network
         /// </summary>
         private void ClientSend()
         {
+            if (_clientSocket == null)
+            {
+                return;
+            }
+
             try
             {
                 byte[] data = null;
@@ -285,6 +350,11 @@ namespace OXGaming.TibiaAPI.Network
         /// </summary>
         private void ServerSend()
         {
+            if (_serverSocket == null)
+            {
+                return;
+            }
+
             try
             {
                 byte[] data = null;
@@ -557,9 +627,6 @@ namespace OXGaming.TibiaAPI.Network
                     return;
                 }
 
-                _clientInMessage.Reset();
-                _clientOutMessage.Reset();
-
                 _clientInMessage.Size = (uint)BitConverter.ToUInt16(_clientInMessage.GetBuffer(), 0) + 2;
                 while (count < _clientInMessage.Size)
                 {
@@ -576,44 +643,40 @@ namespace OXGaming.TibiaAPI.Network
                 if (protocol == 0)
                 {
                     _rsa.OpenTibiaDecrypt(_clientInMessage, 18);
-                    _clientInMessage.Seek(18, SeekOrigin.Begin);
-                    if (_clientInMessage.ReadByte() != 0)
+                    if (_clientInMessage.GetBuffer()[18] != 0)
                     {
                         throw new Exception("[Connection.BeginReceiveClientCallback] RSA decryption failed.");
                     }
 
-                    var xteaKey = new uint[4];
-                    for (var i = 0; i < xteaKey.Length; ++i)
+                    _xteaKey = new uint[4];
+                    for (var i = 0; i < 4; ++i)
                     {
-                        xteaKey[i] = _clientInMessage.ReadUInt32();
+                        _xteaKey[i] = BitConverter.ToUInt32(_clientInMessage.GetBuffer(), 19 + (i * 4));
                     }
-                    _xtea = new Xtea(xteaKey);
 
                     _rsa.TibiaEncrypt(_clientInMessage, 18);
                 }
-                else if (IsPacketParsingEnabled && _xtea != null)
+                else
                 {
-                    if (!_xtea.Decrypt(_clientInMessage))
+                    if (IsPacketParsingEnabled)
                     {
-                        throw new Exception("[Connection.BeginReceiveClientCallback] XTEA decryption failed.");
+                        _clientOutMessage.Reset();
+                        _clientInMessage.PrepareToParse(_xteaKey);
+                        ParseClientMessage(_clientInMessage, _clientOutMessage);
+                        SendToServer(_clientOutMessage);
+
+                        _clientSocket.BeginReceive(_clientInMessage.GetBuffer(), 0, 2, SocketFlags.None, new AsyncCallback(BeginReceiveClientCallback), 1);
+                        return;
                     }
-
-                    _clientInMessage.Size = (uint)(BitConverter.ToUInt16(_clientInMessage.GetBuffer(), 6) + 8);
-
-                    ParseClientMessage(_clientInMessage, _clientOutMessage);
-
-                    if (!_xtea.Encrypt(_clientInMessage))
-                    {
-                        throw new Exception("[Connection.BeginReceiveClientCallback] XTEA encryption failed.");
-                    }
-
-                    SendToServer(_clientInMessage);
-                    _clientSocket.BeginReceive(_clientInMessage.GetBuffer(), 0, 2, SocketFlags.None, new AsyncCallback(BeginReceiveClientCallback), 1);
-                    return;
                 }
 
-                SendToServer(_clientInMessage);
+                SendToServer(_clientInMessage.GetData());
                 _clientSocket.BeginReceive(_clientInMessage.GetBuffer(), 0, 2, SocketFlags.None, new AsyncCallback(BeginReceiveClientCallback), 1);
+            }
+            catch (ObjectDisposedException)
+            {
+                // This exception can occur when the player logs out of their character (e.g., Ctrl+L).
+                ResetConnection();
             }
             catch (SocketException)
             {
@@ -649,8 +712,7 @@ namespace OXGaming.TibiaAPI.Network
                     return;
                 }
 
-                _serverInMessage.Reset();
-                _serverOutMessage.Reset();
+                //_serverOutMessage.Reset();
 
                 _serverInMessage.Size = (uint)BitConverter.ToUInt16(_serverInMessage.GetBuffer(), 0) + 2;
                 while (count < _serverInMessage.Size)
@@ -665,35 +727,35 @@ namespace OXGaming.TibiaAPI.Network
                 }
 
                 var protocol = (int)ar.AsyncState;
-                if (protocol == 1 && IsPacketParsingEnabled && _xtea != null)
+                if (protocol == 1 && IsPacketParsingEnabled)
                 {
-                    if (!_xtea.Decrypt(_serverInMessage))
-                    {
-                        throw new Exception("[Connection.BeginReceiveServerCallback] XTEA decryption failed.");
-                    }
+                    //if (!Xtea.Decrypt(_serverInBuffer, size, _xteaKey))
+                    //{
+                    //    throw new Exception("[Connection.BeginReceiveServerCallback] XTEA decryption failed.");
+                    //}
 
-                    var isCompressed = (BitConverter.ToUInt32(_serverInMessage.GetBuffer(), 2) & 0xC0000000) != 0;
-                    if (isCompressed)
-                    {
-                        var compressedSize = BitConverter.ToUInt16(_serverInMessage.GetBuffer(), 6);
-                        var inBuffer = new byte[compressedSize];
-                        var outBuffer = new byte[NetworkMessage.MaxMessageSize];
+                    //var isCompressed = (BitConverter.ToUInt32(_serverInBuffer, 2) & 0xC0000000) != 0;
+                    //if (isCompressed)
+                    //{
+                    //    var compressedSize = BitConverter.ToUInt16(_serverInBuffer, 6);
+                    //    var inBuffer = new byte[compressedSize];
+                    //    var outBuffer = new byte[NetworkMessage.MaxMessageSize];
 
-                        Array.Copy(_serverInMessage.GetBuffer(), 8, inBuffer, 0, compressedSize);
+                    //    Array.Copy(_serverInBuffer, 8, inBuffer, 0, compressedSize);
 
-                        _zStream.next_in = inBuffer;
-                        _zStream.next_in_index = 0;
-                        _zStream.avail_in = inBuffer.Length;
-                        _zStream.next_out = outBuffer;
-                        _zStream.next_out_index = 0;
-                        _zStream.avail_out = outBuffer.Length;
+                    //    _zStream.next_in = inBuffer;
+                    //    _zStream.next_in_index = 0;
+                    //    _zStream.avail_in = inBuffer.Length;
+                    //    _zStream.next_out = outBuffer;
+                    //    _zStream.next_out_index = 0;
+                    //    _zStream.avail_out = outBuffer.Length;
 
-                        var ret = _zStream.inflate(zlibConst.Z_SYNC_FLUSH);
-                        if (ret != zlibConst.Z_OK)
-                        {
-                            throw new Exception($"[Connection.BeginReceiveServerCallback] zlib inflate failed: {ret}");
-                        }
-                    }
+                    //    var ret = _zStream.inflate(zlibConst.Z_SYNC_FLUSH);
+                    //    if (ret != zlibConst.Z_OK)
+                    //    {
+                    //        throw new Exception($"[Connection.BeginReceiveServerCallback] zlib inflate failed: {ret}");
+                    //    }
+                    //}
 
                     //ParseServerMessage(_serverInMessage, _serverOutMessage);
 
@@ -719,17 +781,17 @@ namespace OXGaming.TibiaAPI.Network
                     //    }
                     //}
 
-                    if (!_xtea.Encrypt(_serverInMessage))
-                    {
-                        throw new Exception("[Connection.BeginReceiveServerCallback] XTEA encryption failed.");
-                    }
+                    //if (!Xtea.Encrypt(_serverInBuffer, ref size, _xteaKey))
+                    //{
+                    //    throw new Exception("[Connection.BeginReceiveServerCallback] XTEA encryption failed.");
+                    //}
 
-                    SendToClient(_serverInMessage);
-                    _serverSocket.BeginReceive(_serverInMessage.GetBuffer(), 0, 2, SocketFlags.None, new AsyncCallback(BeginReceiveServerCallback), 1);
-                    return;
+                    //SendToClient(_serverInMessage);
+                    //_serverSocket.BeginReceive(_serverInMessage.GetBuffer(), 0, 2, SocketFlags.None, new AsyncCallback(BeginReceiveServerCallback), 1);
+                    //return;
                 }
 
-                SendToClient(_serverInMessage);
+                SendToClient(_serverInMessage.GetData());
                 _serverSocket.BeginReceive(_serverInMessage.GetBuffer(), 0, 2, SocketFlags.None, new AsyncCallback(BeginReceiveServerCallback), 1);
             }
             catch (SocketException)

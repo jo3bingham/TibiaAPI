@@ -85,17 +85,17 @@ namespace OXGaming.TibiaAPI.Network
         {
             if (message == null)
             {
-                throw new ArgumentNullException(nameof(message), "[Rsa.ProcessBlock] 'message' must not be null.");
+                throw new ArgumentNullException(nameof(message));
+            }
+
+            if (engine == null)
+            {
+                throw new ArgumentNullException(nameof(engine));
             }
 
             if (index < 0)
             {
                 throw new ArgumentOutOfRangeException(nameof(index), "[Rsa.ProcessBlock] Index cannot be less than 0.");
-            }
-
-            if (engine == null)
-            {
-                throw new ArgumentNullException(nameof(engine), "[Rsa.ProcessBlock] 'engine' must not be null.");
             }
 
             try

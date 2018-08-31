@@ -16,9 +16,9 @@ namespace OXGaming.TibiaAPI.Network.ClientPackets
             Type = ClientPacketType.CollectDailyReward;
         }
 
-        public override bool ParseMessage(NetworkMessage message)
+        public override bool ParseFromNetworkMessage(NetworkMessage message)
         {
-            if (message.ReadByte() != (byte)Type)
+            if (message.ReadByte() != (byte)ClientPacketType.CollectDailyReward)
             {
                 return false;
             }
@@ -34,7 +34,7 @@ namespace OXGaming.TibiaAPI.Network.ClientPackets
             return true;
         }
 
-        public override void AppendToMessage(NetworkMessage message)
+        public override void AppendToNetworkMessage(NetworkMessage message)
         {
             message.Write((byte)ClientPacketType.CollectDailyReward);
             message.Write(Unknown);

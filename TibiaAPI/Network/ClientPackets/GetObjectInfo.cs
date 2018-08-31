@@ -14,9 +14,9 @@ namespace OXGaming.TibiaAPI.Network.ClientPackets
             Type = ClientPacketType.GetObjectInfo;
         }
 
-        public override bool ParseMessage(NetworkMessage message)
+        public override bool ParseFromNetworkMessage(NetworkMessage message)
         {
-            if (message.ReadByte() != (byte)Type)
+            if (message.ReadByte() != (byte)ClientPacketType.GetObjectInfo)
             {
                 return false;
             }
@@ -31,7 +31,7 @@ namespace OXGaming.TibiaAPI.Network.ClientPackets
             return true;
         }
 
-        public override void AppendToMessage(NetworkMessage message)
+        public override void AppendToNetworkMessage(NetworkMessage message)
         {
             message.Write((byte)ClientPacketType.GetObjectInfo);
             var count = (byte)Math.Min(Objects.Count, byte.MaxValue);

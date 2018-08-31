@@ -9,9 +9,9 @@ namespace OXGaming.TibiaAPI.Network.ClientPackets
             Type = ClientPacketType.ConnectionPingBack;
         }
 
-        public override bool ParseMessage(NetworkMessage message)
+        public override bool ParseFromNetworkMessage(NetworkMessage message)
         {
-            if (message.ReadByte() != (byte)Type)
+            if (message.ReadByte() != (byte)ClientPacketType.ConnectionPingBack)
             {
                 return false;
             }
@@ -19,8 +19,9 @@ namespace OXGaming.TibiaAPI.Network.ClientPackets
             return true;
         }
 
-        public override void AppendToMessage(NetworkMessage message)
+        public override void AppendToNetworkMessage(NetworkMessage message)
         {
+            message.AddSequenceNumber = false;
             message.Write((byte)ClientPacketType.ConnectionPingBack);
         }
     }

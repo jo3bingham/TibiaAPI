@@ -6,9 +6,9 @@ using OXGaming.TibiaAPI.Constants;
 
 namespace OXGaming.TibiaAPI.Network
 {
-    internal class Communication
+    public class Communication
     {
-        internal delegate bool ReceivedPacketEventHandler(Packet packet);
+        public delegate bool ReceivedPacketEventHandler(Packet packet);
 
         public event ReceivedPacketEventHandler OnReceivedClientLoginPacket;
         public event ReceivedPacketEventHandler OnReceivedClientSecondaryLoginPacket;
@@ -133,145 +133,145 @@ namespace OXGaming.TibiaAPI.Network
         public event ReceivedPacketEventHandler OnReceivedClientOpenTransactionHistoryPacket;
         public event ReceivedPacketEventHandler OnReceivedClientGetTransactionHistoryPacket;
 
-        public event ReceivedPacketEventHandler OnReceivedServerCreatureDataPacket;
-        public event ReceivedPacketEventHandler OnReceivedServerPendingStateEnteredPacket;
-        public event ReceivedPacketEventHandler OnReceivedServerReadyForSecondaryConnectionPacket;
-        public event ReceivedPacketEventHandler OnReceivedServerWorldEnteredPacket;
-        public event ReceivedPacketEventHandler OnReceivedServerLoginErrorPacket;
-        public event ReceivedPacketEventHandler OnReceivedServerLoginAdvicePacket;
-        public event ReceivedPacketEventHandler OnReceivedServerLoginWaitPacket;
-        public event ReceivedPacketEventHandler OnReceivedServerLoginSuccessPacket;
-        public event ReceivedPacketEventHandler OnReceivedServerStoreButtonIndicatorsPacket;
-        public event ReceivedPacketEventHandler OnReceivedServerPingPacket;
-        public event ReceivedPacketEventHandler OnReceivedServerPingBackPacket;
-        public event ReceivedPacketEventHandler OnReceivedServerLoginChallengePacket;
-        public event ReceivedPacketEventHandler OnReceivedServerDeadPacket;
-        public event ReceivedPacketEventHandler OnReceivedServerDepotTileStatePacket;
-        public event ReceivedPacketEventHandler OnReceivedServerClientCheckPacket;
-        public event ReceivedPacketEventHandler OnReceivedServerFullMapPacket;
-        public event ReceivedPacketEventHandler OnReceivedServerTopRowPacket;
-        public event ReceivedPacketEventHandler OnReceivedServerRightRowPacket;
-        public event ReceivedPacketEventHandler OnReceivedServerBottomRowPacket;
-        public event ReceivedPacketEventHandler OnReceivedServerLeftRowPacket;
-        public event ReceivedPacketEventHandler OnReceivedServerFieldDataPacket;
-        public event ReceivedPacketEventHandler OnReceivedServerCreateOnMapPacket;
-        public event ReceivedPacketEventHandler OnReceivedServerChangeOnMapPacket;
-        public event ReceivedPacketEventHandler OnReceivedServerDeleteOnMapPacket;
-        public event ReceivedPacketEventHandler OnReceivedServerMoveCreaturePacket;
-        public event ReceivedPacketEventHandler OnReceivedServerContainerPacket;
-        public event ReceivedPacketEventHandler OnReceivedServerCloseContainerPacket;
-        public event ReceivedPacketEventHandler OnReceivedServerCreateInContainerPacket;
-        public event ReceivedPacketEventHandler OnReceivedServerChangeInContainerPacket;
-        public event ReceivedPacketEventHandler OnReceivedServerDeleteInContainerPacket;
-        public event ReceivedPacketEventHandler OnReceivedServerInspectionListPacket;
-        public event ReceivedPacketEventHandler OnReceivedServerInspectionStatePacket;
-        public event ReceivedPacketEventHandler OnReceivedServerSetInventoryPacket;
-        public event ReceivedPacketEventHandler OnReceivedServerDeleteInventoryPacket;
-        public event ReceivedPacketEventHandler OnReceivedServerNpcOfferPacket;
-        public event ReceivedPacketEventHandler OnReceivedServerPlayerGoodsPacket;
-        public event ReceivedPacketEventHandler OnReceivedServerCloseNpcTradePacket;
-        public event ReceivedPacketEventHandler OnReceivedServerOwnOfferPacket;
-        public event ReceivedPacketEventHandler OnReceivedServerCounterOfferPacket;
-        public event ReceivedPacketEventHandler OnReceivedServerCloseTradePacket;
-        public event ReceivedPacketEventHandler OnReceivedServerAmbientePacket;
-        public event ReceivedPacketEventHandler OnReceivedServerGraphicalEffectPacket;
-        public event ReceivedPacketEventHandler OnReceivedServerMissileEffectPacket;
-        public event ReceivedPacketEventHandler OnReceivedServerTrappersPacket;
-        public event ReceivedPacketEventHandler OnReceivedServerCreatureHealthPacket;
-        public event ReceivedPacketEventHandler OnReceivedServerCreatureLightPacket;
-        public event ReceivedPacketEventHandler OnReceivedServerCreatureOutfitPacket;
-        public event ReceivedPacketEventHandler OnReceivedServerCreatureSpeedPacket;
-        public event ReceivedPacketEventHandler OnReceivedServerCreatureSkullPacket;
-        public event ReceivedPacketEventHandler OnReceivedServerCreaturePartyPacket;
-        public event ReceivedPacketEventHandler OnReceivedServerCreatureUnpassPacket;
-        public event ReceivedPacketEventHandler OnReceivedServerCreatureMarksPacket;
-        public event ReceivedPacketEventHandler OnReceivedServerCreaturePvpHelpersPacket;
-        public event ReceivedPacketEventHandler OnReceivedServerCreatureTypePacket;
-        public event ReceivedPacketEventHandler OnReceivedServerEditTextPacket;
-        public event ReceivedPacketEventHandler OnReceivedServerEditListPacket;
-        public event ReceivedPacketEventHandler OnReceivedServerShowGameNewsPacket;
-        public event ReceivedPacketEventHandler OnReceivedServerBlessingsDialogPacket;
-        public event ReceivedPacketEventHandler OnReceivedServerBlessingsPacket;
-        public event ReceivedPacketEventHandler OnReceivedServerSwitchPresetPacket;
-        public event ReceivedPacketEventHandler OnReceivedServerPremiumTriggerPacket;
-        public event ReceivedPacketEventHandler OnReceivedServerPlayerDataBasicPacket;
-        public event ReceivedPacketEventHandler OnReceivedServerPlayerDataCurrentPacket;
-        public event ReceivedPacketEventHandler OnReceivedServerPlayerSkillsPacket;
-        public event ReceivedPacketEventHandler OnReceivedServerPlayerStatePacket;
-        public event ReceivedPacketEventHandler OnReceivedServerClearTargetPacket;
-        public event ReceivedPacketEventHandler OnReceivedServerSpellDelayPacket;
-        public event ReceivedPacketEventHandler OnReceivedServerSpellGroupDelayPacket;
-        public event ReceivedPacketEventHandler OnReceivedServerMultiUseDelayPacket;
-        public event ReceivedPacketEventHandler OnReceivedServerSetTacticsPacket;
-        public event ReceivedPacketEventHandler OnReceivedServerSetStoreDeepLinkPacket;
-        public event ReceivedPacketEventHandler OnReceivedServerRestingAreaStatePacket;
-        public event ReceivedPacketEventHandler OnReceivedServerTalkPacket;
-        public event ReceivedPacketEventHandler OnReceivedServerChannelsPacket;
-        public event ReceivedPacketEventHandler OnReceivedServerOpenChannelPacket;
-        public event ReceivedPacketEventHandler OnReceivedServerPrivateChannelPacket;
-        public event ReceivedPacketEventHandler OnReceivedServerEditGuildMessagePacket;
-        public event ReceivedPacketEventHandler OnReceivedServerOpenOwnChannelPacket;
-        public event ReceivedPacketEventHandler OnReceivedServerCloseChannelPacket;
-        public event ReceivedPacketEventHandler OnReceivedServerMessagePacket;
-        public event ReceivedPacketEventHandler OnReceivedServerSnapBackPacket;
-        public event ReceivedPacketEventHandler OnReceivedServerWaitPacket;
-        public event ReceivedPacketEventHandler OnReceivedServerUnjustifiedPointsPacket;
-        public event ReceivedPacketEventHandler OnReceivedServerPvpSituationsPacket;
-        public event ReceivedPacketEventHandler OnReceivedServerTopFloorPacket;
-        public event ReceivedPacketEventHandler OnReceivedServerBottomFloorPacket;
-        public event ReceivedPacketEventHandler OnReceivedServerUpdateLootContainersPacket;
-        public event ReceivedPacketEventHandler OnReceivedServerOutfitPacket;
-        public event ReceivedPacketEventHandler OnReceivedServerExivaSuppressedPacket;
-        public event ReceivedPacketEventHandler OnReceivedServerUpdateExivaOptionsPacket;
-        public event ReceivedPacketEventHandler OnReceivedServerImpactTrackingPacket;
-        public event ReceivedPacketEventHandler OnReceivedServerMarketStatisticsPacket;
-        public event ReceivedPacketEventHandler OnReceivedServerItemWastedPacket;
-        public event ReceivedPacketEventHandler OnReceivedServerItemLootedPacket;
-        public event ReceivedPacketEventHandler OnReceivedServerTrackQuestFlagsPacket;
-        public event ReceivedPacketEventHandler OnReceivedServerKillTrackingPacket;
-        public event ReceivedPacketEventHandler OnReceivedServerBuddyDataPacket;
-        public event ReceivedPacketEventHandler OnReceivedServerBuddyStatusChangePacket;
-        public event ReceivedPacketEventHandler OnReceivedServerBuddyGroupDataPacket;
-        public event ReceivedPacketEventHandler OnReceivedServerMonsterCyclopediaPacket;
-        public event ReceivedPacketEventHandler OnReceivedServerMonsterCyclopediaMonstersPacket;
-        public event ReceivedPacketEventHandler OnReceivedServerMonsterCyclopediaRacePacket;
-        public event ReceivedPacketEventHandler OnReceivedServerMonsterCyclopediaBonusEffectsPacket;
-        public event ReceivedPacketEventHandler OnReceivedServerMonsterCyclopediaNewDetailsPacket;
-        public event ReceivedPacketEventHandler OnReceivedServerTutorialHintPacket;
-        public event ReceivedPacketEventHandler OnReceivedServerAutomapFlagPacket;
-        public event ReceivedPacketEventHandler OnReceivedServerDailyRewardCollectionStatePacket;
-        public event ReceivedPacketEventHandler OnReceivedServerCreditBalancePacket;
-        public event ReceivedPacketEventHandler OnReceivedServerIngameShopErrorPacket;
-        public event ReceivedPacketEventHandler OnReceivedServerRequestPurchaseDataPacket;
-        public event ReceivedPacketEventHandler OnReceivedServerOpenRewardWallPacket;
-        public event ReceivedPacketEventHandler OnReceivedServerCloseRewardWallPacket;
-        public event ReceivedPacketEventHandler OnReceivedServerDailyRewardBasicPacket;
-        public event ReceivedPacketEventHandler OnReceivedServerDailyRewardHistoryPacket;
-        public event ReceivedPacketEventHandler OnReceivedServerPreyFreeListRerollAvailabilityPacket;
-        public event ReceivedPacketEventHandler OnReceivedServerPreyTimeLeftPacket;
-        public event ReceivedPacketEventHandler OnReceivedServerPreyDataPacket;
-        public event ReceivedPacketEventHandler OnReceivedServerPreyRerollPricePacket;
-        public event ReceivedPacketEventHandler OnReceivedServerOfferDescription;
-        public event ReceivedPacketEventHandler OnReceivedServerImbuingDialogRefreshPacket;
-        public event ReceivedPacketEventHandler OnReceivedServerCloseImbuingDialogPacket;
-        public event ReceivedPacketEventHandler OnReceivedServerShowMessageDialogPacket;
-        public event ReceivedPacketEventHandler OnReceivedServerRequestResourceBalancePacket;
-        public event ReceivedPacketEventHandler OnReceivedServerTibiaTimePacket;
-        public event ReceivedPacketEventHandler OnReceivedServerQuestLogPacket;
-        public event ReceivedPacketEventHandler OnReceivedServerQuestLinePacket;
-        public event ReceivedPacketEventHandler OnReceivedServerUpdatingShopBalancePacket;
-        public event ReceivedPacketEventHandler OnReceivedServerChannelEventPacket;
-        public event ReceivedPacketEventHandler OnReceivedServerObjectInfoPacket;
-        public event ReceivedPacketEventHandler OnReceivedServerPlayerInventoryPacket;
-        public event ReceivedPacketEventHandler OnReceivedServerMarketEnterPacket;
-        public event ReceivedPacketEventHandler OnReceivedServerMarketLeavePacket;
-        public event ReceivedPacketEventHandler OnReceivedServerMarketDetailPacket;
-        public event ReceivedPacketEventHandler OnReceivedServerMarketBrowsePacket;
-        public event ReceivedPacketEventHandler OnReceivedServerShowModalDialogPacket;
-        public event ReceivedPacketEventHandler OnReceivedServerStoreCategoriesPacket;
-        public event ReceivedPacketEventHandler OnReceivedServerStoreOffersPacket;
-        public event ReceivedPacketEventHandler OnReceivedServerTransactionHistoryPacket;
-        public event ReceivedPacketEventHandler OnReceivedServerIngameShopSuccessPacket;
+        //public event ReceivedPacketEventHandler OnReceivedServerCreatureDataPacket;
+        //public event ReceivedPacketEventHandler OnReceivedServerPendingStateEnteredPacket;
+        //public event ReceivedPacketEventHandler OnReceivedServerReadyForSecondaryConnectionPacket;
+        //public event ReceivedPacketEventHandler OnReceivedServerWorldEnteredPacket;
+        //public event ReceivedPacketEventHandler OnReceivedServerLoginErrorPacket;
+        //public event ReceivedPacketEventHandler OnReceivedServerLoginAdvicePacket;
+        //public event ReceivedPacketEventHandler OnReceivedServerLoginWaitPacket;
+        //public event ReceivedPacketEventHandler OnReceivedServerLoginSuccessPacket;
+        //public event ReceivedPacketEventHandler OnReceivedServerStoreButtonIndicatorsPacket;
+        //public event ReceivedPacketEventHandler OnReceivedServerPingPacket;
+        //public event ReceivedPacketEventHandler OnReceivedServerPingBackPacket;
+        //public event ReceivedPacketEventHandler OnReceivedServerLoginChallengePacket;
+        //public event ReceivedPacketEventHandler OnReceivedServerDeadPacket;
+        //public event ReceivedPacketEventHandler OnReceivedServerDepotTileStatePacket;
+        //public event ReceivedPacketEventHandler OnReceivedServerClientCheckPacket;
+        //public event ReceivedPacketEventHandler OnReceivedServerFullMapPacket;
+        //public event ReceivedPacketEventHandler OnReceivedServerTopRowPacket;
+        //public event ReceivedPacketEventHandler OnReceivedServerRightRowPacket;
+        //public event ReceivedPacketEventHandler OnReceivedServerBottomRowPacket;
+        //public event ReceivedPacketEventHandler OnReceivedServerLeftRowPacket;
+        //public event ReceivedPacketEventHandler OnReceivedServerFieldDataPacket;
+        //public event ReceivedPacketEventHandler OnReceivedServerCreateOnMapPacket;
+        //public event ReceivedPacketEventHandler OnReceivedServerChangeOnMapPacket;
+        //public event ReceivedPacketEventHandler OnReceivedServerDeleteOnMapPacket;
+        //public event ReceivedPacketEventHandler OnReceivedServerMoveCreaturePacket;
+        //public event ReceivedPacketEventHandler OnReceivedServerContainerPacket;
+        //public event ReceivedPacketEventHandler OnReceivedServerCloseContainerPacket;
+        //public event ReceivedPacketEventHandler OnReceivedServerCreateInContainerPacket;
+        //public event ReceivedPacketEventHandler OnReceivedServerChangeInContainerPacket;
+        //public event ReceivedPacketEventHandler OnReceivedServerDeleteInContainerPacket;
+        //public event ReceivedPacketEventHandler OnReceivedServerInspectionListPacket;
+        //public event ReceivedPacketEventHandler OnReceivedServerInspectionStatePacket;
+        //public event ReceivedPacketEventHandler OnReceivedServerSetInventoryPacket;
+        //public event ReceivedPacketEventHandler OnReceivedServerDeleteInventoryPacket;
+        //public event ReceivedPacketEventHandler OnReceivedServerNpcOfferPacket;
+        //public event ReceivedPacketEventHandler OnReceivedServerPlayerGoodsPacket;
+        //public event ReceivedPacketEventHandler OnReceivedServerCloseNpcTradePacket;
+        //public event ReceivedPacketEventHandler OnReceivedServerOwnOfferPacket;
+        //public event ReceivedPacketEventHandler OnReceivedServerCounterOfferPacket;
+        //public event ReceivedPacketEventHandler OnReceivedServerCloseTradePacket;
+        //public event ReceivedPacketEventHandler OnReceivedServerAmbientePacket;
+        //public event ReceivedPacketEventHandler OnReceivedServerGraphicalEffectPacket;
+        //public event ReceivedPacketEventHandler OnReceivedServerMissileEffectPacket;
+        //public event ReceivedPacketEventHandler OnReceivedServerTrappersPacket;
+        //public event ReceivedPacketEventHandler OnReceivedServerCreatureHealthPacket;
+        //public event ReceivedPacketEventHandler OnReceivedServerCreatureLightPacket;
+        //public event ReceivedPacketEventHandler OnReceivedServerCreatureOutfitPacket;
+        //public event ReceivedPacketEventHandler OnReceivedServerCreatureSpeedPacket;
+        //public event ReceivedPacketEventHandler OnReceivedServerCreatureSkullPacket;
+        //public event ReceivedPacketEventHandler OnReceivedServerCreaturePartyPacket;
+        //public event ReceivedPacketEventHandler OnReceivedServerCreatureUnpassPacket;
+        //public event ReceivedPacketEventHandler OnReceivedServerCreatureMarksPacket;
+        //public event ReceivedPacketEventHandler OnReceivedServerCreaturePvpHelpersPacket;
+        //public event ReceivedPacketEventHandler OnReceivedServerCreatureTypePacket;
+        //public event ReceivedPacketEventHandler OnReceivedServerEditTextPacket;
+        //public event ReceivedPacketEventHandler OnReceivedServerEditListPacket;
+        //public event ReceivedPacketEventHandler OnReceivedServerShowGameNewsPacket;
+        //public event ReceivedPacketEventHandler OnReceivedServerBlessingsDialogPacket;
+        //public event ReceivedPacketEventHandler OnReceivedServerBlessingsPacket;
+        //public event ReceivedPacketEventHandler OnReceivedServerSwitchPresetPacket;
+        //public event ReceivedPacketEventHandler OnReceivedServerPremiumTriggerPacket;
+        //public event ReceivedPacketEventHandler OnReceivedServerPlayerDataBasicPacket;
+        //public event ReceivedPacketEventHandler OnReceivedServerPlayerDataCurrentPacket;
+        //public event ReceivedPacketEventHandler OnReceivedServerPlayerSkillsPacket;
+        //public event ReceivedPacketEventHandler OnReceivedServerPlayerStatePacket;
+        //public event ReceivedPacketEventHandler OnReceivedServerClearTargetPacket;
+        //public event ReceivedPacketEventHandler OnReceivedServerSpellDelayPacket;
+        //public event ReceivedPacketEventHandler OnReceivedServerSpellGroupDelayPacket;
+        //public event ReceivedPacketEventHandler OnReceivedServerMultiUseDelayPacket;
+        //public event ReceivedPacketEventHandler OnReceivedServerSetTacticsPacket;
+        //public event ReceivedPacketEventHandler OnReceivedServerSetStoreDeepLinkPacket;
+        //public event ReceivedPacketEventHandler OnReceivedServerRestingAreaStatePacket;
+        //public event ReceivedPacketEventHandler OnReceivedServerTalkPacket;
+        //public event ReceivedPacketEventHandler OnReceivedServerChannelsPacket;
+        //public event ReceivedPacketEventHandler OnReceivedServerOpenChannelPacket;
+        //public event ReceivedPacketEventHandler OnReceivedServerPrivateChannelPacket;
+        //public event ReceivedPacketEventHandler OnReceivedServerEditGuildMessagePacket;
+        //public event ReceivedPacketEventHandler OnReceivedServerOpenOwnChannelPacket;
+        //public event ReceivedPacketEventHandler OnReceivedServerCloseChannelPacket;
+        //public event ReceivedPacketEventHandler OnReceivedServerMessagePacket;
+        //public event ReceivedPacketEventHandler OnReceivedServerSnapBackPacket;
+        //public event ReceivedPacketEventHandler OnReceivedServerWaitPacket;
+        //public event ReceivedPacketEventHandler OnReceivedServerUnjustifiedPointsPacket;
+        //public event ReceivedPacketEventHandler OnReceivedServerPvpSituationsPacket;
+        //public event ReceivedPacketEventHandler OnReceivedServerTopFloorPacket;
+        //public event ReceivedPacketEventHandler OnReceivedServerBottomFloorPacket;
+        //public event ReceivedPacketEventHandler OnReceivedServerUpdateLootContainersPacket;
+        //public event ReceivedPacketEventHandler OnReceivedServerOutfitPacket;
+        //public event ReceivedPacketEventHandler OnReceivedServerExivaSuppressedPacket;
+        //public event ReceivedPacketEventHandler OnReceivedServerUpdateExivaOptionsPacket;
+        //public event ReceivedPacketEventHandler OnReceivedServerImpactTrackingPacket;
+        //public event ReceivedPacketEventHandler OnReceivedServerMarketStatisticsPacket;
+        //public event ReceivedPacketEventHandler OnReceivedServerItemWastedPacket;
+        //public event ReceivedPacketEventHandler OnReceivedServerItemLootedPacket;
+        //public event ReceivedPacketEventHandler OnReceivedServerTrackQuestFlagsPacket;
+        //public event ReceivedPacketEventHandler OnReceivedServerKillTrackingPacket;
+        //public event ReceivedPacketEventHandler OnReceivedServerBuddyDataPacket;
+        //public event ReceivedPacketEventHandler OnReceivedServerBuddyStatusChangePacket;
+        //public event ReceivedPacketEventHandler OnReceivedServerBuddyGroupDataPacket;
+        //public event ReceivedPacketEventHandler OnReceivedServerMonsterCyclopediaPacket;
+        //public event ReceivedPacketEventHandler OnReceivedServerMonsterCyclopediaMonstersPacket;
+        //public event ReceivedPacketEventHandler OnReceivedServerMonsterCyclopediaRacePacket;
+        //public event ReceivedPacketEventHandler OnReceivedServerMonsterCyclopediaBonusEffectsPacket;
+        //public event ReceivedPacketEventHandler OnReceivedServerMonsterCyclopediaNewDetailsPacket;
+        //public event ReceivedPacketEventHandler OnReceivedServerTutorialHintPacket;
+        //public event ReceivedPacketEventHandler OnReceivedServerAutomapFlagPacket;
+        //public event ReceivedPacketEventHandler OnReceivedServerDailyRewardCollectionStatePacket;
+        //public event ReceivedPacketEventHandler OnReceivedServerCreditBalancePacket;
+        //public event ReceivedPacketEventHandler OnReceivedServerIngameShopErrorPacket;
+        //public event ReceivedPacketEventHandler OnReceivedServerRequestPurchaseDataPacket;
+        //public event ReceivedPacketEventHandler OnReceivedServerOpenRewardWallPacket;
+        //public event ReceivedPacketEventHandler OnReceivedServerCloseRewardWallPacket;
+        //public event ReceivedPacketEventHandler OnReceivedServerDailyRewardBasicPacket;
+        //public event ReceivedPacketEventHandler OnReceivedServerDailyRewardHistoryPacket;
+        //public event ReceivedPacketEventHandler OnReceivedServerPreyFreeListRerollAvailabilityPacket;
+        //public event ReceivedPacketEventHandler OnReceivedServerPreyTimeLeftPacket;
+        //public event ReceivedPacketEventHandler OnReceivedServerPreyDataPacket;
+        //public event ReceivedPacketEventHandler OnReceivedServerPreyRerollPricePacket;
+        //public event ReceivedPacketEventHandler OnReceivedServerOfferDescription;
+        //public event ReceivedPacketEventHandler OnReceivedServerImbuingDialogRefreshPacket;
+        //public event ReceivedPacketEventHandler OnReceivedServerCloseImbuingDialogPacket;
+        //public event ReceivedPacketEventHandler OnReceivedServerShowMessageDialogPacket;
+        //public event ReceivedPacketEventHandler OnReceivedServerRequestResourceBalancePacket;
+        //public event ReceivedPacketEventHandler OnReceivedServerTibiaTimePacket;
+        //public event ReceivedPacketEventHandler OnReceivedServerQuestLogPacket;
+        //public event ReceivedPacketEventHandler OnReceivedServerQuestLinePacket;
+        //public event ReceivedPacketEventHandler OnReceivedServerUpdatingShopBalancePacket;
+        //public event ReceivedPacketEventHandler OnReceivedServerChannelEventPacket;
+        //public event ReceivedPacketEventHandler OnReceivedServerObjectInfoPacket;
+        //public event ReceivedPacketEventHandler OnReceivedServerPlayerInventoryPacket;
+        //public event ReceivedPacketEventHandler OnReceivedServerMarketEnterPacket;
+        //public event ReceivedPacketEventHandler OnReceivedServerMarketLeavePacket;
+        //public event ReceivedPacketEventHandler OnReceivedServerMarketDetailPacket;
+        //public event ReceivedPacketEventHandler OnReceivedServerMarketBrowsePacket;
+        //public event ReceivedPacketEventHandler OnReceivedServerShowModalDialogPacket;
+        //public event ReceivedPacketEventHandler OnReceivedServerStoreCategoriesPacket;
+        //public event ReceivedPacketEventHandler OnReceivedServerStoreOffersPacket;
+        //public event ReceivedPacketEventHandler OnReceivedServerTransactionHistoryPacket;
+        //public event ReceivedPacketEventHandler OnReceivedServerIngameShopSuccessPacket;
 
         internal void ParseClientMessage(NetworkMessage inMessage, NetworkMessage outMessage)
         {
@@ -296,12 +296,12 @@ namespace OXGaming.TibiaAPI.Network
                         case ClientPacketType.Login:
                             {
                                 var packet = new ClientPackets.Login();
-                                if (packet.ParseMessage(inMessage))
+                                if (packet.ParseFromNetworkMessage(inMessage))
                                 {
                                     packet.Forward = OnReceivedClientLoginPacket?.Invoke(packet) ?? true;
                                     if (packet.Forward)
                                     {
-                                        packet.AppendToMessage(outMessage);
+                                        packet.AppendToNetworkMessage(outMessage);
                                     }
                                 }
                             }
@@ -309,12 +309,12 @@ namespace OXGaming.TibiaAPI.Network
                         case ClientPacketType.SecondaryLogin:
                             {
                                 var packet = new ClientPackets.SecondaryLogin();
-                                if (packet.ParseMessage(inMessage))
+                                if (packet.ParseFromNetworkMessage(inMessage))
                                 {
                                     packet.Forward = OnReceivedClientSecondaryLoginPacket?.Invoke(packet) ?? true;
                                     if (packet.Forward)
                                     {
-                                        packet.AppendToMessage(outMessage);
+                                        packet.AppendToNetworkMessage(outMessage);
                                     }
                                 }
                             }
@@ -322,12 +322,12 @@ namespace OXGaming.TibiaAPI.Network
                         case ClientPacketType.EnterWorld:
                             {
                                 var packet = new ClientPackets.EnterWorld();
-                                if (packet.ParseMessage(inMessage))
+                                if (packet.ParseFromNetworkMessage(inMessage))
                                 {
                                     packet.Forward = OnReceivedClientEnterWorldPacket?.Invoke(packet) ?? true;
                                     if (packet.Forward)
                                     {
-                                        packet.AppendToMessage(outMessage);
+                                        packet.AppendToNetworkMessage(outMessage);
                                     }
                                 }
                             }
@@ -335,12 +335,12 @@ namespace OXGaming.TibiaAPI.Network
                         case ClientPacketType.QuitGame:
                             {
                                 var packet = new ClientPackets.QuitGame();
-                                if (packet.ParseMessage(inMessage))
+                                if (packet.ParseFromNetworkMessage(inMessage))
                                 {
                                     packet.Forward = OnReceivedClientQuitGamePacket?.Invoke(packet) ?? true;
                                     if (packet.Forward)
                                     {
-                                        packet.AppendToMessage(outMessage);
+                                        packet.AppendToNetworkMessage(outMessage);
                                     }
                                 }
                             }
@@ -348,12 +348,12 @@ namespace OXGaming.TibiaAPI.Network
                         case ClientPacketType.ConnectionPingBack:
                             {
                                 var packet = new ClientPackets.ConnectionPingBack();
-                                if (packet.ParseMessage(inMessage))
+                                if (packet.ParseFromNetworkMessage(inMessage))
                                 {
                                     packet.Forward = OnReceivedClientConnectionPingBack?.Invoke(packet) ?? true;
                                     if (packet.Forward)
                                     {
-                                        packet.AppendToMessage(outMessage);
+                                        packet.AppendToNetworkMessage(outMessage);
                                     }
                                 }
                             }
@@ -361,12 +361,12 @@ namespace OXGaming.TibiaAPI.Network
                         case ClientPacketType.Ping:
                             {
                                 var packet = new ClientPackets.Ping();
-                                if (packet.ParseMessage(inMessage))
+                                if (packet.ParseFromNetworkMessage(inMessage))
                                 {
                                     packet.Forward = OnReceivedClientPingPacket?.Invoke(packet) ?? true;
                                     if (packet.Forward)
                                     {
-                                        packet.AppendToMessage(outMessage);
+                                        packet.AppendToNetworkMessage(outMessage);
                                     }
                                 }
                             }
@@ -374,12 +374,12 @@ namespace OXGaming.TibiaAPI.Network
                         case ClientPacketType.PingBack:
                             {
                                 var packet = new ClientPackets.PingBack();
-                                if (packet.ParseMessage(inMessage))
+                                if (packet.ParseFromNetworkMessage(inMessage))
                                 {
                                     packet.Forward = OnReceivedClientPingBackPacket?.Invoke(packet) ?? true;
                                     if (packet.Forward)
                                     {
-                                        packet.AppendToMessage(outMessage);
+                                        packet.AppendToNetworkMessage(outMessage);
                                     }
                                 }
                             }
@@ -387,12 +387,12 @@ namespace OXGaming.TibiaAPI.Network
                         case ClientPacketType.PerformanceMetrics:
                             {
                                 var packet = new ClientPackets.PerformanceMetrics();
-                                if (packet.ParseMessage(inMessage))
+                                if (packet.ParseFromNetworkMessage(inMessage))
                                 {
                                     packet.Forward = OnReceivedClientPerformanceMetricsPacket?.Invoke(packet) ?? true;
                                     if (packet.Forward)
                                     {
-                                        packet.AppendToMessage(outMessage);
+                                        packet.AppendToNetworkMessage(outMessage);
                                     }
                                 }
                             }
@@ -400,12 +400,12 @@ namespace OXGaming.TibiaAPI.Network
                         case ClientPacketType.StashAction:
                             {
                                 var packet = new ClientPackets.StashAction();
-                                if (packet.ParseMessage(inMessage))
+                                if (packet.ParseFromNetworkMessage(inMessage))
                                 {
                                     packet.Forward = OnReceivedClientStashActionPacket?.Invoke(packet) ?? true;
                                     if (packet.Forward)
                                     {
-                                        packet.AppendToMessage(outMessage);
+                                        packet.AppendToNetworkMessage(outMessage);
                                     }
                                 }
                             }
@@ -413,12 +413,12 @@ namespace OXGaming.TibiaAPI.Network
                         case ClientPacketType.ClientCheck:
                             {
                                 var packet = new ClientPackets.ClientCheck();
-                                if (packet.ParseMessage(inMessage))
+                                if (packet.ParseFromNetworkMessage(inMessage))
                                 {
                                     packet.Forward = OnReceivedClientClientCheckPacket?.Invoke(packet) ?? true;
                                     if (packet.Forward)
                                     {
-                                        packet.AppendToMessage(outMessage);
+                                        packet.AppendToNetworkMessage(outMessage);
                                     }
                                 }
                             }
@@ -426,12 +426,12 @@ namespace OXGaming.TibiaAPI.Network
                         case ClientPacketType.GoPath:
                             {
                                 var packet = new ClientPackets.GoPath();
-                                if (packet.ParseMessage(inMessage))
+                                if (packet.ParseFromNetworkMessage(inMessage))
                                 {
                                     packet.Forward = OnReceivedClientGoPathPacket?.Invoke(packet) ?? true;
                                     if (packet.Forward)
                                     {
-                                        packet.AppendToMessage(outMessage);
+                                        packet.AppendToNetworkMessage(outMessage);
                                     }
                                 }
                             }
@@ -439,12 +439,12 @@ namespace OXGaming.TibiaAPI.Network
                         case ClientPacketType.GoNorth:
                             {
                                 var packet = new ClientPackets.GoNorth();
-                                if (packet.ParseMessage(inMessage))
+                                if (packet.ParseFromNetworkMessage(inMessage))
                                 {
                                     packet.Forward = OnReceivedClientGoNorthPacket?.Invoke(packet) ?? true;
                                     if (packet.Forward)
                                     {
-                                        packet.AppendToMessage(outMessage);
+                                        packet.AppendToNetworkMessage(outMessage);
                                     }
                                 }
                             }
@@ -452,12 +452,12 @@ namespace OXGaming.TibiaAPI.Network
                         case ClientPacketType.GoEast:
                             {
                                 var packet = new ClientPackets.GoEast();
-                                if (packet.ParseMessage(inMessage))
+                                if (packet.ParseFromNetworkMessage(inMessage))
                                 {
                                     packet.Forward = OnReceivedClientGoEastPacket?.Invoke(packet) ?? true;
                                     if (packet.Forward)
                                     {
-                                        packet.AppendToMessage(outMessage);
+                                        packet.AppendToNetworkMessage(outMessage);
                                     }
                                 }
                             }
@@ -465,12 +465,12 @@ namespace OXGaming.TibiaAPI.Network
                         case ClientPacketType.GoSouth:
                             {
                                 var packet = new ClientPackets.GoSouth();
-                                if (packet.ParseMessage(inMessage))
+                                if (packet.ParseFromNetworkMessage(inMessage))
                                 {
                                     packet.Forward = OnReceivedClientGoSouthPacket?.Invoke(packet) ?? true;
                                     if (packet.Forward)
                                     {
-                                        packet.AppendToMessage(outMessage);
+                                        packet.AppendToNetworkMessage(outMessage);
                                     }
                                 }
                             }
@@ -478,12 +478,12 @@ namespace OXGaming.TibiaAPI.Network
                         case ClientPacketType.GoWest:
                             {
                                 var packet = new ClientPackets.GoWest();
-                                if (packet.ParseMessage(inMessage))
+                                if (packet.ParseFromNetworkMessage(inMessage))
                                 {
                                     packet.Forward = OnReceivedClientGoWestPacket?.Invoke(packet) ?? true;
                                     if (packet.Forward)
                                     {
-                                        packet.AppendToMessage(outMessage);
+                                        packet.AppendToNetworkMessage(outMessage);
                                     }
                                 }
                             }
@@ -491,12 +491,12 @@ namespace OXGaming.TibiaAPI.Network
                         case ClientPacketType.Stop:
                             {
                                 var packet = new ClientPackets.Stop();
-                                if (packet.ParseMessage(inMessage))
+                                if (packet.ParseFromNetworkMessage(inMessage))
                                 {
                                     packet.Forward = OnReceivedClientStopPacket?.Invoke(packet) ?? true;
                                     if (packet.Forward)
                                     {
-                                        packet.AppendToMessage(outMessage);
+                                        packet.AppendToNetworkMessage(outMessage);
                                     }
                                 }
                             }
@@ -504,12 +504,12 @@ namespace OXGaming.TibiaAPI.Network
                         case ClientPacketType.GoNorthEast:
                             {
                                 var packet = new ClientPackets.GoNorthEast();
-                                if (packet.ParseMessage(inMessage))
+                                if (packet.ParseFromNetworkMessage(inMessage))
                                 {
                                     packet.Forward = OnReceivedClientGoNorthEastPacket?.Invoke(packet) ?? true;
                                     if (packet.Forward)
                                     {
-                                        packet.AppendToMessage(outMessage);
+                                        packet.AppendToNetworkMessage(outMessage);
                                     }
                                 }
                             }
@@ -517,12 +517,12 @@ namespace OXGaming.TibiaAPI.Network
                         case ClientPacketType.GoSouthEast:
                             {
                                 var packet = new ClientPackets.GoSouthEast();
-                                if (packet.ParseMessage(inMessage))
+                                if (packet.ParseFromNetworkMessage(inMessage))
                                 {
                                     packet.Forward = OnReceivedClientGoSouthEastPacket?.Invoke(packet) ?? true;
                                     if (packet.Forward)
                                     {
-                                        packet.AppendToMessage(outMessage);
+                                        packet.AppendToNetworkMessage(outMessage);
                                     }
                                 }
                             }
@@ -530,12 +530,12 @@ namespace OXGaming.TibiaAPI.Network
                         case ClientPacketType.GoSouthWest:
                             {
                                 var packet = new ClientPackets.GoSouthWest();
-                                if (packet.ParseMessage(inMessage))
+                                if (packet.ParseFromNetworkMessage(inMessage))
                                 {
                                     packet.Forward = OnReceivedClientGoSouthWestPacket?.Invoke(packet) ?? true;
                                     if (packet.Forward)
                                     {
-                                        packet.AppendToMessage(outMessage);
+                                        packet.AppendToNetworkMessage(outMessage);
                                     }
                                 }
                             }
@@ -543,12 +543,12 @@ namespace OXGaming.TibiaAPI.Network
                         case ClientPacketType.GoNorthWest:
                             {
                                 var packet = new ClientPackets.GoNorthWest();
-                                if (packet.ParseMessage(inMessage))
+                                if (packet.ParseFromNetworkMessage(inMessage))
                                 {
                                     packet.Forward = OnReceivedClientGoNorthWestPacket?.Invoke(packet) ?? true;
                                     if (packet.Forward)
                                     {
-                                        packet.AppendToMessage(outMessage);
+                                        packet.AppendToNetworkMessage(outMessage);
                                     }
                                 }
                             }
@@ -556,12 +556,12 @@ namespace OXGaming.TibiaAPI.Network
                         case ClientPacketType.RotateNorth:
                             {
                                 var packet = new ClientPackets.RotateNorth();
-                                if (packet.ParseMessage(inMessage))
+                                if (packet.ParseFromNetworkMessage(inMessage))
                                 {
                                     packet.Forward = OnReceivedClientRotateNorthPacket?.Invoke(packet) ?? true;
                                     if (packet.Forward)
                                     {
-                                        packet.AppendToMessage(outMessage);
+                                        packet.AppendToNetworkMessage(outMessage);
                                     }
                                 }
                             }
@@ -569,12 +569,12 @@ namespace OXGaming.TibiaAPI.Network
                         case ClientPacketType.RotateEast:
                             {
                                 var packet = new ClientPackets.RotateEast();
-                                if (packet.ParseMessage(inMessage))
+                                if (packet.ParseFromNetworkMessage(inMessage))
                                 {
                                     packet.Forward = OnReceivedClientRotateEastPacket?.Invoke(packet) ?? true;
                                     if (packet.Forward)
                                     {
-                                        packet.AppendToMessage(outMessage);
+                                        packet.AppendToNetworkMessage(outMessage);
                                     }
                                 }
                             }
@@ -582,12 +582,12 @@ namespace OXGaming.TibiaAPI.Network
                         case ClientPacketType.RotateSouth:
                             {
                                 var packet = new ClientPackets.RotateSouth();
-                                if (packet.ParseMessage(inMessage))
+                                if (packet.ParseFromNetworkMessage(inMessage))
                                 {
                                     packet.Forward = OnReceivedClientRotateSouthPacket?.Invoke(packet) ?? true;
                                     if (packet.Forward)
                                     {
-                                        packet.AppendToMessage(outMessage);
+                                        packet.AppendToNetworkMessage(outMessage);
                                     }
                                 }
                             }
@@ -595,12 +595,12 @@ namespace OXGaming.TibiaAPI.Network
                         case ClientPacketType.RotateWest:
                             {
                                 var packet = new ClientPackets.RotateWest();
-                                if (packet.ParseMessage(inMessage))
+                                if (packet.ParseFromNetworkMessage(inMessage))
                                 {
                                     packet.Forward = OnReceivedClientRotateWestPacket?.Invoke(packet) ?? true;
                                     if (packet.Forward)
                                     {
-                                        packet.AppendToMessage(outMessage);
+                                        packet.AppendToNetworkMessage(outMessage);
                                     }
                                 }
                             }
@@ -608,12 +608,12 @@ namespace OXGaming.TibiaAPI.Network
                         case ClientPacketType.Teleport:
                             {
                                 var packet = new ClientPackets.Teleport();
-                                if (packet.ParseMessage(inMessage))
+                                if (packet.ParseFromNetworkMessage(inMessage))
                                 {
                                     packet.Forward = OnReceivedClientTeleportPacket?.Invoke(packet) ?? true;
                                     if (packet.Forward)
                                     {
-                                        packet.AppendToMessage(outMessage);
+                                        packet.AppendToNetworkMessage(outMessage);
                                     }
                                 }
                             }
@@ -621,12 +621,12 @@ namespace OXGaming.TibiaAPI.Network
                         case ClientPacketType.EquipObject:
                             {
                                 var packet = new ClientPackets.EquipObject();
-                                if (packet.ParseMessage(inMessage))
+                                if (packet.ParseFromNetworkMessage(inMessage))
                                 {
                                     packet.Forward = OnReceivedClientEquipObjectPacket?.Invoke(packet) ?? true;
                                     if (packet.Forward)
                                     {
-                                        packet.AppendToMessage(outMessage);
+                                        packet.AppendToNetworkMessage(outMessage);
                                     }
                                 }
                             }
@@ -634,12 +634,12 @@ namespace OXGaming.TibiaAPI.Network
                         case ClientPacketType.MoveObject:
                             {
                                 var packet = new ClientPackets.MoveObject();
-                                if (packet.ParseMessage(inMessage))
+                                if (packet.ParseFromNetworkMessage(inMessage))
                                 {
                                     packet.Forward = OnReceivedClientMoveObjectPacket?.Invoke(packet) ?? true;
                                     if (packet.Forward)
                                     {
-                                        packet.AppendToMessage(outMessage);
+                                        packet.AppendToNetworkMessage(outMessage);
                                     }
                                 }
                             }
@@ -647,12 +647,12 @@ namespace OXGaming.TibiaAPI.Network
                         case ClientPacketType.LookNpcTrade:
                             {
                                 var packet = new ClientPackets.LookNpcTrade();
-                                if (packet.ParseMessage(inMessage))
+                                if (packet.ParseFromNetworkMessage(inMessage))
                                 {
                                     packet.Forward = OnReceivedClientLookNpcTradePacket?.Invoke(packet) ?? true;
                                     if (packet.Forward)
                                     {
-                                        packet.AppendToMessage(outMessage);
+                                        packet.AppendToNetworkMessage(outMessage);
                                     }
                                 }
                             }
@@ -660,12 +660,12 @@ namespace OXGaming.TibiaAPI.Network
                         case ClientPacketType.BuyObject:
                             {
                                 var packet = new ClientPackets.BuyObject();
-                                if (packet.ParseMessage(inMessage))
+                                if (packet.ParseFromNetworkMessage(inMessage))
                                 {
                                     packet.Forward = OnReceivedClientBuyObjectPacket?.Invoke(packet) ?? true;
                                     if (packet.Forward)
                                     {
-                                        packet.AppendToMessage(outMessage);
+                                        packet.AppendToNetworkMessage(outMessage);
                                     }
                                 }
                             }
@@ -673,12 +673,12 @@ namespace OXGaming.TibiaAPI.Network
                         case ClientPacketType.SellObject:
                             {
                                 var packet = new ClientPackets.SellObject();
-                                if (packet.ParseMessage(inMessage))
+                                if (packet.ParseFromNetworkMessage(inMessage))
                                 {
                                     packet.Forward = OnReceivedClientSellObjectPacket?.Invoke(packet) ?? true;
                                     if (packet.Forward)
                                     {
-                                        packet.AppendToMessage(outMessage);
+                                        packet.AppendToNetworkMessage(outMessage);
                                     }
                                 }
                             }
@@ -686,12 +686,12 @@ namespace OXGaming.TibiaAPI.Network
                         case ClientPacketType.CloseNpcTrade:
                             {
                                 var packet = new ClientPackets.CloseNpcTrade();
-                                if (packet.ParseMessage(inMessage))
+                                if (packet.ParseFromNetworkMessage(inMessage))
                                 {
                                     packet.Forward = OnReceivedClientCloseNpcTradePacket?.Invoke(packet) ?? true;
                                     if (packet.Forward)
                                     {
-                                        packet.AppendToMessage(outMessage);
+                                        packet.AppendToNetworkMessage(outMessage);
                                     }
                                 }
                             }
@@ -699,12 +699,12 @@ namespace OXGaming.TibiaAPI.Network
                         case ClientPacketType.TradeObject:
                             {
                                 var packet = new ClientPackets.TradeObject();
-                                if (packet.ParseMessage(inMessage))
+                                if (packet.ParseFromNetworkMessage(inMessage))
                                 {
                                     packet.Forward = OnReceivedClientTradeObjectPacket?.Invoke(packet) ?? true;
                                     if (packet.Forward)
                                     {
-                                        packet.AppendToMessage(outMessage);
+                                        packet.AppendToNetworkMessage(outMessage);
                                     }
                                 }
                             }
@@ -712,12 +712,12 @@ namespace OXGaming.TibiaAPI.Network
                         case ClientPacketType.LookTrade:
                             {
                                 var packet = new ClientPackets.LookTrade();
-                                if (packet.ParseMessage(inMessage))
+                                if (packet.ParseFromNetworkMessage(inMessage))
                                 {
                                     packet.Forward = OnReceivedClientLookTradePacket?.Invoke(packet) ?? true;
                                     if (packet.Forward)
                                     {
-                                        packet.AppendToMessage(outMessage);
+                                        packet.AppendToNetworkMessage(outMessage);
                                     }
                                 }
                             }
@@ -725,12 +725,12 @@ namespace OXGaming.TibiaAPI.Network
                         case ClientPacketType.AcceptTrade:
                             {
                                 var packet = new ClientPackets.AcceptTrade();
-                                if (packet.ParseMessage(inMessage))
+                                if (packet.ParseFromNetworkMessage(inMessage))
                                 {
                                     packet.Forward = OnReceivedClientAcceptTradePacket?.Invoke(packet) ?? true;
                                     if (packet.Forward)
                                     {
-                                        packet.AppendToMessage(outMessage);
+                                        packet.AppendToNetworkMessage(outMessage);
                                     }
                                 }
                             }
@@ -738,12 +738,12 @@ namespace OXGaming.TibiaAPI.Network
                         case ClientPacketType.RejectTrade:
                             {
                                 var packet = new ClientPackets.RejectTrade();
-                                if (packet.ParseMessage(inMessage))
+                                if (packet.ParseFromNetworkMessage(inMessage))
                                 {
                                     packet.Forward = OnReceivedClientRejectTradePacket?.Invoke(packet) ?? true;
                                     if (packet.Forward)
                                     {
-                                        packet.AppendToMessage(outMessage);
+                                        packet.AppendToNetworkMessage(outMessage);
                                     }
                                 }
                             }
@@ -751,12 +751,12 @@ namespace OXGaming.TibiaAPI.Network
                         case ClientPacketType.UseObject:
                             {
                                 var packet = new ClientPackets.UseObject();
-                                if (packet.ParseMessage(inMessage))
+                                if (packet.ParseFromNetworkMessage(inMessage))
                                 {
                                     packet.Forward = OnReceivedClientUseObjectPacket?.Invoke(packet) ?? true;
                                     if (packet.Forward)
                                     {
-                                        packet.AppendToMessage(outMessage);
+                                        packet.AppendToNetworkMessage(outMessage);
                                     }
                                 }
                             }
@@ -764,12 +764,12 @@ namespace OXGaming.TibiaAPI.Network
                         case ClientPacketType.UseTwoObjects:
                             {
                                 var packet = new ClientPackets.UseTwoObjects();
-                                if (packet.ParseMessage(inMessage))
+                                if (packet.ParseFromNetworkMessage(inMessage))
                                 {
                                     packet.Forward = OnReceivedClientUseTwoObjectsPacket?.Invoke(packet) ?? true;
                                     if (packet.Forward)
                                     {
-                                        packet.AppendToMessage(outMessage);
+                                        packet.AppendToNetworkMessage(outMessage);
                                     }
                                 }
                             }
@@ -777,12 +777,12 @@ namespace OXGaming.TibiaAPI.Network
                         case ClientPacketType.UseOnCreature:
                             {
                                 var packet = new ClientPackets.UseOnCreature();
-                                if (packet.ParseMessage(inMessage))
+                                if (packet.ParseFromNetworkMessage(inMessage))
                                 {
                                     packet.Forward = OnReceivedClientUseOnCreaturePacket?.Invoke(packet) ?? true;
                                     if (packet.Forward)
                                     {
-                                        packet.AppendToMessage(outMessage);
+                                        packet.AppendToNetworkMessage(outMessage);
                                     }
                                 }
                             }
@@ -790,12 +790,12 @@ namespace OXGaming.TibiaAPI.Network
                         case ClientPacketType.TurnObject:
                             {
                                 var packet = new ClientPackets.TurnObject();
-                                if (packet.ParseMessage(inMessage))
+                                if (packet.ParseFromNetworkMessage(inMessage))
                                 {
                                     packet.Forward = OnReceivedClientTurnObjectPacket?.Invoke(packet) ?? true;
                                     if (packet.Forward)
                                     {
-                                        packet.AppendToMessage(outMessage);
+                                        packet.AppendToNetworkMessage(outMessage);
                                     }
                                 }
                             }
@@ -803,12 +803,12 @@ namespace OXGaming.TibiaAPI.Network
                         case ClientPacketType.CloseContainer:
                             {
                                 var packet = new ClientPackets.CloseContainer();
-                                if (packet.ParseMessage(inMessage))
+                                if (packet.ParseFromNetworkMessage(inMessage))
                                 {
                                     packet.Forward = OnReceivedClientCloseContainerPacket?.Invoke(packet) ?? true;
                                     if (packet.Forward)
                                     {
-                                        packet.AppendToMessage(outMessage);
+                                        packet.AppendToNetworkMessage(outMessage);
                                     }
                                 }
                             }
@@ -816,12 +816,12 @@ namespace OXGaming.TibiaAPI.Network
                         case ClientPacketType.UpContainer:
                             {
                                 var packet = new ClientPackets.UpContainer();
-                                if (packet.ParseMessage(inMessage))
+                                if (packet.ParseFromNetworkMessage(inMessage))
                                 {
                                     packet.Forward = OnReceivedClientUpContainerPacket?.Invoke(packet) ?? true;
                                     if (packet.Forward)
                                     {
-                                        packet.AppendToMessage(outMessage);
+                                        packet.AppendToNetworkMessage(outMessage);
                                     }
                                 }
                             }
@@ -829,12 +829,12 @@ namespace OXGaming.TibiaAPI.Network
                         case ClientPacketType.EditText:
                             {
                                 var packet = new ClientPackets.EditText();
-                                if (packet.ParseMessage(inMessage))
+                                if (packet.ParseFromNetworkMessage(inMessage))
                                 {
                                     packet.Forward = OnReceivedClientEditTextPacket?.Invoke(packet) ?? true;
                                     if (packet.Forward)
                                     {
-                                        packet.AppendToMessage(outMessage);
+                                        packet.AppendToNetworkMessage(outMessage);
                                     }
                                 }
                             }
@@ -842,12 +842,12 @@ namespace OXGaming.TibiaAPI.Network
                         case ClientPacketType.EditList:
                             {
                                 var packet = new ClientPackets.EditList();
-                                if (packet.ParseMessage(inMessage))
+                                if (packet.ParseFromNetworkMessage(inMessage))
                                 {
                                     packet.Forward = OnReceivedClientEditListPacket?.Invoke(packet) ?? true;
                                     if (packet.Forward)
                                     {
-                                        packet.AppendToMessage(outMessage);
+                                        packet.AppendToNetworkMessage(outMessage);
                                     }
                                 }
                             }
@@ -855,12 +855,12 @@ namespace OXGaming.TibiaAPI.Network
                         case ClientPacketType.ToggleWrapState:
                             {
                                 var packet = new ClientPackets.ToggleWrapState();
-                                if (packet.ParseMessage(inMessage))
+                                if (packet.ParseFromNetworkMessage(inMessage))
                                 {
                                     packet.Forward = OnReceivedClientToggleWarpStatePacket?.Invoke(packet) ?? true;
                                     if (packet.Forward)
                                     {
-                                        packet.AppendToMessage(outMessage);
+                                        packet.AppendToNetworkMessage(outMessage);
                                     }
                                 }
                             }
@@ -868,12 +868,12 @@ namespace OXGaming.TibiaAPI.Network
                         case ClientPacketType.Look:
                             {
                                 var packet = new ClientPackets.Look();
-                                if (packet.ParseMessage(inMessage))
+                                if (packet.ParseFromNetworkMessage(inMessage))
                                 {
                                     packet.Forward = OnReceivedClientLookPacket?.Invoke(packet) ?? true;
                                     if (packet.Forward)
                                     {
-                                        packet.AppendToMessage(outMessage);
+                                        packet.AppendToNetworkMessage(outMessage);
                                     }
                                 }
                             }
@@ -881,12 +881,12 @@ namespace OXGaming.TibiaAPI.Network
                         case ClientPacketType.LookAtCreature:
                             {
                                 var packet = new ClientPackets.LookAtCreature();
-                                if (packet.ParseMessage(inMessage))
+                                if (packet.ParseFromNetworkMessage(inMessage))
                                 {
                                     packet.Forward = OnReceivedClientLookAtCreaturePacket?.Invoke(packet) ?? true;
                                     if (packet.Forward)
                                     {
-                                        packet.AppendToMessage(outMessage);
+                                        packet.AppendToNetworkMessage(outMessage);
                                     }
                                 }
                             }
@@ -894,12 +894,12 @@ namespace OXGaming.TibiaAPI.Network
                         case ClientPacketType.JoinAggression:
                             {
                                 var packet = new ClientPackets.JoinAggression();
-                                if (packet.ParseMessage(inMessage))
+                                if (packet.ParseFromNetworkMessage(inMessage))
                                 {
                                     packet.Forward = OnReceivedClientJoinAggressionPacket?.Invoke(packet) ?? true;
                                     if (packet.Forward)
                                     {
-                                        packet.AppendToMessage(outMessage);
+                                        packet.AppendToNetworkMessage(outMessage);
                                     }
                                 }
                             }
@@ -907,12 +907,12 @@ namespace OXGaming.TibiaAPI.Network
                         case ClientPacketType.QuickLoot:
                             {
                                 var packet = new ClientPackets.QuickLoot();
-                                if (packet.ParseMessage(inMessage))
+                                if (packet.ParseFromNetworkMessage(inMessage))
                                 {
                                     packet.Forward = OnReceivedClientQuickLootPacket?.Invoke(packet) ?? true;
                                     if (packet.Forward)
                                     {
-                                        packet.AppendToMessage(outMessage);
+                                        packet.AppendToNetworkMessage(outMessage);
                                     }
                                 }
                             }
@@ -920,12 +920,12 @@ namespace OXGaming.TibiaAPI.Network
                         case ClientPacketType.LootContainer:
                             {
                                 var packet = new ClientPackets.LootContainer();
-                                if (packet.ParseMessage(inMessage))
+                                if (packet.ParseFromNetworkMessage(inMessage))
                                 {
                                     packet.Forward = OnReceivedClientLootContainerPacket?.Invoke(packet) ?? true;
                                     if (packet.Forward)
                                     {
-                                        packet.AppendToMessage(outMessage);
+                                        packet.AppendToNetworkMessage(outMessage);
                                     }
                                 }
                             }
@@ -933,12 +933,12 @@ namespace OXGaming.TibiaAPI.Network
                         case ClientPacketType.QuickLootBlackWhitelist:
                             {
                                 var packet = new ClientPackets.QuickLootBlackWhitelist();
-                                if (packet.ParseMessage(inMessage))
+                                if (packet.ParseFromNetworkMessage(inMessage))
                                 {
                                     packet.Forward = OnReceivedClientQuickLootBlackWhitelistPacket?.Invoke(packet) ?? true;
                                     if (packet.Forward)
                                     {
-                                        packet.AppendToMessage(outMessage);
+                                        packet.AppendToNetworkMessage(outMessage);
                                     }
                                 }
                             }
@@ -946,12 +946,12 @@ namespace OXGaming.TibiaAPI.Network
                         case ClientPacketType.Talk:
                             {
                                 var packet = new ClientPackets.Talk();
-                                if (packet.ParseMessage(inMessage))
+                                if (packet.ParseFromNetworkMessage(inMessage))
                                 {
                                     packet.Forward = OnReceivedClientTalkPacket?.Invoke(packet) ?? true;
                                     if (packet.Forward)
                                     {
-                                        packet.AppendToMessage(outMessage);
+                                        packet.AppendToNetworkMessage(outMessage);
                                     }
                                 }
                             }
@@ -959,12 +959,12 @@ namespace OXGaming.TibiaAPI.Network
                         case ClientPacketType.GetChannels:
                             {
                                 var packet = new ClientPackets.GetChannels();
-                                if (packet.ParseMessage(inMessage))
+                                if (packet.ParseFromNetworkMessage(inMessage))
                                 {
                                     packet.Forward = OnReceivedClientGetChannelsPacket?.Invoke(packet) ?? true;
                                     if (packet.Forward)
                                     {
-                                        packet.AppendToMessage(outMessage);
+                                        packet.AppendToNetworkMessage(outMessage);
                                     }
                                 }
                             }
@@ -972,12 +972,12 @@ namespace OXGaming.TibiaAPI.Network
                         case ClientPacketType.JoinChannel:
                             {
                                 var packet = new ClientPackets.JoinChannel();
-                                if (packet.ParseMessage(inMessage))
+                                if (packet.ParseFromNetworkMessage(inMessage))
                                 {
                                     packet.Forward = OnReceivedClientJoinChannelPacket?.Invoke(packet) ?? true;
                                     if (packet.Forward)
                                     {
-                                        packet.AppendToMessage(outMessage);
+                                        packet.AppendToNetworkMessage(outMessage);
                                     }
                                 }
                             }
@@ -985,12 +985,12 @@ namespace OXGaming.TibiaAPI.Network
                         case ClientPacketType.LeaveChannel:
                             {
                                 var packet = new ClientPackets.LeaveChannel();
-                                if (packet.ParseMessage(inMessage))
+                                if (packet.ParseFromNetworkMessage(inMessage))
                                 {
                                     packet.Forward = OnReceivedClientLeaveChannelPacket?.Invoke(packet) ?? true;
                                     if (packet.Forward)
                                     {
-                                        packet.AppendToMessage(outMessage);
+                                        packet.AppendToNetworkMessage(outMessage);
                                     }
                                 }
                             }
@@ -998,12 +998,12 @@ namespace OXGaming.TibiaAPI.Network
                         case ClientPacketType.PrivateChannel:
                             {
                                 var packet = new ClientPackets.PrivateChannel();
-                                if (packet.ParseMessage(inMessage))
+                                if (packet.ParseFromNetworkMessage(inMessage))
                                 {
                                     packet.Forward = OnReceivedClientPrivateChannelPacket?.Invoke(packet) ?? true;
                                     if (packet.Forward)
                                     {
-                                        packet.AppendToMessage(outMessage);
+                                        packet.AppendToNetworkMessage(outMessage);
                                     }
                                 }
                             }
@@ -1011,12 +1011,12 @@ namespace OXGaming.TibiaAPI.Network
                         case ClientPacketType.GuildMessage:
                             {
                                 var packet = new ClientPackets.GuildMessage();
-                                if (packet.ParseMessage(inMessage))
+                                if (packet.ParseFromNetworkMessage(inMessage))
                                 {
                                     packet.Forward = OnReceivedClientGuildMessagePacket?.Invoke(packet) ?? true;
                                     if (packet.Forward)
                                     {
-                                        packet.AppendToMessage(outMessage);
+                                        packet.AppendToNetworkMessage(outMessage);
                                     }
                                 }
                             }
@@ -1024,12 +1024,12 @@ namespace OXGaming.TibiaAPI.Network
                         case ClientPacketType.EditGuildMessage:
                             {
                                 var packet = new ClientPackets.EditGuildMessage();
-                                if (packet.ParseMessage(inMessage))
+                                if (packet.ParseFromNetworkMessage(inMessage))
                                 {
                                     packet.Forward = OnReceivedClientEditGuildMessagePacket?.Invoke(packet) ?? true;
                                     if (packet.Forward)
                                     {
-                                        packet.AppendToMessage(outMessage);
+                                        packet.AppendToNetworkMessage(outMessage);
                                     }
                                 }
                             }
@@ -1037,12 +1037,12 @@ namespace OXGaming.TibiaAPI.Network
                         case ClientPacketType.CloseNpcChannel:
                             {
                                 var packet = new ClientPackets.CloseNpcChannel();
-                                if (packet.ParseMessage(inMessage))
+                                if (packet.ParseFromNetworkMessage(inMessage))
                                 {
                                     packet.Forward = OnReceivedClientCloseNpcChannelPacket?.Invoke(packet) ?? true;
                                     if (packet.Forward)
                                     {
-                                        packet.AppendToMessage(outMessage);
+                                        packet.AppendToNetworkMessage(outMessage);
                                     }
                                 }
                             }
@@ -1050,12 +1050,12 @@ namespace OXGaming.TibiaAPI.Network
                         case ClientPacketType.SetTactics:
                             {
                                 var packet = new ClientPackets.SetTactics();
-                                if (packet.ParseMessage(inMessage))
+                                if (packet.ParseFromNetworkMessage(inMessage))
                                 {
                                     packet.Forward = OnReceivedClientSetTacticsPacket?.Invoke(packet) ?? true;
                                     if (packet.Forward)
                                     {
-                                        packet.AppendToMessage(outMessage);
+                                        packet.AppendToNetworkMessage(outMessage);
                                     }
                                 }
                             }
@@ -1063,12 +1063,12 @@ namespace OXGaming.TibiaAPI.Network
                         case ClientPacketType.Attack:
                             {
                                 var packet = new ClientPackets.Attack();
-                                if (packet.ParseMessage(inMessage))
+                                if (packet.ParseFromNetworkMessage(inMessage))
                                 {
                                     packet.Forward = OnReceivedClientAttackPacket?.Invoke(packet) ?? true;
                                     if (packet.Forward)
                                     {
-                                        packet.AppendToMessage(outMessage);
+                                        packet.AppendToNetworkMessage(outMessage);
                                     }
                                 }
                             }
@@ -1076,12 +1076,12 @@ namespace OXGaming.TibiaAPI.Network
                         case ClientPacketType.Follow:
                             {
                                 var packet = new ClientPackets.Follow();
-                                if (packet.ParseMessage(inMessage))
+                                if (packet.ParseFromNetworkMessage(inMessage))
                                 {
                                     packet.Forward = OnReceivedClientFollowPacket?.Invoke(packet) ?? true;
                                     if (packet.Forward)
                                     {
-                                        packet.AppendToMessage(outMessage);
+                                        packet.AppendToNetworkMessage(outMessage);
                                     }
                                 }
                             }
@@ -1089,12 +1089,12 @@ namespace OXGaming.TibiaAPI.Network
                         case ClientPacketType.InviteToParty:
                             {
                                 var packet = new ClientPackets.InviteToParty();
-                                if (packet.ParseMessage(inMessage))
+                                if (packet.ParseFromNetworkMessage(inMessage))
                                 {
                                     packet.Forward = OnReceivedClientInviteToPartyPacket?.Invoke(packet) ?? true;
                                     if (packet.Forward)
                                     {
-                                        packet.AppendToMessage(outMessage);
+                                        packet.AppendToNetworkMessage(outMessage);
                                     }
                                 }
                             }
@@ -1102,12 +1102,12 @@ namespace OXGaming.TibiaAPI.Network
                         case ClientPacketType.JoinParty:
                             {
                                 var packet = new ClientPackets.JoinParty();
-                                if (packet.ParseMessage(inMessage))
+                                if (packet.ParseFromNetworkMessage(inMessage))
                                 {
                                     packet.Forward = OnReceivedClientJoinPartyPacket?.Invoke(packet) ?? true;
                                     if (packet.Forward)
                                     {
-                                        packet.AppendToMessage(outMessage);
+                                        packet.AppendToNetworkMessage(outMessage);
                                     }
                                 }
                             }
@@ -1115,12 +1115,12 @@ namespace OXGaming.TibiaAPI.Network
                         case ClientPacketType.RevokeInvitation:
                             {
                                 var packet = new ClientPackets.RevokeInvitation();
-                                if (packet.ParseMessage(inMessage))
+                                if (packet.ParseFromNetworkMessage(inMessage))
                                 {
                                     packet.Forward = OnReceivedClientRevokeInvitationPacket?.Invoke(packet) ?? true;
                                     if (packet.Forward)
                                     {
-                                        packet.AppendToMessage(outMessage);
+                                        packet.AppendToNetworkMessage(outMessage);
                                     }
                                 }
                             }
@@ -1128,12 +1128,12 @@ namespace OXGaming.TibiaAPI.Network
                         case ClientPacketType.PassLeadership:
                             {
                                 var packet = new ClientPackets.PassLeadership();
-                                if (packet.ParseMessage(inMessage))
+                                if (packet.ParseFromNetworkMessage(inMessage))
                                 {
                                     packet.Forward = OnReceivedClientPassLeadershipPacket?.Invoke(packet) ?? true;
                                     if (packet.Forward)
                                     {
-                                        packet.AppendToMessage(outMessage);
+                                        packet.AppendToNetworkMessage(outMessage);
                                     }
                                 }
                             }
@@ -1141,12 +1141,12 @@ namespace OXGaming.TibiaAPI.Network
                         case ClientPacketType.LeaveParty:
                             {
                                 var packet = new ClientPackets.LeaveParty();
-                                if (packet.ParseMessage(inMessage))
+                                if (packet.ParseFromNetworkMessage(inMessage))
                                 {
                                     packet.Forward = OnReceivedClientLeavePartyPacket?.Invoke(packet) ?? true;
                                     if (packet.Forward)
                                     {
-                                        packet.AppendToMessage(outMessage);
+                                        packet.AppendToNetworkMessage(outMessage);
                                     }
                                 }
                             }
@@ -1154,12 +1154,12 @@ namespace OXGaming.TibiaAPI.Network
                         case ClientPacketType.ShareExperience:
                             {
                                 var packet = new ClientPackets.ShareExperience();
-                                if (packet.ParseMessage(inMessage))
+                                if (packet.ParseFromNetworkMessage(inMessage))
                                 {
                                     packet.Forward = OnReceivedClientShareExperiencePacket?.Invoke(packet) ?? true;
                                     if (packet.Forward)
                                     {
-                                        packet.AppendToMessage(outMessage);
+                                        packet.AppendToNetworkMessage(outMessage);
                                     }
                                 }
                             }
@@ -1167,12 +1167,12 @@ namespace OXGaming.TibiaAPI.Network
                         case ClientPacketType.DisbandParty:
                             {
                                 var packet = new ClientPackets.DisbandParty();
-                                if (packet.ParseMessage(inMessage))
+                                if (packet.ParseFromNetworkMessage(inMessage))
                                 {
                                     packet.Forward = OnReceivedClientDisbandPartyPacket?.Invoke(packet) ?? true;
                                     if (packet.Forward)
                                     {
-                                        packet.AppendToMessage(outMessage);
+                                        packet.AppendToNetworkMessage(outMessage);
                                     }
                                 }
                             }
@@ -1180,12 +1180,12 @@ namespace OXGaming.TibiaAPI.Network
                         case ClientPacketType.OpenChannel:
                             {
                                 var packet = new ClientPackets.OpenChannel();
-                                if (packet.ParseMessage(inMessage))
+                                if (packet.ParseFromNetworkMessage(inMessage))
                                 {
                                     packet.Forward = OnReceivedClientOpenChannelPacket?.Invoke(packet) ?? true;
                                     if (packet.Forward)
                                     {
-                                        packet.AppendToMessage(outMessage);
+                                        packet.AppendToNetworkMessage(outMessage);
                                     }
                                 }
                             }
@@ -1193,12 +1193,12 @@ namespace OXGaming.TibiaAPI.Network
                         case ClientPacketType.InviteToChannel:
                             {
                                 var packet = new ClientPackets.InviteToChannel();
-                                if (packet.ParseMessage(inMessage))
+                                if (packet.ParseFromNetworkMessage(inMessage))
                                 {
                                     packet.Forward = OnReceivedClientInviteToChannelPacket?.Invoke(packet) ?? true;
                                     if (packet.Forward)
                                     {
-                                        packet.AppendToMessage(outMessage);
+                                        packet.AppendToNetworkMessage(outMessage);
                                     }
                                 }
                             }
@@ -1206,12 +1206,12 @@ namespace OXGaming.TibiaAPI.Network
                         case ClientPacketType.ExcludeFromChannel:
                             {
                                 var packet = new ClientPackets.ExcludeFromChannel();
-                                if (packet.ParseMessage(inMessage))
+                                if (packet.ParseFromNetworkMessage(inMessage))
                                 {
                                     packet.Forward = OnReceivedClientExcludeFromChannelPacket?.Invoke(packet) ?? true;
                                     if (packet.Forward)
                                     {
-                                        packet.AppendToMessage(outMessage);
+                                        packet.AppendToNetworkMessage(outMessage);
                                     }
                                 }
                             }
@@ -1219,12 +1219,12 @@ namespace OXGaming.TibiaAPI.Network
                         case ClientPacketType.Cancel:
                             {
                                 var packet = new ClientPackets.Cancel();
-                                if (packet.ParseMessage(inMessage))
+                                if (packet.ParseFromNetworkMessage(inMessage))
                                 {
                                     packet.Forward = OnReceivedClientCancelPacket?.Invoke(packet) ?? true;
                                     if (packet.Forward)
                                     {
-                                        packet.AppendToMessage(outMessage);
+                                        packet.AppendToNetworkMessage(outMessage);
                                     }
                                 }
                             }
@@ -1232,12 +1232,12 @@ namespace OXGaming.TibiaAPI.Network
                         case ClientPacketType.UpdateExivaOptions:
                             {
                                 var packet = new ClientPackets.UpdateExivaOptions();
-                                if (packet.ParseMessage(inMessage))
+                                if (packet.ParseFromNetworkMessage(inMessage))
                                 {
                                     packet.Forward = OnReceivedClientUpdateExivaOptionsPacket?.Invoke(packet) ?? true;
                                     if (packet.Forward)
                                     {
-                                        packet.AppendToMessage(outMessage);
+                                        packet.AppendToNetworkMessage(outMessage);
                                     }
                                 }
                             }
@@ -1245,12 +1245,12 @@ namespace OXGaming.TibiaAPI.Network
                         case ClientPacketType.BrowseField:
                             {
                                 var packet = new ClientPackets.BrowseField();
-                                if (packet.ParseMessage(inMessage))
+                                if (packet.ParseFromNetworkMessage(inMessage))
                                 {
                                     packet.Forward = OnReceivedClientBrowseFieldPacket?.Invoke(packet) ?? true;
                                     if (packet.Forward)
                                     {
-                                        packet.AppendToMessage(outMessage);
+                                        packet.AppendToNetworkMessage(outMessage);
                                     }
                                 }
                             }
@@ -1258,12 +1258,12 @@ namespace OXGaming.TibiaAPI.Network
                         case ClientPacketType.SeekInContainer:
                             {
                                 var packet = new ClientPackets.SeekInContainer();
-                                if (packet.ParseMessage(inMessage))
+                                if (packet.ParseFromNetworkMessage(inMessage))
                                 {
                                     packet.Forward = OnReceivedClientSeekInContainerPacket?.Invoke(packet) ?? true;
                                     if (packet.Forward)
                                     {
-                                        packet.AppendToMessage(outMessage);
+                                        packet.AppendToNetworkMessage(outMessage);
                                     }
                                 }
                             }
@@ -1271,12 +1271,12 @@ namespace OXGaming.TibiaAPI.Network
                         case ClientPacketType.InspectObject:
                             {
                                 var packet = new ClientPackets.InspectObject();
-                                if (packet.ParseMessage(inMessage))
+                                if (packet.ParseFromNetworkMessage(inMessage))
                                 {
                                     packet.Forward = OnReceivedClientInspectObjectPacket?.Invoke(packet) ?? true;
                                     if (packet.Forward)
                                     {
-                                        packet.AppendToMessage(outMessage);
+                                        packet.AppendToNetworkMessage(outMessage);
                                     }
                                 }
                             }
@@ -1284,12 +1284,12 @@ namespace OXGaming.TibiaAPI.Network
                         case ClientPacketType.InspectPlayer:
                             {
                                 var packet = new ClientPackets.InspectPlayer();
-                                if (packet.ParseMessage(inMessage))
+                                if (packet.ParseFromNetworkMessage(inMessage))
                                 {
                                     packet.Forward = OnReceivedClientInspectPlayerPacket?.Invoke(packet) ?? true;
                                     if (packet.Forward)
                                     {
-                                        packet.AppendToMessage(outMessage);
+                                        packet.AppendToNetworkMessage(outMessage);
                                     }
                                 }
                             }
@@ -1297,12 +1297,12 @@ namespace OXGaming.TibiaAPI.Network
                         case ClientPacketType.BlessingsDialog:
                             {
                                 var packet = new ClientPackets.BlessingsDialog();
-                                if (packet.ParseMessage(inMessage))
+                                if (packet.ParseFromNetworkMessage(inMessage))
                                 {
                                     packet.Forward = OnReceivedClientBlessingsDialogPacket?.Invoke(packet) ?? true;
                                     if (packet.Forward)
                                     {
-                                        packet.AppendToMessage(outMessage);
+                                        packet.AppendToNetworkMessage(outMessage);
                                     }
                                 }
                             }
@@ -1310,12 +1310,12 @@ namespace OXGaming.TibiaAPI.Network
                         case ClientPacketType.TrackQuestFlags:
                             {
                                 var packet = new ClientPackets.TrackQuestFlags();
-                                if (packet.ParseMessage(inMessage))
+                                if (packet.ParseFromNetworkMessage(inMessage))
                                 {
                                     packet.Forward = OnReceivedClientTrackQuestFlagsPacket?.Invoke(packet) ?? true;
                                     if (packet.Forward)
                                     {
-                                        packet.AppendToMessage(outMessage);
+                                        packet.AppendToNetworkMessage(outMessage);
                                     }
                                 }
                             }
@@ -1323,12 +1323,12 @@ namespace OXGaming.TibiaAPI.Network
                         case ClientPacketType.MarketStatistics:
                             {
                                 var packet = new ClientPackets.MarketStatistics();
-                                if (packet.ParseMessage(inMessage))
+                                if (packet.ParseFromNetworkMessage(inMessage))
                                 {
                                     packet.Forward = OnReceivedClientMarketStatisticsPacket?.Invoke(packet) ?? true;
                                     if (packet.Forward)
                                     {
-                                        packet.AppendToMessage(outMessage);
+                                        packet.AppendToNetworkMessage(outMessage);
                                     }
                                 }
                             }
@@ -1336,12 +1336,12 @@ namespace OXGaming.TibiaAPI.Network
                         case ClientPacketType.GetOutfit:
                             {
                                 var packet = new ClientPackets.GetOutfit();
-                                if (packet.ParseMessage(inMessage))
+                                if (packet.ParseFromNetworkMessage(inMessage))
                                 {
                                     packet.Forward = OnReceivedClientGetOutfitPacket?.Invoke(packet) ?? true;
                                     if (packet.Forward)
                                     {
-                                        packet.AppendToMessage(outMessage);
+                                        packet.AppendToNetworkMessage(outMessage);
                                     }
                                 }
                             }
@@ -1349,12 +1349,12 @@ namespace OXGaming.TibiaAPI.Network
                         case ClientPacketType.SetOutfit:
                             {
                                 var packet = new ClientPackets.SetOutfit();
-                                if (packet.ParseMessage(inMessage))
+                                if (packet.ParseFromNetworkMessage(inMessage))
                                 {
                                     packet.Forward = OnReceivedClientSetOutfitPacket?.Invoke(packet) ?? true;
                                     if (packet.Forward)
                                     {
-                                        packet.AppendToMessage(outMessage);
+                                        packet.AppendToNetworkMessage(outMessage);
                                     }
                                 }
                             }
@@ -1362,12 +1362,12 @@ namespace OXGaming.TibiaAPI.Network
                         case ClientPacketType.Mount:
                             {
                                 var packet = new ClientPackets.Mount();
-                                if (packet.ParseMessage(inMessage))
+                                if (packet.ParseFromNetworkMessage(inMessage))
                                 {
                                     packet.Forward = OnReceivedClientMountPacket?.Invoke(packet) ?? true;
                                     if (packet.Forward)
                                     {
-                                        packet.AppendToMessage(outMessage);
+                                        packet.AppendToNetworkMessage(outMessage);
                                     }
                                 }
                             }
@@ -1375,12 +1375,12 @@ namespace OXGaming.TibiaAPI.Network
                         case ClientPacketType.ApplyImbuement:
                             {
                                 var packet = new ClientPackets.ApplyImbuement();
-                                if (packet.ParseMessage(inMessage))
+                                if (packet.ParseFromNetworkMessage(inMessage))
                                 {
                                     packet.Forward = OnReceivedClientApplyImbuementPacket?.Invoke(packet) ?? true;
                                     if (packet.Forward)
                                     {
-                                        packet.AppendToMessage(outMessage);
+                                        packet.AppendToNetworkMessage(outMessage);
                                     }
                                 }
                             }
@@ -1388,12 +1388,12 @@ namespace OXGaming.TibiaAPI.Network
                         case ClientPacketType.ApplyClearingCharm:
                             {
                                 var packet = new ClientPackets.ApplyClearingCharm();
-                                if (packet.ParseMessage(inMessage))
+                                if (packet.ParseFromNetworkMessage(inMessage))
                                 {
                                     packet.Forward = OnReceivedClientApplyClearingCharmPacket?.Invoke(packet) ?? true;
                                     if (packet.Forward)
                                     {
-                                        packet.AppendToMessage(outMessage);
+                                        packet.AppendToNetworkMessage(outMessage);
                                     }
                                 }
                             }
@@ -1401,12 +1401,12 @@ namespace OXGaming.TibiaAPI.Network
                         case ClientPacketType.ClosedImbuingDialog:
                             {
                                 var packet = new ClientPackets.ClosedImbuingDialog();
-                                if (packet.ParseMessage(inMessage))
+                                if (packet.ParseFromNetworkMessage(inMessage))
                                 {
                                     packet.Forward = OnReceivedClientClosedImbuingDialogPacket?.Invoke(packet) ?? true;
                                     if (packet.Forward)
                                     {
-                                        packet.AppendToMessage(outMessage);
+                                        packet.AppendToNetworkMessage(outMessage);
                                     }
                                 }
                             }
@@ -1414,12 +1414,12 @@ namespace OXGaming.TibiaAPI.Network
                         case ClientPacketType.OpenRewardWall:
                             {
                                 var packet = new ClientPackets.OpenRewardWall();
-                                if (packet.ParseMessage(inMessage))
+                                if (packet.ParseFromNetworkMessage(inMessage))
                                 {
                                     packet.Forward = OnReceivedClientOpenRewardWallPacket?.Invoke(packet) ?? true;
                                     if (packet.Forward)
                                     {
-                                        packet.AppendToMessage(outMessage);
+                                        packet.AppendToNetworkMessage(outMessage);
                                     }
                                 }
                             }
@@ -1427,12 +1427,12 @@ namespace OXGaming.TibiaAPI.Network
                         case ClientPacketType.DailyRewardHistory:
                             {
                                 var packet = new ClientPackets.DailyRewardHistory();
-                                if (packet.ParseMessage(inMessage))
+                                if (packet.ParseFromNetworkMessage(inMessage))
                                 {
                                     packet.Forward = OnReceivedClientDailyRewardHistoryPacket?.Invoke(packet) ?? true;
                                     if (packet.Forward)
                                     {
-                                        packet.AppendToMessage(outMessage);
+                                        packet.AppendToNetworkMessage(outMessage);
                                     }
                                 }
                             }
@@ -1440,12 +1440,12 @@ namespace OXGaming.TibiaAPI.Network
                         case ClientPacketType.CollectDailyReward:
                             {
                                 var packet = new ClientPackets.CollectDailyReward();
-                                if (packet.ParseMessage(inMessage))
+                                if (packet.ParseFromNetworkMessage(inMessage))
                                 {
                                     packet.Forward = OnReceivedClientCollectDailyRewardPacket?.Invoke(packet) ?? true;
                                     if (packet.Forward)
                                     {
-                                        packet.AppendToMessage(outMessage);
+                                        packet.AppendToNetworkMessage(outMessage);
                                     }
                                 }
                             }
@@ -1453,12 +1453,12 @@ namespace OXGaming.TibiaAPI.Network
                         case ClientPacketType.CyclopediaMapAction:
                             {
                                 var packet = new ClientPackets.CyclopediaMapAction();
-                                if (packet.ParseMessage(inMessage))
+                                if (packet.ParseFromNetworkMessage(inMessage))
                                 {
                                     packet.Forward = OnReceivedClientCyclopediaMapActionPacket?.Invoke(packet) ?? true;
                                     if (packet.Forward)
                                     {
-                                        packet.AppendToMessage(outMessage);
+                                        packet.AppendToNetworkMessage(outMessage);
                                     }
                                 }
                             }
@@ -1466,12 +1466,12 @@ namespace OXGaming.TibiaAPI.Network
                         case ClientPacketType.AddBuddy:
                             {
                                 var packet = new ClientPackets.AddBuddy();
-                                if (packet.ParseMessage(inMessage))
+                                if (packet.ParseFromNetworkMessage(inMessage))
                                 {
                                     packet.Forward = OnReceivedClientAddBuddyPacket?.Invoke(packet) ?? true;
                                     if (packet.Forward)
                                     {
-                                        packet.AppendToMessage(outMessage);
+                                        packet.AppendToNetworkMessage(outMessage);
                                     }
                                 }
                             }
@@ -1479,12 +1479,12 @@ namespace OXGaming.TibiaAPI.Network
                         case ClientPacketType.RemoveBuddy:
                             {
                                 var packet = new ClientPackets.RemoveBuddy();
-                                if (packet.ParseMessage(inMessage))
+                                if (packet.ParseFromNetworkMessage(inMessage))
                                 {
                                     packet.Forward = OnReceivedClientRemoveBuddyPacket?.Invoke(packet) ?? true;
                                     if (packet.Forward)
                                     {
-                                        packet.AppendToMessage(outMessage);
+                                        packet.AppendToNetworkMessage(outMessage);
                                     }
                                 }
                             }
@@ -1492,12 +1492,12 @@ namespace OXGaming.TibiaAPI.Network
                         case ClientPacketType.EditBuddy:
                             {
                                 var packet = new ClientPackets.EditBuddy();
-                                if (packet.ParseMessage(inMessage))
+                                if (packet.ParseFromNetworkMessage(inMessage))
                                 {
                                     packet.Forward = OnReceivedClientEditBuddyPacket?.Invoke(packet) ?? true;
                                     if (packet.Forward)
                                     {
-                                        packet.AppendToMessage(outMessage);
+                                        packet.AppendToNetworkMessage(outMessage);
                                     }
                                 }
                             }
@@ -1505,12 +1505,12 @@ namespace OXGaming.TibiaAPI.Network
                         case ClientPacketType.BuddyGroup:
                             {
                                 var packet = new ClientPackets.BuddyGroup();
-                                if (packet.ParseMessage(inMessage))
+                                if (packet.ParseFromNetworkMessage(inMessage))
                                 {
                                     packet.Forward = OnReceivedClientBuddyGroupPacket?.Invoke(packet) ?? true;
                                     if (packet.Forward)
                                     {
-                                        packet.AppendToMessage(outMessage);
+                                        packet.AppendToNetworkMessage(outMessage);
                                     }
                                 }
                             }
@@ -1518,12 +1518,12 @@ namespace OXGaming.TibiaAPI.Network
                         case ClientPacketType.MarkGameNewsAsRead:
                             {
                                 var packet = new ClientPackets.MarkGameNewsAsRead();
-                                if (packet.ParseMessage(inMessage))
+                                if (packet.ParseFromNetworkMessage(inMessage))
                                 {
                                     packet.Forward = OnReceivedClientMarkGameNewsAsReadPacket?.Invoke(packet) ?? true;
                                     if (packet.Forward)
                                     {
-                                        packet.AppendToMessage(outMessage);
+                                        packet.AppendToNetworkMessage(outMessage);
                                     }
                                 }
                             }
@@ -1531,12 +1531,12 @@ namespace OXGaming.TibiaAPI.Network
                         case ClientPacketType.OpenMonsterCyclopedia:
                             {
                                 var packet = new ClientPackets.OpenMonsterCyclopedia();
-                                if (packet.ParseMessage(inMessage))
+                                if (packet.ParseFromNetworkMessage(inMessage))
                                 {
                                     packet.Forward = OnReceivedClientOpenMonsterCyclopediaPacket?.Invoke(packet) ?? true;
                                     if (packet.Forward)
                                     {
-                                        packet.AppendToMessage(outMessage);
+                                        packet.AppendToNetworkMessage(outMessage);
                                     }
                                 }
                             }
@@ -1544,12 +1544,12 @@ namespace OXGaming.TibiaAPI.Network
                         case ClientPacketType.OpenMonsterCyclopediaMonsters:
                             {
                                 var packet = new ClientPackets.OpenMonsterCyclopediaMonsters();
-                                if (packet.ParseMessage(inMessage))
+                                if (packet.ParseFromNetworkMessage(inMessage))
                                 {
                                     packet.Forward = OnReceivedClientOpenMonsterCyclopediaMonstersPacket?.Invoke(packet) ?? true;
                                     if (packet.Forward)
                                     {
-                                        packet.AppendToMessage(outMessage);
+                                        packet.AppendToNetworkMessage(outMessage);
                                     }
                                 }
                             }
@@ -1557,12 +1557,12 @@ namespace OXGaming.TibiaAPI.Network
                         case ClientPacketType.OpenMonsterCyclopediaRace:
                             {
                                 var packet = new ClientPackets.OpenMonsterCyclopediaRace();
-                                if (packet.ParseMessage(inMessage))
+                                if (packet.ParseFromNetworkMessage(inMessage))
                                 {
                                     packet.Forward = OnReceivedClientOpenMonsterCyclopediaRacePacket?.Invoke(packet) ?? true;
                                     if (packet.Forward)
                                     {
-                                        packet.AppendToMessage(outMessage);
+                                        packet.AppendToNetworkMessage(outMessage);
                                     }
                                 }
                             }
@@ -1570,12 +1570,12 @@ namespace OXGaming.TibiaAPI.Network
                         case ClientPacketType.MonsterBonusEffectAction:
                             {
                                 var packet = new ClientPackets.MonsterBonusEffectAction();
-                                if (packet.ParseMessage(inMessage))
+                                if (packet.ParseFromNetworkMessage(inMessage))
                                 {
                                     packet.Forward = OnReceivedClientMonsterBonusEffectActionPacket?.Invoke(packet) ?? true;
                                     if (packet.Forward)
                                     {
-                                        packet.AppendToMessage(outMessage);
+                                        packet.AppendToNetworkMessage(outMessage);
                                     }
                                 }
                             }
@@ -1583,12 +1583,12 @@ namespace OXGaming.TibiaAPI.Network
                         case ClientPacketType.BugReport:
                             {
                                 var packet = new ClientPackets.BugReport();
-                                if (packet.ParseMessage(inMessage))
+                                if (packet.ParseFromNetworkMessage(inMessage))
                                 {
                                     packet.Forward = OnReceivedClientBugReportPacket?.Invoke(packet) ?? true;
                                     if (packet.Forward)
                                     {
-                                        packet.AppendToMessage(outMessage);
+                                        packet.AppendToNetworkMessage(outMessage);
                                     }
                                 }
                             }
@@ -1596,12 +1596,12 @@ namespace OXGaming.TibiaAPI.Network
                         case ClientPacketType.ThankYou:
                             {
                                 var packet = new ClientPackets.ThankYou();
-                                if (packet.ParseMessage(inMessage))
+                                if (packet.ParseFromNetworkMessage(inMessage))
                                 {
                                     packet.Forward = OnReceivedClientThankYouPacket?.Invoke(packet) ?? true;
                                     if (packet.Forward)
                                     {
-                                        packet.AppendToMessage(outMessage);
+                                        packet.AppendToNetworkMessage(outMessage);
                                     }
                                 }
                             }
@@ -1609,12 +1609,12 @@ namespace OXGaming.TibiaAPI.Network
                         case ClientPacketType.GetOfferDescription:
                             {
                                 var packet = new ClientPackets.GetOfferDescription();
-                                if (packet.ParseMessage(inMessage))
+                                if (packet.ParseFromNetworkMessage(inMessage))
                                 {
                                     packet.Forward = OnReceivedClientGetOfferDescription?.Invoke(packet) ?? true;
                                     if (packet.Forward)
                                     {
-                                        packet.AppendToMessage(outMessage);
+                                        packet.AppendToNetworkMessage(outMessage);
                                     }
                                 }
                             }
@@ -1622,12 +1622,12 @@ namespace OXGaming.TibiaAPI.Network
                         case ClientPacketType.StoreEvent:
                             {
                                 var packet = new ClientPackets.StoreEvent();
-                                if (packet.ParseMessage(inMessage))
+                                if (packet.ParseFromNetworkMessage(inMessage))
                                 {
                                     packet.Forward = OnReceivedClientStoreEventPacket?.Invoke(packet) ?? true;
                                     if (packet.Forward)
                                     {
-                                        packet.AppendToMessage(outMessage);
+                                        packet.AppendToNetworkMessage(outMessage);
                                     }
                                 }
                             }
@@ -1635,12 +1635,12 @@ namespace OXGaming.TibiaAPI.Network
                         case ClientPacketType.FeatureEvent:
                             {
                                 var packet = new ClientPackets.FeatureEvent();
-                                if (packet.ParseMessage(inMessage))
+                                if (packet.ParseFromNetworkMessage(inMessage))
                                 {
                                     packet.Forward = OnReceivedClientFeatureEventPacket?.Invoke(packet) ?? true;
                                     if (packet.Forward)
                                     {
-                                        packet.AppendToMessage(outMessage);
+                                        packet.AppendToNetworkMessage(outMessage);
                                     }
                                 }
                             }
@@ -1648,12 +1648,12 @@ namespace OXGaming.TibiaAPI.Network
                         case ClientPacketType.PreyAction:
                             {
                                 var packet = new ClientPackets.PreyAction();
-                                if (packet.ParseMessage(inMessage))
+                                if (packet.ParseFromNetworkMessage(inMessage))
                                 {
                                     packet.Forward = OnReceivedClientPreyActionPacket?.Invoke(packet) ?? true;
                                     if (packet.Forward)
                                     {
-                                        packet.AppendToMessage(outMessage);
+                                        packet.AppendToNetworkMessage(outMessage);
                                     }
                                 }
                             }
@@ -1661,12 +1661,12 @@ namespace OXGaming.TibiaAPI.Network
                         case ClientPacketType.RequestResourceBalance:
                             {
                                 var packet = new ClientPackets.RequestResourceBalance();
-                                if (packet.ParseMessage(inMessage))
+                                if (packet.ParseFromNetworkMessage(inMessage))
                                 {
                                     packet.Forward = OnReceivedClientRequestResourceBalancePacket?.Invoke(packet) ?? true;
                                     if (packet.Forward)
                                     {
-                                        packet.AppendToMessage(outMessage);
+                                        packet.AppendToNetworkMessage(outMessage);
                                     }
                                 }
                             }
@@ -1674,12 +1674,12 @@ namespace OXGaming.TibiaAPI.Network
                         case ClientPacketType.TransferCurrency:
                             {
                                 var packet = new ClientPackets.TransferCurrency();
-                                if (packet.ParseMessage(inMessage))
+                                if (packet.ParseFromNetworkMessage(inMessage))
                                 {
                                     packet.Forward = OnReceivedClientTransferCurrencyPacket?.Invoke(packet) ?? true;
                                     if (packet.Forward)
                                     {
-                                        packet.AppendToMessage(outMessage);
+                                        packet.AppendToNetworkMessage(outMessage);
                                     }
                                 }
                             }
@@ -1687,12 +1687,12 @@ namespace OXGaming.TibiaAPI.Network
                         case ClientPacketType.GetQuestLog:
                             {
                                 var packet = new ClientPackets.GetQuestLog();
-                                if (packet.ParseMessage(inMessage))
+                                if (packet.ParseFromNetworkMessage(inMessage))
                                 {
                                     packet.Forward = OnReceivedClientGetQuestLogPacket?.Invoke(packet) ?? true;
                                     if (packet.Forward)
                                     {
-                                        packet.AppendToMessage(outMessage);
+                                        packet.AppendToNetworkMessage(outMessage);
                                     }
                                 }
                             }
@@ -1700,12 +1700,12 @@ namespace OXGaming.TibiaAPI.Network
                         case ClientPacketType.GetQuestLine:
                             {
                                 var packet = new ClientPackets.GetQuestLine();
-                                if (packet.ParseMessage(inMessage))
+                                if (packet.ParseFromNetworkMessage(inMessage))
                                 {
                                     packet.Forward = OnReceivedClientGetQuestLinePacket?.Invoke(packet) ?? true;
                                     if (packet.Forward)
                                     {
-                                        packet.AppendToMessage(outMessage);
+                                        packet.AppendToNetworkMessage(outMessage);
                                     }
                                 }
                             }
@@ -1713,12 +1713,12 @@ namespace OXGaming.TibiaAPI.Network
                         case ClientPacketType.RuleViolationReport:
                             {
                                 var packet = new ClientPackets.RuleViolationReport();
-                                if (packet.ParseMessage(inMessage))
+                                if (packet.ParseFromNetworkMessage(inMessage))
                                 {
                                     packet.Forward = OnReceivedClientRuleViolationReportPacket?.Invoke(packet) ?? true;
                                     if (packet.Forward)
                                     {
-                                        packet.AppendToMessage(outMessage);
+                                        packet.AppendToNetworkMessage(outMessage);
                                     }
                                 }
                             }
@@ -1726,12 +1726,12 @@ namespace OXGaming.TibiaAPI.Network
                         case ClientPacketType.GetObjectInfo:
                             {
                                 var packet = new ClientPackets.GetObjectInfo();
-                                if (packet.ParseMessage(inMessage))
+                                if (packet.ParseFromNetworkMessage(inMessage))
                                 {
                                     packet.Forward = OnReceivedClientGetObjectInfoPacket?.Invoke(packet) ?? true;
                                     if (packet.Forward)
                                     {
-                                        packet.AppendToMessage(outMessage);
+                                        packet.AppendToNetworkMessage(outMessage);
                                     }
                                 }
                             }
@@ -1739,12 +1739,12 @@ namespace OXGaming.TibiaAPI.Network
                         case ClientPacketType.MarketLeave:
                             {
                                 var packet = new ClientPackets.MarketLeave();
-                                if (packet.ParseMessage(inMessage))
+                                if (packet.ParseFromNetworkMessage(inMessage))
                                 {
                                     packet.Forward = OnReceivedClientMarketLeavePacket?.Invoke(packet) ?? true;
                                     if (packet.Forward)
                                     {
-                                        packet.AppendToMessage(outMessage);
+                                        packet.AppendToNetworkMessage(outMessage);
                                     }
                                 }
                             }
@@ -1752,12 +1752,12 @@ namespace OXGaming.TibiaAPI.Network
                         case ClientPacketType.MarketBrowse:
                             {
                                 var packet = new ClientPackets.MarketBrowse();
-                                if (packet.ParseMessage(inMessage))
+                                if (packet.ParseFromNetworkMessage(inMessage))
                                 {
                                     packet.Forward = OnReceivedClientMarketBrowsePacket?.Invoke(packet) ?? true;
                                     if (packet.Forward)
                                     {
-                                        packet.AppendToMessage(outMessage);
+                                        packet.AppendToNetworkMessage(outMessage);
                                     }
                                 }
                             }
@@ -1765,12 +1765,12 @@ namespace OXGaming.TibiaAPI.Network
                         case ClientPacketType.MarketCreate:
                             {
                                 var packet = new ClientPackets.MarketCreate();
-                                if (packet.ParseMessage(inMessage))
+                                if (packet.ParseFromNetworkMessage(inMessage))
                                 {
                                     packet.Forward = OnReceivedClientMarketCreatePacket?.Invoke(packet) ?? true;
                                     if (packet.Forward)
                                     {
-                                        packet.AppendToMessage(outMessage);
+                                        packet.AppendToNetworkMessage(outMessage);
                                     }
                                 }
                             }
@@ -1778,12 +1778,12 @@ namespace OXGaming.TibiaAPI.Network
                         case ClientPacketType.MarketCancel:
                             {
                                 var packet = new ClientPackets.MarketCancel();
-                                if (packet.ParseMessage(inMessage))
+                                if (packet.ParseFromNetworkMessage(inMessage))
                                 {
                                     packet.Forward = OnReceivedClientMarketCancelPacket?.Invoke(packet) ?? true;
                                     if (packet.Forward)
                                     {
-                                        packet.AppendToMessage(outMessage);
+                                        packet.AppendToNetworkMessage(outMessage);
                                     }
                                 }
                             }
@@ -1791,12 +1791,12 @@ namespace OXGaming.TibiaAPI.Network
                         case ClientPacketType.MarketAccept:
                             {
                                 var packet = new ClientPackets.MarketAccept();
-                                if (packet.ParseMessage(inMessage))
+                                if (packet.ParseFromNetworkMessage(inMessage))
                                 {
                                     packet.Forward = OnReceivedClientMarketAcceptPacket?.Invoke(packet) ?? true;
                                     if (packet.Forward)
                                     {
-                                        packet.AppendToMessage(outMessage);
+                                        packet.AppendToNetworkMessage(outMessage);
                                     }
                                 }
                             }
@@ -1804,12 +1804,12 @@ namespace OXGaming.TibiaAPI.Network
                         case ClientPacketType.AnswerModalDialog:
                             {
                                 var packet = new ClientPackets.AnswerModalDialog();
-                                if (packet.ParseMessage(inMessage))
+                                if (packet.ParseFromNetworkMessage(inMessage))
                                 {
                                     packet.Forward = OnReceivedClientAnswerModalDialogPacket?.Invoke(packet) ?? true;
                                     if (packet.Forward)
                                     {
-                                        packet.AppendToMessage(outMessage);
+                                        packet.AppendToNetworkMessage(outMessage);
                                     }
                                 }
                             }
@@ -1817,12 +1817,12 @@ namespace OXGaming.TibiaAPI.Network
                         case ClientPacketType.OpenIngameShop:
                             {
                                 var packet = new ClientPackets.OpenIngameShop();
-                                if (packet.ParseMessage(inMessage))
+                                if (packet.ParseFromNetworkMessage(inMessage))
                                 {
                                     packet.Forward = OnReceivedClientOpenIngameShopPacket?.Invoke(packet) ?? true;
                                     if (packet.Forward)
                                     {
-                                        packet.AppendToMessage(outMessage);
+                                        packet.AppendToNetworkMessage(outMessage);
                                     }
                                 }
                             }
@@ -1830,12 +1830,12 @@ namespace OXGaming.TibiaAPI.Network
                         case ClientPacketType.RequestShopOffers:
                             {
                                 var packet = new ClientPackets.RequestShopOffers();
-                                if (packet.ParseMessage(inMessage))
+                                if (packet.ParseFromNetworkMessage(inMessage))
                                 {
                                     packet.Forward = OnReceivedClientRequestShopOffersPacket?.Invoke(packet) ?? true;
                                     if (packet.Forward)
                                     {
-                                        packet.AppendToMessage(outMessage);
+                                        packet.AppendToNetworkMessage(outMessage);
                                     }
                                 }
                             }
@@ -1843,12 +1843,12 @@ namespace OXGaming.TibiaAPI.Network
                         case ClientPacketType.BuyIngameShopOffer:
                             {
                                 var packet = new ClientPackets.BuyIngameShopOffer();
-                                if (packet.ParseMessage(inMessage))
+                                if (packet.ParseFromNetworkMessage(inMessage))
                                 {
                                     packet.Forward = OnReceivedClientBuyIngameShopOfferPacket?.Invoke(packet) ?? true;
                                     if (packet.Forward)
                                     {
-                                        packet.AppendToMessage(outMessage);
+                                        packet.AppendToNetworkMessage(outMessage);
                                     }
                                 }
                             }
@@ -1856,12 +1856,12 @@ namespace OXGaming.TibiaAPI.Network
                         case ClientPacketType.OpenTransactionHistory:
                             {
                                 var packet = new ClientPackets.OpenTransactionHistory();
-                                if (packet.ParseMessage(inMessage))
+                                if (packet.ParseFromNetworkMessage(inMessage))
                                 {
                                     packet.Forward = OnReceivedClientOpenTransactionHistoryPacket?.Invoke(packet) ?? true;
                                     if (packet.Forward)
                                     {
-                                        packet.AppendToMessage(outMessage);
+                                        packet.AppendToNetworkMessage(outMessage);
                                     }
                                 }
                             }
@@ -1869,12 +1869,12 @@ namespace OXGaming.TibiaAPI.Network
                         case ClientPacketType.GetTransactionHistory:
                             {
                                 var packet = new ClientPackets.GetTransactionHistory();
-                                if (packet.ParseMessage(inMessage))
+                                if (packet.ParseFromNetworkMessage(inMessage))
                                 {
                                     packet.Forward = OnReceivedClientGetTransactionHistoryPacket?.Invoke(packet) ?? true;
                                     if (packet.Forward)
                                     {
-                                        packet.AppendToMessage(outMessage);
+                                        packet.AppendToNetworkMessage(outMessage);
                                     }
                                 }
                             }
@@ -1903,1868 +1903,1868 @@ namespace OXGaming.TibiaAPI.Network
             }
         }
 
-        internal void ParseServerMessage(NetworkMessage inMessage, NetworkMessage outMessage)
-        {
-            if (inMessage == null)
-            {
-                throw new ArgumentNullException(nameof(inMessage));
-            }
+        //internal void ParseServerMessage(NetworkMessage inMessage, NetworkMessage outMessage)
+        //{
+        //    if (inMessage == null)
+        //    {
+        //        throw new ArgumentNullException(nameof(inMessage));
+        //    }
 
-            while (inMessage.Position < inMessage.Size)
-            {
-                var type = (ServerPacketType)inMessage.PeekByte();
-                switch (type)
-                {
-                    case ServerPacketType.CreatureData:
-                        {
-                            var packet = new ClientPackets.Login();
-                            if (packet.ParseMessage(inMessage))
-                            {
-                                packet.Forward = OnReceivedClientLoginPacket?.Invoke(packet) ?? true;
-                                if (packet.Forward)
-                                {
-                                    packet.AppendToMessage(outMessage);
-                                }
-                            }
-                        }
-                        break;
-                    case ServerPacketType.PendingStateEntered:
-                        {
-                            var packet = new ClientPackets.Login();
-                            if (packet.ParseMessage(inMessage))
-                            {
-                                packet.Forward = OnReceivedClientLoginPacket?.Invoke(packet) ?? true;
-                                if (packet.Forward)
-                                {
-                                    packet.AppendToMessage(outMessage);
-                                }
-                            }
-                        }
-                        break;
-                    case ServerPacketType.ReadyForSecondaryConnection:
-                        {
-                            var packet = new ClientPackets.Login();
-                            if (packet.ParseMessage(inMessage))
-                            {
-                                packet.Forward = OnReceivedClientLoginPacket?.Invoke(packet) ?? true;
-                                if (packet.Forward)
-                                {
-                                    packet.AppendToMessage(outMessage);
-                                }
-                            }
-                        }
-                        break;
-                    case ServerPacketType.WorldEntered:
-                        {
-                            var packet = new ClientPackets.Login();
-                            if (packet.ParseMessage(inMessage))
-                            {
-                                packet.Forward = OnReceivedClientLoginPacket?.Invoke(packet) ?? true;
-                                if (packet.Forward)
-                                {
-                                    packet.AppendToMessage(outMessage);
-                                }
-                            }
-                        }
-                        break;
-                    case ServerPacketType.LoginError:
-                        {
-                            var packet = new ClientPackets.Login();
-                            if (packet.ParseMessage(inMessage))
-                            {
-                                packet.Forward = OnReceivedClientLoginPacket?.Invoke(packet) ?? true;
-                                if (packet.Forward)
-                                {
-                                    packet.AppendToMessage(outMessage);
-                                }
-                            }
-                        }
-                        break;
-                    case ServerPacketType.LoginAdvice:
-                        {
-                            var packet = new ClientPackets.Login();
-                            if (packet.ParseMessage(inMessage))
-                            {
-                                packet.Forward = OnReceivedClientLoginPacket?.Invoke(packet) ?? true;
-                                if (packet.Forward)
-                                {
-                                    packet.AppendToMessage(outMessage);
-                                }
-                            }
-                        }
-                        break;
-                    case ServerPacketType.LoginWait:
-                        {
-                            var packet = new ClientPackets.Login();
-                            if (packet.ParseMessage(inMessage))
-                            {
-                                packet.Forward = OnReceivedClientLoginPacket?.Invoke(packet) ?? true;
-                                if (packet.Forward)
-                                {
-                                    packet.AppendToMessage(outMessage);
-                                }
-                            }
-                        }
-                        break;
-                    case ServerPacketType.LoginSuccess:
-                        {
-                            var packet = new ClientPackets.Login();
-                            if (packet.ParseMessage(inMessage))
-                            {
-                                packet.Forward = OnReceivedClientLoginPacket?.Invoke(packet) ?? true;
-                                if (packet.Forward)
-                                {
-                                    packet.AppendToMessage(outMessage);
-                                }
-                            }
-                        }
-                        break;
-                    case ServerPacketType.StoreButtonIndicators:
-                        {
-                            var packet = new ClientPackets.Login();
-                            if (packet.ParseMessage(inMessage))
-                            {
-                                packet.Forward = OnReceivedClientLoginPacket?.Invoke(packet) ?? true;
-                                if (packet.Forward)
-                                {
-                                    packet.AppendToMessage(outMessage);
-                                }
-                            }
-                        }
-                        break;
-                    case ServerPacketType.Ping:
-                        {
-                            var packet = new ClientPackets.Login();
-                            if (packet.ParseMessage(inMessage))
-                            {
-                                packet.Forward = OnReceivedClientLoginPacket?.Invoke(packet) ?? true;
-                                if (packet.Forward)
-                                {
-                                    packet.AppendToMessage(outMessage);
-                                }
-                            }
-                        }
-                        break;
-                    case ServerPacketType.PingBack:
-                        {
-                            var packet = new ClientPackets.Login();
-                            if (packet.ParseMessage(inMessage))
-                            {
-                                packet.Forward = OnReceivedClientLoginPacket?.Invoke(packet) ?? true;
-                                if (packet.Forward)
-                                {
-                                    packet.AppendToMessage(outMessage);
-                                }
-                            }
-                        }
-                        break;
-                    case ServerPacketType.LoginChallenge:
-                        {
-                            var packet = new ClientPackets.Login();
-                            if (packet.ParseMessage(inMessage))
-                            {
-                                packet.Forward = OnReceivedClientLoginPacket?.Invoke(packet) ?? true;
-                                if (packet.Forward)
-                                {
-                                    packet.AppendToMessage(outMessage);
-                                }
-                            }
-                        }
-                        break;
-                    case ServerPacketType.Dead:
-                        {
-                            var packet = new ClientPackets.Login();
-                            if (packet.ParseMessage(inMessage))
-                            {
-                                packet.Forward = OnReceivedClientLoginPacket?.Invoke(packet) ?? true;
-                                if (packet.Forward)
-                                {
-                                    packet.AppendToMessage(outMessage);
-                                }
-                            }
-                        }
-                        break;
-                    case ServerPacketType.Stash:
-                        {
-                            var packet = new ClientPackets.Login();
-                            if (packet.ParseMessage(inMessage))
-                            {
-                                packet.Forward = OnReceivedClientLoginPacket?.Invoke(packet) ?? true;
-                                if (packet.Forward)
-                                {
-                                    packet.AppendToMessage(outMessage);
-                                }
-                            }
-                        }
-                        break;
-                    case ServerPacketType.DepotTileState:
-                        {
-                            var packet = new ClientPackets.Login();
-                            if (packet.ParseMessage(inMessage))
-                            {
-                                packet.Forward = OnReceivedClientLoginPacket?.Invoke(packet) ?? true;
-                                if (packet.Forward)
-                                {
-                                    packet.AppendToMessage(outMessage);
-                                }
-                            }
-                        }
-                        break;
-                    case ServerPacketType.ClientCheck:
-                        {
-                            var packet = new ClientPackets.Login();
-                            if (packet.ParseMessage(inMessage))
-                            {
-                                packet.Forward = OnReceivedClientLoginPacket?.Invoke(packet) ?? true;
-                                if (packet.Forward)
-                                {
-                                    packet.AppendToMessage(outMessage);
-                                }
-                            }
-                        }
-                        break;
-                    case ServerPacketType.FullMap:
-                        {
-                            var packet = new ClientPackets.Login();
-                            if (packet.ParseMessage(inMessage))
-                            {
-                                packet.Forward = OnReceivedClientLoginPacket?.Invoke(packet) ?? true;
-                                if (packet.Forward)
-                                {
-                                    packet.AppendToMessage(outMessage);
-                                }
-                            }
-                        }
-                        break;
-                    case ServerPacketType.TopRow:
-                        {
-                            var packet = new ClientPackets.Login();
-                            if (packet.ParseMessage(inMessage))
-                            {
-                                packet.Forward = OnReceivedClientLoginPacket?.Invoke(packet) ?? true;
-                                if (packet.Forward)
-                                {
-                                    packet.AppendToMessage(outMessage);
-                                }
-                            }
-                        }
-                        break;
-                    case ServerPacketType.RightColumn:
-                        {
-                            var packet = new ClientPackets.Login();
-                            if (packet.ParseMessage(inMessage))
-                            {
-                                packet.Forward = OnReceivedClientLoginPacket?.Invoke(packet) ?? true;
-                                if (packet.Forward)
-                                {
-                                    packet.AppendToMessage(outMessage);
-                                }
-                            }
-                        }
-                        break;
-                    case ServerPacketType.BottomRow:
-                        {
-                            var packet = new ClientPackets.Login();
-                            if (packet.ParseMessage(inMessage))
-                            {
-                                packet.Forward = OnReceivedClientLoginPacket?.Invoke(packet) ?? true;
-                                if (packet.Forward)
-                                {
-                                    packet.AppendToMessage(outMessage);
-                                }
-                            }
-                        }
-                        break;
-                    case ServerPacketType.LeftColumn:
-                        {
-                            var packet = new ClientPackets.Login();
-                            if (packet.ParseMessage(inMessage))
-                            {
-                                packet.Forward = OnReceivedClientLoginPacket?.Invoke(packet) ?? true;
-                                if (packet.Forward)
-                                {
-                                    packet.AppendToMessage(outMessage);
-                                }
-                            }
-                        }
-                        break;
-                    case ServerPacketType.FieldData:
-                        {
-                            var packet = new ClientPackets.Login();
-                            if (packet.ParseMessage(inMessage))
-                            {
-                                packet.Forward = OnReceivedClientLoginPacket?.Invoke(packet) ?? true;
-                                if (packet.Forward)
-                                {
-                                    packet.AppendToMessage(outMessage);
-                                }
-                            }
-                        }
-                        break;
-                    case ServerPacketType.CreateOnMap:
-                        {
-                            var packet = new ClientPackets.Login();
-                            if (packet.ParseMessage(inMessage))
-                            {
-                                packet.Forward = OnReceivedClientLoginPacket?.Invoke(packet) ?? true;
-                                if (packet.Forward)
-                                {
-                                    packet.AppendToMessage(outMessage);
-                                }
-                            }
-                        }
-                        break;
-                    case ServerPacketType.ChangeOnMap:
-                        {
-                            var packet = new ClientPackets.Login();
-                            if (packet.ParseMessage(inMessage))
-                            {
-                                packet.Forward = OnReceivedClientLoginPacket?.Invoke(packet) ?? true;
-                                if (packet.Forward)
-                                {
-                                    packet.AppendToMessage(outMessage);
-                                }
-                            }
-                        }
-                        break;
-                    case ServerPacketType.DeleteOnMap:
-                        {
-                            var packet = new ClientPackets.Login();
-                            if (packet.ParseMessage(inMessage))
-                            {
-                                packet.Forward = OnReceivedClientLoginPacket?.Invoke(packet) ?? true;
-                                if (packet.Forward)
-                                {
-                                    packet.AppendToMessage(outMessage);
-                                }
-                            }
-                        }
-                        break;
-                    case ServerPacketType.MoveCreature:
-                        {
-                            var packet = new ClientPackets.Login();
-                            if (packet.ParseMessage(inMessage))
-                            {
-                                packet.Forward = OnReceivedClientLoginPacket?.Invoke(packet) ?? true;
-                                if (packet.Forward)
-                                {
-                                    packet.AppendToMessage(outMessage);
-                                }
-                            }
-                        }
-                        break;
-                    case ServerPacketType.Container:
-                        {
-                            var packet = new ClientPackets.Login();
-                            if (packet.ParseMessage(inMessage))
-                            {
-                                packet.Forward = OnReceivedClientLoginPacket?.Invoke(packet) ?? true;
-                                if (packet.Forward)
-                                {
-                                    packet.AppendToMessage(outMessage);
-                                }
-                            }
-                        }
-                        break;
-                    case ServerPacketType.CloseContainer:
-                        {
-                            var packet = new ClientPackets.Login();
-                            if (packet.ParseMessage(inMessage))
-                            {
-                                packet.Forward = OnReceivedClientLoginPacket?.Invoke(packet) ?? true;
-                                if (packet.Forward)
-                                {
-                                    packet.AppendToMessage(outMessage);
-                                }
-                            }
-                        }
-                        break;
-                    case ServerPacketType.CreateInContainer:
-                        {
-                            var packet = new ClientPackets.Login();
-                            if (packet.ParseMessage(inMessage))
-                            {
-                                packet.Forward = OnReceivedClientLoginPacket?.Invoke(packet) ?? true;
-                                if (packet.Forward)
-                                {
-                                    packet.AppendToMessage(outMessage);
-                                }
-                            }
-                        }
-                        break;
-                    case ServerPacketType.ChangeInContainer:
-                        {
-                            var packet = new ClientPackets.Login();
-                            if (packet.ParseMessage(inMessage))
-                            {
-                                packet.Forward = OnReceivedClientLoginPacket?.Invoke(packet) ?? true;
-                                if (packet.Forward)
-                                {
-                                    packet.AppendToMessage(outMessage);
-                                }
-                            }
-                        }
-                        break;
-                    case ServerPacketType.DeleteInContainer:
-                        {
-                            var packet = new ClientPackets.Login();
-                            if (packet.ParseMessage(inMessage))
-                            {
-                                packet.Forward = OnReceivedClientLoginPacket?.Invoke(packet) ?? true;
-                                if (packet.Forward)
-                                {
-                                    packet.AppendToMessage(outMessage);
-                                }
-                            }
-                        }
-                        break;
-                    case ServerPacketType.ScreenshotEvent:
-                        {
-                            var packet = new ClientPackets.Login();
-                            if (packet.ParseMessage(inMessage))
-                            {
-                                packet.Forward = OnReceivedClientLoginPacket?.Invoke(packet) ?? true;
-                                if (packet.Forward)
-                                {
-                                    packet.AppendToMessage(outMessage);
-                                }
-                            }
-                        }
-                        break;
-                    case ServerPacketType.InspectionList:
-                        {
-                            var packet = new ClientPackets.Login();
-                            if (packet.ParseMessage(inMessage))
-                            {
-                                packet.Forward = OnReceivedClientLoginPacket?.Invoke(packet) ?? true;
-                                if (packet.Forward)
-                                {
-                                    packet.AppendToMessage(outMessage);
-                                }
-                            }
-                        }
-                        break;
-                    case ServerPacketType.InspectionState:
-                        {
-                            var packet = new ClientPackets.Login();
-                            if (packet.ParseMessage(inMessage))
-                            {
-                                packet.Forward = OnReceivedClientLoginPacket?.Invoke(packet) ?? true;
-                                if (packet.Forward)
-                                {
-                                    packet.AppendToMessage(outMessage);
-                                }
-                            }
-                        }
-                        break;
-                    case ServerPacketType.SetInventory:
-                        {
-                            var packet = new ClientPackets.Login();
-                            if (packet.ParseMessage(inMessage))
-                            {
-                                packet.Forward = OnReceivedClientLoginPacket?.Invoke(packet) ?? true;
-                                if (packet.Forward)
-                                {
-                                    packet.AppendToMessage(outMessage);
-                                }
-                            }
-                        }
-                        break;
-                    case ServerPacketType.DeleteInventory:
-                        {
-                            var packet = new ClientPackets.Login();
-                            if (packet.ParseMessage(inMessage))
-                            {
-                                packet.Forward = OnReceivedClientLoginPacket?.Invoke(packet) ?? true;
-                                if (packet.Forward)
-                                {
-                                    packet.AppendToMessage(outMessage);
-                                }
-                            }
-                        }
-                        break;
-                    case ServerPacketType.NpcOffer:
-                        {
-                            var packet = new ClientPackets.Login();
-                            if (packet.ParseMessage(inMessage))
-                            {
-                                packet.Forward = OnReceivedClientLoginPacket?.Invoke(packet) ?? true;
-                                if (packet.Forward)
-                                {
-                                    packet.AppendToMessage(outMessage);
-                                }
-                            }
-                        }
-                        break;
-                    case ServerPacketType.PlayerGoods:
-                        {
-                            var packet = new ClientPackets.Login();
-                            if (packet.ParseMessage(inMessage))
-                            {
-                                packet.Forward = OnReceivedClientLoginPacket?.Invoke(packet) ?? true;
-                                if (packet.Forward)
-                                {
-                                    packet.AppendToMessage(outMessage);
-                                }
-                            }
-                        }
-                        break;
-                    case ServerPacketType.CloseNpcTrade:
-                        {
-                            var packet = new ClientPackets.Login();
-                            if (packet.ParseMessage(inMessage))
-                            {
-                                packet.Forward = OnReceivedClientLoginPacket?.Invoke(packet) ?? true;
-                                if (packet.Forward)
-                                {
-                                    packet.AppendToMessage(outMessage);
-                                }
-                            }
-                        }
-                        break;
-                    case ServerPacketType.OwnOffer:
-                        {
-                            var packet = new ClientPackets.Login();
-                            if (packet.ParseMessage(inMessage))
-                            {
-                                packet.Forward = OnReceivedClientLoginPacket?.Invoke(packet) ?? true;
-                                if (packet.Forward)
-                                {
-                                    packet.AppendToMessage(outMessage);
-                                }
-                            }
-                        }
-                        break;
-                    case ServerPacketType.CounterOffer:
-                        {
-                            var packet = new ClientPackets.Login();
-                            if (packet.ParseMessage(inMessage))
-                            {
-                                packet.Forward = OnReceivedClientLoginPacket?.Invoke(packet) ?? true;
-                                if (packet.Forward)
-                                {
-                                    packet.AppendToMessage(outMessage);
-                                }
-                            }
-                        }
-                        break;
-                    case ServerPacketType.CloseTrade:
-                        {
-                            var packet = new ClientPackets.Login();
-                            if (packet.ParseMessage(inMessage))
-                            {
-                                packet.Forward = OnReceivedClientLoginPacket?.Invoke(packet) ?? true;
-                                if (packet.Forward)
-                                {
-                                    packet.AppendToMessage(outMessage);
-                                }
-                            }
-                        }
-                        break;
-                    case ServerPacketType.Ambiente:
-                        {
-                            var packet = new ClientPackets.Login();
-                            if (packet.ParseMessage(inMessage))
-                            {
-                                packet.Forward = OnReceivedClientLoginPacket?.Invoke(packet) ?? true;
-                                if (packet.Forward)
-                                {
-                                    packet.AppendToMessage(outMessage);
-                                }
-                            }
-                        }
-                        break;
-                    case ServerPacketType.GraphicalEffect:
-                        {
-                            var packet = new ClientPackets.Login();
-                            if (packet.ParseMessage(inMessage))
-                            {
-                                packet.Forward = OnReceivedClientLoginPacket?.Invoke(packet) ?? true;
-                                if (packet.Forward)
-                                {
-                                    packet.AppendToMessage(outMessage);
-                                }
-                            }
-                        }
-                        break;
-                    case ServerPacketType.RemoveGraphicalEffect:
-                        {
-                            var packet = new ClientPackets.Login();
-                            if (packet.ParseMessage(inMessage))
-                            {
-                                packet.Forward = OnReceivedClientLoginPacket?.Invoke(packet) ?? true;
-                                if (packet.Forward)
-                                {
-                                    packet.AppendToMessage(outMessage);
-                                }
-                            }
-                        }
-                        break;
-                    case ServerPacketType.MissileEffect:
-                        {
-                            var packet = new ClientPackets.Login();
-                            if (packet.ParseMessage(inMessage))
-                            {
-                                packet.Forward = OnReceivedClientLoginPacket?.Invoke(packet) ?? true;
-                                if (packet.Forward)
-                                {
-                                    packet.AppendToMessage(outMessage);
-                                }
-                            }
-                        }
-                        break;
-                    case ServerPacketType.Trappers:
-                        {
-                            var packet = new ClientPackets.Login();
-                            if (packet.ParseMessage(inMessage))
-                            {
-                                packet.Forward = OnReceivedClientLoginPacket?.Invoke(packet) ?? true;
-                                if (packet.Forward)
-                                {
-                                    packet.AppendToMessage(outMessage);
-                                }
-                            }
-                        }
-                        break;
-                    case ServerPacketType.CreatureHealth:
-                        {
-                            var packet = new ClientPackets.Login();
-                            if (packet.ParseMessage(inMessage))
-                            {
-                                packet.Forward = OnReceivedClientLoginPacket?.Invoke(packet) ?? true;
-                                if (packet.Forward)
-                                {
-                                    packet.AppendToMessage(outMessage);
-                                }
-                            }
-                        }
-                        break;
-                    case ServerPacketType.CreatureLight:
-                        {
-                            var packet = new ClientPackets.Login();
-                            if (packet.ParseMessage(inMessage))
-                            {
-                                packet.Forward = OnReceivedClientLoginPacket?.Invoke(packet) ?? true;
-                                if (packet.Forward)
-                                {
-                                    packet.AppendToMessage(outMessage);
-                                }
-                            }
-                        }
-                        break;
-                    case ServerPacketType.CreatureOutfit:
-                        {
-                            var packet = new ClientPackets.Login();
-                            if (packet.ParseMessage(inMessage))
-                            {
-                                packet.Forward = OnReceivedClientLoginPacket?.Invoke(packet) ?? true;
-                                if (packet.Forward)
-                                {
-                                    packet.AppendToMessage(outMessage);
-                                }
-                            }
-                        }
-                        break;
-                    case ServerPacketType.CreatureSpeed:
-                        {
-                            var packet = new ClientPackets.Login();
-                            if (packet.ParseMessage(inMessage))
-                            {
-                                packet.Forward = OnReceivedClientLoginPacket?.Invoke(packet) ?? true;
-                                if (packet.Forward)
-                                {
-                                    packet.AppendToMessage(outMessage);
-                                }
-                            }
-                        }
-                        break;
-                    case ServerPacketType.CreatureSkull:
-                        {
-                            var packet = new ClientPackets.Login();
-                            if (packet.ParseMessage(inMessage))
-                            {
-                                packet.Forward = OnReceivedClientLoginPacket?.Invoke(packet) ?? true;
-                                if (packet.Forward)
-                                {
-                                    packet.AppendToMessage(outMessage);
-                                }
-                            }
-                        }
-                        break;
-                    case ServerPacketType.CreatureParty:
-                        {
-                            var packet = new ClientPackets.Login();
-                            if (packet.ParseMessage(inMessage))
-                            {
-                                packet.Forward = OnReceivedClientLoginPacket?.Invoke(packet) ?? true;
-                                if (packet.Forward)
-                                {
-                                    packet.AppendToMessage(outMessage);
-                                }
-                            }
-                        }
-                        break;
-                    case ServerPacketType.CreatureUnpass:
-                        {
-                            var packet = new ClientPackets.Login();
-                            if (packet.ParseMessage(inMessage))
-                            {
-                                packet.Forward = OnReceivedClientLoginPacket?.Invoke(packet) ?? true;
-                                if (packet.Forward)
-                                {
-                                    packet.AppendToMessage(outMessage);
-                                }
-                            }
-                        }
-                        break;
-                    case ServerPacketType.CreatureMarks:
-                        {
-                            var packet = new ClientPackets.Login();
-                            if (packet.ParseMessage(inMessage))
-                            {
-                                packet.Forward = OnReceivedClientLoginPacket?.Invoke(packet) ?? true;
-                                if (packet.Forward)
-                                {
-                                    packet.AppendToMessage(outMessage);
-                                }
-                            }
-                        }
-                        break;
-                    case ServerPacketType.CreaturePvpHelpers:
-                        {
-                            var packet = new ClientPackets.Login();
-                            if (packet.ParseMessage(inMessage))
-                            {
-                                packet.Forward = OnReceivedClientLoginPacket?.Invoke(packet) ?? true;
-                                if (packet.Forward)
-                                {
-                                    packet.AppendToMessage(outMessage);
-                                }
-                            }
-                        }
-                        break;
-                    case ServerPacketType.CreatureType:
-                        {
-                            var packet = new ClientPackets.Login();
-                            if (packet.ParseMessage(inMessage))
-                            {
-                                packet.Forward = OnReceivedClientLoginPacket?.Invoke(packet) ?? true;
-                                if (packet.Forward)
-                                {
-                                    packet.AppendToMessage(outMessage);
-                                }
-                            }
-                        }
-                        break;
-                    case ServerPacketType.EditText:
-                        {
-                            var packet = new ClientPackets.Login();
-                            if (packet.ParseMessage(inMessage))
-                            {
-                                packet.Forward = OnReceivedClientLoginPacket?.Invoke(packet) ?? true;
-                                if (packet.Forward)
-                                {
-                                    packet.AppendToMessage(outMessage);
-                                }
-                            }
-                        }
-                        break;
-                    case ServerPacketType.EditList:
-                        {
-                            var packet = new ClientPackets.Login();
-                            if (packet.ParseMessage(inMessage))
-                            {
-                                packet.Forward = OnReceivedClientLoginPacket?.Invoke(packet) ?? true;
-                                if (packet.Forward)
-                                {
-                                    packet.AppendToMessage(outMessage);
-                                }
-                            }
-                        }
-                        break;
-                    case ServerPacketType.ShowGameNews:
-                        {
-                            var packet = new ClientPackets.Login();
-                            if (packet.ParseMessage(inMessage))
-                            {
-                                packet.Forward = OnReceivedClientLoginPacket?.Invoke(packet) ?? true;
-                                if (packet.Forward)
-                                {
-                                    packet.AppendToMessage(outMessage);
-                                }
-                            }
-                        }
-                        break;
-                    case ServerPacketType.BlessingsDialog:
-                        {
-                            var packet = new ClientPackets.Login();
-                            if (packet.ParseMessage(inMessage))
-                            {
-                                packet.Forward = OnReceivedClientLoginPacket?.Invoke(packet) ?? true;
-                                if (packet.Forward)
-                                {
-                                    packet.AppendToMessage(outMessage);
-                                }
-                            }
-                        }
-                        break;
-                    case ServerPacketType.Blessings:
-                        {
-                            var packet = new ClientPackets.Login();
-                            if (packet.ParseMessage(inMessage))
-                            {
-                                packet.Forward = OnReceivedClientLoginPacket?.Invoke(packet) ?? true;
-                                if (packet.Forward)
-                                {
-                                    packet.AppendToMessage(outMessage);
-                                }
-                            }
-                        }
-                        break;
-                    case ServerPacketType.SwitchPreset:
-                        {
-                            var packet = new ClientPackets.Login();
-                            if (packet.ParseMessage(inMessage))
-                            {
-                                packet.Forward = OnReceivedClientLoginPacket?.Invoke(packet) ?? true;
-                                if (packet.Forward)
-                                {
-                                    packet.AppendToMessage(outMessage);
-                                }
-                            }
-                        }
-                        break;
-                    case ServerPacketType.PremiumTrigger:
-                        {
-                            var packet = new ClientPackets.Login();
-                            if (packet.ParseMessage(inMessage))
-                            {
-                                packet.Forward = OnReceivedClientLoginPacket?.Invoke(packet) ?? true;
-                                if (packet.Forward)
-                                {
-                                    packet.AppendToMessage(outMessage);
-                                }
-                            }
-                        }
-                        break;
-                    case ServerPacketType.PlayerDataBasic:
-                        {
-                            var packet = new ClientPackets.Login();
-                            if (packet.ParseMessage(inMessage))
-                            {
-                                packet.Forward = OnReceivedClientLoginPacket?.Invoke(packet) ?? true;
-                                if (packet.Forward)
-                                {
-                                    packet.AppendToMessage(outMessage);
-                                }
-                            }
-                        }
-                        break;
-                    case ServerPacketType.PlayerDataCurrent:
-                        {
-                            var packet = new ClientPackets.Login();
-                            if (packet.ParseMessage(inMessage))
-                            {
-                                packet.Forward = OnReceivedClientLoginPacket?.Invoke(packet) ?? true;
-                                if (packet.Forward)
-                                {
-                                    packet.AppendToMessage(outMessage);
-                                }
-                            }
-                        }
-                        break;
-                    case ServerPacketType.PlayerSkills:
-                        {
-                            var packet = new ClientPackets.Login();
-                            if (packet.ParseMessage(inMessage))
-                            {
-                                packet.Forward = OnReceivedClientLoginPacket?.Invoke(packet) ?? true;
-                                if (packet.Forward)
-                                {
-                                    packet.AppendToMessage(outMessage);
-                                }
-                            }
-                        }
-                        break;
-                    case ServerPacketType.PlayerState:
-                        {
-                            var packet = new ClientPackets.Login();
-                            if (packet.ParseMessage(inMessage))
-                            {
-                                packet.Forward = OnReceivedClientLoginPacket?.Invoke(packet) ?? true;
-                                if (packet.Forward)
-                                {
-                                    packet.AppendToMessage(outMessage);
-                                }
-                            }
-                        }
-                        break;
-                    case ServerPacketType.ClearTarget:
-                        {
-                            var packet = new ClientPackets.Login();
-                            if (packet.ParseMessage(inMessage))
-                            {
-                                packet.Forward = OnReceivedClientLoginPacket?.Invoke(packet) ?? true;
-                                if (packet.Forward)
-                                {
-                                    packet.AppendToMessage(outMessage);
-                                }
-                            }
-                        }
-                        break;
-                    case ServerPacketType.SpellDelay:
-                        {
-                            var packet = new ClientPackets.Login();
-                            if (packet.ParseMessage(inMessage))
-                            {
-                                packet.Forward = OnReceivedClientLoginPacket?.Invoke(packet) ?? true;
-                                if (packet.Forward)
-                                {
-                                    packet.AppendToMessage(outMessage);
-                                }
-                            }
-                        }
-                        break;
-                    case ServerPacketType.SpellGroupDelay:
-                        {
-                            var packet = new ClientPackets.Login();
-                            if (packet.ParseMessage(inMessage))
-                            {
-                                packet.Forward = OnReceivedClientLoginPacket?.Invoke(packet) ?? true;
-                                if (packet.Forward)
-                                {
-                                    packet.AppendToMessage(outMessage);
-                                }
-                            }
-                        }
-                        break;
-                    case ServerPacketType.MultiUseDelay:
-                        {
-                            var packet = new ClientPackets.Login();
-                            if (packet.ParseMessage(inMessage))
-                            {
-                                packet.Forward = OnReceivedClientLoginPacket?.Invoke(packet) ?? true;
-                                if (packet.Forward)
-                                {
-                                    packet.AppendToMessage(outMessage);
-                                }
-                            }
-                        }
-                        break;
-                    case ServerPacketType.SetTactics:
-                        {
-                            var packet = new ClientPackets.Login();
-                            if (packet.ParseMessage(inMessage))
-                            {
-                                packet.Forward = OnReceivedClientLoginPacket?.Invoke(packet) ?? true;
-                                if (packet.Forward)
-                                {
-                                    packet.AppendToMessage(outMessage);
-                                }
-                            }
-                        }
-                        break;
-                    case ServerPacketType.SetStoreDeepLink:
-                        {
-                            var packet = new ClientPackets.Login();
-                            if (packet.ParseMessage(inMessage))
-                            {
-                                packet.Forward = OnReceivedClientLoginPacket?.Invoke(packet) ?? true;
-                                if (packet.Forward)
-                                {
-                                    packet.AppendToMessage(outMessage);
-                                }
-                            }
-                        }
-                        break;
-                    case ServerPacketType.RestingAreaState:
-                        {
-                            var packet = new ClientPackets.Login();
-                            if (packet.ParseMessage(inMessage))
-                            {
-                                packet.Forward = OnReceivedClientLoginPacket?.Invoke(packet) ?? true;
-                                if (packet.Forward)
-                                {
-                                    packet.AppendToMessage(outMessage);
-                                }
-                            }
-                        }
-                        break;
-                    case ServerPacketType.Talk:
-                        {
-                            var packet = new ClientPackets.Login();
-                            if (packet.ParseMessage(inMessage))
-                            {
-                                packet.Forward = OnReceivedClientLoginPacket?.Invoke(packet) ?? true;
-                                if (packet.Forward)
-                                {
-                                    packet.AppendToMessage(outMessage);
-                                }
-                            }
-                        }
-                        break;
-                    case ServerPacketType.Channels:
-                        {
-                            var packet = new ClientPackets.Login();
-                            if (packet.ParseMessage(inMessage))
-                            {
-                                packet.Forward = OnReceivedClientLoginPacket?.Invoke(packet) ?? true;
-                                if (packet.Forward)
-                                {
-                                    packet.AppendToMessage(outMessage);
-                                }
-                            }
-                        }
-                        break;
-                    case ServerPacketType.OpenChannel:
-                        {
-                            var packet = new ClientPackets.Login();
-                            if (packet.ParseMessage(inMessage))
-                            {
-                                packet.Forward = OnReceivedClientLoginPacket?.Invoke(packet) ?? true;
-                                if (packet.Forward)
-                                {
-                                    packet.AppendToMessage(outMessage);
-                                }
-                            }
-                        }
-                        break;
-                    case ServerPacketType.PrivateChannel:
-                        {
-                            var packet = new ClientPackets.Login();
-                            if (packet.ParseMessage(inMessage))
-                            {
-                                packet.Forward = OnReceivedClientLoginPacket?.Invoke(packet) ?? true;
-                                if (packet.Forward)
-                                {
-                                    packet.AppendToMessage(outMessage);
-                                }
-                            }
-                        }
-                        break;
-                    case ServerPacketType.EditGuildMessage:
-                        {
-                            var packet = new ClientPackets.Login();
-                            if (packet.ParseMessage(inMessage))
-                            {
-                                packet.Forward = OnReceivedClientLoginPacket?.Invoke(packet) ?? true;
-                                if (packet.Forward)
-                                {
-                                    packet.AppendToMessage(outMessage);
-                                }
-                            }
-                        }
-                        break;
-                    case ServerPacketType.OpenOwnChannel:
-                        {
-                            var packet = new ClientPackets.Login();
-                            if (packet.ParseMessage(inMessage))
-                            {
-                                packet.Forward = OnReceivedClientLoginPacket?.Invoke(packet) ?? true;
-                                if (packet.Forward)
-                                {
-                                    packet.AppendToMessage(outMessage);
-                                }
-                            }
-                        }
-                        break;
-                    case ServerPacketType.CloseChannel:
-                        {
-                            var packet = new ClientPackets.Login();
-                            if (packet.ParseMessage(inMessage))
-                            {
-                                packet.Forward = OnReceivedClientLoginPacket?.Invoke(packet) ?? true;
-                                if (packet.Forward)
-                                {
-                                    packet.AppendToMessage(outMessage);
-                                }
-                            }
-                        }
-                        break;
-                    case ServerPacketType.Message:
-                        {
-                            var packet = new ClientPackets.Login();
-                            if (packet.ParseMessage(inMessage))
-                            {
-                                packet.Forward = OnReceivedClientLoginPacket?.Invoke(packet) ?? true;
-                                if (packet.Forward)
-                                {
-                                    packet.AppendToMessage(outMessage);
-                                }
-                            }
-                        }
-                        break;
-                    case ServerPacketType.SnapBack:
-                        {
-                            var packet = new ClientPackets.Login();
-                            if (packet.ParseMessage(inMessage))
-                            {
-                                packet.Forward = OnReceivedClientLoginPacket?.Invoke(packet) ?? true;
-                                if (packet.Forward)
-                                {
-                                    packet.AppendToMessage(outMessage);
-                                }
-                            }
-                        }
-                        break;
-                    case ServerPacketType.Wait:
-                        {
-                            var packet = new ClientPackets.Login();
-                            if (packet.ParseMessage(inMessage))
-                            {
-                                packet.Forward = OnReceivedClientLoginPacket?.Invoke(packet) ?? true;
-                                if (packet.Forward)
-                                {
-                                    packet.AppendToMessage(outMessage);
-                                }
-                            }
-                        }
-                        break;
-                    case ServerPacketType.UnjustifiedPoints:
-                        {
-                            var packet = new ClientPackets.Login();
-                            if (packet.ParseMessage(inMessage))
-                            {
-                                packet.Forward = OnReceivedClientLoginPacket?.Invoke(packet) ?? true;
-                                if (packet.Forward)
-                                {
-                                    packet.AppendToMessage(outMessage);
-                                }
-                            }
-                        }
-                        break;
-                    case ServerPacketType.PvpSituations:
-                        {
-                            var packet = new ClientPackets.Login();
-                            if (packet.ParseMessage(inMessage))
-                            {
-                                packet.Forward = OnReceivedClientLoginPacket?.Invoke(packet) ?? true;
-                                if (packet.Forward)
-                                {
-                                    packet.AppendToMessage(outMessage);
-                                }
-                            }
-                        }
-                        break;
-                    case ServerPacketType.TopFloor:
-                        {
-                            var packet = new ClientPackets.Login();
-                            if (packet.ParseMessage(inMessage))
-                            {
-                                packet.Forward = OnReceivedClientLoginPacket?.Invoke(packet) ?? true;
-                                if (packet.Forward)
-                                {
-                                    packet.AppendToMessage(outMessage);
-                                }
-                            }
-                        }
-                        break;
-                    case ServerPacketType.BottomFloor:
-                        {
-                            var packet = new ClientPackets.Login();
-                            if (packet.ParseMessage(inMessage))
-                            {
-                                packet.Forward = OnReceivedClientLoginPacket?.Invoke(packet) ?? true;
-                                if (packet.Forward)
-                                {
-                                    packet.AppendToMessage(outMessage);
-                                }
-                            }
-                        }
-                        break;
-                    case ServerPacketType.UpdateLootContainers:
-                        {
-                            var packet = new ClientPackets.Login();
-                            if (packet.ParseMessage(inMessage))
-                            {
-                                packet.Forward = OnReceivedClientLoginPacket?.Invoke(packet) ?? true;
-                                if (packet.Forward)
-                                {
-                                    packet.AppendToMessage(outMessage);
-                                }
-                            }
-                        }
-                        break;
-                    case ServerPacketType.Outfit:
-                        {
-                            var packet = new ClientPackets.Login();
-                            if (packet.ParseMessage(inMessage))
-                            {
-                                packet.Forward = OnReceivedClientLoginPacket?.Invoke(packet) ?? true;
-                                if (packet.Forward)
-                                {
-                                    packet.AppendToMessage(outMessage);
-                                }
-                            }
-                        }
-                        break;
-                    case ServerPacketType.ExivaSuppressed:
-                        {
-                            var packet = new ClientPackets.Login();
-                            if (packet.ParseMessage(inMessage))
-                            {
-                                packet.Forward = OnReceivedClientLoginPacket?.Invoke(packet) ?? true;
-                                if (packet.Forward)
-                                {
-                                    packet.AppendToMessage(outMessage);
-                                }
-                            }
-                        }
-                        break;
-                    case ServerPacketType.UpdateExivaOptions:
-                        {
-                            var packet = new ClientPackets.Login();
-                            if (packet.ParseMessage(inMessage))
-                            {
-                                packet.Forward = OnReceivedClientLoginPacket?.Invoke(packet) ?? true;
-                                if (packet.Forward)
-                                {
-                                    packet.AppendToMessage(outMessage);
-                                }
-                            }
-                        }
-                        break;
-                    case ServerPacketType.ImpactTracking:
-                        {
-                            var packet = new ClientPackets.Login();
-                            if (packet.ParseMessage(inMessage))
-                            {
-                                packet.Forward = OnReceivedClientLoginPacket?.Invoke(packet) ?? true;
-                                if (packet.Forward)
-                                {
-                                    packet.AppendToMessage(outMessage);
-                                }
-                            }
-                        }
-                        break;
-                    case ServerPacketType.MarketStatistics:
-                        {
-                            var packet = new ClientPackets.Login();
-                            if (packet.ParseMessage(inMessage))
-                            {
-                                packet.Forward = OnReceivedClientLoginPacket?.Invoke(packet) ?? true;
-                                if (packet.Forward)
-                                {
-                                    packet.AppendToMessage(outMessage);
-                                }
-                            }
-                        }
-                        break;
-                    case ServerPacketType.ItemWasted:
-                        {
-                            var packet = new ClientPackets.Login();
-                            if (packet.ParseMessage(inMessage))
-                            {
-                                packet.Forward = OnReceivedClientLoginPacket?.Invoke(packet) ?? true;
-                                if (packet.Forward)
-                                {
-                                    packet.AppendToMessage(outMessage);
-                                }
-                            }
-                        }
-                        break;
-                    case ServerPacketType.ItemLooted:
-                        {
-                            var packet = new ClientPackets.Login();
-                            if (packet.ParseMessage(inMessage))
-                            {
-                                packet.Forward = OnReceivedClientLoginPacket?.Invoke(packet) ?? true;
-                                if (packet.Forward)
-                                {
-                                    packet.AppendToMessage(outMessage);
-                                }
-                            }
-                        }
-                        break;
-                    case ServerPacketType.TrackQuestFlags:
-                        {
-                            var packet = new ClientPackets.Login();
-                            if (packet.ParseMessage(inMessage))
-                            {
-                                packet.Forward = OnReceivedClientLoginPacket?.Invoke(packet) ?? true;
-                                if (packet.Forward)
-                                {
-                                    packet.AppendToMessage(outMessage);
-                                }
-                            }
-                        }
-                        break;
-                    case ServerPacketType.KillTracking:
-                        {
-                            var packet = new ClientPackets.Login();
-                            if (packet.ParseMessage(inMessage))
-                            {
-                                packet.Forward = OnReceivedClientLoginPacket?.Invoke(packet) ?? true;
-                                if (packet.Forward)
-                                {
-                                    packet.AppendToMessage(outMessage);
-                                }
-                            }
-                        }
-                        break;
-                    case ServerPacketType.BuddyData:
-                        {
-                            var packet = new ClientPackets.Login();
-                            if (packet.ParseMessage(inMessage))
-                            {
-                                packet.Forward = OnReceivedClientLoginPacket?.Invoke(packet) ?? true;
-                                if (packet.Forward)
-                                {
-                                    packet.AppendToMessage(outMessage);
-                                }
-                            }
-                        }
-                        break;
-                    case ServerPacketType.BuddyStatusChange:
-                        {
-                            var packet = new ClientPackets.Login();
-                            if (packet.ParseMessage(inMessage))
-                            {
-                                packet.Forward = OnReceivedClientLoginPacket?.Invoke(packet) ?? true;
-                                if (packet.Forward)
-                                {
-                                    packet.AppendToMessage(outMessage);
-                                }
-                            }
-                        }
-                        break;
-                    case ServerPacketType.BuddyGroupData:
-                        {
-                            var packet = new ClientPackets.Login();
-                            if (packet.ParseMessage(inMessage))
-                            {
-                                packet.Forward = OnReceivedClientLoginPacket?.Invoke(packet) ?? true;
-                                if (packet.Forward)
-                                {
-                                    packet.AppendToMessage(outMessage);
-                                }
-                            }
-                        }
-                        break;
-                    case ServerPacketType.MonsterCyclopedia:
-                        {
-                            var packet = new ClientPackets.Login();
-                            if (packet.ParseMessage(inMessage))
-                            {
-                                packet.Forward = OnReceivedClientLoginPacket?.Invoke(packet) ?? true;
-                                if (packet.Forward)
-                                {
-                                    packet.AppendToMessage(outMessage);
-                                }
-                            }
-                        }
-                        break;
-                    case ServerPacketType.MonsterCyclopediaMonsters:
-                        {
-                            var packet = new ClientPackets.Login();
-                            if (packet.ParseMessage(inMessage))
-                            {
-                                packet.Forward = OnReceivedClientLoginPacket?.Invoke(packet) ?? true;
-                                if (packet.Forward)
-                                {
-                                    packet.AppendToMessage(outMessage);
-                                }
-                            }
-                        }
-                        break;
-                    case ServerPacketType.MonsterCyclopediaRace:
-                        {
-                            var packet = new ClientPackets.Login();
-                            if (packet.ParseMessage(inMessage))
-                            {
-                                packet.Forward = OnReceivedClientLoginPacket?.Invoke(packet) ?? true;
-                                if (packet.Forward)
-                                {
-                                    packet.AppendToMessage(outMessage);
-                                }
-                            }
-                        }
-                        break;
-                    case ServerPacketType.MonsterCyclopediaBonusEffects:
-                        {
-                            var packet = new ClientPackets.Login();
-                            if (packet.ParseMessage(inMessage))
-                            {
-                                packet.Forward = OnReceivedClientLoginPacket?.Invoke(packet) ?? true;
-                                if (packet.Forward)
-                                {
-                                    packet.AppendToMessage(outMessage);
-                                }
-                            }
-                        }
-                        break;
-                    case ServerPacketType.MonsterCyclopediaNewDetails:
-                        {
-                            var packet = new ClientPackets.Login();
-                            if (packet.ParseMessage(inMessage))
-                            {
-                                packet.Forward = OnReceivedClientLoginPacket?.Invoke(packet) ?? true;
-                                if (packet.Forward)
-                                {
-                                    packet.AppendToMessage(outMessage);
-                                }
-                            }
-                        }
-                        break;
-                    case ServerPacketType.TutorialHint:
-                        {
-                            var packet = new ClientPackets.Login();
-                            if (packet.ParseMessage(inMessage))
-                            {
-                                packet.Forward = OnReceivedClientLoginPacket?.Invoke(packet) ?? true;
-                                if (packet.Forward)
-                                {
-                                    packet.AppendToMessage(outMessage);
-                                }
-                            }
-                        }
-                        break;
-                    case ServerPacketType.CyclopediaMapData:
-                        {
-                            var packet = new ClientPackets.Login();
-                            if (packet.ParseMessage(inMessage))
-                            {
-                                packet.Forward = OnReceivedClientLoginPacket?.Invoke(packet) ?? true;
-                                if (packet.Forward)
-                                {
-                                    packet.AppendToMessage(outMessage);
-                                }
-                            }
-                        }
-                        break;
-                    case ServerPacketType.DailyRewardCollectionState:
-                        {
-                            var packet = new ClientPackets.Login();
-                            if (packet.ParseMessage(inMessage))
-                            {
-                                packet.Forward = OnReceivedClientLoginPacket?.Invoke(packet) ?? true;
-                                if (packet.Forward)
-                                {
-                                    packet.AppendToMessage(outMessage);
-                                }
-                            }
-                        }
-                        break;
-                    case ServerPacketType.CreditBalance:
-                        {
-                            var packet = new ClientPackets.Login();
-                            if (packet.ParseMessage(inMessage))
-                            {
-                                packet.Forward = OnReceivedClientLoginPacket?.Invoke(packet) ?? true;
-                                if (packet.Forward)
-                                {
-                                    packet.AppendToMessage(outMessage);
-                                }
-                            }
-                        }
-                        break;
-                    case ServerPacketType.IngameShopError:
-                        {
-                            var packet = new ClientPackets.Login();
-                            if (packet.ParseMessage(inMessage))
-                            {
-                                packet.Forward = OnReceivedClientLoginPacket?.Invoke(packet) ?? true;
-                                if (packet.Forward)
-                                {
-                                    packet.AppendToMessage(outMessage);
-                                }
-                            }
-                        }
-                        break;
-                    case ServerPacketType.RequestPurchaseData:
-                        {
-                            var packet = new ClientPackets.Login();
-                            if (packet.ParseMessage(inMessage))
-                            {
-                                packet.Forward = OnReceivedClientLoginPacket?.Invoke(packet) ?? true;
-                                if (packet.Forward)
-                                {
-                                    packet.AppendToMessage(outMessage);
-                                }
-                            }
-                        }
-                        break;
-                    case ServerPacketType.OpenRewardWall:
-                        {
-                            var packet = new ClientPackets.Login();
-                            if (packet.ParseMessage(inMessage))
-                            {
-                                packet.Forward = OnReceivedClientLoginPacket?.Invoke(packet) ?? true;
-                                if (packet.Forward)
-                                {
-                                    packet.AppendToMessage(outMessage);
-                                }
-                            }
-                        }
-                        break;
-                    case ServerPacketType.CloseRewardWall:
-                        {
-                            var packet = new ClientPackets.Login();
-                            if (packet.ParseMessage(inMessage))
-                            {
-                                packet.Forward = OnReceivedClientLoginPacket?.Invoke(packet) ?? true;
-                                if (packet.Forward)
-                                {
-                                    packet.AppendToMessage(outMessage);
-                                }
-                            }
-                        }
-                        break;
-                    case ServerPacketType.DailyRewardBasic:
-                        {
-                            var packet = new ClientPackets.Login();
-                            if (packet.ParseMessage(inMessage))
-                            {
-                                packet.Forward = OnReceivedClientLoginPacket?.Invoke(packet) ?? true;
-                                if (packet.Forward)
-                                {
-                                    packet.AppendToMessage(outMessage);
-                                }
-                            }
-                        }
-                        break;
-                    case ServerPacketType.DailyRewardHistory:
-                        {
-                            var packet = new ClientPackets.Login();
-                            if (packet.ParseMessage(inMessage))
-                            {
-                                packet.Forward = OnReceivedClientLoginPacket?.Invoke(packet) ?? true;
-                                if (packet.Forward)
-                                {
-                                    packet.AppendToMessage(outMessage);
-                                }
-                            }
-                        }
-                        break;
-                    case ServerPacketType.PreyFreeListRerollAvailability:
-                        {
-                            var packet = new ClientPackets.Login();
-                            if (packet.ParseMessage(inMessage))
-                            {
-                                packet.Forward = OnReceivedClientLoginPacket?.Invoke(packet) ?? true;
-                                if (packet.Forward)
-                                {
-                                    packet.AppendToMessage(outMessage);
-                                }
-                            }
-                        }
-                        break;
-                    case ServerPacketType.PreyTimeLeft:
-                        {
-                            var packet = new ClientPackets.Login();
-                            if (packet.ParseMessage(inMessage))
-                            {
-                                packet.Forward = OnReceivedClientLoginPacket?.Invoke(packet) ?? true;
-                                if (packet.Forward)
-                                {
-                                    packet.AppendToMessage(outMessage);
-                                }
-                            }
-                        }
-                        break;
-                    case ServerPacketType.PreyData:
-                        {
-                            var packet = new ClientPackets.Login();
-                            if (packet.ParseMessage(inMessage))
-                            {
-                                packet.Forward = OnReceivedClientLoginPacket?.Invoke(packet) ?? true;
-                                if (packet.Forward)
-                                {
-                                    packet.AppendToMessage(outMessage);
-                                }
-                            }
-                        }
-                        break;
-                    case ServerPacketType.PreyRerollPrice:
-                        {
-                            var packet = new ClientPackets.Login();
-                            if (packet.ParseMessage(inMessage))
-                            {
-                                packet.Forward = OnReceivedClientLoginPacket?.Invoke(packet) ?? true;
-                                if (packet.Forward)
-                                {
-                                    packet.AppendToMessage(outMessage);
-                                }
-                            }
-                        }
-                        break;
-                    case ServerPacketType.OfferDescription:
-                        {
-                            var packet = new ClientPackets.Login();
-                            if (packet.ParseMessage(inMessage))
-                            {
-                                packet.Forward = OnReceivedClientLoginPacket?.Invoke(packet) ?? true;
-                                if (packet.Forward)
-                                {
-                                    packet.AppendToMessage(outMessage);
-                                }
-                            }
-                        }
-                        break;
-                    case ServerPacketType.ImbuingDialogRefresh:
-                        {
-                            var packet = new ClientPackets.Login();
-                            if (packet.ParseMessage(inMessage))
-                            {
-                                packet.Forward = OnReceivedClientLoginPacket?.Invoke(packet) ?? true;
-                                if (packet.Forward)
-                                {
-                                    packet.AppendToMessage(outMessage);
-                                }
-                            }
-                        }
-                        break;
-                    case ServerPacketType.CloseImbuingDialog:
-                        {
-                            var packet = new ClientPackets.Login();
-                            if (packet.ParseMessage(inMessage))
-                            {
-                                packet.Forward = OnReceivedClientLoginPacket?.Invoke(packet) ?? true;
-                                if (packet.Forward)
-                                {
-                                    packet.AppendToMessage(outMessage);
-                                }
-                            }
-                        }
-                        break;
-                    case ServerPacketType.ShowMessageDialog:
-                        {
-                            var packet = new ClientPackets.Login();
-                            if (packet.ParseMessage(inMessage))
-                            {
-                                packet.Forward = OnReceivedClientLoginPacket?.Invoke(packet) ?? true;
-                                if (packet.Forward)
-                                {
-                                    packet.AppendToMessage(outMessage);
-                                }
-                            }
-                        }
-                        break;
-                    case ServerPacketType.RequestResourceBalance:
-                        {
-                            var packet = new ClientPackets.Login();
-                            if (packet.ParseMessage(inMessage))
-                            {
-                                packet.Forward = OnReceivedClientLoginPacket?.Invoke(packet) ?? true;
-                                if (packet.Forward)
-                                {
-                                    packet.AppendToMessage(outMessage);
-                                }
-                            }
-                        }
-                        break;
-                    case ServerPacketType.TibiaTime:
-                        {
-                            var packet = new ClientPackets.Login();
-                            if (packet.ParseMessage(inMessage))
-                            {
-                                packet.Forward = OnReceivedClientLoginPacket?.Invoke(packet) ?? true;
-                                if (packet.Forward)
-                                {
-                                    packet.AppendToMessage(outMessage);
-                                }
-                            }
-                        }
-                        break;
-                    case ServerPacketType.QuestLog:
-                        {
-                            var packet = new ClientPackets.Login();
-                            if (packet.ParseMessage(inMessage))
-                            {
-                                packet.Forward = OnReceivedClientLoginPacket?.Invoke(packet) ?? true;
-                                if (packet.Forward)
-                                {
-                                    packet.AppendToMessage(outMessage);
-                                }
-                            }
-                        }
-                        break;
-                    case ServerPacketType.QuestLine:
-                        {
-                            var packet = new ClientPackets.Login();
-                            if (packet.ParseMessage(inMessage))
-                            {
-                                packet.Forward = OnReceivedClientLoginPacket?.Invoke(packet) ?? true;
-                                if (packet.Forward)
-                                {
-                                    packet.AppendToMessage(outMessage);
-                                }
-                            }
-                        }
-                        break;
-                    case ServerPacketType.UpdatingShopBalance:
-                        {
-                            var packet = new ClientPackets.Login();
-                            if (packet.ParseMessage(inMessage))
-                            {
-                                packet.Forward = OnReceivedClientLoginPacket?.Invoke(packet) ?? true;
-                                if (packet.Forward)
-                                {
-                                    packet.AppendToMessage(outMessage);
-                                }
-                            }
-                        }
-                        break;
-                    case ServerPacketType.ChannelEvent:
-                        {
-                            var packet = new ClientPackets.Login();
-                            if (packet.ParseMessage(inMessage))
-                            {
-                                packet.Forward = OnReceivedClientLoginPacket?.Invoke(packet) ?? true;
-                                if (packet.Forward)
-                                {
-                                    packet.AppendToMessage(outMessage);
-                                }
-                            }
-                        }
-                        break;
-                    case ServerPacketType.ObjectInfo:
-                        {
-                            var packet = new ClientPackets.Login();
-                            if (packet.ParseMessage(inMessage))
-                            {
-                                packet.Forward = OnReceivedClientLoginPacket?.Invoke(packet) ?? true;
-                                if (packet.Forward)
-                                {
-                                    packet.AppendToMessage(outMessage);
-                                }
-                            }
-                        }
-                        break;
-                    case ServerPacketType.PlayerInventory:
-                        {
-                            var packet = new ClientPackets.Login();
-                            if (packet.ParseMessage(inMessage))
-                            {
-                                packet.Forward = OnReceivedClientLoginPacket?.Invoke(packet) ?? true;
-                                if (packet.Forward)
-                                {
-                                    packet.AppendToMessage(outMessage);
-                                }
-                            }
-                        }
-                        break;
-                    case ServerPacketType.MarketEnter:
-                        {
-                            var packet = new ClientPackets.Login();
-                            if (packet.ParseMessage(inMessage))
-                            {
-                                packet.Forward = OnReceivedClientLoginPacket?.Invoke(packet) ?? true;
-                                if (packet.Forward)
-                                {
-                                    packet.AppendToMessage(outMessage);
-                                }
-                            }
-                        }
-                        break;
-                    case ServerPacketType.MarketLeave:
-                        {
-                            var packet = new ClientPackets.Login();
-                            if (packet.ParseMessage(inMessage))
-                            {
-                                packet.Forward = OnReceivedClientLoginPacket?.Invoke(packet) ?? true;
-                                if (packet.Forward)
-                                {
-                                    packet.AppendToMessage(outMessage);
-                                }
-                            }
-                        }
-                        break;
-                    case ServerPacketType.MarketDetail:
-                        {
-                            var packet = new ClientPackets.Login();
-                            if (packet.ParseMessage(inMessage))
-                            {
-                                packet.Forward = OnReceivedClientLoginPacket?.Invoke(packet) ?? true;
-                                if (packet.Forward)
-                                {
-                                    packet.AppendToMessage(outMessage);
-                                }
-                            }
-                        }
-                        break;
-                    case ServerPacketType.MarketBrowse:
-                        {
-                            var packet = new ClientPackets.Login();
-                            if (packet.ParseMessage(inMessage))
-                            {
-                                packet.Forward = OnReceivedClientLoginPacket?.Invoke(packet) ?? true;
-                                if (packet.Forward)
-                                {
-                                    packet.AppendToMessage(outMessage);
-                                }
-                            }
-                        }
-                        break;
-                    case ServerPacketType.ShowModalDialog:
-                        {
-                            var packet = new ClientPackets.Login();
-                            if (packet.ParseMessage(inMessage))
-                            {
-                                packet.Forward = OnReceivedClientLoginPacket?.Invoke(packet) ?? true;
-                                if (packet.Forward)
-                                {
-                                    packet.AppendToMessage(outMessage);
-                                }
-                            }
-                        }
-                        break;
-                    case ServerPacketType.StoreCategories:
-                        {
-                            var packet = new ClientPackets.Login();
-                            if (packet.ParseMessage(inMessage))
-                            {
-                                packet.Forward = OnReceivedClientLoginPacket?.Invoke(packet) ?? true;
-                                if (packet.Forward)
-                                {
-                                    packet.AppendToMessage(outMessage);
-                                }
-                            }
-                        }
-                        break;
-                    case ServerPacketType.StoreOffers:
-                        {
-                            var packet = new ClientPackets.Login();
-                            if (packet.ParseMessage(inMessage))
-                            {
-                                packet.Forward = OnReceivedClientLoginPacket?.Invoke(packet) ?? true;
-                                if (packet.Forward)
-                                {
-                                    packet.AppendToMessage(outMessage);
-                                }
-                            }
-                        }
-                        break;
-                    case ServerPacketType.TransactionHistory:
-                        {
-                            var packet = new ClientPackets.Login();
-                            if (packet.ParseMessage(inMessage))
-                            {
-                                packet.Forward = OnReceivedClientLoginPacket?.Invoke(packet) ?? true;
-                                if (packet.Forward)
-                                {
-                                    packet.AppendToMessage(outMessage);
-                                }
-                            }
-                        }
-                        break;
-                    case ServerPacketType.StoreSuccess:
-                        {
-                            var packet = new ClientPackets.Login();
-                            if (packet.ParseMessage(inMessage))
-                            {
-                                packet.Forward = OnReceivedClientLoginPacket?.Invoke(packet) ?? true;
-                                if (packet.Forward)
-                                {
-                                    packet.AppendToMessage(outMessage);
-                                }
-                            }
-                        }
-                        break;
-                    default:
-                        break;
-                }
-            }
-        }
+        //    while (inMessage.Position < inMessage.Size)
+        //    {
+        //        var type = (ServerPacketType)inMessage.PeekByte();
+        //        switch (type)
+        //        {
+        //            case ServerPacketType.CreatureData:
+        //                {
+        //                    var packet = new ClientPackets.Login();
+        //                    if (packet.ParseFromNetworkMessage(inMessage))
+        //                    {
+        //                        packet.Forward = OnReceivedClientLoginPacket?.Invoke(packet) ?? true;
+        //                        if (packet.Forward)
+        //                        {
+        //                            packet.AppendToNetworkMessage(outMessage);
+        //                        }
+        //                    }
+        //                }
+        //                break;
+        //            case ServerPacketType.PendingStateEntered:
+        //                {
+        //                    var packet = new ClientPackets.Login();
+        //                    if (packet.ParseFromNetworkMessage(inMessage))
+        //                    {
+        //                        packet.Forward = OnReceivedClientLoginPacket?.Invoke(packet) ?? true;
+        //                        if (packet.Forward)
+        //                        {
+        //                            packet.AppendToNetworkMessage(outMessage);
+        //                        }
+        //                    }
+        //                }
+        //                break;
+        //            case ServerPacketType.ReadyForSecondaryConnection:
+        //                {
+        //                    var packet = new ClientPackets.Login();
+        //                    if (packet.ParseFromNetworkMessage(inMessage))
+        //                    {
+        //                        packet.Forward = OnReceivedClientLoginPacket?.Invoke(packet) ?? true;
+        //                        if (packet.Forward)
+        //                        {
+        //                            packet.AppendToNetworkMessage(outMessage);
+        //                        }
+        //                    }
+        //                }
+        //                break;
+        //            case ServerPacketType.WorldEntered:
+        //                {
+        //                    var packet = new ClientPackets.Login();
+        //                    if (packet.ParseFromNetworkMessage(inMessage))
+        //                    {
+        //                        packet.Forward = OnReceivedClientLoginPacket?.Invoke(packet) ?? true;
+        //                        if (packet.Forward)
+        //                        {
+        //                            packet.AppendToNetworkMessage(outMessage);
+        //                        }
+        //                    }
+        //                }
+        //                break;
+        //            case ServerPacketType.LoginError:
+        //                {
+        //                    var packet = new ClientPackets.Login();
+        //                    if (packet.ParseFromNetworkMessage(inMessage))
+        //                    {
+        //                        packet.Forward = OnReceivedClientLoginPacket?.Invoke(packet) ?? true;
+        //                        if (packet.Forward)
+        //                        {
+        //                            packet.AppendToNetworkMessage(outMessage);
+        //                        }
+        //                    }
+        //                }
+        //                break;
+        //            case ServerPacketType.LoginAdvice:
+        //                {
+        //                    var packet = new ClientPackets.Login();
+        //                    if (packet.ParseFromNetworkMessage(inMessage))
+        //                    {
+        //                        packet.Forward = OnReceivedClientLoginPacket?.Invoke(packet) ?? true;
+        //                        if (packet.Forward)
+        //                        {
+        //                            packet.AppendToNetworkMessage(outMessage);
+        //                        }
+        //                    }
+        //                }
+        //                break;
+        //            case ServerPacketType.LoginWait:
+        //                {
+        //                    var packet = new ClientPackets.Login();
+        //                    if (packet.ParseFromNetworkMessage(inMessage))
+        //                    {
+        //                        packet.Forward = OnReceivedClientLoginPacket?.Invoke(packet) ?? true;
+        //                        if (packet.Forward)
+        //                        {
+        //                            packet.AppendToNetworkMessage(outMessage);
+        //                        }
+        //                    }
+        //                }
+        //                break;
+        //            case ServerPacketType.LoginSuccess:
+        //                {
+        //                    var packet = new ClientPackets.Login();
+        //                    if (packet.ParseFromNetworkMessage(inMessage))
+        //                    {
+        //                        packet.Forward = OnReceivedClientLoginPacket?.Invoke(packet) ?? true;
+        //                        if (packet.Forward)
+        //                        {
+        //                            packet.AppendToNetworkMessage(outMessage);
+        //                        }
+        //                    }
+        //                }
+        //                break;
+        //            case ServerPacketType.StoreButtonIndicators:
+        //                {
+        //                    var packet = new ClientPackets.Login();
+        //                    if (packet.ParseFromNetworkMessage(inMessage))
+        //                    {
+        //                        packet.Forward = OnReceivedClientLoginPacket?.Invoke(packet) ?? true;
+        //                        if (packet.Forward)
+        //                        {
+        //                            packet.AppendToNetworkMessage(outMessage);
+        //                        }
+        //                    }
+        //                }
+        //                break;
+        //            case ServerPacketType.Ping:
+        //                {
+        //                    var packet = new ClientPackets.Login();
+        //                    if (packet.ParseFromNetworkMessage(inMessage))
+        //                    {
+        //                        packet.Forward = OnReceivedClientLoginPacket?.Invoke(packet) ?? true;
+        //                        if (packet.Forward)
+        //                        {
+        //                            packet.AppendToNetworkMessage(outMessage);
+        //                        }
+        //                    }
+        //                }
+        //                break;
+        //            case ServerPacketType.PingBack:
+        //                {
+        //                    var packet = new ClientPackets.Login();
+        //                    if (packet.ParseFromNetworkMessage(inMessage))
+        //                    {
+        //                        packet.Forward = OnReceivedClientLoginPacket?.Invoke(packet) ?? true;
+        //                        if (packet.Forward)
+        //                        {
+        //                            packet.AppendToNetworkMessage(outMessage);
+        //                        }
+        //                    }
+        //                }
+        //                break;
+        //            case ServerPacketType.LoginChallenge:
+        //                {
+        //                    var packet = new ClientPackets.Login();
+        //                    if (packet.ParseFromNetworkMessage(inMessage))
+        //                    {
+        //                        packet.Forward = OnReceivedClientLoginPacket?.Invoke(packet) ?? true;
+        //                        if (packet.Forward)
+        //                        {
+        //                            packet.AppendToNetworkMessage(outMessage);
+        //                        }
+        //                    }
+        //                }
+        //                break;
+        //            case ServerPacketType.Dead:
+        //                {
+        //                    var packet = new ClientPackets.Login();
+        //                    if (packet.ParseFromNetworkMessage(inMessage))
+        //                    {
+        //                        packet.Forward = OnReceivedClientLoginPacket?.Invoke(packet) ?? true;
+        //                        if (packet.Forward)
+        //                        {
+        //                            packet.AppendToNetworkMessage(outMessage);
+        //                        }
+        //                    }
+        //                }
+        //                break;
+        //            case ServerPacketType.Stash:
+        //                {
+        //                    var packet = new ClientPackets.Login();
+        //                    if (packet.ParseFromNetworkMessage(inMessage))
+        //                    {
+        //                        packet.Forward = OnReceivedClientLoginPacket?.Invoke(packet) ?? true;
+        //                        if (packet.Forward)
+        //                        {
+        //                            packet.AppendToNetworkMessage(outMessage);
+        //                        }
+        //                    }
+        //                }
+        //                break;
+        //            case ServerPacketType.DepotTileState:
+        //                {
+        //                    var packet = new ClientPackets.Login();
+        //                    if (packet.ParseFromNetworkMessage(inMessage))
+        //                    {
+        //                        packet.Forward = OnReceivedClientLoginPacket?.Invoke(packet) ?? true;
+        //                        if (packet.Forward)
+        //                        {
+        //                            packet.AppendToNetworkMessage(outMessage);
+        //                        }
+        //                    }
+        //                }
+        //                break;
+        //            case ServerPacketType.ClientCheck:
+        //                {
+        //                    var packet = new ClientPackets.Login();
+        //                    if (packet.ParseFromNetworkMessage(inMessage))
+        //                    {
+        //                        packet.Forward = OnReceivedClientLoginPacket?.Invoke(packet) ?? true;
+        //                        if (packet.Forward)
+        //                        {
+        //                            packet.AppendToNetworkMessage(outMessage);
+        //                        }
+        //                    }
+        //                }
+        //                break;
+        //            case ServerPacketType.FullMap:
+        //                {
+        //                    var packet = new ClientPackets.Login();
+        //                    if (packet.ParseFromNetworkMessage(inMessage))
+        //                    {
+        //                        packet.Forward = OnReceivedClientLoginPacket?.Invoke(packet) ?? true;
+        //                        if (packet.Forward)
+        //                        {
+        //                            packet.AppendToNetworkMessage(outMessage);
+        //                        }
+        //                    }
+        //                }
+        //                break;
+        //            case ServerPacketType.TopRow:
+        //                {
+        //                    var packet = new ClientPackets.Login();
+        //                    if (packet.ParseFromNetworkMessage(inMessage))
+        //                    {
+        //                        packet.Forward = OnReceivedClientLoginPacket?.Invoke(packet) ?? true;
+        //                        if (packet.Forward)
+        //                        {
+        //                            packet.AppendToNetworkMessage(outMessage);
+        //                        }
+        //                    }
+        //                }
+        //                break;
+        //            case ServerPacketType.RightColumn:
+        //                {
+        //                    var packet = new ClientPackets.Login();
+        //                    if (packet.ParseFromNetworkMessage(inMessage))
+        //                    {
+        //                        packet.Forward = OnReceivedClientLoginPacket?.Invoke(packet) ?? true;
+        //                        if (packet.Forward)
+        //                        {
+        //                            packet.AppendToNetworkMessage(outMessage);
+        //                        }
+        //                    }
+        //                }
+        //                break;
+        //            case ServerPacketType.BottomRow:
+        //                {
+        //                    var packet = new ClientPackets.Login();
+        //                    if (packet.ParseFromNetworkMessage(inMessage))
+        //                    {
+        //                        packet.Forward = OnReceivedClientLoginPacket?.Invoke(packet) ?? true;
+        //                        if (packet.Forward)
+        //                        {
+        //                            packet.AppendToNetworkMessage(outMessage);
+        //                        }
+        //                    }
+        //                }
+        //                break;
+        //            case ServerPacketType.LeftColumn:
+        //                {
+        //                    var packet = new ClientPackets.Login();
+        //                    if (packet.ParseFromNetworkMessage(inMessage))
+        //                    {
+        //                        packet.Forward = OnReceivedClientLoginPacket?.Invoke(packet) ?? true;
+        //                        if (packet.Forward)
+        //                        {
+        //                            packet.AppendToNetworkMessage(outMessage);
+        //                        }
+        //                    }
+        //                }
+        //                break;
+        //            case ServerPacketType.FieldData:
+        //                {
+        //                    var packet = new ClientPackets.Login();
+        //                    if (packet.ParseFromNetworkMessage(inMessage))
+        //                    {
+        //                        packet.Forward = OnReceivedClientLoginPacket?.Invoke(packet) ?? true;
+        //                        if (packet.Forward)
+        //                        {
+        //                            packet.AppendToNetworkMessage(outMessage);
+        //                        }
+        //                    }
+        //                }
+        //                break;
+        //            case ServerPacketType.CreateOnMap:
+        //                {
+        //                    var packet = new ClientPackets.Login();
+        //                    if (packet.ParseFromNetworkMessage(inMessage))
+        //                    {
+        //                        packet.Forward = OnReceivedClientLoginPacket?.Invoke(packet) ?? true;
+        //                        if (packet.Forward)
+        //                        {
+        //                            packet.AppendToNetworkMessage(outMessage);
+        //                        }
+        //                    }
+        //                }
+        //                break;
+        //            case ServerPacketType.ChangeOnMap:
+        //                {
+        //                    var packet = new ClientPackets.Login();
+        //                    if (packet.ParseFromNetworkMessage(inMessage))
+        //                    {
+        //                        packet.Forward = OnReceivedClientLoginPacket?.Invoke(packet) ?? true;
+        //                        if (packet.Forward)
+        //                        {
+        //                            packet.AppendToNetworkMessage(outMessage);
+        //                        }
+        //                    }
+        //                }
+        //                break;
+        //            case ServerPacketType.DeleteOnMap:
+        //                {
+        //                    var packet = new ClientPackets.Login();
+        //                    if (packet.ParseFromNetworkMessage(inMessage))
+        //                    {
+        //                        packet.Forward = OnReceivedClientLoginPacket?.Invoke(packet) ?? true;
+        //                        if (packet.Forward)
+        //                        {
+        //                            packet.AppendToNetworkMessage(outMessage);
+        //                        }
+        //                    }
+        //                }
+        //                break;
+        //            case ServerPacketType.MoveCreature:
+        //                {
+        //                    var packet = new ClientPackets.Login();
+        //                    if (packet.ParseFromNetworkMessage(inMessage))
+        //                    {
+        //                        packet.Forward = OnReceivedClientLoginPacket?.Invoke(packet) ?? true;
+        //                        if (packet.Forward)
+        //                        {
+        //                            packet.AppendToNetworkMessage(outMessage);
+        //                        }
+        //                    }
+        //                }
+        //                break;
+        //            case ServerPacketType.Container:
+        //                {
+        //                    var packet = new ClientPackets.Login();
+        //                    if (packet.ParseFromNetworkMessage(inMessage))
+        //                    {
+        //                        packet.Forward = OnReceivedClientLoginPacket?.Invoke(packet) ?? true;
+        //                        if (packet.Forward)
+        //                        {
+        //                            packet.AppendToNetworkMessage(outMessage);
+        //                        }
+        //                    }
+        //                }
+        //                break;
+        //            case ServerPacketType.CloseContainer:
+        //                {
+        //                    var packet = new ClientPackets.Login();
+        //                    if (packet.ParseFromNetworkMessage(inMessage))
+        //                    {
+        //                        packet.Forward = OnReceivedClientLoginPacket?.Invoke(packet) ?? true;
+        //                        if (packet.Forward)
+        //                        {
+        //                            packet.AppendToNetworkMessage(outMessage);
+        //                        }
+        //                    }
+        //                }
+        //                break;
+        //            case ServerPacketType.CreateInContainer:
+        //                {
+        //                    var packet = new ClientPackets.Login();
+        //                    if (packet.ParseFromNetworkMessage(inMessage))
+        //                    {
+        //                        packet.Forward = OnReceivedClientLoginPacket?.Invoke(packet) ?? true;
+        //                        if (packet.Forward)
+        //                        {
+        //                            packet.AppendToNetworkMessage(outMessage);
+        //                        }
+        //                    }
+        //                }
+        //                break;
+        //            case ServerPacketType.ChangeInContainer:
+        //                {
+        //                    var packet = new ClientPackets.Login();
+        //                    if (packet.ParseFromNetworkMessage(inMessage))
+        //                    {
+        //                        packet.Forward = OnReceivedClientLoginPacket?.Invoke(packet) ?? true;
+        //                        if (packet.Forward)
+        //                        {
+        //                            packet.AppendToNetworkMessage(outMessage);
+        //                        }
+        //                    }
+        //                }
+        //                break;
+        //            case ServerPacketType.DeleteInContainer:
+        //                {
+        //                    var packet = new ClientPackets.Login();
+        //                    if (packet.ParseFromNetworkMessage(inMessage))
+        //                    {
+        //                        packet.Forward = OnReceivedClientLoginPacket?.Invoke(packet) ?? true;
+        //                        if (packet.Forward)
+        //                        {
+        //                            packet.AppendToNetworkMessage(outMessage);
+        //                        }
+        //                    }
+        //                }
+        //                break;
+        //            case ServerPacketType.ScreenshotEvent:
+        //                {
+        //                    var packet = new ClientPackets.Login();
+        //                    if (packet.ParseFromNetworkMessage(inMessage))
+        //                    {
+        //                        packet.Forward = OnReceivedClientLoginPacket?.Invoke(packet) ?? true;
+        //                        if (packet.Forward)
+        //                        {
+        //                            packet.AppendToNetworkMessage(outMessage);
+        //                        }
+        //                    }
+        //                }
+        //                break;
+        //            case ServerPacketType.InspectionList:
+        //                {
+        //                    var packet = new ClientPackets.Login();
+        //                    if (packet.ParseFromNetworkMessage(inMessage))
+        //                    {
+        //                        packet.Forward = OnReceivedClientLoginPacket?.Invoke(packet) ?? true;
+        //                        if (packet.Forward)
+        //                        {
+        //                            packet.AppendToNetworkMessage(outMessage);
+        //                        }
+        //                    }
+        //                }
+        //                break;
+        //            case ServerPacketType.InspectionState:
+        //                {
+        //                    var packet = new ClientPackets.Login();
+        //                    if (packet.ParseFromNetworkMessage(inMessage))
+        //                    {
+        //                        packet.Forward = OnReceivedClientLoginPacket?.Invoke(packet) ?? true;
+        //                        if (packet.Forward)
+        //                        {
+        //                            packet.AppendToNetworkMessage(outMessage);
+        //                        }
+        //                    }
+        //                }
+        //                break;
+        //            case ServerPacketType.SetInventory:
+        //                {
+        //                    var packet = new ClientPackets.Login();
+        //                    if (packet.ParseFromNetworkMessage(inMessage))
+        //                    {
+        //                        packet.Forward = OnReceivedClientLoginPacket?.Invoke(packet) ?? true;
+        //                        if (packet.Forward)
+        //                        {
+        //                            packet.AppendToNetworkMessage(outMessage);
+        //                        }
+        //                    }
+        //                }
+        //                break;
+        //            case ServerPacketType.DeleteInventory:
+        //                {
+        //                    var packet = new ClientPackets.Login();
+        //                    if (packet.ParseFromNetworkMessage(inMessage))
+        //                    {
+        //                        packet.Forward = OnReceivedClientLoginPacket?.Invoke(packet) ?? true;
+        //                        if (packet.Forward)
+        //                        {
+        //                            packet.AppendToNetworkMessage(outMessage);
+        //                        }
+        //                    }
+        //                }
+        //                break;
+        //            case ServerPacketType.NpcOffer:
+        //                {
+        //                    var packet = new ClientPackets.Login();
+        //                    if (packet.ParseFromNetworkMessage(inMessage))
+        //                    {
+        //                        packet.Forward = OnReceivedClientLoginPacket?.Invoke(packet) ?? true;
+        //                        if (packet.Forward)
+        //                        {
+        //                            packet.AppendToNetworkMessage(outMessage);
+        //                        }
+        //                    }
+        //                }
+        //                break;
+        //            case ServerPacketType.PlayerGoods:
+        //                {
+        //                    var packet = new ClientPackets.Login();
+        //                    if (packet.ParseFromNetworkMessage(inMessage))
+        //                    {
+        //                        packet.Forward = OnReceivedClientLoginPacket?.Invoke(packet) ?? true;
+        //                        if (packet.Forward)
+        //                        {
+        //                            packet.AppendToNetworkMessage(outMessage);
+        //                        }
+        //                    }
+        //                }
+        //                break;
+        //            case ServerPacketType.CloseNpcTrade:
+        //                {
+        //                    var packet = new ClientPackets.Login();
+        //                    if (packet.ParseFromNetworkMessage(inMessage))
+        //                    {
+        //                        packet.Forward = OnReceivedClientLoginPacket?.Invoke(packet) ?? true;
+        //                        if (packet.Forward)
+        //                        {
+        //                            packet.AppendToNetworkMessage(outMessage);
+        //                        }
+        //                    }
+        //                }
+        //                break;
+        //            case ServerPacketType.OwnOffer:
+        //                {
+        //                    var packet = new ClientPackets.Login();
+        //                    if (packet.ParseFromNetworkMessage(inMessage))
+        //                    {
+        //                        packet.Forward = OnReceivedClientLoginPacket?.Invoke(packet) ?? true;
+        //                        if (packet.Forward)
+        //                        {
+        //                            packet.AppendToNetworkMessage(outMessage);
+        //                        }
+        //                    }
+        //                }
+        //                break;
+        //            case ServerPacketType.CounterOffer:
+        //                {
+        //                    var packet = new ClientPackets.Login();
+        //                    if (packet.ParseFromNetworkMessage(inMessage))
+        //                    {
+        //                        packet.Forward = OnReceivedClientLoginPacket?.Invoke(packet) ?? true;
+        //                        if (packet.Forward)
+        //                        {
+        //                            packet.AppendToNetworkMessage(outMessage);
+        //                        }
+        //                    }
+        //                }
+        //                break;
+        //            case ServerPacketType.CloseTrade:
+        //                {
+        //                    var packet = new ClientPackets.Login();
+        //                    if (packet.ParseFromNetworkMessage(inMessage))
+        //                    {
+        //                        packet.Forward = OnReceivedClientLoginPacket?.Invoke(packet) ?? true;
+        //                        if (packet.Forward)
+        //                        {
+        //                            packet.AppendToNetworkMessage(outMessage);
+        //                        }
+        //                    }
+        //                }
+        //                break;
+        //            case ServerPacketType.Ambiente:
+        //                {
+        //                    var packet = new ClientPackets.Login();
+        //                    if (packet.ParseFromNetworkMessage(inMessage))
+        //                    {
+        //                        packet.Forward = OnReceivedClientLoginPacket?.Invoke(packet) ?? true;
+        //                        if (packet.Forward)
+        //                        {
+        //                            packet.AppendToNetworkMessage(outMessage);
+        //                        }
+        //                    }
+        //                }
+        //                break;
+        //            case ServerPacketType.GraphicalEffect:
+        //                {
+        //                    var packet = new ClientPackets.Login();
+        //                    if (packet.ParseFromNetworkMessage(inMessage))
+        //                    {
+        //                        packet.Forward = OnReceivedClientLoginPacket?.Invoke(packet) ?? true;
+        //                        if (packet.Forward)
+        //                        {
+        //                            packet.AppendToNetworkMessage(outMessage);
+        //                        }
+        //                    }
+        //                }
+        //                break;
+        //            case ServerPacketType.RemoveGraphicalEffect:
+        //                {
+        //                    var packet = new ClientPackets.Login();
+        //                    if (packet.ParseFromNetworkMessage(inMessage))
+        //                    {
+        //                        packet.Forward = OnReceivedClientLoginPacket?.Invoke(packet) ?? true;
+        //                        if (packet.Forward)
+        //                        {
+        //                            packet.AppendToNetworkMessage(outMessage);
+        //                        }
+        //                    }
+        //                }
+        //                break;
+        //            case ServerPacketType.MissileEffect:
+        //                {
+        //                    var packet = new ClientPackets.Login();
+        //                    if (packet.ParseFromNetworkMessage(inMessage))
+        //                    {
+        //                        packet.Forward = OnReceivedClientLoginPacket?.Invoke(packet) ?? true;
+        //                        if (packet.Forward)
+        //                        {
+        //                            packet.AppendToNetworkMessage(outMessage);
+        //                        }
+        //                    }
+        //                }
+        //                break;
+        //            case ServerPacketType.Trappers:
+        //                {
+        //                    var packet = new ClientPackets.Login();
+        //                    if (packet.ParseFromNetworkMessage(inMessage))
+        //                    {
+        //                        packet.Forward = OnReceivedClientLoginPacket?.Invoke(packet) ?? true;
+        //                        if (packet.Forward)
+        //                        {
+        //                            packet.AppendToNetworkMessage(outMessage);
+        //                        }
+        //                    }
+        //                }
+        //                break;
+        //            case ServerPacketType.CreatureHealth:
+        //                {
+        //                    var packet = new ClientPackets.Login();
+        //                    if (packet.ParseFromNetworkMessage(inMessage))
+        //                    {
+        //                        packet.Forward = OnReceivedClientLoginPacket?.Invoke(packet) ?? true;
+        //                        if (packet.Forward)
+        //                        {
+        //                            packet.AppendToNetworkMessage(outMessage);
+        //                        }
+        //                    }
+        //                }
+        //                break;
+        //            case ServerPacketType.CreatureLight:
+        //                {
+        //                    var packet = new ClientPackets.Login();
+        //                    if (packet.ParseFromNetworkMessage(inMessage))
+        //                    {
+        //                        packet.Forward = OnReceivedClientLoginPacket?.Invoke(packet) ?? true;
+        //                        if (packet.Forward)
+        //                        {
+        //                            packet.AppendToNetworkMessage(outMessage);
+        //                        }
+        //                    }
+        //                }
+        //                break;
+        //            case ServerPacketType.CreatureOutfit:
+        //                {
+        //                    var packet = new ClientPackets.Login();
+        //                    if (packet.ParseFromNetworkMessage(inMessage))
+        //                    {
+        //                        packet.Forward = OnReceivedClientLoginPacket?.Invoke(packet) ?? true;
+        //                        if (packet.Forward)
+        //                        {
+        //                            packet.AppendToNetworkMessage(outMessage);
+        //                        }
+        //                    }
+        //                }
+        //                break;
+        //            case ServerPacketType.CreatureSpeed:
+        //                {
+        //                    var packet = new ClientPackets.Login();
+        //                    if (packet.ParseFromNetworkMessage(inMessage))
+        //                    {
+        //                        packet.Forward = OnReceivedClientLoginPacket?.Invoke(packet) ?? true;
+        //                        if (packet.Forward)
+        //                        {
+        //                            packet.AppendToNetworkMessage(outMessage);
+        //                        }
+        //                    }
+        //                }
+        //                break;
+        //            case ServerPacketType.CreatureSkull:
+        //                {
+        //                    var packet = new ClientPackets.Login();
+        //                    if (packet.ParseFromNetworkMessage(inMessage))
+        //                    {
+        //                        packet.Forward = OnReceivedClientLoginPacket?.Invoke(packet) ?? true;
+        //                        if (packet.Forward)
+        //                        {
+        //                            packet.AppendToNetworkMessage(outMessage);
+        //                        }
+        //                    }
+        //                }
+        //                break;
+        //            case ServerPacketType.CreatureParty:
+        //                {
+        //                    var packet = new ClientPackets.Login();
+        //                    if (packet.ParseFromNetworkMessage(inMessage))
+        //                    {
+        //                        packet.Forward = OnReceivedClientLoginPacket?.Invoke(packet) ?? true;
+        //                        if (packet.Forward)
+        //                        {
+        //                            packet.AppendToNetworkMessage(outMessage);
+        //                        }
+        //                    }
+        //                }
+        //                break;
+        //            case ServerPacketType.CreatureUnpass:
+        //                {
+        //                    var packet = new ClientPackets.Login();
+        //                    if (packet.ParseFromNetworkMessage(inMessage))
+        //                    {
+        //                        packet.Forward = OnReceivedClientLoginPacket?.Invoke(packet) ?? true;
+        //                        if (packet.Forward)
+        //                        {
+        //                            packet.AppendToNetworkMessage(outMessage);
+        //                        }
+        //                    }
+        //                }
+        //                break;
+        //            case ServerPacketType.CreatureMarks:
+        //                {
+        //                    var packet = new ClientPackets.Login();
+        //                    if (packet.ParseFromNetworkMessage(inMessage))
+        //                    {
+        //                        packet.Forward = OnReceivedClientLoginPacket?.Invoke(packet) ?? true;
+        //                        if (packet.Forward)
+        //                        {
+        //                            packet.AppendToNetworkMessage(outMessage);
+        //                        }
+        //                    }
+        //                }
+        //                break;
+        //            case ServerPacketType.CreaturePvpHelpers:
+        //                {
+        //                    var packet = new ClientPackets.Login();
+        //                    if (packet.ParseFromNetworkMessage(inMessage))
+        //                    {
+        //                        packet.Forward = OnReceivedClientLoginPacket?.Invoke(packet) ?? true;
+        //                        if (packet.Forward)
+        //                        {
+        //                            packet.AppendToNetworkMessage(outMessage);
+        //                        }
+        //                    }
+        //                }
+        //                break;
+        //            case ServerPacketType.CreatureType:
+        //                {
+        //                    var packet = new ClientPackets.Login();
+        //                    if (packet.ParseFromNetworkMessage(inMessage))
+        //                    {
+        //                        packet.Forward = OnReceivedClientLoginPacket?.Invoke(packet) ?? true;
+        //                        if (packet.Forward)
+        //                        {
+        //                            packet.AppendToNetworkMessage(outMessage);
+        //                        }
+        //                    }
+        //                }
+        //                break;
+        //            case ServerPacketType.EditText:
+        //                {
+        //                    var packet = new ClientPackets.Login();
+        //                    if (packet.ParseFromNetworkMessage(inMessage))
+        //                    {
+        //                        packet.Forward = OnReceivedClientLoginPacket?.Invoke(packet) ?? true;
+        //                        if (packet.Forward)
+        //                        {
+        //                            packet.AppendToNetworkMessage(outMessage);
+        //                        }
+        //                    }
+        //                }
+        //                break;
+        //            case ServerPacketType.EditList:
+        //                {
+        //                    var packet = new ClientPackets.Login();
+        //                    if (packet.ParseFromNetworkMessage(inMessage))
+        //                    {
+        //                        packet.Forward = OnReceivedClientLoginPacket?.Invoke(packet) ?? true;
+        //                        if (packet.Forward)
+        //                        {
+        //                            packet.AppendToNetworkMessage(outMessage);
+        //                        }
+        //                    }
+        //                }
+        //                break;
+        //            case ServerPacketType.ShowGameNews:
+        //                {
+        //                    var packet = new ClientPackets.Login();
+        //                    if (packet.ParseFromNetworkMessage(inMessage))
+        //                    {
+        //                        packet.Forward = OnReceivedClientLoginPacket?.Invoke(packet) ?? true;
+        //                        if (packet.Forward)
+        //                        {
+        //                            packet.AppendToNetworkMessage(outMessage);
+        //                        }
+        //                    }
+        //                }
+        //                break;
+        //            case ServerPacketType.BlessingsDialog:
+        //                {
+        //                    var packet = new ClientPackets.Login();
+        //                    if (packet.ParseFromNetworkMessage(inMessage))
+        //                    {
+        //                        packet.Forward = OnReceivedClientLoginPacket?.Invoke(packet) ?? true;
+        //                        if (packet.Forward)
+        //                        {
+        //                            packet.AppendToNetworkMessage(outMessage);
+        //                        }
+        //                    }
+        //                }
+        //                break;
+        //            case ServerPacketType.Blessings:
+        //                {
+        //                    var packet = new ClientPackets.Login();
+        //                    if (packet.ParseFromNetworkMessage(inMessage))
+        //                    {
+        //                        packet.Forward = OnReceivedClientLoginPacket?.Invoke(packet) ?? true;
+        //                        if (packet.Forward)
+        //                        {
+        //                            packet.AppendToNetworkMessage(outMessage);
+        //                        }
+        //                    }
+        //                }
+        //                break;
+        //            case ServerPacketType.SwitchPreset:
+        //                {
+        //                    var packet = new ClientPackets.Login();
+        //                    if (packet.ParseFromNetworkMessage(inMessage))
+        //                    {
+        //                        packet.Forward = OnReceivedClientLoginPacket?.Invoke(packet) ?? true;
+        //                        if (packet.Forward)
+        //                        {
+        //                            packet.AppendToNetworkMessage(outMessage);
+        //                        }
+        //                    }
+        //                }
+        //                break;
+        //            case ServerPacketType.PremiumTrigger:
+        //                {
+        //                    var packet = new ClientPackets.Login();
+        //                    if (packet.ParseFromNetworkMessage(inMessage))
+        //                    {
+        //                        packet.Forward = OnReceivedClientLoginPacket?.Invoke(packet) ?? true;
+        //                        if (packet.Forward)
+        //                        {
+        //                            packet.AppendToNetworkMessage(outMessage);
+        //                        }
+        //                    }
+        //                }
+        //                break;
+        //            case ServerPacketType.PlayerDataBasic:
+        //                {
+        //                    var packet = new ClientPackets.Login();
+        //                    if (packet.ParseFromNetworkMessage(inMessage))
+        //                    {
+        //                        packet.Forward = OnReceivedClientLoginPacket?.Invoke(packet) ?? true;
+        //                        if (packet.Forward)
+        //                        {
+        //                            packet.AppendToNetworkMessage(outMessage);
+        //                        }
+        //                    }
+        //                }
+        //                break;
+        //            case ServerPacketType.PlayerDataCurrent:
+        //                {
+        //                    var packet = new ClientPackets.Login();
+        //                    if (packet.ParseFromNetworkMessage(inMessage))
+        //                    {
+        //                        packet.Forward = OnReceivedClientLoginPacket?.Invoke(packet) ?? true;
+        //                        if (packet.Forward)
+        //                        {
+        //                            packet.AppendToNetworkMessage(outMessage);
+        //                        }
+        //                    }
+        //                }
+        //                break;
+        //            case ServerPacketType.PlayerSkills:
+        //                {
+        //                    var packet = new ClientPackets.Login();
+        //                    if (packet.ParseFromNetworkMessage(inMessage))
+        //                    {
+        //                        packet.Forward = OnReceivedClientLoginPacket?.Invoke(packet) ?? true;
+        //                        if (packet.Forward)
+        //                        {
+        //                            packet.AppendToNetworkMessage(outMessage);
+        //                        }
+        //                    }
+        //                }
+        //                break;
+        //            case ServerPacketType.PlayerState:
+        //                {
+        //                    var packet = new ClientPackets.Login();
+        //                    if (packet.ParseFromNetworkMessage(inMessage))
+        //                    {
+        //                        packet.Forward = OnReceivedClientLoginPacket?.Invoke(packet) ?? true;
+        //                        if (packet.Forward)
+        //                        {
+        //                            packet.AppendToNetworkMessage(outMessage);
+        //                        }
+        //                    }
+        //                }
+        //                break;
+        //            case ServerPacketType.ClearTarget:
+        //                {
+        //                    var packet = new ClientPackets.Login();
+        //                    if (packet.ParseFromNetworkMessage(inMessage))
+        //                    {
+        //                        packet.Forward = OnReceivedClientLoginPacket?.Invoke(packet) ?? true;
+        //                        if (packet.Forward)
+        //                        {
+        //                            packet.AppendToNetworkMessage(outMessage);
+        //                        }
+        //                    }
+        //                }
+        //                break;
+        //            case ServerPacketType.SpellDelay:
+        //                {
+        //                    var packet = new ClientPackets.Login();
+        //                    if (packet.ParseFromNetworkMessage(inMessage))
+        //                    {
+        //                        packet.Forward = OnReceivedClientLoginPacket?.Invoke(packet) ?? true;
+        //                        if (packet.Forward)
+        //                        {
+        //                            packet.AppendToNetworkMessage(outMessage);
+        //                        }
+        //                    }
+        //                }
+        //                break;
+        //            case ServerPacketType.SpellGroupDelay:
+        //                {
+        //                    var packet = new ClientPackets.Login();
+        //                    if (packet.ParseFromNetworkMessage(inMessage))
+        //                    {
+        //                        packet.Forward = OnReceivedClientLoginPacket?.Invoke(packet) ?? true;
+        //                        if (packet.Forward)
+        //                        {
+        //                            packet.AppendToNetworkMessage(outMessage);
+        //                        }
+        //                    }
+        //                }
+        //                break;
+        //            case ServerPacketType.MultiUseDelay:
+        //                {
+        //                    var packet = new ClientPackets.Login();
+        //                    if (packet.ParseFromNetworkMessage(inMessage))
+        //                    {
+        //                        packet.Forward = OnReceivedClientLoginPacket?.Invoke(packet) ?? true;
+        //                        if (packet.Forward)
+        //                        {
+        //                            packet.AppendToNetworkMessage(outMessage);
+        //                        }
+        //                    }
+        //                }
+        //                break;
+        //            case ServerPacketType.SetTactics:
+        //                {
+        //                    var packet = new ClientPackets.Login();
+        //                    if (packet.ParseFromNetworkMessage(inMessage))
+        //                    {
+        //                        packet.Forward = OnReceivedClientLoginPacket?.Invoke(packet) ?? true;
+        //                        if (packet.Forward)
+        //                        {
+        //                            packet.AppendToNetworkMessage(outMessage);
+        //                        }
+        //                    }
+        //                }
+        //                break;
+        //            case ServerPacketType.SetStoreDeepLink:
+        //                {
+        //                    var packet = new ClientPackets.Login();
+        //                    if (packet.ParseFromNetworkMessage(inMessage))
+        //                    {
+        //                        packet.Forward = OnReceivedClientLoginPacket?.Invoke(packet) ?? true;
+        //                        if (packet.Forward)
+        //                        {
+        //                            packet.AppendToNetworkMessage(outMessage);
+        //                        }
+        //                    }
+        //                }
+        //                break;
+        //            case ServerPacketType.RestingAreaState:
+        //                {
+        //                    var packet = new ClientPackets.Login();
+        //                    if (packet.ParseFromNetworkMessage(inMessage))
+        //                    {
+        //                        packet.Forward = OnReceivedClientLoginPacket?.Invoke(packet) ?? true;
+        //                        if (packet.Forward)
+        //                        {
+        //                            packet.AppendToNetworkMessage(outMessage);
+        //                        }
+        //                    }
+        //                }
+        //                break;
+        //            case ServerPacketType.Talk:
+        //                {
+        //                    var packet = new ClientPackets.Login();
+        //                    if (packet.ParseFromNetworkMessage(inMessage))
+        //                    {
+        //                        packet.Forward = OnReceivedClientLoginPacket?.Invoke(packet) ?? true;
+        //                        if (packet.Forward)
+        //                        {
+        //                            packet.AppendToNetworkMessage(outMessage);
+        //                        }
+        //                    }
+        //                }
+        //                break;
+        //            case ServerPacketType.Channels:
+        //                {
+        //                    var packet = new ClientPackets.Login();
+        //                    if (packet.ParseFromNetworkMessage(inMessage))
+        //                    {
+        //                        packet.Forward = OnReceivedClientLoginPacket?.Invoke(packet) ?? true;
+        //                        if (packet.Forward)
+        //                        {
+        //                            packet.AppendToNetworkMessage(outMessage);
+        //                        }
+        //                    }
+        //                }
+        //                break;
+        //            case ServerPacketType.OpenChannel:
+        //                {
+        //                    var packet = new ClientPackets.Login();
+        //                    if (packet.ParseFromNetworkMessage(inMessage))
+        //                    {
+        //                        packet.Forward = OnReceivedClientLoginPacket?.Invoke(packet) ?? true;
+        //                        if (packet.Forward)
+        //                        {
+        //                            packet.AppendToNetworkMessage(outMessage);
+        //                        }
+        //                    }
+        //                }
+        //                break;
+        //            case ServerPacketType.PrivateChannel:
+        //                {
+        //                    var packet = new ClientPackets.Login();
+        //                    if (packet.ParseFromNetworkMessage(inMessage))
+        //                    {
+        //                        packet.Forward = OnReceivedClientLoginPacket?.Invoke(packet) ?? true;
+        //                        if (packet.Forward)
+        //                        {
+        //                            packet.AppendToNetworkMessage(outMessage);
+        //                        }
+        //                    }
+        //                }
+        //                break;
+        //            case ServerPacketType.EditGuildMessage:
+        //                {
+        //                    var packet = new ClientPackets.Login();
+        //                    if (packet.ParseFromNetworkMessage(inMessage))
+        //                    {
+        //                        packet.Forward = OnReceivedClientLoginPacket?.Invoke(packet) ?? true;
+        //                        if (packet.Forward)
+        //                        {
+        //                            packet.AppendToNetworkMessage(outMessage);
+        //                        }
+        //                    }
+        //                }
+        //                break;
+        //            case ServerPacketType.OpenOwnChannel:
+        //                {
+        //                    var packet = new ClientPackets.Login();
+        //                    if (packet.ParseFromNetworkMessage(inMessage))
+        //                    {
+        //                        packet.Forward = OnReceivedClientLoginPacket?.Invoke(packet) ?? true;
+        //                        if (packet.Forward)
+        //                        {
+        //                            packet.AppendToNetworkMessage(outMessage);
+        //                        }
+        //                    }
+        //                }
+        //                break;
+        //            case ServerPacketType.CloseChannel:
+        //                {
+        //                    var packet = new ClientPackets.Login();
+        //                    if (packet.ParseFromNetworkMessage(inMessage))
+        //                    {
+        //                        packet.Forward = OnReceivedClientLoginPacket?.Invoke(packet) ?? true;
+        //                        if (packet.Forward)
+        //                        {
+        //                            packet.AppendToNetworkMessage(outMessage);
+        //                        }
+        //                    }
+        //                }
+        //                break;
+        //            case ServerPacketType.Message:
+        //                {
+        //                    var packet = new ClientPackets.Login();
+        //                    if (packet.ParseFromNetworkMessage(inMessage))
+        //                    {
+        //                        packet.Forward = OnReceivedClientLoginPacket?.Invoke(packet) ?? true;
+        //                        if (packet.Forward)
+        //                        {
+        //                            packet.AppendToNetworkMessage(outMessage);
+        //                        }
+        //                    }
+        //                }
+        //                break;
+        //            case ServerPacketType.SnapBack:
+        //                {
+        //                    var packet = new ClientPackets.Login();
+        //                    if (packet.ParseFromNetworkMessage(inMessage))
+        //                    {
+        //                        packet.Forward = OnReceivedClientLoginPacket?.Invoke(packet) ?? true;
+        //                        if (packet.Forward)
+        //                        {
+        //                            packet.AppendToNetworkMessage(outMessage);
+        //                        }
+        //                    }
+        //                }
+        //                break;
+        //            case ServerPacketType.Wait:
+        //                {
+        //                    var packet = new ClientPackets.Login();
+        //                    if (packet.ParseFromNetworkMessage(inMessage))
+        //                    {
+        //                        packet.Forward = OnReceivedClientLoginPacket?.Invoke(packet) ?? true;
+        //                        if (packet.Forward)
+        //                        {
+        //                            packet.AppendToNetworkMessage(outMessage);
+        //                        }
+        //                    }
+        //                }
+        //                break;
+        //            case ServerPacketType.UnjustifiedPoints:
+        //                {
+        //                    var packet = new ClientPackets.Login();
+        //                    if (packet.ParseFromNetworkMessage(inMessage))
+        //                    {
+        //                        packet.Forward = OnReceivedClientLoginPacket?.Invoke(packet) ?? true;
+        //                        if (packet.Forward)
+        //                        {
+        //                            packet.AppendToNetworkMessage(outMessage);
+        //                        }
+        //                    }
+        //                }
+        //                break;
+        //            case ServerPacketType.PvpSituations:
+        //                {
+        //                    var packet = new ClientPackets.Login();
+        //                    if (packet.ParseFromNetworkMessage(inMessage))
+        //                    {
+        //                        packet.Forward = OnReceivedClientLoginPacket?.Invoke(packet) ?? true;
+        //                        if (packet.Forward)
+        //                        {
+        //                            packet.AppendToNetworkMessage(outMessage);
+        //                        }
+        //                    }
+        //                }
+        //                break;
+        //            case ServerPacketType.TopFloor:
+        //                {
+        //                    var packet = new ClientPackets.Login();
+        //                    if (packet.ParseFromNetworkMessage(inMessage))
+        //                    {
+        //                        packet.Forward = OnReceivedClientLoginPacket?.Invoke(packet) ?? true;
+        //                        if (packet.Forward)
+        //                        {
+        //                            packet.AppendToNetworkMessage(outMessage);
+        //                        }
+        //                    }
+        //                }
+        //                break;
+        //            case ServerPacketType.BottomFloor:
+        //                {
+        //                    var packet = new ClientPackets.Login();
+        //                    if (packet.ParseFromNetworkMessage(inMessage))
+        //                    {
+        //                        packet.Forward = OnReceivedClientLoginPacket?.Invoke(packet) ?? true;
+        //                        if (packet.Forward)
+        //                        {
+        //                            packet.AppendToNetworkMessage(outMessage);
+        //                        }
+        //                    }
+        //                }
+        //                break;
+        //            case ServerPacketType.UpdateLootContainers:
+        //                {
+        //                    var packet = new ClientPackets.Login();
+        //                    if (packet.ParseFromNetworkMessage(inMessage))
+        //                    {
+        //                        packet.Forward = OnReceivedClientLoginPacket?.Invoke(packet) ?? true;
+        //                        if (packet.Forward)
+        //                        {
+        //                            packet.AppendToNetworkMessage(outMessage);
+        //                        }
+        //                    }
+        //                }
+        //                break;
+        //            case ServerPacketType.Outfit:
+        //                {
+        //                    var packet = new ClientPackets.Login();
+        //                    if (packet.ParseFromNetworkMessage(inMessage))
+        //                    {
+        //                        packet.Forward = OnReceivedClientLoginPacket?.Invoke(packet) ?? true;
+        //                        if (packet.Forward)
+        //                        {
+        //                            packet.AppendToNetworkMessage(outMessage);
+        //                        }
+        //                    }
+        //                }
+        //                break;
+        //            case ServerPacketType.ExivaSuppressed:
+        //                {
+        //                    var packet = new ClientPackets.Login();
+        //                    if (packet.ParseFromNetworkMessage(inMessage))
+        //                    {
+        //                        packet.Forward = OnReceivedClientLoginPacket?.Invoke(packet) ?? true;
+        //                        if (packet.Forward)
+        //                        {
+        //                            packet.AppendToNetworkMessage(outMessage);
+        //                        }
+        //                    }
+        //                }
+        //                break;
+        //            case ServerPacketType.UpdateExivaOptions:
+        //                {
+        //                    var packet = new ClientPackets.Login();
+        //                    if (packet.ParseFromNetworkMessage(inMessage))
+        //                    {
+        //                        packet.Forward = OnReceivedClientLoginPacket?.Invoke(packet) ?? true;
+        //                        if (packet.Forward)
+        //                        {
+        //                            packet.AppendToNetworkMessage(outMessage);
+        //                        }
+        //                    }
+        //                }
+        //                break;
+        //            case ServerPacketType.ImpactTracking:
+        //                {
+        //                    var packet = new ClientPackets.Login();
+        //                    if (packet.ParseFromNetworkMessage(inMessage))
+        //                    {
+        //                        packet.Forward = OnReceivedClientLoginPacket?.Invoke(packet) ?? true;
+        //                        if (packet.Forward)
+        //                        {
+        //                            packet.AppendToNetworkMessage(outMessage);
+        //                        }
+        //                    }
+        //                }
+        //                break;
+        //            case ServerPacketType.MarketStatistics:
+        //                {
+        //                    var packet = new ClientPackets.Login();
+        //                    if (packet.ParseFromNetworkMessage(inMessage))
+        //                    {
+        //                        packet.Forward = OnReceivedClientLoginPacket?.Invoke(packet) ?? true;
+        //                        if (packet.Forward)
+        //                        {
+        //                            packet.AppendToNetworkMessage(outMessage);
+        //                        }
+        //                    }
+        //                }
+        //                break;
+        //            case ServerPacketType.ItemWasted:
+        //                {
+        //                    var packet = new ClientPackets.Login();
+        //                    if (packet.ParseFromNetworkMessage(inMessage))
+        //                    {
+        //                        packet.Forward = OnReceivedClientLoginPacket?.Invoke(packet) ?? true;
+        //                        if (packet.Forward)
+        //                        {
+        //                            packet.AppendToNetworkMessage(outMessage);
+        //                        }
+        //                    }
+        //                }
+        //                break;
+        //            case ServerPacketType.ItemLooted:
+        //                {
+        //                    var packet = new ClientPackets.Login();
+        //                    if (packet.ParseFromNetworkMessage(inMessage))
+        //                    {
+        //                        packet.Forward = OnReceivedClientLoginPacket?.Invoke(packet) ?? true;
+        //                        if (packet.Forward)
+        //                        {
+        //                            packet.AppendToNetworkMessage(outMessage);
+        //                        }
+        //                    }
+        //                }
+        //                break;
+        //            case ServerPacketType.TrackQuestFlags:
+        //                {
+        //                    var packet = new ClientPackets.Login();
+        //                    if (packet.ParseFromNetworkMessage(inMessage))
+        //                    {
+        //                        packet.Forward = OnReceivedClientLoginPacket?.Invoke(packet) ?? true;
+        //                        if (packet.Forward)
+        //                        {
+        //                            packet.AppendToNetworkMessage(outMessage);
+        //                        }
+        //                    }
+        //                }
+        //                break;
+        //            case ServerPacketType.KillTracking:
+        //                {
+        //                    var packet = new ClientPackets.Login();
+        //                    if (packet.ParseFromNetworkMessage(inMessage))
+        //                    {
+        //                        packet.Forward = OnReceivedClientLoginPacket?.Invoke(packet) ?? true;
+        //                        if (packet.Forward)
+        //                        {
+        //                            packet.AppendToNetworkMessage(outMessage);
+        //                        }
+        //                    }
+        //                }
+        //                break;
+        //            case ServerPacketType.BuddyData:
+        //                {
+        //                    var packet = new ClientPackets.Login();
+        //                    if (packet.ParseFromNetworkMessage(inMessage))
+        //                    {
+        //                        packet.Forward = OnReceivedClientLoginPacket?.Invoke(packet) ?? true;
+        //                        if (packet.Forward)
+        //                        {
+        //                            packet.AppendToNetworkMessage(outMessage);
+        //                        }
+        //                    }
+        //                }
+        //                break;
+        //            case ServerPacketType.BuddyStatusChange:
+        //                {
+        //                    var packet = new ClientPackets.Login();
+        //                    if (packet.ParseFromNetworkMessage(inMessage))
+        //                    {
+        //                        packet.Forward = OnReceivedClientLoginPacket?.Invoke(packet) ?? true;
+        //                        if (packet.Forward)
+        //                        {
+        //                            packet.AppendToNetworkMessage(outMessage);
+        //                        }
+        //                    }
+        //                }
+        //                break;
+        //            case ServerPacketType.BuddyGroupData:
+        //                {
+        //                    var packet = new ClientPackets.Login();
+        //                    if (packet.ParseFromNetworkMessage(inMessage))
+        //                    {
+        //                        packet.Forward = OnReceivedClientLoginPacket?.Invoke(packet) ?? true;
+        //                        if (packet.Forward)
+        //                        {
+        //                            packet.AppendToNetworkMessage(outMessage);
+        //                        }
+        //                    }
+        //                }
+        //                break;
+        //            case ServerPacketType.MonsterCyclopedia:
+        //                {
+        //                    var packet = new ClientPackets.Login();
+        //                    if (packet.ParseFromNetworkMessage(inMessage))
+        //                    {
+        //                        packet.Forward = OnReceivedClientLoginPacket?.Invoke(packet) ?? true;
+        //                        if (packet.Forward)
+        //                        {
+        //                            packet.AppendToNetworkMessage(outMessage);
+        //                        }
+        //                    }
+        //                }
+        //                break;
+        //            case ServerPacketType.MonsterCyclopediaMonsters:
+        //                {
+        //                    var packet = new ClientPackets.Login();
+        //                    if (packet.ParseFromNetworkMessage(inMessage))
+        //                    {
+        //                        packet.Forward = OnReceivedClientLoginPacket?.Invoke(packet) ?? true;
+        //                        if (packet.Forward)
+        //                        {
+        //                            packet.AppendToNetworkMessage(outMessage);
+        //                        }
+        //                    }
+        //                }
+        //                break;
+        //            case ServerPacketType.MonsterCyclopediaRace:
+        //                {
+        //                    var packet = new ClientPackets.Login();
+        //                    if (packet.ParseFromNetworkMessage(inMessage))
+        //                    {
+        //                        packet.Forward = OnReceivedClientLoginPacket?.Invoke(packet) ?? true;
+        //                        if (packet.Forward)
+        //                        {
+        //                            packet.AppendToNetworkMessage(outMessage);
+        //                        }
+        //                    }
+        //                }
+        //                break;
+        //            case ServerPacketType.MonsterCyclopediaBonusEffects:
+        //                {
+        //                    var packet = new ClientPackets.Login();
+        //                    if (packet.ParseFromNetworkMessage(inMessage))
+        //                    {
+        //                        packet.Forward = OnReceivedClientLoginPacket?.Invoke(packet) ?? true;
+        //                        if (packet.Forward)
+        //                        {
+        //                            packet.AppendToNetworkMessage(outMessage);
+        //                        }
+        //                    }
+        //                }
+        //                break;
+        //            case ServerPacketType.MonsterCyclopediaNewDetails:
+        //                {
+        //                    var packet = new ClientPackets.Login();
+        //                    if (packet.ParseFromNetworkMessage(inMessage))
+        //                    {
+        //                        packet.Forward = OnReceivedClientLoginPacket?.Invoke(packet) ?? true;
+        //                        if (packet.Forward)
+        //                        {
+        //                            packet.AppendToNetworkMessage(outMessage);
+        //                        }
+        //                    }
+        //                }
+        //                break;
+        //            case ServerPacketType.TutorialHint:
+        //                {
+        //                    var packet = new ClientPackets.Login();
+        //                    if (packet.ParseFromNetworkMessage(inMessage))
+        //                    {
+        //                        packet.Forward = OnReceivedClientLoginPacket?.Invoke(packet) ?? true;
+        //                        if (packet.Forward)
+        //                        {
+        //                            packet.AppendToNetworkMessage(outMessage);
+        //                        }
+        //                    }
+        //                }
+        //                break;
+        //            case ServerPacketType.CyclopediaMapData:
+        //                {
+        //                    var packet = new ClientPackets.Login();
+        //                    if (packet.ParseFromNetworkMessage(inMessage))
+        //                    {
+        //                        packet.Forward = OnReceivedClientLoginPacket?.Invoke(packet) ?? true;
+        //                        if (packet.Forward)
+        //                        {
+        //                            packet.AppendToNetworkMessage(outMessage);
+        //                        }
+        //                    }
+        //                }
+        //                break;
+        //            case ServerPacketType.DailyRewardCollectionState:
+        //                {
+        //                    var packet = new ClientPackets.Login();
+        //                    if (packet.ParseFromNetworkMessage(inMessage))
+        //                    {
+        //                        packet.Forward = OnReceivedClientLoginPacket?.Invoke(packet) ?? true;
+        //                        if (packet.Forward)
+        //                        {
+        //                            packet.AppendToNetworkMessage(outMessage);
+        //                        }
+        //                    }
+        //                }
+        //                break;
+        //            case ServerPacketType.CreditBalance:
+        //                {
+        //                    var packet = new ClientPackets.Login();
+        //                    if (packet.ParseFromNetworkMessage(inMessage))
+        //                    {
+        //                        packet.Forward = OnReceivedClientLoginPacket?.Invoke(packet) ?? true;
+        //                        if (packet.Forward)
+        //                        {
+        //                            packet.AppendToNetworkMessage(outMessage);
+        //                        }
+        //                    }
+        //                }
+        //                break;
+        //            case ServerPacketType.IngameShopError:
+        //                {
+        //                    var packet = new ClientPackets.Login();
+        //                    if (packet.ParseFromNetworkMessage(inMessage))
+        //                    {
+        //                        packet.Forward = OnReceivedClientLoginPacket?.Invoke(packet) ?? true;
+        //                        if (packet.Forward)
+        //                        {
+        //                            packet.AppendToNetworkMessage(outMessage);
+        //                        }
+        //                    }
+        //                }
+        //                break;
+        //            case ServerPacketType.RequestPurchaseData:
+        //                {
+        //                    var packet = new ClientPackets.Login();
+        //                    if (packet.ParseFromNetworkMessage(inMessage))
+        //                    {
+        //                        packet.Forward = OnReceivedClientLoginPacket?.Invoke(packet) ?? true;
+        //                        if (packet.Forward)
+        //                        {
+        //                            packet.AppendToNetworkMessage(outMessage);
+        //                        }
+        //                    }
+        //                }
+        //                break;
+        //            case ServerPacketType.OpenRewardWall:
+        //                {
+        //                    var packet = new ClientPackets.Login();
+        //                    if (packet.ParseFromNetworkMessage(inMessage))
+        //                    {
+        //                        packet.Forward = OnReceivedClientLoginPacket?.Invoke(packet) ?? true;
+        //                        if (packet.Forward)
+        //                        {
+        //                            packet.AppendToNetworkMessage(outMessage);
+        //                        }
+        //                    }
+        //                }
+        //                break;
+        //            case ServerPacketType.CloseRewardWall:
+        //                {
+        //                    var packet = new ClientPackets.Login();
+        //                    if (packet.ParseFromNetworkMessage(inMessage))
+        //                    {
+        //                        packet.Forward = OnReceivedClientLoginPacket?.Invoke(packet) ?? true;
+        //                        if (packet.Forward)
+        //                        {
+        //                            packet.AppendToNetworkMessage(outMessage);
+        //                        }
+        //                    }
+        //                }
+        //                break;
+        //            case ServerPacketType.DailyRewardBasic:
+        //                {
+        //                    var packet = new ClientPackets.Login();
+        //                    if (packet.ParseFromNetworkMessage(inMessage))
+        //                    {
+        //                        packet.Forward = OnReceivedClientLoginPacket?.Invoke(packet) ?? true;
+        //                        if (packet.Forward)
+        //                        {
+        //                            packet.AppendToNetworkMessage(outMessage);
+        //                        }
+        //                    }
+        //                }
+        //                break;
+        //            case ServerPacketType.DailyRewardHistory:
+        //                {
+        //                    var packet = new ClientPackets.Login();
+        //                    if (packet.ParseFromNetworkMessage(inMessage))
+        //                    {
+        //                        packet.Forward = OnReceivedClientLoginPacket?.Invoke(packet) ?? true;
+        //                        if (packet.Forward)
+        //                        {
+        //                            packet.AppendToNetworkMessage(outMessage);
+        //                        }
+        //                    }
+        //                }
+        //                break;
+        //            case ServerPacketType.PreyFreeListRerollAvailability:
+        //                {
+        //                    var packet = new ClientPackets.Login();
+        //                    if (packet.ParseFromNetworkMessage(inMessage))
+        //                    {
+        //                        packet.Forward = OnReceivedClientLoginPacket?.Invoke(packet) ?? true;
+        //                        if (packet.Forward)
+        //                        {
+        //                            packet.AppendToNetworkMessage(outMessage);
+        //                        }
+        //                    }
+        //                }
+        //                break;
+        //            case ServerPacketType.PreyTimeLeft:
+        //                {
+        //                    var packet = new ClientPackets.Login();
+        //                    if (packet.ParseFromNetworkMessage(inMessage))
+        //                    {
+        //                        packet.Forward = OnReceivedClientLoginPacket?.Invoke(packet) ?? true;
+        //                        if (packet.Forward)
+        //                        {
+        //                            packet.AppendToNetworkMessage(outMessage);
+        //                        }
+        //                    }
+        //                }
+        //                break;
+        //            case ServerPacketType.PreyData:
+        //                {
+        //                    var packet = new ClientPackets.Login();
+        //                    if (packet.ParseFromNetworkMessage(inMessage))
+        //                    {
+        //                        packet.Forward = OnReceivedClientLoginPacket?.Invoke(packet) ?? true;
+        //                        if (packet.Forward)
+        //                        {
+        //                            packet.AppendToNetworkMessage(outMessage);
+        //                        }
+        //                    }
+        //                }
+        //                break;
+        //            case ServerPacketType.PreyRerollPrice:
+        //                {
+        //                    var packet = new ClientPackets.Login();
+        //                    if (packet.ParseFromNetworkMessage(inMessage))
+        //                    {
+        //                        packet.Forward = OnReceivedClientLoginPacket?.Invoke(packet) ?? true;
+        //                        if (packet.Forward)
+        //                        {
+        //                            packet.AppendToNetworkMessage(outMessage);
+        //                        }
+        //                    }
+        //                }
+        //                break;
+        //            case ServerPacketType.OfferDescription:
+        //                {
+        //                    var packet = new ClientPackets.Login();
+        //                    if (packet.ParseFromNetworkMessage(inMessage))
+        //                    {
+        //                        packet.Forward = OnReceivedClientLoginPacket?.Invoke(packet) ?? true;
+        //                        if (packet.Forward)
+        //                        {
+        //                            packet.AppendToNetworkMessage(outMessage);
+        //                        }
+        //                    }
+        //                }
+        //                break;
+        //            case ServerPacketType.ImbuingDialogRefresh:
+        //                {
+        //                    var packet = new ClientPackets.Login();
+        //                    if (packet.ParseFromNetworkMessage(inMessage))
+        //                    {
+        //                        packet.Forward = OnReceivedClientLoginPacket?.Invoke(packet) ?? true;
+        //                        if (packet.Forward)
+        //                        {
+        //                            packet.AppendToNetworkMessage(outMessage);
+        //                        }
+        //                    }
+        //                }
+        //                break;
+        //            case ServerPacketType.CloseImbuingDialog:
+        //                {
+        //                    var packet = new ClientPackets.Login();
+        //                    if (packet.ParseFromNetworkMessage(inMessage))
+        //                    {
+        //                        packet.Forward = OnReceivedClientLoginPacket?.Invoke(packet) ?? true;
+        //                        if (packet.Forward)
+        //                        {
+        //                            packet.AppendToNetworkMessage(outMessage);
+        //                        }
+        //                    }
+        //                }
+        //                break;
+        //            case ServerPacketType.ShowMessageDialog:
+        //                {
+        //                    var packet = new ClientPackets.Login();
+        //                    if (packet.ParseFromNetworkMessage(inMessage))
+        //                    {
+        //                        packet.Forward = OnReceivedClientLoginPacket?.Invoke(packet) ?? true;
+        //                        if (packet.Forward)
+        //                        {
+        //                            packet.AppendToNetworkMessage(outMessage);
+        //                        }
+        //                    }
+        //                }
+        //                break;
+        //            case ServerPacketType.RequestResourceBalance:
+        //                {
+        //                    var packet = new ClientPackets.Login();
+        //                    if (packet.ParseFromNetworkMessage(inMessage))
+        //                    {
+        //                        packet.Forward = OnReceivedClientLoginPacket?.Invoke(packet) ?? true;
+        //                        if (packet.Forward)
+        //                        {
+        //                            packet.AppendToNetworkMessage(outMessage);
+        //                        }
+        //                    }
+        //                }
+        //                break;
+        //            case ServerPacketType.TibiaTime:
+        //                {
+        //                    var packet = new ClientPackets.Login();
+        //                    if (packet.ParseFromNetworkMessage(inMessage))
+        //                    {
+        //                        packet.Forward = OnReceivedClientLoginPacket?.Invoke(packet) ?? true;
+        //                        if (packet.Forward)
+        //                        {
+        //                            packet.AppendToNetworkMessage(outMessage);
+        //                        }
+        //                    }
+        //                }
+        //                break;
+        //            case ServerPacketType.QuestLog:
+        //                {
+        //                    var packet = new ClientPackets.Login();
+        //                    if (packet.ParseFromNetworkMessage(inMessage))
+        //                    {
+        //                        packet.Forward = OnReceivedClientLoginPacket?.Invoke(packet) ?? true;
+        //                        if (packet.Forward)
+        //                        {
+        //                            packet.AppendToNetworkMessage(outMessage);
+        //                        }
+        //                    }
+        //                }
+        //                break;
+        //            case ServerPacketType.QuestLine:
+        //                {
+        //                    var packet = new ClientPackets.Login();
+        //                    if (packet.ParseFromNetworkMessage(inMessage))
+        //                    {
+        //                        packet.Forward = OnReceivedClientLoginPacket?.Invoke(packet) ?? true;
+        //                        if (packet.Forward)
+        //                        {
+        //                            packet.AppendToNetworkMessage(outMessage);
+        //                        }
+        //                    }
+        //                }
+        //                break;
+        //            case ServerPacketType.UpdatingShopBalance:
+        //                {
+        //                    var packet = new ClientPackets.Login();
+        //                    if (packet.ParseFromNetworkMessage(inMessage))
+        //                    {
+        //                        packet.Forward = OnReceivedClientLoginPacket?.Invoke(packet) ?? true;
+        //                        if (packet.Forward)
+        //                        {
+        //                            packet.AppendToNetworkMessage(outMessage);
+        //                        }
+        //                    }
+        //                }
+        //                break;
+        //            case ServerPacketType.ChannelEvent:
+        //                {
+        //                    var packet = new ClientPackets.Login();
+        //                    if (packet.ParseFromNetworkMessage(inMessage))
+        //                    {
+        //                        packet.Forward = OnReceivedClientLoginPacket?.Invoke(packet) ?? true;
+        //                        if (packet.Forward)
+        //                        {
+        //                            packet.AppendToNetworkMessage(outMessage);
+        //                        }
+        //                    }
+        //                }
+        //                break;
+        //            case ServerPacketType.ObjectInfo:
+        //                {
+        //                    var packet = new ClientPackets.Login();
+        //                    if (packet.ParseFromNetworkMessage(inMessage))
+        //                    {
+        //                        packet.Forward = OnReceivedClientLoginPacket?.Invoke(packet) ?? true;
+        //                        if (packet.Forward)
+        //                        {
+        //                            packet.AppendToNetworkMessage(outMessage);
+        //                        }
+        //                    }
+        //                }
+        //                break;
+        //            case ServerPacketType.PlayerInventory:
+        //                {
+        //                    var packet = new ClientPackets.Login();
+        //                    if (packet.ParseFromNetworkMessage(inMessage))
+        //                    {
+        //                        packet.Forward = OnReceivedClientLoginPacket?.Invoke(packet) ?? true;
+        //                        if (packet.Forward)
+        //                        {
+        //                            packet.AppendToNetworkMessage(outMessage);
+        //                        }
+        //                    }
+        //                }
+        //                break;
+        //            case ServerPacketType.MarketEnter:
+        //                {
+        //                    var packet = new ClientPackets.Login();
+        //                    if (packet.ParseFromNetworkMessage(inMessage))
+        //                    {
+        //                        packet.Forward = OnReceivedClientLoginPacket?.Invoke(packet) ?? true;
+        //                        if (packet.Forward)
+        //                        {
+        //                            packet.AppendToNetworkMessage(outMessage);
+        //                        }
+        //                    }
+        //                }
+        //                break;
+        //            case ServerPacketType.MarketLeave:
+        //                {
+        //                    var packet = new ClientPackets.Login();
+        //                    if (packet.ParseFromNetworkMessage(inMessage))
+        //                    {
+        //                        packet.Forward = OnReceivedClientLoginPacket?.Invoke(packet) ?? true;
+        //                        if (packet.Forward)
+        //                        {
+        //                            packet.AppendToNetworkMessage(outMessage);
+        //                        }
+        //                    }
+        //                }
+        //                break;
+        //            case ServerPacketType.MarketDetail:
+        //                {
+        //                    var packet = new ClientPackets.Login();
+        //                    if (packet.ParseFromNetworkMessage(inMessage))
+        //                    {
+        //                        packet.Forward = OnReceivedClientLoginPacket?.Invoke(packet) ?? true;
+        //                        if (packet.Forward)
+        //                        {
+        //                            packet.AppendToNetworkMessage(outMessage);
+        //                        }
+        //                    }
+        //                }
+        //                break;
+        //            case ServerPacketType.MarketBrowse:
+        //                {
+        //                    var packet = new ClientPackets.Login();
+        //                    if (packet.ParseFromNetworkMessage(inMessage))
+        //                    {
+        //                        packet.Forward = OnReceivedClientLoginPacket?.Invoke(packet) ?? true;
+        //                        if (packet.Forward)
+        //                        {
+        //                            packet.AppendToNetworkMessage(outMessage);
+        //                        }
+        //                    }
+        //                }
+        //                break;
+        //            case ServerPacketType.ShowModalDialog:
+        //                {
+        //                    var packet = new ClientPackets.Login();
+        //                    if (packet.ParseFromNetworkMessage(inMessage))
+        //                    {
+        //                        packet.Forward = OnReceivedClientLoginPacket?.Invoke(packet) ?? true;
+        //                        if (packet.Forward)
+        //                        {
+        //                            packet.AppendToNetworkMessage(outMessage);
+        //                        }
+        //                    }
+        //                }
+        //                break;
+        //            case ServerPacketType.StoreCategories:
+        //                {
+        //                    var packet = new ClientPackets.Login();
+        //                    if (packet.ParseFromNetworkMessage(inMessage))
+        //                    {
+        //                        packet.Forward = OnReceivedClientLoginPacket?.Invoke(packet) ?? true;
+        //                        if (packet.Forward)
+        //                        {
+        //                            packet.AppendToNetworkMessage(outMessage);
+        //                        }
+        //                    }
+        //                }
+        //                break;
+        //            case ServerPacketType.StoreOffers:
+        //                {
+        //                    var packet = new ClientPackets.Login();
+        //                    if (packet.ParseFromNetworkMessage(inMessage))
+        //                    {
+        //                        packet.Forward = OnReceivedClientLoginPacket?.Invoke(packet) ?? true;
+        //                        if (packet.Forward)
+        //                        {
+        //                            packet.AppendToNetworkMessage(outMessage);
+        //                        }
+        //                    }
+        //                }
+        //                break;
+        //            case ServerPacketType.TransactionHistory:
+        //                {
+        //                    var packet = new ClientPackets.Login();
+        //                    if (packet.ParseFromNetworkMessage(inMessage))
+        //                    {
+        //                        packet.Forward = OnReceivedClientLoginPacket?.Invoke(packet) ?? true;
+        //                        if (packet.Forward)
+        //                        {
+        //                            packet.AppendToNetworkMessage(outMessage);
+        //                        }
+        //                    }
+        //                }
+        //                break;
+        //            case ServerPacketType.StoreSuccess:
+        //                {
+        //                    var packet = new ClientPackets.Login();
+        //                    if (packet.ParseFromNetworkMessage(inMessage))
+        //                    {
+        //                        packet.Forward = OnReceivedClientLoginPacket?.Invoke(packet) ?? true;
+        //                        if (packet.Forward)
+        //                        {
+        //                            packet.AppendToNetworkMessage(outMessage);
+        //                        }
+        //                    }
+        //                }
+        //                break;
+        //            default:
+        //                break;
+        //        }
+        //    }
+        //}
     }
 }

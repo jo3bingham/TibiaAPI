@@ -23,6 +23,8 @@ namespace OXGaming.TibiaAPI.Network
 
         private readonly byte[] _buffer = new byte[MaxMessageSize];
 
+        private uint _size = PayloadDataPosition;
+
         /// <value>
         /// Gets the current position in the buffer.
         /// </value>
@@ -31,7 +33,9 @@ namespace OXGaming.TibiaAPI.Network
         /// <value>
         /// Get/set the size of the message.
         /// </value>
-        public uint Size { get; set; } = PayloadDataPosition;
+        public uint Size { get => _size; set => _size = value; }
+
+        public bool AddSequenceNumber { get; set; } = true;
 
         /// <summary>
         /// Gets the underlying buffer.
@@ -43,11 +47,10 @@ namespace OXGaming.TibiaAPI.Network
         }
 
         /// <value>
-        /// Gets the message data from the underlying buffer.
+        /// Gets the actual data from the underlying buffer.
         /// </value>
         /// <remarks>
-        /// Get this only when necessary as it creates a new byte array, copies the valid data from the
-        /// underlying buffer into it, then returns it.
+        /// Get this only when necessary as it creates a new byte array.
         /// </remarks>
         public byte[] GetData()
         {
@@ -58,8 +61,13 @@ namespace OXGaming.TibiaAPI.Network
 
         public void Reset()
         {
-            Position = PayloadDataPosition;
-            Size = PayloadDataPosition;
+            for (var i = 0; i < 8; ++i)
+            {
+                _buffer[i] = 0;
+            }
+
+            Position = 8;
+            Size = 8;
         }
 
         /// <summary>
@@ -491,6 +499,30 @@ namespace OXGaming.TibiaAPI.Network
                 }
 
                 Position = MaxMessageSize - (uint)offset - 1;
+            }
+        }
+
+        public void PrepareToParse(uint[] xteaKey)
+        {
+            Xtea.Decrypt(_buffer, Size, xteaKey);
+
+            Position = 6;
+            Size = (uint)(ReadUInt16() + 8);
+        }
+
+        public void PrepareToSend(uint[] xteaKey, ref uint sequenceNumber)
+        {
+            Position = 6;
+            Write((ushort)(Size - 8));
+
+            Xtea.Encrypt(_buffer, ref _size, xteaKey);
+
+            Position = 0;
+            Write((ushort)(_size - 2));
+
+            if (AddSequenceNumber)
+            {
+                Write(sequenceNumber++);
             }
         }
     }

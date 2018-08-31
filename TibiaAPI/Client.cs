@@ -4,24 +4,16 @@ namespace OXGaming.TibiaAPI
 {
     public class Client : IDisposable
     {
-        private Network.Connection _connection;
+        public Network.Connection Proxy { get; } = new Network.Connection();
 
         public bool StartProxy()
         {
-            if (_connection == null)
-            {
-                _connection = new Network.Connection();
-            }
-
-            return _connection.Start();
+            return Proxy.Start();
         }
 
         public void StopProxy()
         {
-            if (_connection != null)
-            {
-                _connection.Stop();
-            }
+            Proxy.Stop();
         }
 
         #region IDisposable Support
@@ -33,10 +25,7 @@ namespace OXGaming.TibiaAPI
             {
                 if (disposing)
                 {
-                    if (_connection != null)
-                    {
-                        _connection.Dispose();
-                    }
+                    Proxy.Dispose();
                 }
 
                 disposedValue = true;
