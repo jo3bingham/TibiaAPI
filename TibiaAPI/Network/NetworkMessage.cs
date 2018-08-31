@@ -2,6 +2,8 @@
 using System.IO;
 using System.Text;
 
+using OXGaming.TibiaAPI.Utilities;
+
 namespace OXGaming.TibiaAPI.Network
 {
     /// <summary>
@@ -199,6 +201,14 @@ namespace OXGaming.TibiaAPI.Network
             return Encoding.ASCII.GetString(ReadBytes(length));
         }
 
+        public Position ReadPosition()
+        {
+            var x = ReadUInt16();
+            var y = ReadUInt16();
+            var z = ReadByte();
+            return new Position(x, y, z);
+        }
+
         /// <summary>
         /// Writes a byte array to the buffer.
         /// </summary>
@@ -327,6 +337,13 @@ namespace OXGaming.TibiaAPI.Network
 
             Write((ushort)value.Length);
             Write(Encoding.ASCII.GetBytes(value));
+        }
+
+        public void Write(Position value)
+        {
+            Write(value.X);
+            Write(value.Y);
+            Write(value.Z);
         }
 
         /// <summary>

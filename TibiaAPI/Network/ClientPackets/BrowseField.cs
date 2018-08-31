@@ -1,10 +1,11 @@
 ﻿using OXGaming.TibiaAPI.Constants;
+using OXGaming.TibiaAPI.Utilities;
 
 namespace OXGaming.TibiaAPI.Network.ClientPackets
 {
     public class BrowseField : ClientPacket
     {
-        //public Position Position { get; set; }
+        public Position Position { get; set; }
 
         public BrowseField()
         {
@@ -18,14 +19,14 @@ namespace OXGaming.TibiaAPI.Network.ClientPackets
                 return false;
             }
 
-            //Position = message.ReadPosition();
+            Position = message.ReadPosition();
             return true;
         }
 
         public override void AppendToNetworkMessage(NetworkMessage message)
         {
             message.Write((byte)ClientPacketType.BrowseField);
-            //message.WritePosition(Position);
+            message.Write(Position);
         }
     }
 }

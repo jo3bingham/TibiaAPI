@@ -1,10 +1,11 @@
 ﻿using OXGaming.TibiaAPI.Constants;
+using OXGaming.TibiaAPI.Utilities;
 
 namespace OXGaming.TibiaAPI.Network.ClientPackets
 {
     public class LootContainer : ClientPacket
     {
-        //Position Position { get; set; }
+        Position Position { get; set; }
 
         public ushort ObjectId { get; set; }
 
@@ -26,7 +27,7 @@ namespace OXGaming.TibiaAPI.Network.ClientPackets
 
             Unknown1 = message.ReadByte();
             ContainerId = message.ReadByte();
-            //Position = message.ReadPosition();
+            Position = message.ReadPosition();
             ObjectId = message.ReadUInt16();
             Unknown2 = message.ReadByte();
             return true;
@@ -37,7 +38,7 @@ namespace OXGaming.TibiaAPI.Network.ClientPackets
             message.Write((byte)ClientPacketType.LootContainer);
             message.Write(Unknown1);
             message.Write(ContainerId);
-            //message.WritePosition(Position);
+            message.Write(Position);
             message.Write(ObjectId);
             message.Write(Unknown2);
         }

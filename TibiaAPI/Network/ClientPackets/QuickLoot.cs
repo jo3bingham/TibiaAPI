@@ -1,10 +1,11 @@
 ﻿using OXGaming.TibiaAPI.Constants;
+using OXGaming.TibiaAPI.Utilities;
 
 namespace OXGaming.TibiaAPI.Network.ClientPackets
 {
     public class QuickLoot : ClientPacket
     {
-        //public Position Position { get; set; }
+        public Position Position { get; set; }
 
         public ushort CorpseId { get; set; }
 
@@ -22,7 +23,7 @@ namespace OXGaming.TibiaAPI.Network.ClientPackets
                 return false;
             }
 
-            //Position = message.ReadPosition();
+            Position = message.ReadPosition();
             CorpseId = message.ReadUInt16();
             Unknown = message.ReadByte();
             return true;
@@ -31,7 +32,7 @@ namespace OXGaming.TibiaAPI.Network.ClientPackets
         public override void AppendToNetworkMessage(NetworkMessage message)
         {
             message.Write((byte)ClientPacketType.QuickLoot);
-            //message.WritePosition(Position);
+            message.Write(Position);
             message.Write(CorpseId);
             message.Write(Unknown);
         }

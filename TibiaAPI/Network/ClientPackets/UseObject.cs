@@ -1,10 +1,11 @@
 ﻿using OXGaming.TibiaAPI.Constants;
+using OXGaming.TibiaAPI.Utilities;
 
 namespace OXGaming.TibiaAPI.Network.ClientPackets
 {
     public class UseObject : ClientPacket
     {
-        //public Position Position { get; set; }
+        public Position Position { get; set; }
 
         public ushort ObjectId { get; set; }
 
@@ -23,7 +24,7 @@ namespace OXGaming.TibiaAPI.Network.ClientPackets
                 return false;
             }
 
-            //Position = message.ReadPosition();
+            Position = message.ReadPosition();
             ObjectId = message.ReadUInt16();
             StackPositionOrData = message.ReadByte();
             Index = message.ReadByte();
@@ -33,7 +34,7 @@ namespace OXGaming.TibiaAPI.Network.ClientPackets
         public override void AppendToNetworkMessage(NetworkMessage message)
         {
             message.Write((byte)ClientPacketType.UseObject);
-            //message.WritePosition(Position);
+            message.Write(Position);
             message.Write(ObjectId);
             message.Write(StackPositionOrData);
             message.Write(Index);

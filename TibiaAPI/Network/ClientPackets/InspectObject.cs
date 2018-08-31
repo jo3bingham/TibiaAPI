@@ -1,10 +1,11 @@
 ﻿using OXGaming.TibiaAPI.Constants;
+using OXGaming.TibiaAPI.Utilities;
 
 namespace OXGaming.TibiaAPI.Network.ClientPackets
 {
     public class InspectObject : ClientPacket
     {
-        //public Position Position { get; set; }
+        public Position Position { get; set; }
 
         public ushort ObjectId { get; set; }
 
@@ -31,7 +32,7 @@ namespace OXGaming.TibiaAPI.Network.ClientPackets
             }
             else
             {
-                //Position = message.ReadPosition();
+                Position = message.ReadPosition();
             }
             return true;
         }
@@ -47,7 +48,7 @@ namespace OXGaming.TibiaAPI.Network.ClientPackets
             }
             else
             {
-                //message.WritePosition(Position);
+                message.Write(Position);
             }
         }
     }

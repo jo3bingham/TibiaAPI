@@ -1,4 +1,5 @@
 ﻿using OXGaming.TibiaAPI.Constants;
+using OXGaming.TibiaAPI.Utilities;
 
 namespace OXGaming.TibiaAPI.Network.ClientPackets
 {
@@ -6,7 +7,7 @@ namespace OXGaming.TibiaAPI.Network.ClientPackets
     {
         public BugCategory BugCategory { get; set; }
 
-        //public Position Position { get; set; }
+        public Position Position { get; set; }
 
         public string ReportText { get; set; }
         public string SpeakerName { get; set; }
@@ -28,7 +29,7 @@ namespace OXGaming.TibiaAPI.Network.ClientPackets
             ReportText = message.ReadString();
             if (BugCategory == BugCategory.Map)
             {
-                //Position = message.ReadPosition();
+                Position = message.ReadPosition();
             }
             else if (BugCategory == BugCategory.Typo)
             {
@@ -45,7 +46,7 @@ namespace OXGaming.TibiaAPI.Network.ClientPackets
             message.Write(ReportText);
             if (BugCategory == BugCategory.Map)
             {
-                //message.WritePosition(Position);
+                message.Write(Position);
             }
             else if (BugCategory == BugCategory.Typo)
             {

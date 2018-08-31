@@ -1,10 +1,11 @@
 ﻿using OXGaming.TibiaAPI.Constants;
+using OXGaming.TibiaAPI.Utilities;
 
 namespace OXGaming.TibiaAPI.Network.ClientPackets
 {
     public class TradeObject : ClientPacket
     {
-        //public Position Position { get; set; }
+        public Position Position { get; set; }
 
         public uint TradePartnerId { get; set; }
 
@@ -24,7 +25,7 @@ namespace OXGaming.TibiaAPI.Network.ClientPackets
                 return false;
             }
 
-            //Position = message.ReadPosition();
+            Position = message.ReadPosition();
             ObjectId = message.ReadUInt16();
             StackPosition = message.ReadByte();
             TradePartnerId = message.ReadUInt32();
@@ -34,7 +35,7 @@ namespace OXGaming.TibiaAPI.Network.ClientPackets
         public override void AppendToNetworkMessage(NetworkMessage message)
         {
             message.Write((byte)ClientPacketType.TradeObject);
-            //message.WritePosition(Position);
+            message.Write(Position);
             message.Write(ObjectId);
             message.Write(StackPosition);
             message.Write(TradePartnerId);
