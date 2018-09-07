@@ -8,7 +8,7 @@ namespace OXGaming.TibiaAPI.Network.ClientPackets
 
         public RemoveBuddy()
         {
-            Type = ClientPacketType.RemoveBuddy;
+            PacketType = ClientPacketType.RemoveBuddy;
         }
 
         public override bool ParseFromNetworkMessage(NetworkMessage message)

@@ -10,7 +10,7 @@ namespace OXGaming.TibiaAPI.Network.ClientPackets
 
         public EquipObject()
         {
-            Type = ClientPacketType.EquipObject;
+            PacketType = ClientPacketType.EquipObject;
         }
 
         public override bool ParseFromNetworkMessage(NetworkMessage message)

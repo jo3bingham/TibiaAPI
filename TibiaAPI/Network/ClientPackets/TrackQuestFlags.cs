@@ -11,7 +11,7 @@ namespace OXGaming.TibiaAPI.Network.ClientPackets
 
         public TrackQuestFlags()
         {
-            Type = ClientPacketType.TrackQuestFlags;
+            PacketType = ClientPacketType.TrackQuestFlags;
         }
 
         public override bool ParseFromNetworkMessage(NetworkMessage message)

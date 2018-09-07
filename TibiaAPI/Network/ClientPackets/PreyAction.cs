@@ -11,7 +11,7 @@ namespace OXGaming.TibiaAPI.Network.ClientPackets
 
         public PreyAction()
         {
-            Type = ClientPacketType.PreyAction;
+            PacketType = ClientPacketType.PreyAction;
         }
 
         public override bool ParseFromNetworkMessage(NetworkMessage message)

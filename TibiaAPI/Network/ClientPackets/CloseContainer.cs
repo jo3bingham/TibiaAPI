@@ -8,7 +8,7 @@ namespace OXGaming.TibiaAPI.Network.ClientPackets
 
         public CloseContainer()
         {
-            Type = ClientPacketType.CloseContainer;
+            PacketType = ClientPacketType.CloseContainer;
         }
 
         public override bool ParseFromNetworkMessage(NetworkMessage message)

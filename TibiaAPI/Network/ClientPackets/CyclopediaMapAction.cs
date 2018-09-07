@@ -6,7 +6,7 @@ namespace OXGaming.TibiaAPI.Network.ClientPackets
     {
         public CyclopediaMapAction()
         {
-            Type = ClientPacketType.CyclopediaMapAction;
+            PacketType = ClientPacketType.CyclopediaMapAction;
         }
 
         public override bool ParseFromNetworkMessage(NetworkMessage message)

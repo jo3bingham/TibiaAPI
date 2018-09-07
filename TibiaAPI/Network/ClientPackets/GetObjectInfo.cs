@@ -11,7 +11,7 @@ namespace OXGaming.TibiaAPI.Network.ClientPackets
 
         public GetObjectInfo()
         {
-            Type = ClientPacketType.GetObjectInfo;
+            PacketType = ClientPacketType.GetObjectInfo;
         }
 
         public override bool ParseFromNetworkMessage(NetworkMessage message)

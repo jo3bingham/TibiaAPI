@@ -8,7 +8,7 @@ namespace OXGaming.TibiaAPI.Network.ClientPackets
 
         public GetOfferDescription()
         {
-            Type = ClientPacketType.GetOfferDescription;
+            PacketType = ClientPacketType.GetOfferDescription;
         }
 
         public override bool ParseFromNetworkMessage(NetworkMessage message)

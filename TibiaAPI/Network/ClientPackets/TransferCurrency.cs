@@ -10,7 +10,7 @@ namespace OXGaming.TibiaAPI.Network.ClientPackets
 
         public TransferCurrency()
         {
-            Type = ClientPacketType.TransferCurrency;
+            PacketType = ClientPacketType.TransferCurrency;
         }
 
         public override bool ParseFromNetworkMessage(NetworkMessage message)

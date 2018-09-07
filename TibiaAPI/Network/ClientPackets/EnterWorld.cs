@@ -6,7 +6,7 @@ namespace OXGaming.TibiaAPI.Network.ClientPackets
     {
         public EnterWorld()
         {
-            Type = ClientPacketType.EnterWorld;
+            PacketType = ClientPacketType.EnterWorld;
         }
 
         public override bool ParseFromNetworkMessage(NetworkMessage message)

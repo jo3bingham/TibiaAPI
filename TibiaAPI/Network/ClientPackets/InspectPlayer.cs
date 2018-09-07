@@ -10,7 +10,7 @@ namespace OXGaming.TibiaAPI.Network.ClientPackets
 
         public InspectPlayer()
         {
-            Type = ClientPacketType.InspectPlayer;
+            PacketType = ClientPacketType.InspectPlayer;
         }
 
         public override bool ParseFromNetworkMessage(NetworkMessage message)

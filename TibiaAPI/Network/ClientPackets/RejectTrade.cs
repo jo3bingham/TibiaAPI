@@ -6,7 +6,7 @@ namespace OXGaming.TibiaAPI.Network.ClientPackets
     {
         public RejectTrade()
         {
-            Type = ClientPacketType.RejectTrade;
+            PacketType = ClientPacketType.RejectTrade;
         }
 
         public override bool ParseFromNetworkMessage(NetworkMessage message)

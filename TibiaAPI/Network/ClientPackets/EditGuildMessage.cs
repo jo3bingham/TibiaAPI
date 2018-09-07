@@ -8,7 +8,7 @@ namespace OXGaming.TibiaAPI.Network.ClientPackets
 
         public EditGuildMessage()
         {
-            Type = ClientPacketType.EditGuildMessage;
+            PacketType = ClientPacketType.EditGuildMessage;
         }
 
         public override bool ParseFromNetworkMessage(NetworkMessage message)

@@ -15,7 +15,7 @@ namespace OXGaming.TibiaAPI.Network.ClientPackets
 
         public LootContainer()
         {
-            Type = ClientPacketType.LootContainer;
+            PacketType = ClientPacketType.LootContainer;
         }
 
         public override bool ParseFromNetworkMessage(NetworkMessage message)

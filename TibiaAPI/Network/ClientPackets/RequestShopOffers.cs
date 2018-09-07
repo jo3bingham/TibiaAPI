@@ -14,7 +14,7 @@ namespace OXGaming.TibiaAPI.Network.ClientPackets
 
         public RequestShopOffers()
         {
-            Type = ClientPacketType.RequestShopOffers;
+            PacketType = ClientPacketType.RequestShopOffers;
         }
 
         public override bool ParseFromNetworkMessage(NetworkMessage message)

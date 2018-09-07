@@ -6,7 +6,7 @@ namespace OXGaming.TibiaAPI.Network.ClientPackets
     {
         public RotateNorth()
         {
-            Type = ClientPacketType.RotateNorth;
+            PacketType = ClientPacketType.RotateNorth;
         }
 
         public override bool ParseFromNetworkMessage(NetworkMessage message)

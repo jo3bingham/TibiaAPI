@@ -13,7 +13,7 @@ namespace OXGaming.TibiaAPI.Network.ClientPackets
 
         public ToggleWrapState()
         {
-            Type = ClientPacketType.ToggleWrapState;
+            PacketType = ClientPacketType.ToggleWrapState;
         }
 
         public override bool ParseFromNetworkMessage(NetworkMessage message)

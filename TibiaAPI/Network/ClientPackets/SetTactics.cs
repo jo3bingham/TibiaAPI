@@ -11,7 +11,7 @@ namespace OXGaming.TibiaAPI.Network.ClientPackets
 
         public SetTactics()
         {
-            Type = ClientPacketType.SetTactics;
+            PacketType = ClientPacketType.SetTactics;
         }
 
         public override bool ParseFromNetworkMessage(NetworkMessage message)

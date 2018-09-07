@@ -11,7 +11,7 @@ namespace OXGaming.TibiaAPI.Network.ClientPackets
 
         public ClientCheck()
         {
-            Type = ClientPacketType.ClientCheck;
+            PacketType = ClientPacketType.ClientCheck;
         }
 
         public override bool ParseFromNetworkMessage(NetworkMessage message)

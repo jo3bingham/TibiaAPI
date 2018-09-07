@@ -6,7 +6,7 @@ namespace OXGaming.TibiaAPI.Network.ClientPackets
     {
         public StashAction()
         {
-            Type = ClientPacketType.StashAction;
+            PacketType = ClientPacketType.StashAction;
         }
 
         public override bool ParseFromNetworkMessage(NetworkMessage message)

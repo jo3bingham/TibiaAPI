@@ -6,7 +6,7 @@ namespace OXGaming.TibiaAPI.Network.ClientPackets
     {
         public SecondaryLogin()
         {
-            Type = ClientPacketType.SecondaryLogin;
+            PacketType = ClientPacketType.SecondaryLogin;
         }
 
         public override bool ParseFromNetworkMessage(NetworkMessage message)

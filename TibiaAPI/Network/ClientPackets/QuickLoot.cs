@@ -13,7 +13,7 @@ namespace OXGaming.TibiaAPI.Network.ClientPackets
 
         public QuickLoot()
         {
-            Type = ClientPacketType.QuickLoot;
+            PacketType = ClientPacketType.QuickLoot;
         }
 
         public override bool ParseFromNetworkMessage(NetworkMessage message)

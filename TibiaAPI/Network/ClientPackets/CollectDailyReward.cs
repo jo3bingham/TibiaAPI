@@ -13,7 +13,7 @@ namespace OXGaming.TibiaAPI.Network.ClientPackets
 
         public CollectDailyReward()
         {
-            Type = ClientPacketType.CollectDailyReward;
+            PacketType = ClientPacketType.CollectDailyReward;
         }
 
         public override bool ParseFromNetworkMessage(NetworkMessage message)

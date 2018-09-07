@@ -13,7 +13,7 @@ namespace OXGaming.TibiaAPI.Network.ClientPackets
 
         public SellObject()
         {
-            Type = ClientPacketType.SellObject;
+            PacketType = ClientPacketType.SellObject;
         }
 
         public override bool ParseFromNetworkMessage(NetworkMessage message)

@@ -201,11 +201,20 @@ namespace OXGaming.TibiaAPI.Network
             return Encoding.ASCII.GetString(ReadBytes(length));
         }
 
-        public Position ReadPosition()
+        public Position ReadPosition(ushort x = ushort.MaxValue, ushort y = ushort.MaxValue, byte z = byte.MaxValue)
         {
-            var x = ReadUInt16();
-            var y = ReadUInt16();
-            var z = ReadByte();
+            if (x == ushort.MaxValue)
+            {
+                x = ReadUInt16();
+            }
+            if (y == ushort.MaxValue)
+            {
+                y = ReadUInt16();
+            }
+            if (z == byte.MaxValue)
+            {
+                z = ReadByte();
+            }
             return new Position(x, y, z);
         }
 

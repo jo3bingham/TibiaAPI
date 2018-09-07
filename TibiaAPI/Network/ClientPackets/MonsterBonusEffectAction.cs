@@ -6,7 +6,7 @@ namespace OXGaming.TibiaAPI.Network.ClientPackets
     {
         public MonsterBonusEffectAction()
         {
-            Type = ClientPacketType.MonsterBonusEffectAction;
+            PacketType = ClientPacketType.MonsterBonusEffectAction;
         }
 
         public override bool ParseFromNetworkMessage(NetworkMessage message)

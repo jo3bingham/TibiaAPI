@@ -6,7 +6,7 @@ namespace OXGaming.TibiaAPI.Network.ClientPackets
     {
         public ClosedImbuingDialog()
         {
-            Type = ClientPacketType.ClosedImbuingDialog;
+            PacketType = ClientPacketType.ClosedImbuingDialog;
         }
 
         public override bool ParseFromNetworkMessage(NetworkMessage message)

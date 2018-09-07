@@ -8,7 +8,7 @@ namespace OXGaming.TibiaAPI.Network.ClientPackets
 
         public JoinParty()
         {
-            Type = ClientPacketType.JoinParty;
+            PacketType = ClientPacketType.JoinParty;
         }
 
         public override bool ParseFromNetworkMessage(NetworkMessage message)

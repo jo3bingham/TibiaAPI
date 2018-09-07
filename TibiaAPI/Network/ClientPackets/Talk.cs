@@ -15,7 +15,7 @@ namespace OXGaming.TibiaAPI.Network.ClientPackets
 
         public Talk()
         {
-            Type = ClientPacketType.Talk;
+            PacketType = ClientPacketType.Talk;
         }
 
         public override bool ParseFromNetworkMessage(NetworkMessage message)

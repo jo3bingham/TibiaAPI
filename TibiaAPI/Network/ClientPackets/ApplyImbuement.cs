@@ -12,7 +12,7 @@ namespace OXGaming.TibiaAPI.Network.ClientPackets
 
         public ApplyImbuement()
         {
-            Type = ClientPacketType.ApplyImbuement;
+            PacketType = ClientPacketType.ApplyImbuement;
         }
 
         public override bool ParseFromNetworkMessage(NetworkMessage message)

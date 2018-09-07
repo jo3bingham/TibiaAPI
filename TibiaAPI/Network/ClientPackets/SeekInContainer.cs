@@ -10,7 +10,7 @@ namespace OXGaming.TibiaAPI.Network.ClientPackets
 
         public SeekInContainer()
         {
-            Type = ClientPacketType.SeekInContainer;
+            PacketType = ClientPacketType.SeekInContainer;
         }
 
         public override bool ParseFromNetworkMessage(NetworkMessage message)

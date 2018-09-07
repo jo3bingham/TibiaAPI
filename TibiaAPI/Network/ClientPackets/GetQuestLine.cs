@@ -8,7 +8,7 @@ namespace OXGaming.TibiaAPI.Network.ClientPackets
 
         public GetQuestLine()
         {
-            Type = ClientPacketType.GetQuestLine;
+            PacketType = ClientPacketType.GetQuestLine;
         }
 
         public override bool ParseFromNetworkMessage(NetworkMessage message)

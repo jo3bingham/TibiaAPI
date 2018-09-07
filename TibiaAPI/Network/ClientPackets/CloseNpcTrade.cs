@@ -6,7 +6,7 @@ namespace OXGaming.TibiaAPI.Network.ClientPackets
     {
         public CloseNpcTrade()
         {
-            Type = ClientPacketType.CloseNpcTrade;
+            PacketType = ClientPacketType.CloseNpcTrade;
         }
 
         public override bool ParseFromNetworkMessage(NetworkMessage message)

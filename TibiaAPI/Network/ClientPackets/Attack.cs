@@ -8,7 +8,7 @@ namespace OXGaming.TibiaAPI.Network.ClientPackets
 
         public Attack()
         {
-            Type = ClientPacketType.Attack;
+            PacketType = ClientPacketType.Attack;
         }
 
         public override bool ParseFromNetworkMessage(NetworkMessage message)

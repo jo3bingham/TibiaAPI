@@ -6,7 +6,7 @@ namespace OXGaming.TibiaAPI.Network.ClientPackets
     {
         public QuitGame()
         {
-            Type = ClientPacketType.QuitGame;
+            PacketType = ClientPacketType.QuitGame;
         }
 
         public override bool ParseFromNetworkMessage(NetworkMessage message)

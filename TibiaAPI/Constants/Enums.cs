@@ -6,6 +6,20 @@
         Sell = 1
     }
 
+    public enum CreatureInstanceType
+    {
+        UnknownCreature = 97,
+        OutdatedCreature = 98,
+        Creature = 99
+    }
+
+    public enum OutfitWindowType
+    {
+        SelectOutfit = 0,
+        TryOutfit = 1,
+        TryMount = 2
+    }
+
     public enum PreyActionType
     {
         ListReroll = 0,
@@ -20,12 +34,53 @@
         Bot = 2
     }
 
+    public enum StoreOfferDisabledState
+    {
+        Active = 0,
+        Disabled = 1,
+        Hidden = 2
+    }
+
+    public enum DeathType
+    {
+        Regular = 0,
+        Unfair = 1,
+        Blessed = 2,
+        NoPenalty = 3
+    }
+
+    public enum StoreOfferHighlightState
+    {
+        None = 0,
+        New = 1,
+        Sale = 2,
+        Timed = 3
+    }
+
     public enum BugCategory
     {
         Map = 0,
         Typo = 1,
         Technical = 2,
         Other = 3
+    }
+
+    public enum CreatureType
+    {
+        Player = 0,
+        Monster = 1,
+        Npc = 2,
+        PlayerSummon = 3,
+        SummonOthers = 4
+    }
+
+    public enum PreyDataState
+    {
+        Locked = 0,
+        Inactive = 1,
+        Active = 2,
+        Selection = 3,
+        SelectionChangeMonster = 4
     }
 
     public enum ResourceType
@@ -60,6 +115,26 @@
         SouthWest = 6,
         South = 7,
         SouthEast = 8
+    }
+
+    public enum MarketDetailField
+    {
+        Armor = 0,
+        Attack = 1,
+        Capacity = 2,
+        Defence = 3,
+        Description = 4,
+        Expire = 5,
+        Protection = 6,
+        RestrictLevel = 7,
+        RestrictMagicLevel = 8,
+        RestrictProfession = 9,
+        RuneSpell = 10,
+        SkillBoost = 11,
+        Uses = 12,
+        WeaponType = 13,
+        Weight = 14,
+        ImbuementSlots = 15
     }
 
     public enum MessageModeType

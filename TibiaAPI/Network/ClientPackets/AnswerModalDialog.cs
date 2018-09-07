@@ -11,7 +11,7 @@ namespace OXGaming.TibiaAPI.Network.ClientPackets
 
         public AnswerModalDialog()
         {
-            Type = ClientPacketType.AnswerModalDialog;
+            PacketType = ClientPacketType.AnswerModalDialog;
         }
 
         public override bool ParseFromNetworkMessage(NetworkMessage message)

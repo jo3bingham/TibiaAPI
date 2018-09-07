@@ -6,7 +6,7 @@ namespace OXGaming.TibiaAPI.Network.ClientPackets
     {
         public CloseNpcChannel()
         {
-            Type = ClientPacketType.CloseNpcChannel;
+            PacketType = ClientPacketType.CloseNpcChannel;
         }
 
         public override bool ParseFromNetworkMessage(NetworkMessage message)

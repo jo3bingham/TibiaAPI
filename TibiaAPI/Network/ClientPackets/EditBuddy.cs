@@ -18,7 +18,7 @@ namespace OXGaming.TibiaAPI.Network.ClientPackets
 
         public EditBuddy()
         {
-            Type = ClientPacketType.EditBuddy;
+            PacketType = ClientPacketType.EditBuddy;
         }
 
         public override bool ParseFromNetworkMessage(NetworkMessage message)

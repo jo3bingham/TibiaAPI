@@ -56,6 +56,7 @@ namespace OXGaming.TibiaAPI.Network
         private bool _isSendingToClient = false;
         private bool _isSendingToServer = false;
 
+        public bool AllowClientPacketModification { get; set; } = true;
         public bool IsPacketParsingEnabled { get; set; } = true;
 
         /// <summary>
@@ -72,8 +73,13 @@ namespace OXGaming.TibiaAPI.Network
         {
         }
 
-        public void SendToClient(Packet packet)
+        public void SendToClient(ServerPacket packet)
         {
+            if (packet == null)
+            {
+                throw new ArgumentNullException(nameof(packet));
+            }
+
             var message = new NetworkMessage();
             packet.AppendToNetworkMessage(message);
             SendToClient(message);
@@ -81,6 +87,11 @@ namespace OXGaming.TibiaAPI.Network
 
         public void SendToClient(NetworkMessage message)
         {
+            if (message == null)
+            {
+                throw new ArgumentNullException(nameof(message));
+            }
+
             if (message.Size <= 8)
             {
                 return;
@@ -106,6 +117,11 @@ namespace OXGaming.TibiaAPI.Network
         /// </remarks>
         public void SendToClient(byte[] data)
         {
+            if (data == null)
+            {
+                throw new ArgumentNullException(nameof(data));
+            }
+
             if (data.Length <= 8)
             {
                 return;
@@ -134,6 +150,11 @@ namespace OXGaming.TibiaAPI.Network
 
         public void SendToServer(ClientPacket packet)
         {
+            if (packet == null)
+            {
+                throw new ArgumentNullException(nameof(packet));
+            }
+
             var message = new NetworkMessage();
             packet.AppendToNetworkMessage(message);
             SendToServer(message);
@@ -141,6 +162,11 @@ namespace OXGaming.TibiaAPI.Network
 
         public void SendToServer(NetworkMessage message)
         {
+            if (message == null)
+            {
+                throw new ArgumentNullException(nameof(message));
+            }
+
             if (message.Size <= 8)
             {
                 return;
@@ -166,6 +192,11 @@ namespace OXGaming.TibiaAPI.Network
         /// </remarks>
         public void SendToServer(byte[] data)
         {
+            if (data == null)
+            {
+                throw new ArgumentNullException(nameof(data));
+            }
+
             if (data.Length <= 8)
             {
                 return;
@@ -663,14 +694,17 @@ namespace OXGaming.TibiaAPI.Network
                         _clientOutMessage.Reset();
                         _clientInMessage.PrepareToParse(_xteaKey);
                         ParseClientMessage(_clientInMessage, _clientOutMessage);
-                        SendToServer(_clientOutMessage);
-
-                        _clientSocket.BeginReceive(_clientInMessage.GetBuffer(), 0, 2, SocketFlags.None, new AsyncCallback(BeginReceiveClientCallback), 1);
-                        return;
+                        
+                        if (AllowClientPacketModification)
+                        {
+                            SendToServer(_clientOutMessage);
+                            _clientSocket.BeginReceive(_clientInMessage.GetBuffer(), 0, 2, SocketFlags.None, new AsyncCallback(BeginReceiveClientCallback), 1);
+                            return;
+                        }
                     }
                 }
 
-                SendToServer(_clientInMessage.GetData());
+                SendToServer(_clientInMessage);
                 _clientSocket.BeginReceive(_clientInMessage.GetBuffer(), 0, 2, SocketFlags.None, new AsyncCallback(BeginReceiveClientCallback), 1);
             }
             catch (ObjectDisposedException)
@@ -791,7 +825,7 @@ namespace OXGaming.TibiaAPI.Network
                     //return;
                 }
 
-                SendToClient(_serverInMessage.GetData());
+                SendToClient(_serverInMessage);
                 _serverSocket.BeginReceive(_serverInMessage.GetBuffer(), 0, 2, SocketFlags.None, new AsyncCallback(BeginReceiveServerCallback), 1);
             }
             catch (SocketException)

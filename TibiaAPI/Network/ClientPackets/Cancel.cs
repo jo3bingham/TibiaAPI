@@ -6,7 +6,7 @@ namespace OXGaming.TibiaAPI.Network.ClientPackets
     {
         public Cancel()
         {
-            Type = ClientPacketType.Cancel;
+            PacketType = ClientPacketType.Cancel;
         }
 
         public override bool ParseFromNetworkMessage(NetworkMessage message)

@@ -10,7 +10,7 @@ namespace OXGaming.TibiaAPI.Network.ClientPackets
 
         public FeatureEvent()
         {
-            Type = ClientPacketType.FeatureEvent;
+            PacketType = ClientPacketType.FeatureEvent;
         }
 
         public override bool ParseFromNetworkMessage(NetworkMessage message)

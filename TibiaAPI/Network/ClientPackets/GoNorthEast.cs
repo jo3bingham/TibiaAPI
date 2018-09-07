@@ -6,7 +6,7 @@ namespace OXGaming.TibiaAPI.Network.ClientPackets
     {
         public GoNorthEast()
         {
-            Type = ClientPacketType.GoNorthEast;
+            PacketType = ClientPacketType.GoNorthEast;
         }
 
         public override bool ParseFromNetworkMessage(NetworkMessage message)

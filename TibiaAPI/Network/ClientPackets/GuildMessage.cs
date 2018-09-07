@@ -6,7 +6,7 @@ namespace OXGaming.TibiaAPI.Network.ClientPackets
     {
         public GuildMessage()
         {
-            Type = ClientPacketType.GuildMessage;
+            PacketType = ClientPacketType.GuildMessage;
         }
 
         public override bool ParseFromNetworkMessage(NetworkMessage message)

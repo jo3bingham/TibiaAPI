@@ -11,7 +11,7 @@ namespace OXGaming.TibiaAPI.Network.ClientPackets
 
         public MarketAccept()
         {
-            Type = ClientPacketType.MarketAccept;
+            PacketType = ClientPacketType.MarketAccept;
         }
 
         public override bool ParseFromNetworkMessage(NetworkMessage message)

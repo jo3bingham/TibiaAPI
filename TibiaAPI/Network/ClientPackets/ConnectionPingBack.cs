@@ -6,7 +6,7 @@ namespace OXGaming.TibiaAPI.Network.ClientPackets
     {
         public ConnectionPingBack()
         {
-            Type = ClientPacketType.ConnectionPingBack;
+            PacketType = ClientPacketType.ConnectionPingBack;
         }
 
         public override bool ParseFromNetworkMessage(NetworkMessage message)

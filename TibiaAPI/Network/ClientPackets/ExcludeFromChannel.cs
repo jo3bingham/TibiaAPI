@@ -10,7 +10,7 @@ namespace OXGaming.TibiaAPI.Network.ClientPackets
 
         public ExcludeFromChannel()
         {
-            Type = ClientPacketType.ExcludeFromChannel;
+            PacketType = ClientPacketType.ExcludeFromChannel;
         }
 
         public override bool ParseFromNetworkMessage(NetworkMessage message)

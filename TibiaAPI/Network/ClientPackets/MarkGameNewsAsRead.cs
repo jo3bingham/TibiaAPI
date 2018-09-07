@@ -10,7 +10,7 @@ namespace OXGaming.TibiaAPI.Network.ClientPackets
 
         public MarkGameNewsAsRead()
         {
-            Type = ClientPacketType.MarkGameNewsAsRead;
+            PacketType = ClientPacketType.MarkGameNewsAsRead;
         }
 
         public override bool ParseFromNetworkMessage(NetworkMessage message)

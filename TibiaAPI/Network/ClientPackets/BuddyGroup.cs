@@ -11,7 +11,7 @@ namespace OXGaming.TibiaAPI.Network.ClientPackets
 
         public BuddyGroup()
         {
-            Type = ClientPacketType.BuddyGroup;
+            PacketType = ClientPacketType.BuddyGroup;
         }
 
         public override bool ParseFromNetworkMessage(NetworkMessage message)

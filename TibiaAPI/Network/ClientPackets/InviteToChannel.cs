@@ -10,7 +10,7 @@ namespace OXGaming.TibiaAPI.Network.ClientPackets
 
         public InviteToChannel()
         {
-            Type = ClientPacketType.InviteToChannel;
+            PacketType = ClientPacketType.InviteToChannel;
         }
 
         public override bool ParseFromNetworkMessage(NetworkMessage message)

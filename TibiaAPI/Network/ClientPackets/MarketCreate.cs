@@ -15,7 +15,7 @@ namespace OXGaming.TibiaAPI.Network.ClientPackets
 
         public MarketCreate()
         {
-            Type = ClientPacketType.MarketCreate;
+            PacketType = ClientPacketType.MarketCreate;
         }
 
         public override bool ParseFromNetworkMessage(NetworkMessage message)

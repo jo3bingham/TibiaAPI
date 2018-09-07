@@ -6,7 +6,7 @@ namespace OXGaming.TibiaAPI.Network.ClientPackets
     {
         public Teleport()
         {
-            Type = ClientPacketType.Teleport;
+            PacketType = ClientPacketType.Teleport;
         }
 
         public override bool ParseFromNetworkMessage(NetworkMessage message)

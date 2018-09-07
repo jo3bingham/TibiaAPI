@@ -6,7 +6,7 @@ namespace OXGaming.TibiaAPI.Network.ClientPackets
     {
         public UpdateExivaOptions()
         {
-            Type = ClientPacketType.UpdateExivaOptions;
+            PacketType = ClientPacketType.UpdateExivaOptions;
         }
 
         public override bool ParseFromNetworkMessage(NetworkMessage message)

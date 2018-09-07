@@ -12,7 +12,7 @@ namespace OXGaming.TibiaAPI.Network.ClientPackets
 
         public EditList()
         {
-            Type = ClientPacketType.EditList;
+            PacketType = ClientPacketType.EditList;
         }
 
         public override bool ParseFromNetworkMessage(NetworkMessage message)

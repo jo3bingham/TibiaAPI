@@ -8,7 +8,7 @@ namespace OXGaming.TibiaAPI.Network.ClientPackets
 
         public OpenMonsterCyclopediaRace()
         {
-            Type = ClientPacketType.OpenMonsterCyclopediaRace;
+            PacketType = ClientPacketType.OpenMonsterCyclopediaRace;
         }
 
         public override bool ParseFromNetworkMessage(NetworkMessage message)

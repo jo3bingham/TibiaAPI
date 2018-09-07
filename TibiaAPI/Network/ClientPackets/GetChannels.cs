@@ -6,7 +6,7 @@ namespace OXGaming.TibiaAPI.Network.ClientPackets
     {
         public GetChannels()
         {
-            Type = ClientPacketType.GetChannels;
+            PacketType = ClientPacketType.GetChannels;
         }
 
         public override bool ParseFromNetworkMessage(NetworkMessage message)

@@ -8,7 +8,7 @@ namespace OXGaming.TibiaAPI.Network.ClientPackets
 
         public GetOutfit()
         {
-            Type = ClientPacketType.GetOutfit;
+            PacketType = ClientPacketType.GetOutfit;
         }
 
         public override bool ParseFromNetworkMessage(NetworkMessage message)

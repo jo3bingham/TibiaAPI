@@ -6,7 +6,7 @@ namespace OXGaming.TibiaAPI.Network.ClientPackets
     {
         public MarketStatistics()
         {
-            Type = ClientPacketType.MarketStatistics;
+            PacketType = ClientPacketType.MarketStatistics;
         }
 
         public override bool ParseFromNetworkMessage(NetworkMessage message)

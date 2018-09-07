@@ -15,7 +15,7 @@ namespace OXGaming.TibiaAPI.Network.ClientPackets
 
         public TradeObject()
         {
-            Type = ClientPacketType.TradeObject;
+            PacketType = ClientPacketType.TradeObject;
         }
 
         public override bool ParseFromNetworkMessage(NetworkMessage message)

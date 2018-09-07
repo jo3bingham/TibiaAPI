@@ -8,7 +8,7 @@ namespace OXGaming.TibiaAPI.Network.ClientPackets
 
         public UpContainer()
         {
-            Type = ClientPacketType.UpContainer;
+            PacketType = ClientPacketType.UpContainer;
         }
 
         public override bool ParseFromNetworkMessage(NetworkMessage message)

@@ -8,7 +8,7 @@ namespace OXGaming.TibiaAPI.Network.ClientPackets
 
         public RequestResourceBalance()
         {
-            Type = ClientPacketType.RequestResourceBalance;
+            PacketType = ClientPacketType.RequestResourceBalance;
         }
 
         public override bool ParseFromNetworkMessage(NetworkMessage message)

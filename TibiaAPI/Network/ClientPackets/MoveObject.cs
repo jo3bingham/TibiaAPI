@@ -14,7 +14,7 @@ namespace OXGaming.TibiaAPI.Network.ClientPackets
 
         public MoveObject()
         {
-            Type = ClientPacketType.MoveObject;
+            PacketType = ClientPacketType.MoveObject;
         }
 
         public override bool ParseFromNetworkMessage(NetworkMessage message)

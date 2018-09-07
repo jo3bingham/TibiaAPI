@@ -6,7 +6,7 @@ namespace OXGaming.TibiaAPI.Network.ClientPackets
     {
         public OpenRewardWall()
         {
-            Type = ClientPacketType.OpenRewardWall;
+            PacketType = ClientPacketType.OpenRewardWall;
         }
 
         public override bool ParseFromNetworkMessage(NetworkMessage message)

@@ -16,7 +16,7 @@ namespace OXGaming.TibiaAPI.Network.ClientPackets
 
         public RuleViolationReport()
         {
-            Type = ClientPacketType.RuleViolationReport;
+            PacketType = ClientPacketType.RuleViolationReport;
         }
 
         public override bool ParseFromNetworkMessage(NetworkMessage message)

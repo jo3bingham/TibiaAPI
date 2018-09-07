@@ -8,7 +8,7 @@ namespace OXGaming.TibiaAPI.Network.ClientPackets
 
         public LookAtCreature()
         {
-            Type = ClientPacketType.LookAtCreature;
+            PacketType = ClientPacketType.LookAtCreature;
         }
 
         public override bool ParseFromNetworkMessage(NetworkMessage message)

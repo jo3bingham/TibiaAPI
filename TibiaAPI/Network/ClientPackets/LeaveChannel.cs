@@ -8,7 +8,7 @@ namespace OXGaming.TibiaAPI.Network.ClientPackets
 
         public LeaveChannel()
         {
-            Type = ClientPacketType.LeaveChannel;
+            PacketType = ClientPacketType.LeaveChannel;
         }
 
         public override bool ParseFromNetworkMessage(NetworkMessage message)

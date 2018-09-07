@@ -8,7 +8,7 @@ namespace OXGaming.TibiaAPI.Network.ClientPackets
 
         public RevokeInvitation()
         {
-            Type = ClientPacketType.RevokeInvitation;
+            PacketType = ClientPacketType.RevokeInvitation;
         }
 
         public override bool ParseFromNetworkMessage(NetworkMessage message)

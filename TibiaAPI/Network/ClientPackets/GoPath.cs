@@ -11,7 +11,7 @@ namespace OXGaming.TibiaAPI.Network.ClientPackets
 
         public GoPath()
         {
-            Type = ClientPacketType.GoPath;
+            PacketType = ClientPacketType.GoPath;
         }
 
         public override bool ParseFromNetworkMessage(NetworkMessage message)

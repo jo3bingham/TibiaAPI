@@ -8,7 +8,7 @@ namespace OXGaming.TibiaAPI.Network.ClientPackets
 
         public ThankYou()
         {
-            Type = ClientPacketType.ThankYou;
+            PacketType = ClientPacketType.ThankYou;
         }
 
         public override bool ParseFromNetworkMessage(NetworkMessage message)

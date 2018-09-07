@@ -8,7 +8,7 @@ namespace OXGaming.TibiaAPI.Network.ClientPackets
 
         public PassLeadership()
         {
-            Type = ClientPacketType.PassLeadership;
+            PacketType = ClientPacketType.PassLeadership;
         }
 
         public override bool ParseFromNetworkMessage(NetworkMessage message)

@@ -8,7 +8,7 @@ namespace OXGaming.TibiaAPI.Network.ClientPackets
 
         public JoinAggression()
         {
-            Type = ClientPacketType.JoinAggression;
+            PacketType = ClientPacketType.JoinAggression;
         }
 
         public override bool ParseFromNetworkMessage(NetworkMessage message)

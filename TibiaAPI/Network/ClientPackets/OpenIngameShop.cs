@@ -6,7 +6,7 @@ namespace OXGaming.TibiaAPI.Network.ClientPackets
     {
         public OpenIngameShop()
         {
-            Type = ClientPacketType.OpenIngameShop;
+            PacketType = ClientPacketType.OpenIngameShop;
         }
 
         public override bool ParseFromNetworkMessage(NetworkMessage message)

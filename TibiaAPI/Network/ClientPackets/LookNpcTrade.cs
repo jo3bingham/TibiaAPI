@@ -10,7 +10,7 @@ namespace OXGaming.TibiaAPI.Network.ClientPackets
 
         public LookNpcTrade()
         {
-            Type = ClientPacketType.LookNpcTrade;
+            PacketType = ClientPacketType.LookNpcTrade;
         }
 
         public override bool ParseFromNetworkMessage(NetworkMessage message)

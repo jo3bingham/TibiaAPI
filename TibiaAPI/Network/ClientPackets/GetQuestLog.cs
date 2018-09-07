@@ -6,7 +6,7 @@ namespace OXGaming.TibiaAPI.Network.ClientPackets
     {
         public GetQuestLog()
         {
-            Type = ClientPacketType.GetQuestLog;
+            PacketType = ClientPacketType.GetQuestLog;
         }
 
         public override bool ParseFromNetworkMessage(NetworkMessage message)

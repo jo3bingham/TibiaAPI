@@ -15,7 +15,7 @@ namespace OXGaming.TibiaAPI.Network.ClientPackets
 
         public SetOutfit()
         {
-            Type = ClientPacketType.SetOutfit;
+            PacketType = ClientPacketType.SetOutfit;
         }
 
         public override bool ParseFromNetworkMessage(NetworkMessage message)

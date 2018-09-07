@@ -8,7 +8,7 @@ namespace OXGaming.TibiaAPI.Network.ClientPackets
 
         public Mount()
         {
-            Type = ClientPacketType.Mount;
+            PacketType = ClientPacketType.Mount;
         }
 
         public override bool ParseFromNetworkMessage(NetworkMessage message)

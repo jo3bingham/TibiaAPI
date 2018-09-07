@@ -8,7 +8,7 @@ namespace OXGaming.TibiaAPI.Network.ClientPackets
 
         public Follow()
         {
-            Type = ClientPacketType.Follow;
+            PacketType = ClientPacketType.Follow;
         }
 
         public override bool ParseFromNetworkMessage(NetworkMessage message)

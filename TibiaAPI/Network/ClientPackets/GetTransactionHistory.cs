@@ -10,7 +10,7 @@ namespace OXGaming.TibiaAPI.Network.ClientPackets
 
         public GetTransactionHistory()
         {
-            Type = ClientPacketType.GetTransactionHistory;
+            PacketType = ClientPacketType.GetTransactionHistory;
         }
 
         public override bool ParseFromNetworkMessage(NetworkMessage message)

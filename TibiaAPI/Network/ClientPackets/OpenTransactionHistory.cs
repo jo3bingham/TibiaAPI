@@ -8,7 +8,7 @@ namespace OXGaming.TibiaAPI.Network.ClientPackets
 
         public OpenTransactionHistory()
         {
-            Type = ClientPacketType.OpenTransactionHistory;
+            PacketType = ClientPacketType.OpenTransactionHistory;
         }
 
         public override bool ParseFromNetworkMessage(NetworkMessage message)

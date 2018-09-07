@@ -6,7 +6,7 @@ namespace OXGaming.TibiaAPI.Network.ClientPackets
     {
         public DailyRewardHistory()
         {
-            Type = ClientPacketType.DailyRewardHistory;
+            PacketType = ClientPacketType.DailyRewardHistory;
         }
 
         public override bool ParseFromNetworkMessage(NetworkMessage message)

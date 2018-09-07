@@ -6,7 +6,7 @@ namespace OXGaming.TibiaAPI.Network.ClientPackets
     {
         public LeaveParty()
         {
-            Type = ClientPacketType.LeaveParty;
+            PacketType = ClientPacketType.LeaveParty;
         }
 
         public override bool ParseFromNetworkMessage(NetworkMessage message)

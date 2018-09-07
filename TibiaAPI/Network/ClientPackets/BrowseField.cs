@@ -9,7 +9,7 @@ namespace OXGaming.TibiaAPI.Network.ClientPackets
 
         public BrowseField()
         {
-            Type = ClientPacketType.BrowseField;
+            PacketType = ClientPacketType.BrowseField;
         }
 
         public override bool ParseFromNetworkMessage(NetworkMessage message)

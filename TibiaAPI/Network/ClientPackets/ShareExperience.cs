@@ -8,7 +8,7 @@ namespace OXGaming.TibiaAPI.Network.ClientPackets
 
         public ShareExperience()
         {
-            Type = ClientPacketType.ShareExperience;
+            PacketType = ClientPacketType.ShareExperience;
         }
 
         public override bool ParseFromNetworkMessage(NetworkMessage message)

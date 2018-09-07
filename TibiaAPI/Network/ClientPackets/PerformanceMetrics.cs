@@ -14,7 +14,7 @@ namespace OXGaming.TibiaAPI.Network.ClientPackets
 
         public PerformanceMetrics()
         {
-            Type = ClientPacketType.PerformanceMetrics;
+            PacketType = ClientPacketType.PerformanceMetrics;
         }
 
         public override bool ParseFromNetworkMessage(NetworkMessage message)

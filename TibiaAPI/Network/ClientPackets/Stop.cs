@@ -6,7 +6,7 @@ namespace OXGaming.TibiaAPI.Network.ClientPackets
     {
         public Stop()
         {
-            Type = ClientPacketType.Stop;
+            PacketType = ClientPacketType.Stop;
         }
 
         public override bool ParseFromNetworkMessage(NetworkMessage message)

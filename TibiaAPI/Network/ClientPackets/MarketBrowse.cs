@@ -8,7 +8,7 @@ namespace OXGaming.TibiaAPI.Network.ClientPackets
 
         public MarketBrowse()
         {
-            Type = ClientPacketType.MarketBrowse;
+            PacketType = ClientPacketType.MarketBrowse;
         }
 
         public override bool ParseFromNetworkMessage(NetworkMessage message)

@@ -13,7 +13,7 @@ namespace OXGaming.TibiaAPI.Network.ClientPackets
 
         public TurnObject()
         {
-            Type = ClientPacketType.TurnObject;
+            PacketType = ClientPacketType.TurnObject;
         }
 
         public override bool ParseFromNetworkMessage(NetworkMessage message)

@@ -6,7 +6,7 @@ namespace OXGaming.TibiaAPI.Network.ClientPackets
     {
         public MarketLeave()
         {
-            Type = ClientPacketType.MarketLeave;
+            PacketType = ClientPacketType.MarketLeave;
         }
 
         public override bool ParseFromNetworkMessage(NetworkMessage message)
