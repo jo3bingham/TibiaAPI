@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 
+using OXGaming.TibiaAPI.Appearances;
 using OXGaming.TibiaAPI.Constants;
 
 namespace OXGaming.TibiaAPI.Network.ServerPackets
@@ -9,12 +10,12 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
         public List<(string Name, string Description)> Details { get; } =
             new List<(string Name, string Description)>();
 
-        //public Appearances.ObjectInstance Item { get; set; }
-
         public string ObjectName { get; set; }
 
         public byte ImbuementSlots { get; set; }
         public byte Unknown { get; set; }
+
+        public bool IsPlayer { get; set; }
 
         public InspectionList()
         {
@@ -29,19 +30,19 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
             }
 
             // TODO
-            var isPlayer = message.ReadBool();
+            IsPlayer = message.ReadBool();
 
             var numberOfObjects = message.ReadByte();
             for (var i = 0; i < numberOfObjects; ++i)
             {
                 ObjectName = message.ReadString();
 
-                if (isPlayer)
+                if (IsPlayer)
                 {
                     var slotId = message.ReadByte();
                 }
 
-                //Item = message.ReadObjectInstance();
+                var Item = message.ReadObjectInstance();
 
                 ImbuementSlots = message.ReadByte();
                 for (var x = 0; x < ImbuementSlots; ++x)
@@ -58,7 +59,7 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
                 }
             }
 
-            if (isPlayer)
+            if (IsPlayer)
             {
                 var playerName = message.ReadString();
                 //message.ReadCreatureOutfit();

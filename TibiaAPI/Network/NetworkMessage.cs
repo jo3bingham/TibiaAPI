@@ -2,6 +2,7 @@
 using System.IO;
 using System.Text;
 
+using OXGaming.TibiaAPI.Appearances;
 using OXGaming.TibiaAPI.Utilities;
 
 namespace OXGaming.TibiaAPI.Network
@@ -23,6 +24,8 @@ namespace OXGaming.TibiaAPI.Network
 
         private const uint PayloadDataPosition = 8;
 
+        private readonly AppearanceStorage _appearanceStorage;
+
         private readonly byte[] _buffer = new byte[MaxMessageSize];
 
         private uint _size = PayloadDataPosition;
@@ -38,6 +41,15 @@ namespace OXGaming.TibiaAPI.Network
         public uint Size { get => _size; set => _size = value; }
 
         public bool AddSequenceNumber { get; set; } = true;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="NetworkMessage"/> class.
+        /// </summary>
+        /// <param name="appearanceStorage"></param>
+        public NetworkMessage(AppearanceStorage appearanceStorage)
+        {
+            _appearanceStorage = appearanceStorage;
+        }
 
         /// <summary>
         /// Gets the underlying buffer.
@@ -218,6 +230,57 @@ namespace OXGaming.TibiaAPI.Network
             return new Position(x, y, z);
         }
 
+        public ObjectInstance ReadObjectInstance(ushort id = 0)
+        {
+            if (id == 0)
+            {
+                id = ReadUInt16();
+            }
+
+            if (id == 0)
+            {
+                return null;
+            }
+
+            if (id <= 99)
+            {
+                throw new Exception($"[NetworkMessage.ReadObjectInstance] Invalid object id: {id}");
+            }
+
+            var objectInstance = _appearanceStorage.CreateObjectInstance(id, 0);
+            if (objectInstance == null)
+            {
+                throw new Exception($"[NetworkMessage.ReadObjectInstance] Invalid object id: {id}");
+            }
+
+            var objectType = objectInstance.Type;
+            if (objectType == null)
+            {
+                throw new Exception($"[NetworkMessage.ReadObjectInstance] Invalid object id: {id}");
+            }
+
+            if (objectType.Flags.Liquidcontainer || objectType.Flags.Liquidpool || objectType.Flags.Cumulative)
+            {
+                objectInstance.Data = ReadByte();
+            }
+
+            if (objectType.Flags.Container)
+            {
+                objectInstance.IsLootContainer = ReadBool();
+                if (objectInstance.IsLootContainer)
+                {
+                    objectInstance.LootContainerUnknown = ReadUInt32(); // TODO
+                }
+            }
+
+            if (objectType.FrameGroup[0].SpriteInfo.Animation != null)
+            {
+                objectInstance.Phase = ReadByte();
+            }
+
+            return objectInstance;
+        }
+
         /// <summary>
         /// Writes a byte array to the buffer.
         /// </summary>
@@ -353,6 +416,35 @@ namespace OXGaming.TibiaAPI.Network
             Write(value.X);
             Write(value.Y);
             Write(value.Z);
+        }
+
+        public void Write(ObjectInstance value)
+        {
+            if (value == null || value.Type == null)
+            {
+                throw new ArgumentNullException(nameof(value));
+            }
+
+            Write(value.Id);
+
+            if (value.Type.Flags.Liquidcontainer || value.Type.Flags.Liquidpool || value.Type.Flags.Cumulative)
+            {
+                Write(value.Data);
+            }
+
+            if (value.Type.Flags.Container)
+            {
+                Write(value.IsLootContainer);
+                if (value.IsLootContainer)
+                {
+                    Write(value.LootContainerUnknown);
+                }
+            }
+
+            if (value.Type.FrameGroup[0].SpriteInfo.Animation != null)
+            {
+                Write(value.Phase);
+            }
         }
 
         /// <summary>

@@ -1,4 +1,5 @@
-﻿using OXGaming.TibiaAPI.Constants;
+﻿using OXGaming.TibiaAPI.Appearances;
+using OXGaming.TibiaAPI.Constants;
 using OXGaming.TibiaAPI.Utilities;
 
 namespace OXGaming.TibiaAPI.Network.ServerPackets
@@ -7,9 +8,13 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
     {
         // TODO
         //public Creature Creature { get; set; }
-        //public Item Item { get; set; }
+
+        public ObjectInstance Item { get; set; }
+
         public Position Position { get; set; }
+
         public ushort ObjectId { get; set; }
+
         public byte StackPosition { get; set; }
 
         public ChangeOnMap()
@@ -39,7 +44,7 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
                 }
                 else
                 {
-                    //message.ReadObjectInstance(ObjectId);
+                    Item = message.ReadObjectInstance(ObjectId);
                 }
             }
             else
@@ -73,7 +78,7 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
                 }
                 else
                 {
-                    //message.WriteObjectInstance(Item);
+                    message.Write(Item);
                 }
             }
             else

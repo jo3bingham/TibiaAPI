@@ -23,12 +23,14 @@ namespace OXGaming.TibiaAPI.Network
         private readonly object _clientSequenceNumberLock = new object();
         private readonly object _ServerSequenceNumberLock = new object();
 
+        private readonly Appearances.AppearanceStorage _appearanceStorage;
+
         private readonly HttpClient _httpClient = new HttpClient();
         private readonly HttpListener _httpListener = new HttpListener();
 
-        private readonly NetworkMessage _clientInMessage = new NetworkMessage();
-        private readonly NetworkMessage _clientOutMessage = new NetworkMessage();
-        private readonly NetworkMessage _serverInMessage = new NetworkMessage();
+        private readonly NetworkMessage _clientInMessage;
+        private readonly NetworkMessage _clientOutMessage;
+        private readonly NetworkMessage _serverInMessage;
 
         private readonly Queue<byte[]> _clientSendQueue = new Queue<byte[]>();
         private readonly Queue<byte[]> _serverSendQueue = new Queue<byte[]>();
@@ -69,8 +71,13 @@ namespace OXGaming.TibiaAPI.Network
         /// listens on port 80, so there's no need to specify a port. However, since the proxy listens
         /// on port 80, that means it needs to be ran in an elevated environment (i.e., root/administrator).
         /// </remarks>
-        public Connection()
+        public Connection(Appearances.AppearanceStorage appearanceStorage)
         {
+            _appearanceStorage = appearanceStorage ?? throw new ArgumentNullException(nameof(appearanceStorage));
+
+            _clientInMessage = new NetworkMessage(_appearanceStorage);
+            _clientOutMessage = new NetworkMessage(_appearanceStorage);
+            _serverInMessage = new NetworkMessage(_appearanceStorage);
         }
 
         public void SendToClient(ServerPacket packet)
@@ -80,7 +87,7 @@ namespace OXGaming.TibiaAPI.Network
                 throw new ArgumentNullException(nameof(packet));
             }
 
-            var message = new NetworkMessage();
+            var message = new NetworkMessage(_appearanceStorage);
             packet.AppendToNetworkMessage(message);
             SendToClient(message);
         }
@@ -155,7 +162,7 @@ namespace OXGaming.TibiaAPI.Network
                 throw new ArgumentNullException(nameof(packet));
             }
 
-            var message = new NetworkMessage();
+            var message = new NetworkMessage(_appearanceStorage);
             packet.AppendToNetworkMessage(message);
             SendToServer(message);
         }

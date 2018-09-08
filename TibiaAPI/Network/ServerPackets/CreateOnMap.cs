@@ -1,12 +1,17 @@
-﻿using OXGaming.TibiaAPI.Constants;
+﻿using OXGaming.TibiaAPI.Appearances;
+using OXGaming.TibiaAPI.Constants;
 using OXGaming.TibiaAPI.Utilities;
 
 namespace OXGaming.TibiaAPI.Network.ServerPackets
 {
     public class CreateOnMap : ServerPacket
     {
+        public ObjectInstance Item { get; set; }
+
         public Position Position { get; set; }
+
         public ushort ObjectId { get; set; }
+
         public byte StackPosition { get; set; }
 
         public CreateOnMap()
@@ -33,7 +38,7 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
             }
             else
             {
-                //message.ReadObjectInstance(ObjectId);
+                Item = message.ReadObjectInstance(ObjectId);
             }
             return true;
         }
@@ -53,7 +58,7 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
             }
             else
             {
-                //message.WriteObjectInstance(Item);
+                message.Write(Item);
             }
         }
     }

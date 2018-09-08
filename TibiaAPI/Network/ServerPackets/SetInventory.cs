@@ -1,9 +1,12 @@
-﻿using OXGaming.TibiaAPI.Constants;
+﻿using OXGaming.TibiaAPI.Appearances;
+using OXGaming.TibiaAPI.Constants;
 
 namespace OXGaming.TibiaAPI.Network.ServerPackets
 {
     public class SetInventory : ServerPacket
     {
+        public ObjectInstance Item { get; set; }
+
         public byte Slot { get; set; }
 
         public SetInventory()
@@ -19,8 +22,7 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
             }
 
             Slot = message.ReadByte();
-            // TODO
-            //message.ReadObjectInstance();
+            Item = message.ReadObjectInstance();
             return true;
         }
 
@@ -28,8 +30,7 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
         {
             message.Write((byte)ServerPacketType.SetInventory);
             message.Write(Slot);
-            // TODO
-            //message.Write(Item);
+            message.Write(Item);
         }
     }
 }

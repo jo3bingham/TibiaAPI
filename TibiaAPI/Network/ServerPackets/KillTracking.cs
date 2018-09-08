@@ -1,10 +1,15 @@
-﻿using OXGaming.TibiaAPI.Constants;
+﻿using System;
+using System.Collections.Generic;
+
+using OXGaming.TibiaAPI.Appearances;
+using OXGaming.TibiaAPI.Constants;
 
 namespace OXGaming.TibiaAPI.Network.ServerPackets
 {
     public class KillTracking : ServerPacket
     {
-        //public List<ObjectInstance> Loot { get; set; }
+        public List<ObjectInstance> Loot { get; } = new List<ObjectInstance>();
+
         public string CreatureName { get; set; }
 
         public KillTracking()
@@ -22,11 +27,11 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
             // TODO
             CreatureName = message.ReadString();
             //message.ReadCreatureOutfit();
-            //Loot = new List<ObjectInstance>(message.ReadByte());
-            //for (var i = 0; i < Loot.Capacity; ++i)
-            //{
-            //    Loot.Add(message.ReadObjectInstance());
-            //}
+            Loot.Capacity = message.ReadByte();
+            for (var i = 0; i < Loot.Capacity; ++i)
+            {
+                Loot.Add(message.ReadObjectInstance());
+            }
             return true;
         }
 
@@ -34,6 +39,13 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
         {
             message.Write((byte)ServerPacketType.KillTracking);
             // TODO
+            message.Write(CreatureName);
+            //message.Write(CreatureOutfit);
+            var count = Math.Min(Loot.Capacity, byte.MaxValue);
+            for (var i = 0; i < count; ++i)
+            {
+                message.Write(Loot[i]);
+            }
         }
     }
 }

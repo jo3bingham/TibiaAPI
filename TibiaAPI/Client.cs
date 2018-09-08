@@ -1,10 +1,33 @@
 ﻿using System;
+using System.IO;
 
 namespace OXGaming.TibiaAPI
 {
     public class Client : IDisposable
     {
-        public Network.Connection Proxy { get; } = new Network.Connection();
+        private readonly Appearances.AppearanceStorage _appearanceStorage = new Appearances.AppearanceStorage();
+
+        public Network.Connection Proxy { get; }
+
+        public Client(string datFileName)
+        {
+            if (string.IsNullOrEmpty(datFileName))
+            {
+                throw new ArgumentNullException(nameof(datFileName));
+            }
+
+            if (!File.Exists(datFileName))
+            {
+                throw new FileNotFoundException("Tibia dat file not found.", datFileName);
+            }
+
+            using (var datFile = File.OpenRead(datFileName))
+            {
+                _appearanceStorage.LoadAppearances(datFile);
+            }
+
+            Proxy = new Network.Connection(_appearanceStorage);
+        }
 
         public bool StartProxy()
         {

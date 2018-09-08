@@ -1,9 +1,15 @@
-﻿using OXGaming.TibiaAPI.Constants;
+﻿using System;
+using System.Collections.Generic;
+
+using OXGaming.TibiaAPI.Appearances;
+using OXGaming.TibiaAPI.Constants;
 
 namespace OXGaming.TibiaAPI.Network.ServerPackets
 {
     public class CounterOffer : ServerPacket
     {
+        public List<ObjectInstance> Items { get; } = new List<ObjectInstance>();
+
         public string PlayerName { get; set; }
 
         public CounterOffer()
@@ -19,11 +25,10 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
             }
 
             PlayerName = message.ReadString();
-            var tradeItemCount = message.ReadByte();
-            for (var i = 0; i < tradeItemCount; ++i)
+            Items.Capacity = message.ReadByte();
+            for (var i = 0; i < Items.Capacity; ++i)
             {
-                // TODO
-                //message.ReadObjectInstance();
+                Items.Add(message.ReadObjectInstance());
             }
             return true;
         }
@@ -32,13 +37,12 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
         {
             message.Write((byte)ServerPacketType.CounterOffer);
             message.Write(PlayerName);
-            // TODO
-            //var count = (byte)Math.Max(TradeItems.Count byte.MaxValue);
-            //message.WriteByte(count);
-            //for (var i = 0; i < count; ++i)
-            //{
-            //    message.WriteObjectInstance(TradeItems[i]);
-            //}
+            var count = (byte)Math.Max(Items.Count, byte.MaxValue);
+            message.Write(count);
+            for (var i = 0; i < count; ++i)
+            {
+                message.Write(Items[i]);
+            }
         }
     }
 }

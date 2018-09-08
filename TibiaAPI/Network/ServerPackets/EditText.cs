@@ -1,9 +1,12 @@
-﻿using OXGaming.TibiaAPI.Constants;
+﻿using OXGaming.TibiaAPI.Appearances;
+using OXGaming.TibiaAPI.Constants;
 
 namespace OXGaming.TibiaAPI.Network.ServerPackets
 {
     public class EditText : ServerPacket
     {
+        public ObjectInstance Window { get; set; }
+
         public string Author { get; set; }
         public string Date { get; set; }
         public string Text { get; set; }
@@ -25,8 +28,7 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
             }
 
             WindowId = message.ReadUInt32();
-            // TODO
-            //message.ReadObjectInstance();
+            Window = message.ReadObjectInstance();
             MaxTextLength = message.ReadUInt16();
             Text = message.ReadString();
             Author = message.ReadString();
@@ -38,8 +40,7 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
         {
             message.Write((byte)ServerPacketType.EditText);
             message.Write(WindowId);
-            // TODO
-            //message.WriteObjectInstance(Window);
+            message.Write(Window);
             message.Write(MaxTextLength);
             message.Write(Text);
             message.Write(Author);

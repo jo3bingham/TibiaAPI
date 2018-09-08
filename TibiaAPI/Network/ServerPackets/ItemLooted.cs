@@ -1,9 +1,12 @@
-﻿using OXGaming.TibiaAPI.Constants;
+﻿using OXGaming.TibiaAPI.Appearances;
+using OXGaming.TibiaAPI.Constants;
 
 namespace OXGaming.TibiaAPI.Network.ServerPackets
 {
     public class ItemLooted : ServerPacket
     {
+        public ObjectInstance Item { get; set; }
+
         public string ItemDescription { get; set; }
 
         public ItemLooted()
@@ -18,8 +21,7 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
                 return false;
             }
 
-            // TODO
-            //message.ReadObjectInstance();
+            Item = message.ReadObjectInstance();
             ItemDescription = message.ReadString();
             return true;
         }
@@ -27,7 +29,8 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
         public override void AppendToNetworkMessage(NetworkMessage message)
         {
             message.Write((byte)ServerPacketType.ItemLooted);
-            // TODO
+            message.Write(Item);
+            message.Write(ItemDescription);
         }
     }
 }
