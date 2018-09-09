@@ -3,6 +3,8 @@ using System.IO;
 using System.Text;
 
 using OXGaming.TibiaAPI.Appearances;
+using OXGaming.TibiaAPI.Constants;
+using OXGaming.TibiaAPI.Creatures;
 using OXGaming.TibiaAPI.Utilities;
 
 namespace OXGaming.TibiaAPI.Network
@@ -24,7 +26,7 @@ namespace OXGaming.TibiaAPI.Network
 
         private const uint PayloadDataPosition = 8;
 
-        private readonly AppearanceStorage _appearanceStorage;
+        private readonly Client _client;
 
         private readonly byte[] _buffer = new byte[MaxMessageSize];
 
@@ -45,10 +47,10 @@ namespace OXGaming.TibiaAPI.Network
         /// <summary>
         /// Initializes a new instance of the <see cref="NetworkMessage"/> class.
         /// </summary>
-        /// <param name="appearanceStorage"></param>
-        public NetworkMessage(AppearanceStorage appearanceStorage)
+        /// <param name="client"></param>
+        public NetworkMessage(Client client)
         {
-            _appearanceStorage = appearanceStorage;
+            _client = client ?? throw new ArgumentNullException(nameof(client));
         }
 
         /// <summary>
@@ -237,7 +239,7 @@ namespace OXGaming.TibiaAPI.Network
             {
                 return null;
             }
-            return _appearanceStorage.CreateOutfitInstance(mountId, 0, 0, 0, 0, 0);
+            return _client.AppearanceStorage.CreateOutfitInstance(mountId, 0, 0, 0, 0, 0);
         }
 
         public AppearanceInstance ReadCreatureOutfit()
@@ -250,16 +252,16 @@ namespace OXGaming.TibiaAPI.Network
                 var colorLegs = ReadByte();
                 var colorDetail = ReadByte();
                 var addons = ReadByte();
-                return _appearanceStorage.CreateOutfitInstance(outfitId, colorHead, colorTorso, colorLegs, colorDetail, addons);
+                return _client.AppearanceStorage.CreateOutfitInstance(outfitId, colorHead, colorTorso, colorLegs, colorDetail, addons);
             }
             else
             {
                 var itemId = ReadUInt16();
                 if (itemId == 0)
                 {
-                    return _appearanceStorage.CreateOutfitInstance(0, 0, 0, 0, 0, 0);
+                    return _client.AppearanceStorage.CreateOutfitInstance(0, 0, 0, 0, 0, 0);
                 }
-                return _appearanceStorage.CreateObjectInstance(itemId, 0);
+                return _client.AppearanceStorage.CreateObjectInstance(itemId, 0);
             }
         }
 
@@ -280,7 +282,7 @@ namespace OXGaming.TibiaAPI.Network
                 throw new Exception($"[NetworkMessage.ReadObjectInstance] Invalid object id: {id}");
             }
 
-            var objectInstance = _appearanceStorage.CreateObjectInstance(id, 0);
+            var objectInstance = _client.AppearanceStorage.CreateObjectInstance(id, 0);
             if (objectInstance == null)
             {
                 throw new Exception($"[NetworkMessage.ReadObjectInstance] Invalid object id: {id}");
@@ -312,6 +314,114 @@ namespace OXGaming.TibiaAPI.Network
             }
 
             return objectInstance;
+        }
+
+        public Creature ReadCreatureInstance(int id = -1, Position position = null)
+        {
+            if (id == -1)
+            {
+                id = ReadUInt16();
+            }
+
+            if (id != (int)CreatureInstanceType.UnknownCreature &&
+                id != (int)CreatureInstanceType.OutdatedCreature &&
+                id != (int)CreatureInstanceType.Creature)
+            {
+                throw new Exception($"[NetworkMessage.ReadCreatureInstance] Invalid creature type: {id}");
+            }
+
+            Creature creature = null;
+
+            switch (id)
+            {
+                case (int)CreatureInstanceType.UnknownCreature:
+                    {
+                        var removeCreatureId = ReadUInt32();
+                        var creatureId = ReadUInt32();
+
+                        //creature = (creatureId == client.Player.Id) ? client.Player : new Creature(creatureId);
+                        creature = new Creature(creatureId)
+                        {
+                            Type = (CreatureType)ReadByte(),
+                            RemoveCreatureId = removeCreatureId
+                        };
+
+                        if (creature.IsSummon)
+                        {
+                            creature.SummonerCreatureId = ReadUInt32();
+                        }
+
+                        creature.Name = ReadString();
+                        creature.HealthPercent = ReadByte();
+                        creature.Direction = (Direction)ReadByte();
+                        creature.Outfit = ReadCreatureOutfit();
+                        creature.Mount = ReadMountOutfit();
+                        creature.Brightness = ReadByte();
+                        creature.LightColor = ReadByte();
+                        creature.Speed = ReadUInt16();
+                        creature.PkFlag = ReadByte();
+                        creature.PartyFlag = ReadByte();
+                        creature.GuildFlag = ReadByte();
+
+                        creature.Type = (CreatureType)ReadByte();
+                        if (creature.IsSummon)
+                        {
+                            creature.SummonerCreatureId = ReadUInt32();
+                        }
+
+                        creature.SpeechCategory = ReadByte();
+                        creature.Mark = ReadByte();
+                        creature.InspectionState = ReadByte();
+                        creature.IsUnpassable = ReadBool();
+                    }
+                    break;
+                case (int)CreatureInstanceType.OutdatedCreature:
+                    {
+                        var creatureId = ReadUInt32();
+                        creature = new Creature(creatureId)
+                        {
+                            HealthPercent = ReadByte(),
+                            Direction = (Direction)ReadByte()
+                        };
+
+                        creature.Outfit = ReadCreatureOutfit();
+                        creature.Mount = ReadMountOutfit();
+                        creature.Brightness = ReadByte();
+                        creature.LightColor = ReadByte();
+                        creature.Speed = ReadUInt16();
+                        creature.PkFlag = ReadByte();
+                        creature.PartyFlag = ReadByte();
+
+                        creature.Type = (CreatureType)ReadByte();
+                        if (creature.IsSummon)
+                        {
+                            creature.SummonerCreatureId = ReadUInt32();
+                        }
+
+                        creature.SpeechCategory = ReadByte();
+                        creature.Mark = ReadByte();
+                        creature.InspectionState = ReadByte();
+                        creature.IsUnpassable = ReadBool();
+                    }
+                    break;
+                case (int)CreatureInstanceType.Creature:
+                    {
+                        var creatureId = ReadUInt32();
+                        creature = new Creature(creatureId)
+                        {
+                            Direction = (Direction)ReadByte(),
+                            IsUnpassable = ReadBool()
+                        };
+                    }
+                    break;
+            }
+
+            if (position != null)
+            {
+                creature.Position = position;
+            }
+
+            return creature;
         }
 
         /// <summary>
@@ -487,6 +597,97 @@ namespace OXGaming.TibiaAPI.Network
             if (value.Type.FrameGroup[0].SpriteInfo.Animation != null)
             {
                 Write(value.Phase);
+            }
+        }
+
+        public void Write(Creature value, CreatureInstanceType type)
+        {
+            switch (type)
+            {
+                case CreatureInstanceType.UnknownCreature:
+                    {
+                        Write(value.RemoveCreatureId);
+                        Write(value.Id);
+                        Write((byte)value.Type);
+                        if (value.IsSummon)
+                        {
+                            Write(value.SummonerCreatureId);
+                        }
+
+                        Write(value.Name);
+                        Write(value.HealthPercent);
+                        Write((byte)value.Direction);
+
+                        if (value.Outfit is OutfitInstance)
+                        {
+                            Write((OutfitInstance)value.Outfit);
+                        }
+                        else
+                        {
+                            Write((ObjectInstance)value.Outfit);
+                        }
+
+                        Write(value.Mount.Id);
+                        Write(value.Brightness);
+                        Write(value.LightColor);
+                        Write(value.Speed);
+                        Write(value.PkFlag);
+                        Write(value.PartyFlag);
+                        Write(value.GuildFlag);
+
+                        Write((byte)value.Type);
+                        if (value.IsSummon)
+                        {
+                            Write(value.SummonerCreatureId);
+                        }
+
+                        Write(value.SpeechCategory);
+                        Write(value.Mark);
+                        Write(value.InspectionState);
+                        Write(value.IsUnpassable);
+                    }
+                    break;
+                case CreatureInstanceType.OutdatedCreature:
+                    {
+                        Write(value.Id);
+                        Write(value.HealthPercent);
+                        Write((byte)value.Direction);
+
+                        if (value.Outfit is OutfitInstance)
+                        {
+                            Write((OutfitInstance)value.Outfit);
+                        }
+                        else
+                        {
+                            Write((ObjectInstance)value.Outfit);
+                        }
+
+                        Write(value.Mount.Id);
+                        Write(value.Brightness);
+                        Write(value.LightColor);
+                        Write(value.Speed);
+                        Write(value.PkFlag);
+                        Write(value.PartyFlag);
+
+                        Write((byte)value.Type);
+                        if (value.IsSummon)
+                        {
+                            Write(value.SummonerCreatureId);
+                        }
+
+                        Write(value.SpeechCategory);
+                        Write(value.Mark);
+                        Write(value.InspectionState);
+                        Write(value.IsUnpassable);
+                    }
+                    break;
+                case CreatureInstanceType.Creature:
+                    {
+                        Write(value.Id);
+                        Write((byte)value.Direction);
+                        Write(value.IsUnpassable);
+                    }
+                    break;
             }
         }
 

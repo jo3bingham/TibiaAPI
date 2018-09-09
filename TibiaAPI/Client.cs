@@ -5,7 +5,7 @@ namespace OXGaming.TibiaAPI
 {
     public class Client : IDisposable
     {
-        private readonly Appearances.AppearanceStorage _appearanceStorage = new Appearances.AppearanceStorage();
+        public Appearances.AppearanceStorage AppearanceStorage { get; } = new Appearances.AppearanceStorage();
 
         public Network.Connection Proxy { get; }
 
@@ -23,10 +23,10 @@ namespace OXGaming.TibiaAPI
 
             using (var datFile = File.OpenRead(datFileName))
             {
-                _appearanceStorage.LoadAppearances(datFile);
+                AppearanceStorage.LoadAppearances(datFile);
             }
 
-            Proxy = new Network.Connection(_appearanceStorage);
+            Proxy = new Network.Connection(this);
         }
 
         public bool StartProxy()

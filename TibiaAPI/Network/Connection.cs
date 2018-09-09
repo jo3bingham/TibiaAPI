@@ -23,7 +23,7 @@ namespace OXGaming.TibiaAPI.Network
         private readonly object _clientSequenceNumberLock = new object();
         private readonly object _ServerSequenceNumberLock = new object();
 
-        private readonly Appearances.AppearanceStorage _appearanceStorage;
+        private readonly Client _client;
 
         private readonly HttpClient _httpClient = new HttpClient();
         private readonly HttpListener _httpListener = new HttpListener();
@@ -71,13 +71,13 @@ namespace OXGaming.TibiaAPI.Network
         /// listens on port 80, so there's no need to specify a port. However, since the proxy listens
         /// on port 80, that means it needs to be ran in an elevated environment (i.e., root/administrator).
         /// </remarks>
-        public Connection(Appearances.AppearanceStorage appearanceStorage)
+        public Connection(Client client)
         {
-            _appearanceStorage = appearanceStorage ?? throw new ArgumentNullException(nameof(appearanceStorage));
+            _client = client ?? throw new ArgumentNullException(nameof(client));
 
-            _clientInMessage = new NetworkMessage(_appearanceStorage);
-            _clientOutMessage = new NetworkMessage(_appearanceStorage);
-            _serverInMessage = new NetworkMessage(_appearanceStorage);
+            _clientInMessage = new NetworkMessage(_client);
+            _clientOutMessage = new NetworkMessage(_client);
+            _serverInMessage = new NetworkMessage(_client);
         }
 
         public void SendToClient(ServerPacket packet)
@@ -87,7 +87,7 @@ namespace OXGaming.TibiaAPI.Network
                 throw new ArgumentNullException(nameof(packet));
             }
 
-            var message = new NetworkMessage(_appearanceStorage);
+            var message = new NetworkMessage(_client);
             packet.AppendToNetworkMessage(message);
             SendToClient(message);
         }
@@ -162,7 +162,7 @@ namespace OXGaming.TibiaAPI.Network
                 throw new ArgumentNullException(nameof(packet));
             }
 
-            var message = new NetworkMessage(_appearanceStorage);
+            var message = new NetworkMessage(_client);
             packet.AppendToNetworkMessage(message);
             SendToServer(message);
         }

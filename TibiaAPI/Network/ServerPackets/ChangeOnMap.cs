@@ -1,19 +1,19 @@
 ﻿using OXGaming.TibiaAPI.Appearances;
 using OXGaming.TibiaAPI.Constants;
+using OXGaming.TibiaAPI.Creatures;
 using OXGaming.TibiaAPI.Utilities;
 
 namespace OXGaming.TibiaAPI.Network.ServerPackets
 {
     public class ChangeOnMap : ServerPacket
     {
-        // TODO
-        //public Creature Creature { get; set; }
+        public Creature Creature { get; set; }
 
         public ObjectInstance Item { get; set; }
 
         public Position Position { get; set; }
 
-        public ushort ObjectId { get; set; }
+        public ushort Id { get; set; }
 
         public byte StackPosition { get; set; }
 
@@ -29,33 +29,32 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
                 return false;
             }
 
-            // TODO
             var x = message.ReadUInt16();
             if (x != ushort.MaxValue)
             {
                 Position = message.ReadPosition(x);
                 StackPosition = message.ReadByte();
-                ObjectId = message.ReadUInt16();
-                if (ObjectId == (int)CreatureInstanceType.UnknownCreature ||
-                    ObjectId == (int)CreatureInstanceType.OutdatedCreature ||
-                    ObjectId == (int)CreatureInstanceType.Creature)
+                Id = message.ReadUInt16();
+                if (Id == (int)CreatureInstanceType.UnknownCreature ||
+                    Id == (int)CreatureInstanceType.OutdatedCreature ||
+                    Id == (int)CreatureInstanceType.Creature)
                 {
-                    //message.ReadCreatureInstance(ObjectId, Position);
+                    Creature = message.ReadCreatureInstance(Id, Position);
                 }
                 else
                 {
-                    Item = message.ReadObjectInstance(ObjectId);
+                    Item = message.ReadObjectInstance(Id);
                 }
             }
             else
             {
                 var creatureId = message.ReadUInt32();
-                ObjectId = message.ReadUInt16();
-                if (ObjectId == (int)CreatureInstanceType.UnknownCreature ||
-                    ObjectId == (int)CreatureInstanceType.OutdatedCreature ||
-                    ObjectId == (int)CreatureInstanceType.Creature)
+                Id = message.ReadUInt16();
+                if (Id == (int)CreatureInstanceType.UnknownCreature ||
+                    Id == (int)CreatureInstanceType.OutdatedCreature ||
+                    Id == (int)CreatureInstanceType.Creature)
                 {
-                    //message.ReadCreatureInstance(ObjectId);
+                    Creature = message.ReadCreatureInstance(Id);
                 }
             }
             return true;
@@ -63,18 +62,17 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
 
         public override void AppendToNetworkMessage(NetworkMessage message)
         {
-            // TODO
             message.Write((byte)ServerPacketType.ChangeOnMap);
-            if (Position.X != ushort.MaxValue)
+            if (Position != null)
             {
                 message.Write(Position);
                 message.Write(StackPosition);
-                message.Write(ObjectId);
-                if (ObjectId == (int)CreatureInstanceType.UnknownCreature ||
-                    ObjectId == (int)CreatureInstanceType.OutdatedCreature ||
-                    ObjectId == (int)CreatureInstanceType.Creature)
+                message.Write(Id);
+                if (Id == (int)CreatureInstanceType.UnknownCreature ||
+                    Id == (int)CreatureInstanceType.OutdatedCreature ||
+                    Id == (int)CreatureInstanceType.Creature)
                 {
-                    //message.WriteCreatureInstance(Creature);
+                    message.Write(Creature, (CreatureInstanceType)Id);
                 }
                 else
                 {
@@ -84,13 +82,13 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
             else
             {
                 message.Write(ushort.MaxValue);
-                //message.WriteUInt32(Creature.Id);
-                message.Write(ObjectId);
-                if (ObjectId == (int)CreatureInstanceType.UnknownCreature ||
-                    ObjectId == (int)CreatureInstanceType.OutdatedCreature ||
-                    ObjectId == (int)CreatureInstanceType.Creature)
+                message.Write(Creature.Id);
+                message.Write(Id);
+                if (Id == (int)CreatureInstanceType.UnknownCreature ||
+                    Id == (int)CreatureInstanceType.OutdatedCreature ||
+                    Id == (int)CreatureInstanceType.Creature)
                 {
-                    //message.WriteCreatureInstance(Creature);
+                    message.Write(Creature, (CreatureInstanceType)Id);
                 }
             }
         }
