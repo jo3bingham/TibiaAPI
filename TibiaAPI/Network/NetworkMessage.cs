@@ -230,6 +230,39 @@ namespace OXGaming.TibiaAPI.Network
             return new Position(x, y, z);
         }
 
+        public AppearanceInstance ReadMountOutfit()
+        {
+            var mountId = ReadUInt16();
+            if (mountId == 0)
+            {
+                return null;
+            }
+            return _appearanceStorage.CreateOutfitInstance(mountId, 0, 0, 0, 0, 0);
+        }
+
+        public AppearanceInstance ReadCreatureOutfit()
+        {
+            var outfitId = ReadUInt16();
+            if (outfitId != 0)
+            {
+                var colorHead = ReadByte();
+                var colorTorso = ReadByte();
+                var colorLegs = ReadByte();
+                var colorDetail = ReadByte();
+                var addons = ReadByte();
+                return _appearanceStorage.CreateOutfitInstance(outfitId, colorHead, colorTorso, colorLegs, colorDetail, addons);
+            }
+            else
+            {
+                var itemId = ReadUInt16();
+                if (itemId == 0)
+                {
+                    return _appearanceStorage.CreateOutfitInstance(0, 0, 0, 0, 0, 0);
+                }
+                return _appearanceStorage.CreateObjectInstance(itemId, 0);
+            }
+        }
+
         public ObjectInstance ReadObjectInstance(ushort id = 0)
         {
             if (id == 0)
@@ -416,6 +449,16 @@ namespace OXGaming.TibiaAPI.Network
             Write(value.X);
             Write(value.Y);
             Write(value.Z);
+        }
+
+        public void Write(OutfitInstance value)
+        {
+            Write(value.Id);
+            Write(value.ColorHead);
+            Write(value.ColorTorso);
+            Write(value.ColorLegs);
+            Write(value.ColorDetail);
+            Write(value.Addons);
         }
 
         public void Write(ObjectInstance value)

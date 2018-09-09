@@ -10,6 +10,8 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
     {
         public List<ObjectInstance> Loot { get; } = new List<ObjectInstance>();
 
+        public AppearanceInstance CreatureOutfit { get; set; }
+
         public string CreatureName { get; set; }
 
         public KillTracking()
@@ -24,9 +26,8 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
                 return false;
             }
 
-            // TODO
             CreatureName = message.ReadString();
-            //message.ReadCreatureOutfit();
+            CreatureOutfit = message.ReadCreatureOutfit();
             Loot.Capacity = message.ReadByte();
             for (var i = 0; i < Loot.Capacity; ++i)
             {
@@ -38,9 +39,18 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
         public override void AppendToNetworkMessage(NetworkMessage message)
         {
             message.Write((byte)ServerPacketType.KillTracking);
-            // TODO
             message.Write(CreatureName);
-            //message.Write(CreatureOutfit);
+
+            if (CreatureOutfit is OutfitInstance)
+            {
+                message.Write((OutfitInstance)CreatureOutfit);
+            }
+            else if (CreatureOutfit is ObjectInstance)
+            {
+                message.Write((ushort)0);
+                message.Write(CreatureOutfit.Id);
+            }
+
             var count = Math.Min(Loot.Capacity, byte.MaxValue);
             for (var i = 0; i < count; ++i)
             {

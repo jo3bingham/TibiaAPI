@@ -9,11 +9,31 @@ namespace OXGaming.TibiaAPI.Appearances
         private Utilities.Appearances appearances;
 
         private uint lastObjectId;
+        private uint lastOutfitId;
 
         public void LoadAppearances(System.IO.FileStream datFile)
         {
             appearances = Utilities.Appearances.Parser.ParseFrom(datFile);
             lastObjectId = appearances.Object.Aggregate((last, current) => last.Id > current.Id ? last : current).Id;
+            lastOutfitId = appearances.Outfit.Aggregate((last, current) => last.Id > current.Id ? last : current).Id;
+        }
+
+        public ObjectInstance CreateObjectInstance(ushort id, byte data)
+        {
+            if (id >= (uint)CreatureInstanceType.Creature && id <= lastObjectId)
+            {
+                return new ObjectInstance(id, appearances.Object.FirstOrDefault(i => i.Id == id), data);
+            }
+            return null;
+        }
+
+        public OutfitInstance CreateOutfitInstance(ushort id, byte colorHead, byte colorTorso, byte colorLegs, byte colorDetail, byte addons)
+        {
+            if (id >= 0 && id <= lastOutfitId)
+            {
+                return new OutfitInstance(id, appearances.Outfit.FirstOrDefault(i => i.Id == id), colorHead, colorTorso, colorLegs, colorDetail, addons);
+            }
+            return null;
         }
 
         public Utilities.Appearance GetObjectType(ushort id)
@@ -25,11 +45,11 @@ namespace OXGaming.TibiaAPI.Appearances
             return null;
         }
 
-        public ObjectInstance CreateObjectInstance(ushort id, byte data)
+        public Utilities.Appearance GetOutfitType(ushort id)
         {
-            if (id >= (uint)CreatureInstanceType.Creature && id <= lastObjectId)
+            if (id >= 1 && id <= lastOutfitId)
             {
-                return new ObjectInstance(id, appearances.Object.FirstOrDefault(i => i.Id == id), data);
+                appearances.Outfit.FirstOrDefault(i => i.Id == id);
             }
             return null;
         }

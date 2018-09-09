@@ -7,7 +7,6 @@ namespace OXGaming.TibiaAPI.Appearances
         public uint LootContainerUnknown { get; set; }
 
         public byte Data { get; set; }
-        public byte Phase { get; set; }
 
         public bool IsLootContainer { get; set; } = false;
 

@@ -62,7 +62,7 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
             if (IsPlayer)
             {
                 var playerName = message.ReadString();
-                //message.ReadCreatureOutfit();
+                message.ReadCreatureOutfit();
 
                 var numberOfDetails = message.ReadByte();
                 for (var n = 0; n < numberOfDetails; ++n)
