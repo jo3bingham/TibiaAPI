@@ -6,6 +6,12 @@
         Sell = 1
     }
 
+    public enum MarketRequestType
+    {
+        OwnOffers = 65534,
+        OwnHistory = 65535
+    }
+
     public enum CreatureInstanceType
     {
         UnknownCreature = 97,
@@ -41,6 +47,14 @@
         Hidden = 2
     }
 
+    public enum BugCategory
+    {
+        Map = 0,
+        Typo = 1,
+        Technical = 2,
+        Other = 3
+    }
+
     public enum DeathType
     {
         Regular = 0,
@@ -49,20 +63,20 @@
         NoPenalty = 3
     }
 
+    public enum MarketOfferTerminationReason
+    {
+        Active = 0,
+        Cancelled = 1,
+        Expired = 2,
+        Accepted = 3
+    }
+
     public enum StoreOfferHighlightState
     {
         None = 0,
         New = 1,
         Sale = 2,
         Timed = 3
-    }
-
-    public enum BugCategory
-    {
-        Map = 0,
-        Typo = 1,
-        Technical = 2,
-        Other = 3
     }
 
     public enum CreatureType

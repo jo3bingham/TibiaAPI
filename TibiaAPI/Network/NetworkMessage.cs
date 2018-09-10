@@ -6,6 +6,7 @@ using OXGaming.TibiaAPI.Appearances;
 using OXGaming.TibiaAPI.Constants;
 using OXGaming.TibiaAPI.Creatures;
 using OXGaming.TibiaAPI.Imbuing;
+using OXGaming.TibiaAPI.Market;
 using OXGaming.TibiaAPI.Utilities;
 
 namespace OXGaming.TibiaAPI.Network
@@ -425,6 +426,37 @@ namespace OXGaming.TibiaAPI.Network
             return creature;
         }
 
+        public Offer ReadMarketOffer(int kind, ushort typeId)
+        {
+            var timestamp = ReadUInt32();
+            var counter = ReadUInt16();
+
+            if (typeId == (int)MarketRequestType.OwnHistory ||
+                typeId == (int)MarketRequestType.OwnOffers)
+            {
+                typeId = ReadUInt16();
+            }
+
+            var amount = ReadUInt16();
+            var piecePrice = ReadUInt32();
+            var character = string.Empty;
+            var terminationReason = MarketOfferTerminationReason.Active;
+
+            if (typeId == (int)MarketRequestType.OwnHistory)
+            {
+                terminationReason = (MarketOfferTerminationReason)ReadByte();
+            }
+            else if (typeId == (int)MarketRequestType.OwnOffers)
+            {
+            }
+            else
+            {
+                character = ReadString();
+            }
+
+            return new Offer(new OfferId(timestamp, counter), kind, typeId, amount, piecePrice, character, terminationReason);
+        }
+
         public ImbuementData ReadImbuementData()
         {
             var id = ReadUInt32();
@@ -770,6 +802,33 @@ namespace OXGaming.TibiaAPI.Network
                         Write(value.IsUnpassable);
                     }
                     break;
+            }
+        }
+
+        public void Write(Offer value, ushort typeId)
+        {
+            Write(value.OfferId.Timestamp);
+            Write(value.OfferId.Counter);
+
+            if (typeId == (int)MarketRequestType.OwnHistory ||
+                typeId == (int)MarketRequestType.OwnOffers)
+            {
+                Write(value.TypeId);
+            }
+
+            Write(value.Amount);
+            Write(value.PiecePrice);
+
+            if (typeId == (int)MarketRequestType.OwnHistory)
+            {
+                Write((byte)value.TerminationReason);
+            }
+            else if (typeId == (int)MarketRequestType.OwnOffers)
+            {
+            }
+            else
+            {
+                Write(value.Character);
             }
         }
         
