@@ -1,4 +1,8 @@
-﻿using OXGaming.TibiaAPI.Constants;
+﻿using System.Collections.Generic;
+
+using OXGaming.TibiaAPI.Constants;
+using OXGaming.TibiaAPI.Utilities;
+using OXGaming.TibiaAPI.WorldMap;
 
 namespace OXGaming.TibiaAPI.Network.ServerPackets
 {
@@ -7,6 +11,8 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
         private const int GroundLayer = 7;
         private const int UndergroundLayer = 2;
         private const int MapMaxZ = 15;
+
+        public List<(Field, Position)> Fields { get; } = new List<(Field, Position)>();
 
         public BottomFloor()
         {
@@ -33,7 +39,7 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
 
                if (position.Z <= (MapMaxZ - UndergroundLayer))
                {
-                   message.ReadFloor(client, 0, 0);
+                   message.ReadFloor(client, 0, 0, Fields);
                }
             }
             else if (position.Z == (GroundLayer + 1))
@@ -44,7 +50,7 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
                var floorNumber = UndergroundLayer;
                while (floorNumber >= 0)
                {
-                   numberOfTilesToSkip = message.ReadFloor(client, floorNumber, numberOfTilesToSkip);
+                   numberOfTilesToSkip = message.ReadFloor(client, floorNumber, numberOfTilesToSkip, Fields);
                    floorNumber--;
                }
             }

@@ -21,7 +21,6 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
             for (var i = 0; i < numberOfShopCategories; ++i)
             {
                 var categoryName = message.ReadString();
-                //var categoryDescription = message.ReadString();
                 var highlightState = message.ReadByte();
 
                 var numberOfIconIdentifiers = message.ReadByte();

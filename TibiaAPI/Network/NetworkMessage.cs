@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Text;
 
@@ -536,7 +537,7 @@ namespace OXGaming.TibiaAPI.Network
             }
         }
 
-        public int ReadField(Client client, int x, int y, int z)
+        public int ReadField(Client client, int x, int y, int z, List<(Field, Position)> fields)
         {
             var thingsCount = 0;
             var numberOfTilesToSkip = 0;
@@ -579,12 +580,18 @@ namespace OXGaming.TibiaAPI.Network
                 }
 
                 thingsCount++;
-           }
+            }
 
-           return numberOfTilesToSkip;
+            var field = client.WorldMapStorage.GetField(x, y, z);
+            if (field != null)
+            {
+                fields.Add((field, absolutePosition));
+            }
+
+            return numberOfTilesToSkip;
         }
 
-        public int ReadFloor(Client client, int floorNumber, int numberOfTilesToSkip)
+        public int ReadFloor(Client client, int floorNumber, int numberOfTilesToSkip, List<(Field, Position)> fields)
         {
             if (floorNumber < 0 || floorNumber >= MapSizeZ)
             {
@@ -604,7 +611,7 @@ namespace OXGaming.TibiaAPI.Network
                     }
                     else
                     {
-                        numberOfTilesToSkip = ReadField(client, currentX, currentY, floorNumber);
+                        numberOfTilesToSkip = ReadField(client, currentX, currentY, floorNumber, fields);
                     }
                     currentY++;
                 }
@@ -614,7 +621,7 @@ namespace OXGaming.TibiaAPI.Network
             return numberOfTilesToSkip;
         }
 
-        public int ReadArea(Client client, int startX, int startY, int endX, int endY)
+        public int ReadArea(Client client, int startX, int startY, int endX, int endY, List<(Field, Position)> fields)
         {
             var endZ = 0;
             var stepZ = 0;
@@ -651,7 +658,7 @@ namespace OXGaming.TibiaAPI.Network
                         }
                         else
                         {
-                            numberOfTilesToSkip = ReadField(client, currentX, currentY, currentZ);
+                            numberOfTilesToSkip = ReadField(client, currentX, currentY, currentZ, fields);
                         }
                         currentY++;
                     }

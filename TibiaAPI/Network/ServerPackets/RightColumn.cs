@@ -1,4 +1,8 @@
-﻿using OXGaming.TibiaAPI.Constants;
+﻿using System.Collections.Generic;
+
+using OXGaming.TibiaAPI.Constants;
+using OXGaming.TibiaAPI.Utilities;
+using OXGaming.TibiaAPI.WorldMap;
 
 namespace OXGaming.TibiaAPI.Network.ServerPackets
 {
@@ -6,6 +10,8 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
     {
         private const int MapSizeX = 18;
         private const int MapSizeY = 14;
+
+        public List<(Field, Position)> Fields { get; } = new List<(Field, Position)>();
 
         public RightColumn()
         {
@@ -23,7 +29,7 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
             position.X++;
             client.WorldMapStorage.SetPosition(position.X, position.Y, position.Z);
             client.WorldMapStorage.ScrollMap(-1, 0);
-            message.ReadArea(client, (MapSizeX - 1), 0, (MapSizeX - 1), (MapSizeY - 1));
+            message.ReadArea(client, (MapSizeX - 1), 0, (MapSizeX - 1), (MapSizeY - 1), Fields);
             return true;
         }
 
