@@ -22,7 +22,7 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
             PacketType = ServerPacketType.ChangeOnMap;
         }
 
-        public override bool ParseFromNetworkMessage(NetworkMessage message)
+        public override bool ParseFromNetworkMessage(Client client, NetworkMessage message)
         {
             if (message.ReadByte() != (byte)ServerPacketType.ChangeOnMap)
             {
@@ -39,11 +39,11 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
                     Id == (int)CreatureInstanceType.OutdatedCreature ||
                     Id == (int)CreatureInstanceType.Creature)
                 {
-                    Creature = message.ReadCreatureInstance(Id, Position);
+                    Creature = message.ReadCreatureInstance(client, Id, Position);
                 }
                 else
                 {
-                    Item = message.ReadObjectInstance(Id);
+                    Item = message.ReadObjectInstance(client, Id);
                 }
             }
             else
@@ -54,7 +54,7 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
                     Id == (int)CreatureInstanceType.OutdatedCreature ||
                     Id == (int)CreatureInstanceType.Creature)
                 {
-                    Creature = message.ReadCreatureInstance(Id);
+                    Creature = message.ReadCreatureInstance(client, Id);
                 }
             }
             return true;

@@ -4,46 +4,45 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
 {
     public class TopFloor : ServerPacket
     {
+        private const int GroundLayer = 7;
+        private const int UndergroundLayer = 2;
+
         public TopFloor()
         {
             PacketType = ServerPacketType.TopFloor;
         }
 
-        public override bool ParseFromNetworkMessage(NetworkMessage message)
+        public override bool ParseFromNetworkMessage(Client client, NetworkMessage message)
         {
             if (message.ReadByte() != (byte)ServerPacketType.TopFloor)
             {
                 return false;
             }
 
-            //var fields = new System.Collections.Generic.List<WorldMap.Field>();
+            var position = client.WorldMapStorage.GetPosition();
+            position.X++;
+            position.Y++;
+            position.Z--;
 
-            //var position = client.WorldMapStorage.GetPosition();
-            //position.X++;
-            //position.Y++;
-            //position.Z--;
+            client.WorldMapStorage.SetPosition(position.X, position.Y, position.Z);
 
-            //client.WorldMapStorage.SetPosition(position.X, position.Y, position.Z);
+            if (position.Z > GroundLayer)
+            {
+               client.WorldMapStorage.ScrollMap(0, 0, -1);
+               message.ReadFloor(client, (2 * UndergroundLayer), 0);
+            }
+            else if (position.Z == GroundLayer)
+            {
+               client.WorldMapStorage.ScrollMap(0, 0, -(UndergroundLayer + 1));
 
-            //if (position.Z > GroundLayer)
-            //{
-            //    client.WorldMapStorage.ScrollMap(0, 0, -1);
-            //    ReadFloor(message, (2 * UndergroundLayer), 0, fields);
-            //}
-            //else if (position.Z == GroundLayer)
-            //{
-            //    client.WorldMapStorage.ScrollMap(0, 0, -(UndergroundLayer + 1));
-
-            //    var numberOfTilesToSkip = 0;
-            //    var floorNumber = UndergroundLayer;
-            //    while (floorNumber <= GroundLayer)
-            //    {
-            //        numberOfTilesToSkip = ReadFloor(message, floorNumber, numberOfTilesToSkip, fields);
-            //        floorNumber++;
-            //    }
-            //}
-
-            //client.WorldMapStorage.OnMapUpdated(fields);
+               var numberOfTilesToSkip = 0;
+               var floorNumber = UndergroundLayer;
+               while (floorNumber <= GroundLayer)
+               {
+                   numberOfTilesToSkip = message.ReadFloor(client, floorNumber, numberOfTilesToSkip);
+                   floorNumber++;
+               }
+            }
             return true;
         }
 

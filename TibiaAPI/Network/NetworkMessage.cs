@@ -8,6 +8,7 @@ using OXGaming.TibiaAPI.Creatures;
 using OXGaming.TibiaAPI.Imbuing;
 using OXGaming.TibiaAPI.Market;
 using OXGaming.TibiaAPI.Utilities;
+using OXGaming.TibiaAPI.WorldMap;
 
 namespace OXGaming.TibiaAPI.Network
 {
@@ -28,7 +29,13 @@ namespace OXGaming.TibiaAPI.Network
 
         private const uint PayloadDataPosition = 8;
 
-        private readonly Client _client;
+        private const int GroundLayer = 7;
+        private const int UndergroundLayer = 2;
+        private const int MapSizeX = 18;
+        private const int MapSizeY = 14;
+        private const int MapSizeZ = 8;
+        private const int MapSizeW = 10;
+        private const int MapMaxZ = 15;
 
         private readonly byte[] _buffer = new byte[MaxMessageSize];
 
@@ -45,15 +52,6 @@ namespace OXGaming.TibiaAPI.Network
         public uint Size { get => _size; set => _size = value; }
 
         public bool AddSequenceNumber { get; set; } = true;
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="NetworkMessage"/> class.
-        /// </summary>
-        /// <param name="client"></param>
-        public NetworkMessage(Client client)
-        {
-            _client = client ?? throw new ArgumentNullException(nameof(client));
-        }
 
         /// <summary>
         /// Gets the underlying buffer.
@@ -217,34 +215,34 @@ namespace OXGaming.TibiaAPI.Network
             return Encoding.ASCII.GetString(ReadBytes(length));
         }
 
-        public Position ReadPosition(ushort x = ushort.MaxValue, ushort y = ushort.MaxValue, byte z = byte.MaxValue)
+        public Position ReadPosition(int x = -1, int y = -1, int z = -1)
         {
-            if (x == ushort.MaxValue)
+            if (x == -1)
             {
                 x = ReadUInt16();
             }
-            if (y == ushort.MaxValue)
+            if (y == -1)
             {
                 y = ReadUInt16();
             }
-            if (z == byte.MaxValue)
+            if (z == -1)
             {
                 z = ReadByte();
             }
             return new Position(x, y, z);
         }
 
-        public AppearanceInstance ReadMountOutfit()
+        public AppearanceInstance ReadMountOutfit(Client client)
         {
             var mountId = ReadUInt16();
             if (mountId == 0)
             {
                 return null;
             }
-            return _client.AppearanceStorage.CreateOutfitInstance(mountId, 0, 0, 0, 0, 0);
+            return client.AppearanceStorage.CreateOutfitInstance(mountId, 0, 0, 0, 0, 0);
         }
 
-        public AppearanceInstance ReadCreatureOutfit()
+        public AppearanceInstance ReadCreatureOutfit(Client client)
         {
             var outfitId = ReadUInt16();
             if (outfitId != 0)
@@ -254,20 +252,20 @@ namespace OXGaming.TibiaAPI.Network
                 var colorLegs = ReadByte();
                 var colorDetail = ReadByte();
                 var addons = ReadByte();
-                return _client.AppearanceStorage.CreateOutfitInstance(outfitId, colorHead, colorTorso, colorLegs, colorDetail, addons);
+                return client.AppearanceStorage.CreateOutfitInstance(outfitId, colorHead, colorTorso, colorLegs, colorDetail, addons);
             }
             else
             {
                 var itemId = ReadUInt16();
                 if (itemId == 0)
                 {
-                    return _client.AppearanceStorage.CreateOutfitInstance(0, 0, 0, 0, 0, 0);
+                    return client.AppearanceStorage.CreateOutfitInstance(0, 0, 0, 0, 0, 0);
                 }
-                return _client.AppearanceStorage.CreateObjectInstance(itemId, 0);
+                return client.AppearanceStorage.CreateObjectInstance(itemId, 0);
             }
         }
 
-        public ObjectInstance ReadObjectInstance(ushort id = 0)
+        public ObjectInstance ReadObjectInstance(Client client, ushort id = 0)
         {
             if (id == 0)
             {
@@ -284,7 +282,7 @@ namespace OXGaming.TibiaAPI.Network
                 throw new Exception($"[NetworkMessage.ReadObjectInstance] Invalid object id: {id}");
             }
 
-            var objectInstance = _client.AppearanceStorage.CreateObjectInstance(id, 0);
+            var objectInstance = client.AppearanceStorage.CreateObjectInstance(id, 0);
             if (objectInstance == null)
             {
                 throw new Exception($"[NetworkMessage.ReadObjectInstance] Invalid object id: {id}");
@@ -318,7 +316,7 @@ namespace OXGaming.TibiaAPI.Network
             return objectInstance;
         }
 
-        public Creature ReadCreatureInstance(int id = -1, Position position = null)
+        public Creature ReadCreatureInstance(Client client, int id = -1, Position position = null)
         {
             if (id == -1)
             {
@@ -356,8 +354,8 @@ namespace OXGaming.TibiaAPI.Network
                         creature.Name = ReadString();
                         creature.HealthPercent = ReadByte();
                         creature.Direction = (Direction)ReadByte();
-                        creature.Outfit = ReadCreatureOutfit();
-                        creature.Mount = ReadMountOutfit();
+                        creature.Outfit = ReadCreatureOutfit(client);
+                        creature.Mount = ReadMountOutfit(client);
                         creature.Brightness = ReadByte();
                         creature.LightColor = ReadByte();
                         creature.Speed = ReadUInt16();
@@ -386,8 +384,8 @@ namespace OXGaming.TibiaAPI.Network
                             Direction = (Direction)ReadByte()
                         };
 
-                        creature.Outfit = ReadCreatureOutfit();
-                        creature.Mount = ReadMountOutfit();
+                        creature.Outfit = ReadCreatureOutfit(client);
+                        creature.Mount = ReadMountOutfit(client);
                         creature.Brightness = ReadByte();
                         creature.LightColor = ReadByte();
                         creature.Speed = ReadUInt16();
@@ -538,14 +536,141 @@ namespace OXGaming.TibiaAPI.Network
             }
         }
 
+        public int ReadField(Client client, int x, int y, int z)
+        {
+            var thingsCount = 0;
+            var numberOfTilesToSkip = 0;
+            var mapPosition = new Position(x, y, z);
+            var absolutePosition = client.WorldMapStorage.ToAbsolute(mapPosition);
+
+            while (true)
+            {
+                var thingId = ReadUInt16();
+                if (thingId >= 65280)
+                {
+                    numberOfTilesToSkip = thingId - 65280;
+                    break;
+                }
+
+                if (thingId == (int)CreatureInstanceType.UnknownCreature ||
+                    thingId == (int)CreatureInstanceType.OutdatedCreature ||
+                    thingId == (int)CreatureInstanceType.Creature)
+                {
+                    var creature = ReadCreatureInstance(client, thingId, absolutePosition);
+                    var objectInstance = client.AppearanceStorage.CreateObjectInstance(99, creature.Id);
+
+                    if (thingsCount < MapSizeW)
+                    {
+                        client.WorldMapStorage.AppendObject(x, y, z, objectInstance);
+                    }
+                }
+                else
+                {
+                    var objectInstance = ReadObjectInstance(client, thingId);
+
+                    if (thingsCount < MapSizeW)
+                    {
+                        client.WorldMapStorage.AppendObject(x, y, z, objectInstance);
+                    }
+                    else
+                    {
+                        throw new Exception("Connection.readField: Expected creatures but received regular object.");
+                    }
+                }
+
+                thingsCount++;
+           }
+
+           return numberOfTilesToSkip;
+        }
+
+        public int ReadFloor(Client client, int floorNumber, int numberOfTilesToSkip)
+        {
+            if (floorNumber < 0 || floorNumber >= MapSizeZ)
+            {
+                throw new Exception("ReadFloor: Floor number out of range.");
+            }
+
+            var currentX = 0;
+            var currentY = 0;
+            while (currentX <= MapSizeX - 1)
+            {
+                currentY = 0;
+                while (currentY <= MapSizeY - 1)
+                {
+                    if (numberOfTilesToSkip > 0)
+                    {
+                        numberOfTilesToSkip--;
+                    }
+                    else
+                    {
+                        numberOfTilesToSkip = ReadField(client, currentX, currentY, floorNumber);
+                    }
+                    currentY++;
+                }
+                currentX++;
+            }
+
+            return numberOfTilesToSkip;
+        }
+
+        public int ReadArea(Client client, int startX, int startY, int endX, int endY)
+        {
+            var endZ = 0;
+            var stepZ = 0;
+            var numberOfTilesToSkip = 0;
+            var currentX = 0;
+            var currentY = 0;
+            var currentZ = 0;
+            var position = client.WorldMapStorage.GetPosition();
+
+            if (position.Z <= GroundLayer)
+            {
+                currentZ = 0;
+                endZ = GroundLayer + 1;
+                stepZ = 1;
+            }
+            else
+            {
+                currentZ = 2 * UndergroundLayer;
+                endZ = Math.Max(-1, position.Z - MapMaxZ + 1);
+                stepZ = -1;
+            }
+
+            while (currentZ != endZ)
+            {
+                currentX = startX;
+                while (currentX <= endX)
+                {
+                    currentY = startY;
+                    while (currentY <= endY)
+                    {
+                        if (numberOfTilesToSkip > 0)
+                        {
+                            numberOfTilesToSkip--;
+                        }
+                        else
+                        {
+                            numberOfTilesToSkip = ReadField(client, currentX, currentY, currentZ);
+                        }
+                        currentY++;
+                    }
+                    currentX++;
+                }
+                currentZ += stepZ;
+            }
+
+            return numberOfTilesToSkip;
+        }
+
         /// <summary>
         /// Writes a byte array to the buffer.
         /// </summary>
         /// <param name="value">
         /// A byte array containing the data to write.
         /// </param>
-        /// <exception cref="ArgumentException">
-        /// Thrown when the 'value' parameter is invalid (<see langword="null"/>).
+        /// <exception cref="ArgumentNullException">
+        /// Thrown when <see cref="value"/> is null.
         /// </exception>
         /// <exception cref="IndexOutOfRangeException">
         /// Thrown when the position + the length of 'value' exceeds the bounds of the buffer.
@@ -554,8 +679,7 @@ namespace OXGaming.TibiaAPI.Network
         {
             if (value == null)
             {
-                throw new ArgumentException("[NetworkMessage.Write] " +
-                    "'value' cannot be null.");
+                throw new ArgumentNullException(nameof(value));
             }
 
             if (Position + value.Length > _buffer.Length)
@@ -670,14 +794,14 @@ namespace OXGaming.TibiaAPI.Network
 
         public void Write(Position value)
         {
-            Write(value.X);
-            Write(value.Y);
-            Write(value.Z);
+            Write((ushort)value.X);
+            Write((ushort)value.Y);
+            Write((byte)value.Z);
         }
 
         public void Write(OutfitInstance value)
         {
-            Write(value.Id);
+            Write((ushort)value.Id);
             Write(value.ColorHead);
             Write(value.ColorTorso);
             Write(value.ColorLegs);
@@ -692,11 +816,11 @@ namespace OXGaming.TibiaAPI.Network
                 throw new ArgumentNullException(nameof(value));
             }
 
-            Write(value.Id);
+            Write((ushort)value.Id);
 
             if (value.Type.Flags.Liquidcontainer || value.Type.Flags.Liquidpool || value.Type.Flags.Cumulative)
             {
-                Write(value.Data);
+                Write((byte)value.Data);
             }
 
             if (value.Type.Flags.Container)

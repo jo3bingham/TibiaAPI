@@ -17,7 +17,7 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
             PacketType = ServerPacketType.CounterOffer;
         }
 
-        public override bool ParseFromNetworkMessage(NetworkMessage message)
+        public override bool ParseFromNetworkMessage(Client client, NetworkMessage message)
         {
             if (message.ReadByte() != (byte)ServerPacketType.CounterOffer)
             {
@@ -28,7 +28,7 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
             Items.Capacity = message.ReadByte();
             for (var i = 0; i < Items.Capacity; ++i)
             {
-                Items.Add(message.ReadObjectInstance());
+                Items.Add(message.ReadObjectInstance(client));
             }
             return true;
         }

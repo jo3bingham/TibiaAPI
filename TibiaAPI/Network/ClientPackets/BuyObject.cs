@@ -17,7 +17,7 @@ namespace OXGaming.TibiaAPI.Network.ClientPackets
             PacketType = ClientPacketType.BuyObject;
         }
 
-        public override bool ParseFromNetworkMessage(NetworkMessage message)
+        public override bool ParseFromNetworkMessage(Client client, NetworkMessage message)
         {
             if (message.ReadByte() != (byte)ClientPacketType.BuyObject)
             {

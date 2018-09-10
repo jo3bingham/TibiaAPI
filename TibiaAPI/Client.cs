@@ -7,6 +7,8 @@ namespace OXGaming.TibiaAPI
     {
         public Appearances.AppearanceStorage AppearanceStorage { get; } = new Appearances.AppearanceStorage();
 
+        public WorldMap.WorldMapStorage WorldMapStorage { get; } = new WorldMap.WorldMapStorage();
+
         public Network.Connection Proxy { get; }
 
         public Client(string datFileName)

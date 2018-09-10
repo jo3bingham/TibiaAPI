@@ -6,7 +6,7 @@ namespace OXGaming.TibiaAPI.Network
     {
         public bool Forward { get; set; } = true;
 
-        public virtual bool ParseFromNetworkMessage(NetworkMessage message)
+        public virtual bool ParseFromNetworkMessage(Client client, NetworkMessage message)
         {
             throw new NotImplementedException();
         }

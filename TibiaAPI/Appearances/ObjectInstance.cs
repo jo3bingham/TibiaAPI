@@ -4,13 +4,12 @@ namespace OXGaming.TibiaAPI.Appearances
 {
     public class ObjectInstance : AppearanceInstance
     {
+        public uint Data { get; set; }
         public uint LootContainerUnknown { get; set; }
-
-        public byte Data { get; set; }
 
         public bool IsLootContainer { get; set; } = false;
 
-        public ObjectInstance(ushort id, Appearance type, byte data = 0) : base(id, type)
+        public ObjectInstance(uint id, Appearance type, uint data = 0) : base(id, type)
         {
             Data = data;
         }

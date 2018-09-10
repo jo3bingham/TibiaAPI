@@ -2,15 +2,27 @@
 {
     public class Position
     {
-        public ushort X { get; set; }
-        public ushort Y { get; set; }
-        public byte Z { get; set; }
+        public int X { get; set; }
+        public int Y { get; set; }
+        public int Z { get; set; }
 
-        public Position(ushort x, ushort y, byte z)
+        public Position(int x, int y, int z)
         {
             X = x;
             Y = y;
             Z = z;
+        }
+
+        public void SetZero()
+        {
+            X = 0;
+            Y = 0;
+            Z = 0;
+        }
+
+        public Position Clone()
+        {
+            return new Position(X, Y, Z);
         }
     }
 }

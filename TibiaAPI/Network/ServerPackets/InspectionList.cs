@@ -22,7 +22,7 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
             PacketType = ServerPacketType.InspectionList;
         }
 
-        public override bool ParseFromNetworkMessage(NetworkMessage message)
+        public override bool ParseFromNetworkMessage(Client client, NetworkMessage message)
         {
             if (message.ReadByte() != (byte)ServerPacketType.InspectionList)
             {
@@ -42,7 +42,7 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
                     var slotId = message.ReadByte();
                 }
 
-                var Item = message.ReadObjectInstance();
+                var Item = message.ReadObjectInstance(client);
 
                 ImbuementSlots = message.ReadByte();
                 for (var x = 0; x < ImbuementSlots; ++x)
@@ -62,7 +62,7 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
             if (IsPlayer)
             {
                 var playerName = message.ReadString();
-                message.ReadCreatureOutfit();
+                message.ReadCreatureOutfit(client);
 
                 var numberOfDetails = message.ReadByte();
                 for (var n = 0; n < numberOfDetails; ++n)

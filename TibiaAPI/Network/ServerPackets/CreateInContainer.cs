@@ -16,7 +16,7 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
             PacketType = ServerPacketType.CreateInContainer;
         }
 
-        public override bool ParseFromNetworkMessage(NetworkMessage message)
+        public override bool ParseFromNetworkMessage(Client client, NetworkMessage message)
         {
             if (message.ReadByte() != (byte)ServerPacketType.CreateInContainer)
             {
@@ -25,7 +25,7 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
 
             ContainerId = message.ReadByte();
             Index = message.ReadUInt16();
-            Item = message.ReadObjectInstance();
+            Item = message.ReadObjectInstance(client);
             return true;
         }
 

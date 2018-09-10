@@ -14,7 +14,7 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
             PacketType = ServerPacketType.MonsterCyclopediaNewDetails;
         }
 
-        public override bool ParseFromNetworkMessage(NetworkMessage message)
+        public override bool ParseFromNetworkMessage(Client client, NetworkMessage message)
         {
             if (message.ReadByte() != (byte)ServerPacketType.MonsterCyclopediaNewDetails)
             {
@@ -32,6 +32,7 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
             message.Write((byte)ServerPacketType.MonsterCyclopediaNewDetails);
             message.Write(RaceId);
             // TODO
+            message.Write(Unknown);
         }
     }
 }

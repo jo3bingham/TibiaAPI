@@ -10,7 +10,7 @@ namespace OXGaming.TibiaAPI.Appearances
         public byte ColorLegs { get; set; }
         public byte ColorTorso { get; set; }
 
-        public OutfitInstance(ushort id, Appearance type, byte colorHead, byte colorTorso, byte colorLegs, byte colorDetail, byte addons) : base(id, type)
+        public OutfitInstance(uint id, Appearance type, byte colorHead, byte colorTorso, byte colorLegs, byte colorDetail, byte addons) : base(id, type)
         {
             ColorHead = colorHead;
             ColorTorso = colorTorso;

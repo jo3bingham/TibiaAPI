@@ -6,11 +6,11 @@ namespace OXGaming.TibiaAPI.Appearances
     {
         public Appearance Type { get; }
 
-        public ushort Id { get; }
+        public uint Id { get; }
 
         public byte Phase { get; set; }
 
-        public AppearanceInstance(ushort id, Appearance type)
+        public AppearanceInstance(uint id, Appearance type)
         {
             Id = id;
             Type = type;

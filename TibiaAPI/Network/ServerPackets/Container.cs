@@ -29,7 +29,7 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
             PacketType = ServerPacketType.Container;
         }
 
-        public override bool ParseFromNetworkMessage(NetworkMessage message)
+        public override bool ParseFromNetworkMessage(Client client, NetworkMessage message)
         {
             if (message.ReadByte() != (byte)ServerPacketType.Container)
             {
@@ -37,7 +37,7 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
             }
 
             ContainerId = message.ReadByte();
-            ContainerObject = message.ReadObjectInstance();
+            ContainerObject = message.ReadObjectInstance(client);
             ContainerName = message.ReadString();
             NumberOfSlotsPerPage = message.ReadByte();
             IsSubContainer = message.ReadBool();
@@ -49,7 +49,7 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
             ContainerObjects.Capacity = message.ReadByte();
             for (var i = 0; i < ContainerObjects.Capacity; ++i)
             {
-                ContainerObjects.Add(message.ReadObjectInstance());
+                ContainerObjects.Add(message.ReadObjectInstance(client));
             }
             return true;
         }

@@ -75,9 +75,9 @@ namespace OXGaming.TibiaAPI.Network
         {
             _client = client ?? throw new ArgumentNullException(nameof(client));
 
-            _clientInMessage = new NetworkMessage(_client);
-            _clientOutMessage = new NetworkMessage(_client);
-            _serverInMessage = new NetworkMessage(_client);
+            _clientInMessage = new NetworkMessage();
+            _clientOutMessage = new NetworkMessage();
+            _serverInMessage = new NetworkMessage();
         }
 
         public void SendToClient(ServerPacket packet)
@@ -87,7 +87,7 @@ namespace OXGaming.TibiaAPI.Network
                 throw new ArgumentNullException(nameof(packet));
             }
 
-            var message = new NetworkMessage(_client);
+            var message = new NetworkMessage();
             packet.AppendToNetworkMessage(message);
             SendToClient(message);
         }
@@ -162,7 +162,7 @@ namespace OXGaming.TibiaAPI.Network
                 throw new ArgumentNullException(nameof(packet));
             }
 
-            var message = new NetworkMessage(_client);
+            var message = new NetworkMessage();
             packet.AppendToNetworkMessage(message);
             SendToServer(message);
         }
@@ -700,7 +700,7 @@ namespace OXGaming.TibiaAPI.Network
                     {
                         _clientOutMessage.Reset();
                         _clientInMessage.PrepareToParse(_xteaKey);
-                        ParseClientMessage(_clientInMessage, _clientOutMessage);
+                        ParseClientMessage(_client, _clientInMessage, _clientOutMessage);
                         
                         if (AllowClientPacketModification)
                         {
