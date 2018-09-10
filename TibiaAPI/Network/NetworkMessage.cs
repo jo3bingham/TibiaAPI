@@ -424,6 +424,59 @@ namespace OXGaming.TibiaAPI.Network
             return creature;
         }
 
+        public void ReadDailyReward()
+        {
+            // TODO: Work out switch case values, variable names, and
+            // which case corresponds to which reward.
+            var rewardType = ReadByte();
+            switch (rewardType)
+            {
+                case 1:
+                    {
+                        var maxReward = ReadByte();
+                        var numberOfRewardItems = ReadByte();
+                        for (var j = 0; j < numberOfRewardItems; ++j)
+                        {
+                            var itemId = ReadUInt16();
+                            var itemName = ReadString();
+                            var itemWeight = ReadUInt32();
+                        }
+                    }
+                    break;
+                case 2:
+                    {
+                        var numberOfRewardItems = ReadByte();
+                        for (var j = 0; j < numberOfRewardItems; ++j)
+                        {
+                            var rewardId = ReadByte();
+                            switch (rewardId)
+                            {
+                                case 1:
+                                    {
+                                        var itemId = ReadUInt16();
+                                        var itemName = ReadString();
+                                        var itemCount = ReadByte();
+                                    }
+                                    break;
+                                case 2:
+                                    {
+                                        var rewardCount = ReadByte();
+                                    }
+                                    break;
+                                case 3:
+                                    {
+                                        var duration = ReadUInt16();
+                                    }
+                                    break;
+                            }
+                        }
+                    }
+                    break;
+                case 3:
+                    break;
+            }
+        }
+
         /// <summary>
         /// Writes a byte array to the buffer.
         /// </summary>

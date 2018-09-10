@@ -23,12 +23,12 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
                 return false;
             }
 
+            // TODO
             var numberOfDailyRewards = message.ReadByte();
             for (var i = 0; i < numberOfDailyRewards; ++i)
             {
-                // TODO
-                //message.ReadDailyReward();
-                //message.ReadDailyReward();
+                message.ReadDailyReward();
+                message.ReadDailyReward();
             }
 
             Bonuses.Capacity = message.ReadByte();
