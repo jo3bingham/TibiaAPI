@@ -5,6 +5,7 @@ using System.Text;
 using OXGaming.TibiaAPI.Appearances;
 using OXGaming.TibiaAPI.Constants;
 using OXGaming.TibiaAPI.Creatures;
+using OXGaming.TibiaAPI.Imbuing;
 using OXGaming.TibiaAPI.Utilities;
 
 namespace OXGaming.TibiaAPI.Network
@@ -424,6 +425,34 @@ namespace OXGaming.TibiaAPI.Network
             return creature;
         }
 
+        public ImbuementData ReadImbuementData()
+        {
+            var id = ReadUInt32();
+            var name = ReadString();
+            var imbuementData = new ImbuementData(id, name)
+            {
+                Description = ReadString(),
+                Category = ReadString(),
+                IconId = ReadUInt16(),
+                DurationInSeconds = ReadUInt32(),
+                PremiumOnly = ReadBool()
+            };
+
+            var astralSourceCount = ReadByte();
+            for (var i = 0; i < astralSourceCount; i++)
+            {
+                var astralId = ReadUInt16();
+                var astralName = ReadString();
+                var count = ReadUInt16();
+                imbuementData.AstralSources.Add(new AstralSource(astralId, count, astralName));
+            }
+
+            imbuementData.GoldCost = ReadUInt32();
+            imbuementData.SuccessRatePercent = ReadByte();
+            imbuementData.ProtectionGoldCost = ReadUInt32();
+            return imbuementData;
+        }
+
         public void ReadDailyReward()
         {
             // TODO: Work out switch case values, variable names, and
@@ -742,6 +771,31 @@ namespace OXGaming.TibiaAPI.Network
                     }
                     break;
             }
+        }
+        
+        public void Write(ImbuementData value)
+        {
+            Write(value.Id);
+            Write(value.Name);
+            Write(value.Description);
+            Write(value.Category);
+            Write(value.IconId);
+            Write(value.DurationInSeconds);
+            Write(value.PremiumOnly);
+
+            var count = (byte)Math.Min(value.AstralSources.Count, byte.MaxValue);
+            Write(count);
+            for (var i = 0; i < count; ++i)
+            {
+                var astralSource = value.AstralSources[i];
+                Write(astralSource.AppearanceTypeId);
+                Write(astralSource.Name);
+                Write(astralSource.ObjectCount);
+            }
+
+            Write(value.GoldCost);
+            Write(value.SuccessRatePercent);
+            Write(value.ProtectionGoldCost);
         }
 
         /// <summary>
