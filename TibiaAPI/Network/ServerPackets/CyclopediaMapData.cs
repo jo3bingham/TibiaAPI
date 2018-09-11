@@ -42,6 +42,19 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
             {
                 message.ReadUInt32();
             }
+            else if (CyclopediaMapDataType == 9)
+            {
+                message.ReadUInt16();
+                var count = message.ReadUInt16();
+                for (var i = 0; i < count; ++i)
+                {
+                    message.ReadUInt32();
+                }
+            }
+            else if (CyclopediaMapDataType == 10)
+            {
+                message.ReadUInt16();
+            }
             return true;
         }
 
