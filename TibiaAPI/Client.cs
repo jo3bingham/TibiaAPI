@@ -1,27 +1,44 @@
 ﻿using System;
+using System.IO;
 
 namespace OXGaming.TibiaAPI
 {
     public class Client : IDisposable
     {
-        private Network.Connection _connection;
+        public Appearances.AppearanceStorage AppearanceStorage { get; } = new Appearances.AppearanceStorage();
 
-        public bool StartProxy()
+        public WorldMap.WorldMapStorage WorldMapStorage { get; } = new WorldMap.WorldMapStorage();
+
+        public Network.Connection Proxy { get; }
+
+        public Client(string datFileName)
         {
-            if (_connection == null)
+            if (string.IsNullOrEmpty(datFileName))
             {
-                _connection = new Network.Connection();
+                throw new ArgumentNullException(nameof(datFileName));
             }
 
-            return _connection.Start();
+            if (!File.Exists(datFileName))
+            {
+                throw new FileNotFoundException("Tibia dat file not found.", datFileName);
+            }
+
+            using (var datFile = File.OpenRead(datFileName))
+            {
+                AppearanceStorage.LoadAppearances(datFile);
+            }
+
+            Proxy = new Network.Connection(this);
+        }
+
+        public bool StartProxy(bool enablePacketParsing = true)
+        {
+            return Proxy.Start(enablePacketParsing);
         }
 
         public void StopProxy()
         {
-            if (_connection != null)
-            {
-                _connection.Stop();
-            }
+            Proxy.Stop();
         }
 
         #region IDisposable Support
@@ -33,10 +50,7 @@ namespace OXGaming.TibiaAPI
             {
                 if (disposing)
                 {
-                    if (_connection != null)
-                    {
-                        _connection.Dispose();
-                    }
+                    Proxy.Dispose();
                 }
 
                 disposedValue = true;
