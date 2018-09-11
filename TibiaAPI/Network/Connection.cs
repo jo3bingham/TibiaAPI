@@ -60,6 +60,11 @@ namespace OXGaming.TibiaAPI.Network
         private bool _isSendingToServer = false;
         private bool _isStarted;
 
+        public delegate bool ReceivedMessageEventHandler(byte[] data);
+
+        public event ReceivedMessageEventHandler OnReceivedClientMessage;
+        public event ReceivedMessageEventHandler OnReceivedServerMessage;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="Connection"/> class that acts as a proxy
         /// between the Tibia client and the game server.
@@ -704,6 +709,7 @@ namespace OXGaming.TibiaAPI.Network
                 else
                 {
                     _clientInMessage.PrepareToParse(_xteaKey);
+                    OnReceivedClientMessage?.Invoke(_clientInMessage.GetData());
 
                     if (_isPacketParsingEnabled)
                     {
@@ -777,6 +783,7 @@ namespace OXGaming.TibiaAPI.Network
                 if (protocol == 1)
                 {
                     _serverInMessage.PrepareToParse(_xteaKey, _zStream);
+                    OnReceivedServerMessage?.Invoke(_serverInMessage.GetData());
 
                     if (_isPacketParsingEnabled)
                     {
