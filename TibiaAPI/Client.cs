@@ -31,9 +31,9 @@ namespace OXGaming.TibiaAPI
             Proxy = new Network.Connection(this);
         }
 
-        public bool StartProxy()
+        public bool StartProxy(bool enablePacketParsing = true)
         {
-            return Proxy.Start();
+            return Proxy.Start(enablePacketParsing);
         }
 
         public void StopProxy()

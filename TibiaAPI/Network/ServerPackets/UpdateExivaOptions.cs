@@ -67,7 +67,7 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
             message.Write(AllowCharacterWhitelist);
             message.Write(AllowGuildWhitelist);
 
-            var count = (ushort)Math.Max(WhitelistCharacters.Count, ushort.MaxValue);
+            var count = (ushort)Math.Min(WhitelistCharacters.Count, ushort.MaxValue);
             message.Write(count);
             for (var i = 0; i < count; ++i)
             {
@@ -76,7 +76,7 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
 
             message.Write(UnknownUShort1);
 
-            count = (ushort)Math.Max(WhitelistGuilds.Count, ushort.MaxValue);
+            count = (ushort)Math.Min(WhitelistGuilds.Count, ushort.MaxValue);
             message.Write(count);
             for (var i = 0; i < count; ++i)
             {

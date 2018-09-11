@@ -23,14 +23,6 @@ namespace OXGaming.TibiaAPI.Network
     /// </remarks>
     public class NetworkMessage
     {
-        /// <summary>
-        /// The full length of a Tibia packet is stored in two bytes at the beginning of the packet.
-        /// This means that a Tibia packet can never be larger than 65535 + 2. Using a max size of 65535
-        /// ensures that limit is never exceeded.
-        /// </summary>
-        public const ushort MaxMessageSize = ushort.MaxValue;
-
-        private const uint CompressedFlag = 0xC0000000;
         private const uint PayloadDataPosition = 8;
 
         private const int GroundLayer = 7;
@@ -41,29 +33,66 @@ namespace OXGaming.TibiaAPI.Network
         private const int MapSizeW = 10;
         private const int MapMaxZ = 15;
 
+        /// <summary>
+        /// The full length of a Tibia packet is stored in two bytes at the beginning of the packet.
+        /// This means that a Tibia packet can never be larger than 65535 + 2. Using a max size of 65535
+        /// ensures that limit is never exceeded.
+        /// </summary>
+        public const ushort MaxMessageSize = ushort.MaxValue;
+
+        public const uint CompressedFlag = 0xC0000000;
+
         private readonly byte[] _buffer = new byte[MaxMessageSize];
 
         private uint _size = PayloadDataPosition;
-
-        private uint _sequenceNumber
-        {
-            get
-            {
-                return BitConverter.ToUInt32(_buffer, 2);
-            }
-        }
 
         /// <value>
         /// Gets the current position in the buffer.
         /// </value>
         public uint Position { get; private set; } = PayloadDataPosition;
 
+        public uint SequenceNumber
+        {
+            get
+            {
+                return BitConverter.ToUInt32(_buffer, 2);
+            }
+            set
+            {
+                var sequenceNumber = IsCompressed ? (value | CompressedFlag) : value;
+                var data = BitConverter.GetBytes(sequenceNumber);
+                Array.Copy(data, 0, _buffer, 2, data.Length);
+            }
+        }
+
         /// <value>
         /// Get/set the size of the message.
         /// </value>
         public uint Size { get => _size; set => _size = value; }
 
-        public bool AddSequenceNumber { get; set; } = true;
+        public bool IsCompressed
+        {
+            get
+            {
+                return (BitConverter.ToUInt32(_buffer, 2) & CompressedFlag) != 0;
+            }
+            set
+            {
+                if (value && !IsCompressed)
+                {
+                    SequenceNumber |= CompressedFlag;
+                }
+                else if (!value && IsCompressed)
+                {
+                    SequenceNumber ^= CompressedFlag;
+                }
+            }
+        }
+
+        public NetworkMessage()
+        {
+            SequenceNumber = ~CompressedFlag;
+        }
 
         /// <summary>
         /// Gets the underlying buffer.
@@ -89,13 +118,11 @@ namespace OXGaming.TibiaAPI.Network
 
         public void Reset()
         {
-            for (var i = 0; i < 8; ++i)
-            {
-                _buffer[i] = 0;
-            }
-
-            Position = 8;
-            Size = 8;
+            Position = 0;
+            Write(ushort.MinValue);
+            Write(~CompressedFlag);
+            Write(ushort.MinValue);
+            Size = PayloadDataPosition;
         }
 
         /// <summary>
@@ -247,10 +274,6 @@ namespace OXGaming.TibiaAPI.Network
         public AppearanceInstance ReadMountOutfit(Client client)
         {
             var mountId = ReadUInt16();
-            if (mountId == 0)
-            {
-                return null;
-            }
             return client.AppearanceStorage.CreateOutfitInstance(mountId, 0, 0, 0, 0, 0);
         }
 
@@ -902,7 +925,7 @@ namespace OXGaming.TibiaAPI.Network
                             Write((ObjectInstance)value.Outfit);
                         }
 
-                        Write(value.Mount.Id);
+                        Write((ushort)value.Mount.Id);
                         Write(value.Brightness);
                         Write(value.LightColor);
                         Write(value.Speed);
@@ -1193,57 +1216,54 @@ namespace OXGaming.TibiaAPI.Network
 
         public void PrepareToParse(uint[] xteaKey, ZStream zStream = null)
         {
-            Xtea.Decrypt(_buffer, Size, xteaKey);
-
-            if (zStream != null)
+            if (xteaKey != null)
             {
-                var isCompressed = (_sequenceNumber & CompressedFlag) != 0;
-                if (isCompressed)
+                Xtea.Decrypt(_buffer, Size, xteaKey);
+            }
+
+            if (zStream != null && IsCompressed)
+            {
+                var compressedSize = BitConverter.ToUInt16(_buffer, 6);
+                var inBuffer = new byte[compressedSize];
+                var outBuffer = new byte[MaxMessageSize];
+
+                Array.Copy(_buffer, 8, inBuffer, 0, compressedSize);
+
+                zStream.next_in = inBuffer;
+                zStream.next_in_index = 0;
+                zStream.avail_in = inBuffer.Length;
+                zStream.next_out = outBuffer;
+                zStream.next_out_index = 0;
+                zStream.avail_out = outBuffer.Length;
+
+                var ret = zStream.inflate(zlibConst.Z_SYNC_FLUSH);
+                if (ret != zlibConst.Z_OK)
                 {
-                    var compressedSize = BitConverter.ToUInt16(_buffer, 6);
-                    var inBuffer = new byte[compressedSize];
-                    var outBuffer = new byte[NetworkMessage.MaxMessageSize];
-
-                    Array.Copy(_buffer, 8, inBuffer, 0, compressedSize);
-
-                    zStream.next_in = inBuffer;
-                    zStream.next_in_index = 0;
-                    zStream.avail_in = inBuffer.Length;
-                    zStream.next_out = outBuffer;
-                    zStream.next_out_index = 0;
-                    zStream.avail_out = outBuffer.Length;
-
-                    var ret = zStream.inflate(zlibConst.Z_SYNC_FLUSH);
-                    if (ret != zlibConst.Z_OK)
-                    {
-                        throw new Exception($"[NetworkMessage.PrepareToParse] zlib inflate failed: {ret}");
-                    }
-
-                    Position = 2;
-                    Write(_sequenceNumber - CompressedFlag);
-                    Write((ushort)zStream.next_out_index);
-                    Write(outBuffer, 0, (uint)zStream.next_out_index);
+                    throw new Exception($"[NetworkMessage.PrepareToParse] zlib inflate failed: {ret}");
                 }
+
+                Position = 2;
+                Write(SequenceNumber ^ CompressedFlag);
+                Write((ushort)zStream.next_out_index);
+                Write(outBuffer, 0, (uint)zStream.next_out_index);
             }
 
             Position = 6;
-            Size = (uint)(ReadUInt16() + 8);
+            Size = ReadUInt16() + PayloadDataPosition;
         }
 
-        public void PrepareToSend(uint[] xteaKey, ref uint sequenceNumber)
+        public void PrepareToSend(uint[] xteaKey)
         {
             Position = 6;
-            Write((ushort)(Size - 8));
+            Write((ushort)(Size - PayloadDataPosition));
 
-            Xtea.Encrypt(_buffer, ref _size, xteaKey);
+            if (xteaKey != null)
+            {
+                Xtea.Encrypt(_buffer, ref _size, xteaKey);
+            }
 
             Position = 0;
             Write((ushort)(_size - 2));
-
-            if (AddSequenceNumber)
-            {
-                Write(sequenceNumber++);
-            }
         }
     }
 }

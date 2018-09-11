@@ -55,13 +55,10 @@ namespace OXGaming.TibiaAPI.Network
         private uint _clientSequenceNumber = 1;
         private uint _serverSequenceNumber = 1;
 
-        private bool _isStarted;
+        private bool _isPacketParsingEnabled;
         private bool _isSendingToClient = false;
         private bool _isSendingToServer = false;
-
-        public bool AllowClientPacketModification { get; set; } = true;
-        public bool AllowServerPacketModification { get; set; } = true;
-        public bool IsPacketParsingEnabled { get; set; } = true;
+        private bool _isStarted;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Connection"/> class that acts as a proxy
@@ -102,11 +99,15 @@ namespace OXGaming.TibiaAPI.Network
                 return;
             }
 
-            lock (_clientSequenceNumberLock)
+            if (message.SequenceNumber != 0)
             {
-                message.PrepareToSend(_xteaKey, ref _clientSequenceNumber);
+                lock (_clientSequenceNumberLock)
+                {
+                    message.SequenceNumber = _clientSequenceNumber++;
+                }
             }
 
+            message.PrepareToSend(_xteaKey);
             SendToClient(message.GetData());
         }
 
@@ -177,11 +178,15 @@ namespace OXGaming.TibiaAPI.Network
                 return;
             }
 
-            lock (_ServerSequenceNumberLock)
+            if (message.SequenceNumber != 0)
             {
-                message.PrepareToSend(_xteaKey, ref _serverSequenceNumber);
+                lock (_ServerSequenceNumberLock)
+                {
+                    message.SequenceNumber = _serverSequenceNumber++;
+                }
             }
 
+            message.PrepareToSend(_xteaKey);
             SendToServer(message.GetData());
         }
 
@@ -233,7 +238,7 @@ namespace OXGaming.TibiaAPI.Network
         /// connection requests from the Tibia client.
         /// </summary>
         /// <returns></returns>
-        internal bool Start()
+        internal bool Start(bool enablePacketParsing = true)
         {
             if (_isStarted)
             {
@@ -254,7 +259,7 @@ namespace OXGaming.TibiaAPI.Network
                     _httpListener.Prefixes.Add("http://127.0.0.1:80/");
                 }
 
-                _zStream.deflateInit(zlibConst.Z_DEFAULT_COMPRESSION, -15);
+                //_zStream.deflateInit(zlibConst.Z_DEFAULT_COMPRESSION, -15);
                 _zStream.inflateInit(-15);
 
                 _httpListener.Start();
@@ -263,6 +268,7 @@ namespace OXGaming.TibiaAPI.Network
                 _tcpListener.Start();
                 _tcpListener.BeginAcceptSocket(new AsyncCallback(BeginAcceptTcpClientCallback), _tcpListener);
 
+                _isPacketParsingEnabled = enablePacketParsing;
                 _isStarted = true;
             }
             catch (Exception ex)
@@ -330,12 +336,13 @@ namespace OXGaming.TibiaAPI.Network
                 _serverSocket.Close();
             }
 
-            _zStream.deflateEnd();
-            _zStream.deflateInit(zlibConst.Z_DEFAULT_COMPRESSION, -15);
+            //_zStream.deflateEnd();
+            //_zStream.deflateInit(zlibConst.Z_DEFAULT_COMPRESSION, -15);
             _zStream.inflateEnd();
             _zStream.inflateInit(-15);
 
             _clientSequenceNumber = 1;
+            _serverSequenceNumber = 1;
             _xteaKey = null;
         }
 
@@ -679,7 +686,8 @@ namespace OXGaming.TibiaAPI.Network
                 if (protocol == 0)
                 {
                     _rsa.OpenTibiaDecrypt(_clientInMessage, 18);
-                    if (_clientInMessage.GetBuffer()[18] != 0)
+                    _clientInMessage.Seek(18, SeekOrigin.Begin);
+                    if (_clientInMessage.ReadByte() != 0)
                     {
                         throw new Exception("[Connection.BeginReceiveClientCallback] RSA decryption failed.");
                     }
@@ -687,27 +695,29 @@ namespace OXGaming.TibiaAPI.Network
                     _xteaKey = new uint[4];
                     for (var i = 0; i < 4; ++i)
                     {
-                        _xteaKey[i] = BitConverter.ToUInt32(_clientInMessage.GetBuffer(), 19 + (i * 4));
+                        _xteaKey[i] = _clientInMessage.ReadUInt32();
                     }
 
                     _rsa.TibiaEncrypt(_clientInMessage, 18);
-                    SendToServer(_clientInMessage);
-                }
-                else if (IsPacketParsingEnabled)
-                {
-                    _clientOutMessage.Reset();
-                    _clientInMessage.PrepareToParse(_xteaKey);
-
-                    ParseClientMessage(_client, _clientInMessage, _clientOutMessage);
-
-                    if (AllowClientPacketModification)
-                    {
-                        SendToServer(_clientOutMessage);
-                    }
+                    SendToServer(_clientInMessage.GetData());
                 }
                 else
                 {
-                    SendToServer(_clientInMessage);
+                    _clientInMessage.PrepareToParse(_xteaKey);
+
+                    if (_isPacketParsingEnabled)
+                    {
+                        _clientOutMessage.Reset();
+                        _clientOutMessage.SequenceNumber = _clientInMessage.SequenceNumber;
+
+                        ParseClientMessage(_client, _clientInMessage, _clientOutMessage);
+                        SendToServer(_clientOutMessage);
+                    }
+                    else
+                    {
+                        _clientInMessage.PrepareToSend(_xteaKey);
+                        SendToServer(_clientInMessage.GetData());
+                    }
                 }
 
                 _clientSocket.BeginReceive(_clientInMessage.GetBuffer(), 0, 2, SocketFlags.None, new AsyncCallback(BeginReceiveClientCallback), 1);
@@ -751,8 +761,6 @@ namespace OXGaming.TibiaAPI.Network
                     return;
                 }
 
-                //_serverOutMessage.Reset();
-
                 _serverInMessage.Size = (uint)BitConverter.ToUInt16(_serverInMessage.GetBuffer(), 0) + 2;
                 while (count < _serverInMessage.Size)
                 {
@@ -766,25 +774,29 @@ namespace OXGaming.TibiaAPI.Network
                 }
 
                 var protocol = (int)ar.AsyncState;
-                if (protocol == 1 && IsPacketParsingEnabled)
+                if (protocol == 1)
                 {
-                    _serverOutMessage.Reset();
-                    _serverInMessage.PrepareToParse(_xteaKey);
+                    _serverInMessage.PrepareToParse(_xteaKey, _zStream);
 
-                    ParseServerMessage(_client, _serverInMessage, _serverOutMessage);
-
-                    if (AllowServerPacketModification)
+                    if (_isPacketParsingEnabled)
                     {
-                        SendToServer(_serverOutMessage);
+                        _serverOutMessage.Reset();
+                        _serverOutMessage.SequenceNumber = _serverInMessage.SequenceNumber;
+
+                        ParseServerMessage(_client, _serverInMessage, _serverOutMessage);
+                        // TODO: Until AppendToNetworkMessage() is complete for all server
+                        // packets, the original packet must be forwarded.
+                        SendToClient(_serverInMessage);
                     }
                     else
                     {
-                        SendToClient(_serverInMessage);
+                        _serverInMessage.PrepareToSend(_xteaKey);
+                        SendToClient(_serverInMessage.GetData());
                     }
                 }
                 else
                 {
-                    SendToClient(_serverInMessage);
+                    SendToClient(_serverInMessage.GetData());
                 }
 
                 _serverSocket.BeginReceive(_serverInMessage.GetBuffer(), 0, 2, SocketFlags.None, new AsyncCallback(BeginReceiveServerCallback), 1);

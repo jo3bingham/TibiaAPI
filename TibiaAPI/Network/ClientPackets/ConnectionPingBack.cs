@@ -21,7 +21,6 @@ namespace OXGaming.TibiaAPI.Network.ClientPackets
 
         public override void AppendToNetworkMessage(NetworkMessage message)
         {
-            message.AddSequenceNumber = false;
             message.Write((byte)ClientPacketType.ConnectionPingBack);
         }
     }
