@@ -6,6 +6,8 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
     {
         public uint ListRerollPrice { get; set; }
 
+        public ushort Unknown { get; set; }
+
         public PreyRerollPrice()
         {
             PacketType = ServerPacketType.PreyRerollPrice;
@@ -19,6 +21,7 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
             }
 
             ListRerollPrice = message.ReadUInt32();
+            Unknown = message.ReadUInt16();
             return true;
         }
 
@@ -26,6 +29,7 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
         {
             message.Write((byte)ServerPacketType.PreyRerollPrice);
             message.Write(ListRerollPrice);
+            message.Write(Unknown);
         }
     }
 }
