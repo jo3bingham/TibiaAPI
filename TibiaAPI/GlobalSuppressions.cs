@@ -13,4 +13,5 @@
 [assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Globalization", "CA1305:Specify IFormatProvider", Justification = "<Pending>", Scope = "member", Target = "~M:OXGaming.TibiaAPI.Network.Communication.ParseClientMessage(OXGaming.TibiaAPI.Client,OXGaming.TibiaAPI.Network.NetworkMessage,OXGaming.TibiaAPI.Network.NetworkMessage)")]
 [assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1056:Uri properties should not be strings", Justification = "<Pending>", Scope = "member", Target = "~P:OXGaming.TibiaAPI.Network.ServerPackets.LoginSuccess.StoreBaseUrl")]
 [assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Naming", "CA1724:Type names should not match namespaces", Justification = "<Pending>", Scope = "type", Target = "~T:OXGaming.TibiaAPI.Network.ServerPackets.Channels")]
+[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Naming", "CA1724:Type names should not match namespaces", Justification = "<Pending>", Scope = "type", Target = "~T:OXGaming.TibiaAPI.WorldMap.Field")]
 

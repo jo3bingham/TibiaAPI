@@ -2139,7 +2139,8 @@ namespace OXGaming.TibiaAPI.Network
                                 packet.Forward = OnReceivedServerFullMapPacket?.Invoke(packet) ?? true;
                                 if (packet.Forward)
                                 {
-                                    packet.AppendToNetworkMessage(outMessage);
+                                    // TODO: Append outMessage.
+                                    packet.AppendToNetworkMessage(inMessage);
                                 }
                             }
                         }
@@ -2152,7 +2153,8 @@ namespace OXGaming.TibiaAPI.Network
                                 packet.Forward = OnReceivedServerTopRowPacket?.Invoke(packet) ?? true;
                                 if (packet.Forward)
                                 {
-                                    packet.AppendToNetworkMessage(outMessage);
+                                    // TODO: Append outMessage.
+                                    packet.AppendToNetworkMessage(inMessage);
                                 }
                             }
                         }
@@ -2165,7 +2167,8 @@ namespace OXGaming.TibiaAPI.Network
                                 packet.Forward = OnReceivedServerRightColumnPacket?.Invoke(packet) ?? true;
                                 if (packet.Forward)
                                 {
-                                    packet.AppendToNetworkMessage(outMessage);
+                                    // TODO: Append outMessage.
+                                    packet.AppendToNetworkMessage(inMessage);
                                 }
                             }
                         }
@@ -2178,7 +2181,8 @@ namespace OXGaming.TibiaAPI.Network
                                 packet.Forward = OnReceivedServerBottomRowPacket?.Invoke(packet) ?? true;
                                 if (packet.Forward)
                                 {
-                                    packet.AppendToNetworkMessage(outMessage);
+                                    // TODO: Append outMessage.
+                                    packet.AppendToNetworkMessage(inMessage);
                                 }
                             }
                         }
@@ -2191,7 +2195,8 @@ namespace OXGaming.TibiaAPI.Network
                                 packet.Forward = OnReceivedServerLeftColumnPacket?.Invoke(packet) ?? true;
                                 if (packet.Forward)
                                 {
-                                    packet.AppendToNetworkMessage(outMessage);
+                                    // TODO: Append outMessage.
+                                    packet.AppendToNetworkMessage(inMessage);
                                 }
                             }
                         }
@@ -2204,7 +2209,8 @@ namespace OXGaming.TibiaAPI.Network
                                 packet.Forward = OnReceivedServerFieldDataPacket?.Invoke(packet) ?? true;
                                 if (packet.Forward)
                                 {
-                                    packet.AppendToNetworkMessage(outMessage);
+                                    // TODO: Append outMessage.
+                                    packet.AppendToNetworkMessage(inMessage);
                                 }
                             }
                         }
@@ -2347,7 +2353,8 @@ namespace OXGaming.TibiaAPI.Network
                                 packet.Forward = OnReceivedServerInspectionListPacket?.Invoke(packet) ?? true;
                                 if (packet.Forward)
                                 {
-                                    packet.AppendToNetworkMessage(outMessage);
+                                    // TODO: Append outMessage.
+                                    packet.AppendToNetworkMessage(inMessage);
                                 }
                             }
                         }
@@ -2789,7 +2796,8 @@ namespace OXGaming.TibiaAPI.Network
                                 packet.Forward = OnReceivedServerPlayerSkillsPacket?.Invoke(packet) ?? true;
                                 if (packet.Forward)
                                 {
-                                    packet.AppendToNetworkMessage(outMessage);
+                                    // TODO: Append outMessage.
+                                    packet.AppendToNetworkMessage(inMessage);
                                 }
                             }
                         }
@@ -3062,7 +3070,8 @@ namespace OXGaming.TibiaAPI.Network
                                 packet.Forward = OnReceivedServerTopFloorPacket?.Invoke(packet) ?? true;
                                 if (packet.Forward)
                                 {
-                                    packet.AppendToNetworkMessage(outMessage);
+                                    // TODO: Append outMessage.
+                                    packet.AppendToNetworkMessage(inMessage);
                                 }
                             }
                         }
@@ -3075,7 +3084,8 @@ namespace OXGaming.TibiaAPI.Network
                                 packet.Forward = OnReceivedServerBottomFloorPacket?.Invoke(packet) ?? true;
                                 if (packet.Forward)
                                 {
-                                    packet.AppendToNetworkMessage(outMessage);
+                                    // TODO: Append outMessage.
+                                    packet.AppendToNetworkMessage(inMessage);
                                 }
                             }
                         }
@@ -3426,7 +3436,8 @@ namespace OXGaming.TibiaAPI.Network
                                 packet.Forward = OnReceivedServerDailyRewardBasicPacket?.Invoke(packet) ?? true;
                                 if (packet.Forward)
                                 {
-                                    packet.AppendToNetworkMessage(outMessage);
+                                    // TODO: Append outMessage.
+                                    packet.AppendToNetworkMessage(inMessage);
                                 }
                             }
                         }
@@ -3478,7 +3489,8 @@ namespace OXGaming.TibiaAPI.Network
                                 packet.Forward = OnReceivedServerPreyDataPacket?.Invoke(packet) ?? true;
                                 if (packet.Forward)
                                 {
-                                    packet.AppendToNetworkMessage(outMessage);
+                                    // TODO: Append outMessage.
+                                    packet.AppendToNetworkMessage(inMessage);
                                 }
                             }
                         }
@@ -3725,7 +3737,8 @@ namespace OXGaming.TibiaAPI.Network
                                 packet.Forward = OnReceivedServerStoreCategoriesPacket?.Invoke(packet) ?? true;
                                 if (packet.Forward)
                                 {
-                                    packet.AppendToNetworkMessage(outMessage);
+                                    // TODO: Append outMessage.
+                                    packet.AppendToNetworkMessage(inMessage);
                                 }
                             }
                         }
@@ -3738,7 +3751,8 @@ namespace OXGaming.TibiaAPI.Network
                                 packet.Forward = OnReceivedServerStoreOffersPacket?.Invoke(packet) ?? true;
                                 if (packet.Forward)
                                 {
-                                    packet.AppendToNetworkMessage(outMessage);
+                                    // TODO: Append outMessage.
+                                    packet.AppendToNetworkMessage(inMessage);
                                 }
                             }
                         }
