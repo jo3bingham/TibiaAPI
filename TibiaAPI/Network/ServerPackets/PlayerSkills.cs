@@ -49,6 +49,8 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
             ManaLeechChance = (message.ReadUInt16(), message.ReadByte());
             ManaLeechAmount = (message.ReadUInt16(), message.ReadByte());
 
+            var unknown = message.ReadBytes(6);
+
             MaxCapacity = message.ReadUInt32();
             BonusCapacity = message.ReadUInt32();
             return true;
