@@ -60,7 +60,7 @@ namespace OXGaming.TibiaAPI.Network
         private bool _isSendingToServer = false;
         private bool _isStarted;
 
-        public delegate bool ReceivedMessageEventHandler(byte[] data);
+        public delegate void ReceivedMessageEventHandler(byte[] data);
 
         public event ReceivedMessageEventHandler OnReceivedClientMessage;
         public event ReceivedMessageEventHandler OnReceivedServerMessage;
@@ -555,6 +555,10 @@ namespace OXGaming.TibiaAPI.Network
 
                 _httpListener.BeginGetContext(new AsyncCallback(BeginGetContextCallback), _httpListener);
             }
+            catch (ObjectDisposedException)
+            {
+                // This exception can occur if Stop() is called.
+            }
             catch (Exception ex)
             {
                 Console.WriteLine(ex.ToString());
@@ -583,6 +587,10 @@ namespace OXGaming.TibiaAPI.Network
                 _clientSocket.BeginReceive(_clientInMessage.GetBuffer(), 0, 1, SocketFlags.None, new AsyncCallback(BeginReceiveWorldNameCallback), null);
 
                 _tcpListener.BeginAcceptSocket(new AsyncCallback(BeginAcceptTcpClientCallback), _tcpListener);
+            }
+            catch (ObjectDisposedException)
+            {
+                // This exception can occur if Stop() is called.
             }
             catch (Exception ex)
             {
@@ -807,6 +815,10 @@ namespace OXGaming.TibiaAPI.Network
                 }
 
                 _serverSocket.BeginReceive(_serverInMessage.GetBuffer(), 0, 2, SocketFlags.None, new AsyncCallback(BeginReceiveServerCallback), 1);
+            }
+            catch (ObjectDisposedException)
+            {
+                // This exception can occur if Stop() is called.
             }
             catch (SocketException)
             {
