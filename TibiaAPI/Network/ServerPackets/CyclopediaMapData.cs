@@ -72,6 +72,12 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
             }
             else if (CyclopediaMapDataType == 10)
             {
+                //---- Example 1
+                //DD // CyclopediaMapData: Thais (Rookgaard)
+
+                //0A //Type
+
+                //18 00 // Unknown
                 message.ReadUInt16();
             }
             return true;
