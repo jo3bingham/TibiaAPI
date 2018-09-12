@@ -19,7 +19,7 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
         public (ushort Level, ushort Base) ManaLeechAmount { get; set; }
         public (ushort Level, ushort Base) ManaLeechChance { get; set; }
 
-    public uint BonusCapacity { get; set; }
+        public uint BonusCapacity { get; set; }
         public uint MaxCapacity { get; set; }
 
         public PlayerSkills()
@@ -42,14 +42,12 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
             Shielding = (message.ReadUInt16(), message.ReadUInt16(), message.ReadByte());
             Fishing = (message.ReadUInt16(), message.ReadUInt16(), message.ReadByte());
 
-            CriticalHitChance = (message.ReadUInt16(), message.ReadByte());
-            CriticalHitDamage = (message.ReadUInt16(), message.ReadByte());
-            LifeLeechChance = (message.ReadUInt16(), message.ReadByte());
-            LifeLeechAmount = (message.ReadUInt16(), message.ReadByte());
-            ManaLeechChance = (message.ReadUInt16(), message.ReadByte());
-            ManaLeechAmount = (message.ReadUInt16(), message.ReadByte());
-
-            var unknown = message.ReadBytes(6);
+            CriticalHitChance = (message.ReadUInt16(), message.ReadUInt16());
+            CriticalHitDamage = (message.ReadUInt16(), message.ReadUInt16());
+            LifeLeechChance = (message.ReadUInt16(), message.ReadUInt16());
+            LifeLeechAmount = (message.ReadUInt16(), message.ReadUInt16());
+            ManaLeechChance = (message.ReadUInt16(), message.ReadUInt16());
+            ManaLeechAmount = (message.ReadUInt16(), message.ReadUInt16());
 
             MaxCapacity = message.ReadUInt32();
             BonusCapacity = message.ReadUInt32();
