@@ -44,12 +44,31 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
             }
             else if (CyclopediaMapDataType == 9)
             {
-                message.ReadUInt16();
-                var count = message.ReadUInt16();
-                for (var i = 0; i < count; ++i)
-                {
-                    message.ReadUInt32();
-                }
+                //---- Example 1
+                //DD // CyclopediaMapData: Thais (Rookgaard)
+
+                //09 // Type
+
+                //40 42 0F 00 00 00 00 00 07
+
+                //16 00 00 64 00 00 00 00 00 00 00 05 00 00 1F 02 00 00 00 00 00 00 1B 00 00 70 00 00 00 00 00 00 00 13 00 00 01 00 00 00 00 00 00 00 18 00 00
+
+                //01 00 00 00 00 00 00 00 // Donated gold
+
+                //02 00 00 01 00 00 00 00 00 00 00 09 00 01 00 00 00 00 00 00 00 00
+
+                //---- Example 2
+                //DD // CyclopediaMapData: Thais (Rookgaard)
+
+                //09 // Type
+
+                //40 42 0F 00 00 00 00 00 08 0E 00 00 0B 00 00 00 00 00 00 00
+
+                //16 00 00 64 00 00 00 00 00 00 00 05 00 00 1F 02 00 00 00 00 00 00 1B 00 00 70 00 00 00 00 00 00 00 13 00 00 01 00 00 00 00 00 00 00 18 00 00
+
+                //04 00 00 00 00 00 00 00 // Donated gold
+
+                //02 00 00 01 00 00 00 00 00 00 00 09 00 01 00 00 00 00 00 00 00 00
             }
             else if (CyclopediaMapDataType == 10)
             {
