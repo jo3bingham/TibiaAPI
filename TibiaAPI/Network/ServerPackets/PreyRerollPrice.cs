@@ -21,6 +21,10 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
             }
 
             ListRerollPrice = message.ReadUInt32();
+            //---- Example
+            // E9 // PreyRerollPrice
+            // 32 00 00 00 // List reroll price
+            // 01 05 // Unknown
             Unknown = message.ReadUInt16();
             return true;
         }
