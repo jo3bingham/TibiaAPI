@@ -276,7 +276,7 @@ namespace OXGaming.TibiaAPI.Network
         public event ReceivedPacketEventHandler OnReceivedServerTransactionHistoryPacket;
         public event ReceivedPacketEventHandler OnReceivedServerStoreSuccessPacket;
 
-        internal void ParseClientMessage(Client client, NetworkMessage inMessage, NetworkMessage outMessage)
+        public void ParseClientMessage(Client client, NetworkMessage inMessage, NetworkMessage outMessage)
         {
             if (inMessage == null)
             {
@@ -1912,7 +1912,7 @@ namespace OXGaming.TibiaAPI.Network
             }
         }
 
-        internal void ParseServerMessage(Client client, NetworkMessage inMessage, NetworkMessage outMessage)
+        public void ParseServerMessage(Client client, NetworkMessage inMessage, NetworkMessage outMessage)
         {
             if (inMessage == null)
             {

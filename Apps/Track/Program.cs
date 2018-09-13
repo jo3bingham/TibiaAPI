@@ -56,11 +56,6 @@ namespace Track
             catch (Exception ex)
             {
                 Console.WriteLine(ex);
-                Console.Read();
-            }
-            finally
-            {
-                Console.Read();
             }
         }
 
