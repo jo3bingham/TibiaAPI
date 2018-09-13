@@ -342,8 +342,9 @@ namespace OXGaming.TibiaAPI.Network
             }
 
             //_zStream.deflateEnd();
-            //_zStream.deflateInit(zlibConst.Z_DEFAULT_COMPRESSION, -15);
             _zStream.inflateEnd();
+            _zStream = new ZStream();
+            //_zStream.deflateInit(zlibConst.Z_DEFAULT_COMPRESSION, -15);
             _zStream.inflateInit(-15);
 
             _clientSequenceNumber = 1;
