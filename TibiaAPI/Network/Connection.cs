@@ -706,6 +706,8 @@ namespace OXGaming.TibiaAPI.Network
                         throw new Exception("[Connection.BeginReceiveClientCallback] RSA decryption failed.");
                     }
 
+                    OnReceivedClientMessage?.Invoke(_clientInMessage.GetData());
+
                     _xteaKey = new uint[4];
                     for (var i = 0; i < 4; ++i)
                     {
@@ -812,6 +814,7 @@ namespace OXGaming.TibiaAPI.Network
                 }
                 else
                 {
+                    OnReceivedServerMessage?.Invoke(_serverInMessage.GetData());
                     SendToClient(_serverInMessage.GetData());
                 }
 
