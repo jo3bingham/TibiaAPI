@@ -6,6 +6,7 @@ using System.Text;
 using System.Xml;
 
 using OXGaming.TibiaAPI;
+using OXGaming.TibiaAPI.Constants;
 using OXGaming.TibiaAPI.Network;
 using OXGaming.TibiaAPI.Network.ServerPackets;
 using OXGaming.TibiaAPI.Utilities;
@@ -15,18 +16,18 @@ namespace Extract
 {
     class Program
     {
-        static readonly byte[] ReverseFluidMap =
+        static byte[] _reverseFluidMap =
         {
-            (byte)Enums.FluidColors.FLUID_EMPTY,
-            (byte)Enums.FluidTypes.FLUID_WATER,
-            (byte)Enums.FluidTypes.FLUID_MANA,
-            (byte)Enums.FluidTypes.FLUID_BEER,
-            (byte)Enums.FluidColors.FLUID_EMPTY,
-            (byte)Enums.FluidTypes.FLUID_BLOOD,
-            (byte)Enums.FluidTypes.FLUID_SLIME,
-            (byte)Enums.FluidColors.FLUID_EMPTY,
-            (byte)Enums.FluidTypes.FLUID_LEMONADE,
-            (byte)Enums.FluidTypes.FLUID_MILK
+            (byte)FluidColor.Transparent,
+            (byte)FluidType.Water,
+            (byte)FluidType.Mana,
+            (byte)FluidType.Beer,
+            (byte)FluidColor.Transparent,
+            (byte)FluidType.Blood,
+            (byte)FluidType.Slime,
+            (byte)FluidColor.Transparent,
+            (byte)FluidType.Lemonade,
+            (byte)FluidType.Milk
         };
 
         static HashSet<ulong> _knownPositions = new HashSet<ulong>();
@@ -406,9 +407,9 @@ namespace Extract
                 {
                     file.WriteByte(15);
                     byte subType = 0;
-                    if (item.Data >= 0 && item.Data < ReverseFluidMap.Length)
+                    if (item.Data >= 0 && item.Data < _reverseFluidMap.Length)
                     {
-                        subType = ReverseFluidMap[item.Data];
+                        subType = _reverseFluidMap[item.Data];
                     }
                     WriteData(file, new byte[] { subType });
                 }
