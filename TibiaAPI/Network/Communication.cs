@@ -276,7 +276,7 @@ namespace OXGaming.TibiaAPI.Network
         public event ReceivedPacketEventHandler OnReceivedServerTransactionHistoryPacket;
         public event ReceivedPacketEventHandler OnReceivedServerStoreSuccessPacket;
 
-        internal void ParseClientMessage(Client client, NetworkMessage inMessage, NetworkMessage outMessage)
+        public void ParseClientMessage(Client client, NetworkMessage inMessage, NetworkMessage outMessage)
         {
             if (inMessage == null)
             {
@@ -1912,7 +1912,7 @@ namespace OXGaming.TibiaAPI.Network
             }
         }
 
-        internal void ParseServerMessage(Client client, NetworkMessage inMessage, NetworkMessage outMessage)
+        public void ParseServerMessage(Client client, NetworkMessage inMessage, NetworkMessage outMessage)
         {
             if (inMessage == null)
             {
@@ -1935,7 +1935,6 @@ namespace OXGaming.TibiaAPI.Network
                 {
                     packetPosition = inMessage.Position;
                     currentPacket = (ServerPacketType)inMessage.PeekByte();
-                    Console.WriteLine(currentPacket);
                     switch (currentPacket)
                     {
                         case ServerPacketType.CreatureData:
@@ -3787,6 +3786,7 @@ namespace OXGaming.TibiaAPI.Network
                         default:
                             // TODO: Log unknown packet.
                             Console.WriteLine($"Unknown server packet: {((byte)currentPacket).ToString("X2")}, position: {packetPosition}");
+                            Console.WriteLine($"Last known packets: {string.Join(" ", packets.Select(p => "[" + ((byte)p.PacketType).ToString("X2") + ":" + p.Position + "]" + p.PacketType).ToArray())}");
                             Console.WriteLine($"Data: {BitConverter.ToString(inMessage.GetData()).Replace('-', ' ')}");
                             return;
                     }
@@ -3802,8 +3802,8 @@ namespace OXGaming.TibiaAPI.Network
                 // the structure of a new packet. Because of that, it's better to log as much data as
                 // possible and continue.
                 Console.WriteLine(ex.ToString());
-                Console.WriteLine($"Current packet: [{((byte)currentPacket).ToString("X2")}]{currentPacket}, " +
-                    $"Last known packets: {string.Join(" ", packets.Select(p => "[" + ((byte)p.PacketType).ToString("X2") + ":" + p.Position + "]" + p.PacketType).ToArray())}");
+                Console.WriteLine($"Current packet: [{((byte)currentPacket).ToString("X2")}]{currentPacket}");
+                Console.WriteLine($"Last known packets: {string.Join(" ", packets.Select(p => "[" + ((byte)p.PacketType).ToString("X2") + ":" + p.Position + "]" + p.PacketType).ToArray())}");
                 Console.WriteLine($"Data: {BitConverter.ToString(inMessage.GetData()).Replace('-', ' ')}");
             }
         }

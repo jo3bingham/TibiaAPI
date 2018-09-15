@@ -60,6 +60,11 @@ namespace OXGaming.TibiaAPI.Network
         private bool _isSendingToServer = false;
         private bool _isStarted;
 
+        public delegate void ReceivedMessageEventHandler(byte[] data);
+
+        public event ReceivedMessageEventHandler OnReceivedClientMessage;
+        public event ReceivedMessageEventHandler OnReceivedServerMessage;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="Connection"/> class that acts as a proxy
         /// between the Tibia client and the game server.
@@ -337,8 +342,9 @@ namespace OXGaming.TibiaAPI.Network
             }
 
             //_zStream.deflateEnd();
-            //_zStream.deflateInit(zlibConst.Z_DEFAULT_COMPRESSION, -15);
             _zStream.inflateEnd();
+            _zStream = new ZStream();
+            //_zStream.deflateInit(zlibConst.Z_DEFAULT_COMPRESSION, -15);
             _zStream.inflateInit(-15);
 
             _clientSequenceNumber = 1;
@@ -550,6 +556,10 @@ namespace OXGaming.TibiaAPI.Network
 
                 _httpListener.BeginGetContext(new AsyncCallback(BeginGetContextCallback), _httpListener);
             }
+            catch (ObjectDisposedException)
+            {
+                // This exception can occur if Stop() is called.
+            }
             catch (Exception ex)
             {
                 Console.WriteLine(ex.ToString());
@@ -578,6 +588,10 @@ namespace OXGaming.TibiaAPI.Network
                 _clientSocket.BeginReceive(_clientInMessage.GetBuffer(), 0, 1, SocketFlags.None, new AsyncCallback(BeginReceiveWorldNameCallback), null);
 
                 _tcpListener.BeginAcceptSocket(new AsyncCallback(BeginAcceptTcpClientCallback), _tcpListener);
+            }
+            catch (ObjectDisposedException)
+            {
+                // This exception can occur if Stop() is called.
             }
             catch (Exception ex)
             {
@@ -692,6 +706,8 @@ namespace OXGaming.TibiaAPI.Network
                         throw new Exception("[Connection.BeginReceiveClientCallback] RSA decryption failed.");
                     }
 
+                    OnReceivedClientMessage?.Invoke(_clientInMessage.GetData());
+
                     _xteaKey = new uint[4];
                     for (var i = 0; i < 4; ++i)
                     {
@@ -704,6 +720,7 @@ namespace OXGaming.TibiaAPI.Network
                 else
                 {
                     _clientInMessage.PrepareToParse(_xteaKey);
+                    OnReceivedClientMessage?.Invoke(_clientInMessage.GetData());
 
                     if (_isPacketParsingEnabled)
                     {
@@ -777,6 +794,7 @@ namespace OXGaming.TibiaAPI.Network
                 if (protocol == 1)
                 {
                     _serverInMessage.PrepareToParse(_xteaKey, _zStream);
+                    OnReceivedServerMessage?.Invoke(_serverInMessage.GetData());
 
                     if (_isPacketParsingEnabled)
                     {
@@ -796,10 +814,15 @@ namespace OXGaming.TibiaAPI.Network
                 }
                 else
                 {
+                    OnReceivedServerMessage?.Invoke(_serverInMessage.GetData());
                     SendToClient(_serverInMessage.GetData());
                 }
 
                 _serverSocket.BeginReceive(_serverInMessage.GetBuffer(), 0, 2, SocketFlags.None, new AsyncCallback(BeginReceiveServerCallback), 1);
+            }
+            catch (ObjectDisposedException)
+            {
+                // This exception can occur if Stop() is called.
             }
             catch (SocketException)
             {

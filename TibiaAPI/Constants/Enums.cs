@@ -106,6 +106,18 @@
         CharmPoints = 30
     }
 
+    public enum FluidColor
+    {
+        Transparent = 0,
+        Blue = 1,
+        Red = 2,
+        Brown = 3,
+        Green = 4,
+        Yellow = 5,
+        White = 6,
+        Purple = 7
+    }
+
     public enum StoreServiceType
     {
         Unknown = 0,
@@ -149,6 +161,30 @@
         WeaponType = 13,
         Weight = 14,
         ImbuementSlots = 15
+    }
+
+    public enum FluidType
+    {
+        None = FluidColor.Transparent,
+        Water = FluidColor.Blue,
+        Blood = FluidColor.Red,
+        Beer = FluidColor.Brown,
+        Slime = FluidColor.Green,
+        Lemonade = FluidColor.Yellow,
+        Milk = FluidColor.White,
+        Mana = FluidColor.Purple,
+        Life = FluidColor.Red + 8,
+        Oil = FluidColor.Brown + 8,
+        Urine = FluidColor.Yellow + 8,
+        CoconutMilk = FluidColor.White + 8,
+        Wine = FluidColor.Purple + 8,
+        Mud = FluidColor.Brown + 16,
+        FruitJuice = FluidColor.Yellow + 16,
+        Lava = FluidColor.Red + 24,
+        Rum = FluidColor.Brown + 24,
+        Swamp = FluidColor.Green + 24,
+        Tea = FluidColor.Brown + 32,
+        Mead = FluidColor.Brown + 40
     }
 
     public enum MessageModeType
