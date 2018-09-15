@@ -16,6 +16,12 @@ namespace OXGaming.TibiaAPI.Network.ClientPackets
                 return false;
             }
 
+            var type = message.ReadByte();
+            if (type == 3) // Retrieve
+            {
+                var itemId = message.ReadUInt16();
+                var itemCount = message.ReadUInt32();
+            }
             return true;
         }
 

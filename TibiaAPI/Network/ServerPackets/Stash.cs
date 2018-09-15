@@ -16,6 +16,13 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
                 return false;
             }
 
+            var numberOfStashedItems = message.ReadUInt16();
+            for (var i = 0; i < numberOfStashedItems; ++i)
+            {
+                var itemId = message.ReadUInt16();
+                var itemCount = message.ReadUInt32();
+            }
+            var unknown = message.ReadUInt16();
             return true;
         }
 
