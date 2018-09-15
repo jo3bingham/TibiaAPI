@@ -251,7 +251,7 @@ namespace OXGaming.TibiaAPI.Network
         public string ReadString()
         {
             var length = ReadUInt16();
-            return Encoding.ASCII.GetString(ReadBytes(length));
+            return length == 0 ? string.Empty : Encoding.ASCII.GetString(ReadBytes(length));
         }
 
         public Position ReadPosition(int x = -1, int y = -1, int z = -1)
