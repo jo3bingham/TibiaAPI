@@ -309,7 +309,7 @@ namespace OXGaming.TibiaAPI.Network
 
             if (id == 0)
             {
-                return null;
+                return new ObjectInstance(id, null);
             }
 
             if (id <= 99)
@@ -326,7 +326,7 @@ namespace OXGaming.TibiaAPI.Network
             var objectType = objectInstance.Type;
             if (objectType == null)
             {
-                throw new Exception($"[NetworkMessage.ReadObjectInstance] Invalid object id: {id}");
+                return objectInstance;
             }
 
             if (objectType.Flags.Liquidcontainer || objectType.Flags.Liquidpool || objectType.Flags.Cumulative)
@@ -871,12 +871,17 @@ namespace OXGaming.TibiaAPI.Network
 
         public void Write(ObjectInstance value)
         {
-            if (value == null || value.Type == null)
+            if (value == null)
             {
                 throw new ArgumentNullException(nameof(value));
             }
 
             Write((ushort)value.Id);
+
+            if (value.Type == null)
+            {
+                return;
+            }
 
             if (value.Type.Flags.Liquidcontainer || value.Type.Flags.Liquidpool || value.Type.Flags.Cumulative)
             {

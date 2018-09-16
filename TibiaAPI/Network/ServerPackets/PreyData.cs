@@ -25,6 +25,11 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
                 case PreyDataState.Locked:
                     {
                         var unlockOption = message.ReadByte();
+                        var count = message.ReadUInt16();
+                        for (var i = 0; i < count; ++i)
+                        {
+                            message.ReadUInt16();
+                        }
                         break;
                     }
                 case PreyDataState.Active:
