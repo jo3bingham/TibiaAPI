@@ -4,6 +4,8 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
 {
     public class ScreenshotEvent : ServerPacket
     {
+        public byte Type { get; set; }
+
         public ScreenshotEvent()
         {
             PacketType = ServerPacketType.ScreenshotEvent;
@@ -16,12 +18,15 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
                 return false;
             }
 
+            Type = message.ReadByte();
+            //07 = level up
             return true;
         }
 
         public override void AppendToNetworkMessage(NetworkMessage message)
         {
             message.Write((byte)ServerPacketType.ScreenshotEvent);
+            message.Write(Type);
         }
     }
 }

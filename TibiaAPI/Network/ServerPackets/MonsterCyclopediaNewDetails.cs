@@ -4,9 +4,6 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
 {
     public class MonsterCyclopediaNewDetails : ServerPacket
     {
-        // TODO
-        private byte[] _unknown = new byte[3];
-
         public ushort RaceId { get; set; }
 
         public MonsterCyclopediaNewDetails()
@@ -22,8 +19,6 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
             }
 
             RaceId = message.ReadUInt16();
-            // TODO
-            _unknown = message.ReadBytes(3);
             return true;
         }
 
@@ -31,8 +26,6 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
         {
             message.Write((byte)ServerPacketType.MonsterCyclopediaNewDetails);
             message.Write(RaceId);
-            // TODO
-            message.Write(_unknown);
         }
     }
 }

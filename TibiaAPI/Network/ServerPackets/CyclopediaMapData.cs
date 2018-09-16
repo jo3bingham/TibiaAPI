@@ -71,6 +71,12 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
                     }
                 }
             }
+            else if (CyclopediaMapDataType == 8)
+            {
+                message.ReadUInt16();
+                message.ReadByte();
+                message.ReadUInt16();
+            }
             else if (CyclopediaMapDataType == 9)
             {
                 var minimumGoldDonation = message.ReadUInt64();

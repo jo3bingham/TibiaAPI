@@ -34,12 +34,13 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
                     }
                 case PreyDataState.Active:
                     {
-                        var preyName = message.ReadString();
-                        message.ReadCreatureOutfit(client);
-                        var bonusType = message.ReadByte();
-                        var bonusValue = message.ReadUInt16();
-                        var bonusGrade = message.ReadByte();
-                        var preyTimeLeft = message.ReadUInt16();
+                        // var preyName = message.ReadString();
+                        // message.ReadCreatureOutfit(client);
+                        // var bonusType = message.ReadByte();
+                        // var bonusValue = message.ReadUInt16();
+                        // var bonusGrade = message.ReadByte();
+                        // var preyTimeLeft = message.ReadUInt16();
+                        message.ReadUInt16();
                     }
                     break;
                 case PreyDataState.Selection:

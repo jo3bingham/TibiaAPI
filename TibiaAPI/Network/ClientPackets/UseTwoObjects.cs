@@ -1,11 +1,12 @@
 ﻿using OXGaming.TibiaAPI.Constants;
+using OXGaming.TibiaAPI.Utilities;
 
 namespace OXGaming.TibiaAPI.Network.ClientPackets
 {
     public class UseTwoObjects : ClientPacket
     {
-        //public Position FromPosition { get; set; }
-        //public Position ToPosition { get; set; }
+        public Position FromPosition { get; set; }
+        public Position ToPosition { get; set; }
 
         public ushort FromObjectId { get; set; }
         public ushort ToObjectId { get; set; }
@@ -25,10 +26,10 @@ namespace OXGaming.TibiaAPI.Network.ClientPackets
                 return false;
             }
 
-            //FromPosition = message.ReadPosition();
+            FromPosition = message.ReadPosition();
             FromObjectId = message.ReadUInt16();
             FromStackPositionOrData = message.ReadByte();
-            //ToPosition = message.ReadPosition();
+            ToPosition = message.ReadPosition();
             ToObjectId = message.ReadUInt16();
             ToStackPosition = message.ReadByte();
             return true;
@@ -37,10 +38,10 @@ namespace OXGaming.TibiaAPI.Network.ClientPackets
         public override void AppendToNetworkMessage(NetworkMessage message)
         {
             message.Write((byte)ClientPacketType.UseTwoObjects);
-            //message.WritePosition(FromPosition);
+            message.Write(FromPosition);
             message.Write(FromObjectId);
             message.Write(FromStackPositionOrData);
-            //message.WritePosition(ToPosition);
+            message.Write(ToPosition);
             message.Write(ToObjectId);
             message.Write(ToStackPosition);
         }
