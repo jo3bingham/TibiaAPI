@@ -52,6 +52,7 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
             }
 
             var count = Math.Min(Loot.Capacity, byte.MaxValue);
+            message.Write((byte)count);
             for (var i = 0; i < count; ++i)
             {
                 message.Write(Loot[i]);
