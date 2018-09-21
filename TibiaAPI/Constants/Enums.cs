@@ -143,6 +143,18 @@
         SouthEast = 8
     }
 
+    public enum CyclopediaMapDataType
+    {
+        DiscoveryData = 1,
+        ImminentRaidMainArea = 3,
+        ImminentRaidSubArea = 4,
+        SetDiscoveryArea = 5,
+        Passage = 6,
+        SubAreaMonsters = 7,
+        Donations = 9,
+        SetCurrentArea = 10
+    }
+
     public enum MarketDetailField
     {
         Armor = 0,
