@@ -790,31 +790,22 @@ namespace OXGaming.TibiaAPI.Network
                     count += read;
                 }
 
-                var protocol = (int)ar.AsyncState;
-                if (protocol == 1)
+                _serverInMessage.PrepareToParse(_xteaKey, _zStream);
+                OnReceivedServerMessage?.Invoke(_serverInMessage.GetData());
+
+                if (_isPacketParsingEnabled)
                 {
-                    _serverInMessage.PrepareToParse(_xteaKey, _zStream);
-                    OnReceivedServerMessage?.Invoke(_serverInMessage.GetData());
+                    _serverOutMessage.Reset();
+                    _serverOutMessage.SequenceNumber = _serverInMessage.SequenceNumber;
 
-                    if (_isPacketParsingEnabled)
-                    {
-                        _serverOutMessage.Reset();
-                        _serverOutMessage.SequenceNumber = _serverInMessage.SequenceNumber;
-
-                        ParseServerMessage(_client, _serverInMessage, _serverOutMessage);
-                        // TODO: Until AppendToNetworkMessage() is complete for all server
-                        // packets, the original packet must be forwarded.
-                        SendToClient(_serverInMessage);
-                    }
-                    else
-                    {
-                        _serverInMessage.PrepareToSend(_xteaKey);
-                        SendToClient(_serverInMessage.GetData());
-                    }
+                    ParseServerMessage(_client, _serverInMessage, _serverOutMessage);
+                    // TODO: Until AppendToNetworkMessage() is complete for all server
+                    // packets, the original packet must be forwarded.
+                    SendToClient(_serverInMessage);
                 }
                 else
                 {
-                    OnReceivedServerMessage?.Invoke(_serverInMessage.GetData());
+                    _serverInMessage.PrepareToSend(_xteaKey);
                     SendToClient(_serverInMessage.GetData());
                 }
 
