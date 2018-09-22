@@ -3497,9 +3497,9 @@ namespace OXGaming.TibiaAPI.Network
                                 }
                             }
                             break;
-                        case ServerPacketType.PreyRerollPrice:
+                        case ServerPacketType.PreyPrices:
                             {
-                                var packet = new ServerPackets.PreyRerollPrice();
+                                var packet = new ServerPackets.PreyPrices();
                                 if (packet.ParseFromNetworkMessage(client, inMessage))
                                 {
                                     packet.Forward = OnReceivedServerPreyRerollPricePacket?.Invoke(packet) ?? true;

@@ -45,6 +45,7 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
                 message.Write(ItemId);
                 message.Write(Count);
             }
+            message.Write(FreeSlots);
         }
     }
 }

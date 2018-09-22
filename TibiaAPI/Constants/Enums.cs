@@ -498,7 +498,7 @@
         PreyFreeListRerollAvailability = 0xE6,
         PreyTimeLeft = 0xE7,
         PreyData = 0xE8,
-        PreyRerollPrice = 0xE9,
+        PreyPrices = 0xE9,
         OfferDescription = 0xEA,
         ImbuingDialogRefresh = 0xEB,
         CloseImbuingDialog = 0xEC,
