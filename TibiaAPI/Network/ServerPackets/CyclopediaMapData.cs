@@ -39,11 +39,10 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
                     var areaId = message.ReadUInt16();
                 }
             }
-            else if (DataType == CyclopediaMapDataType.Unknown2)
+            else if (DataType == CyclopediaMapDataType.ActiveRaid)
             {
                 var position = message.ReadPosition();
-                var unknown = message.ReadByte();
-                System.Console.WriteLine($"{position.ToString()} : {unknown}");
+                var state = message.ReadByte(); // 0 = active (show exclamation mark on map) 
             }
             else if (DataType == CyclopediaMapDataType.ImminentRaidMainArea)
             {
