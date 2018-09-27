@@ -146,6 +146,7 @@
     public enum CyclopediaMapDataType
     {
         DiscoveryData = 1,
+        ActiveRaid = 2,
         ImminentRaidMainArea = 3,
         ImminentRaidSubArea = 4,
         SetDiscoveryArea = 5,

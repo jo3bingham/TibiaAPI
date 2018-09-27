@@ -6,7 +6,8 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
     {
         public uint ListRerollPrice { get; set; }
 
-        public ushort Unknown { get; set; }
+        public byte Unknown1 { get; set; }
+        public byte Unknown2 { get; set; }
 
         public PreyPrices()
         {
@@ -25,7 +26,8 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
             // E9 // PreyRerollPrice
             // 32 00 00 00 // List reroll price
             // 01 05 // Unknown
-            Unknown = message.ReadUInt16();
+            Unknown1 = message.ReadByte();
+            Unknown2 = message.ReadByte();
             return true;
         }
 
@@ -33,7 +35,8 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
         {
             message.Write((byte)ServerPacketType.PreyPrices);
             message.Write(ListRerollPrice);
-            message.Write(Unknown);
+            message.Write(Unknown1);
+            message.Write(Unknown2);
         }
     }
 }
