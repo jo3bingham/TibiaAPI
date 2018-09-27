@@ -38,6 +38,7 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
                 {
                     var areaId = message.ReadUInt16();
                 }
+                System.Console.WriteLine($"{numberOfMainAreas} : {numberOfDiscoveredSubAreas} : {numberOfDiscoverableSubAreas}");
             }
             else if (DataType == CyclopediaMapDataType.ActiveRaid)
             {
@@ -56,7 +57,7 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
             }
             else if (DataType == CyclopediaMapDataType.SetDiscoveryArea)
             {
-                var areaId = message.ReadUInt32();
+                var areaId = message.ReadUInt16();
                 var numberOfPointsOfInterestToDiscover = message.ReadByte();
                 var numberOfPointsOfInterest = message.ReadByte();
                 for (var i = 0; i < numberOfPointsOfInterest; ++i)
