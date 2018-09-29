@@ -6,8 +6,8 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
     {
         public uint ListRerollPrice { get; set; }
 
-        public byte Unknown1 { get; set; }
-        public byte Unknown2 { get; set; }
+        public byte AutomaticBonusReroll { get; set; }
+        public byte LockPrey { get; set; }
 
         public PreyPrices()
         {
@@ -22,12 +22,8 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
             }
 
             ListRerollPrice = message.ReadUInt32();
-            //---- Example
-            // E9 // PreyRerollPrice
-            // 32 00 00 00 // List reroll price
-            // 01 05 // Unknown
-            Unknown1 = message.ReadByte();
-            Unknown2 = message.ReadByte();
+            AutomaticBonusReroll = message.ReadByte();
+            LockPrey = message.ReadByte();
             return true;
         }
 
@@ -35,8 +31,8 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
         {
             message.Write((byte)ServerPacketType.PreyPrices);
             message.Write(ListRerollPrice);
-            message.Write(Unknown1);
-            message.Write(Unknown2);
+            message.Write(AutomaticBonusReroll);
+            message.Write(LockPrey);
         }
     }
 }

@@ -38,7 +38,6 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
                 {
                     var areaId = message.ReadUInt16();
                 }
-                System.Console.WriteLine($"{numberOfMainAreas} : {numberOfDiscoveredSubAreas} : {numberOfDiscoverableSubAreas}");
             }
             else if (DataType == CyclopediaMapDataType.ActiveRaid)
             {
