@@ -289,15 +289,13 @@ namespace OXGaming.TibiaAPI.Network
                 var addons = ReadByte();
                 return client.AppearanceStorage.CreateOutfitInstance(outfitId, colorHead, colorTorso, colorLegs, colorDetail, addons);
             }
-            else
+
+            var itemId = ReadUInt16();
+            if (itemId == 0)
             {
-                var itemId = ReadUInt16();
-                if (itemId == 0)
-                {
-                    return client.AppearanceStorage.CreateOutfitInstance(0, 0, 0, 0, 0, 0);
-                }
-                return client.AppearanceStorage.CreateObjectInstance(itemId, 0);
+                return client.AppearanceStorage.CreateOutfitInstance(0, 0, 0, 0, 0, 0);
             }
+            return client.AppearanceStorage.CreateObjectInstance(itemId, 0);
         }
 
         public ObjectInstance ReadObjectInstance(Client client, ushort id = 0)

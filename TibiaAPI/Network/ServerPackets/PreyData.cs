@@ -16,7 +16,6 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
                 return false;
             }
 
-            // TODO
             var preyArrayIndex = message.ReadByte();
 
             var preyState = (PreyDataState)message.ReadByte();
@@ -24,13 +23,16 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
             {
                 case PreyDataState.Locked:
                     {
-                        message.ReadByte();
+                        var unlockOption = message.ReadByte(); // 0 = temporary and permanent, 1 = permanent
                         break;
                     }
                 case PreyDataState.Active:
                     {
                         var preyName = message.ReadString();
-                        message.ReadBytes(11);
+                        var preyOutfit = message.ReadCreatureOutfit(client);
+                        var bonusType = message.ReadByte(); // 0 = damage, 1 = defense, 2 = exp, 3 = loot
+                        var bonusPercentage = message.ReadUInt16();
+                        var bonusRatity = message.ReadByte();
                         var timeLeftInSeconds = message.ReadUInt16();
                     }
                     break;
@@ -40,28 +42,28 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
                         for (var i = 0; i < preyCount; i++)
                         {
                             var preyName = message.ReadString();
-                            message.ReadCreatureOutfit(client);
+                            var preyOutfit = message.ReadCreatureOutfit(client);
                         }
                     }
                     break;
                 case PreyDataState.SelectionChangeMonster:
                     {
-                        message.ReadByte();
-                        message.ReadUInt16();
-                        message.ReadByte();
+                        var bonusType = message.ReadByte();
+                        var bonusPercentage = message.ReadUInt16();
+                        var bonusRatity = message.ReadByte();
 
-                        var count = message.ReadByte();
-                        for (var i = 0; i < count; i++)
+                        var preyCount = message.ReadByte();
+                        for (var i = 0; i < preyCount; i++)
                         {
                             var preyName = message.ReadString();
-                            message.ReadCreatureOutfit(client);
+                            var preyOutfit = message.ReadCreatureOutfit(client);
                         }
                     }
                     break;
             }
 
             var timeLeftUntilFreeListReroll = message.ReadUInt16();
-            message.ReadByte();
+            var preyOption = message.ReadByte(); // 0 = none, 1 = automatic reroll, 2 = locked
             return true;
         }
 
