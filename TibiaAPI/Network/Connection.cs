@@ -301,9 +301,21 @@ namespace OXGaming.TibiaAPI.Network
                 _zStream.deflateEnd();
                 _zStream.inflateEnd();
                 _httpListener.Close();
-                _tcpListener.Stop();
-                _clientSocket.Close();
-                _serverSocket.Close();
+
+                if (_tcpListener != null)
+                {
+                    _tcpListener.Stop();
+                }
+
+                if (_clientSocket != null)
+                {
+                    _clientSocket.Close();
+                }
+
+                if (_serverSocket != null)
+                {
+                    _serverSocket.Close();
+                }
             }
             catch (Exception ex)
             {
@@ -865,8 +877,16 @@ namespace OXGaming.TibiaAPI.Network
                 if (disposing)
                 {
                     _httpClient.Dispose();
-                    _clientSocket.Dispose();
-                    _serverSocket.Dispose();
+
+                    if (_clientSocket != null)
+                    {
+                        _clientSocket.Dispose();
+                    }
+
+                    if (_serverSocket != null)
+                    {
+                        _serverSocket.Dispose();
+                    }
                 }
 
                 disposedValue = true;
