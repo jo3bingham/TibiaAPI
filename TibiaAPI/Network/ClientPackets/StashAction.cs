@@ -4,6 +4,12 @@ namespace OXGaming.TibiaAPI.Network.ClientPackets
 {
     public class StashAction : ClientPacket
     {
+        public uint ItemCount { get; set; }
+
+        public ushort ItemId { get; set; }
+
+        public byte StashType { get; set; }
+
         public StashAction()
         {
             PacketType = ClientPacketType.StashAction;
@@ -16,11 +22,12 @@ namespace OXGaming.TibiaAPI.Network.ClientPackets
                 return false;
             }
 
-            var type = message.ReadByte();
-            if (type == 3) // Retrieve
+            StashType = message.ReadByte();
+            // TODO: Are there more stash types? 3 = retrieve?
+            if (StashType == 3)
             {
-                var itemId = message.ReadUInt16();
-                var itemCount = message.ReadUInt32();
+                ItemId = message.ReadUInt16();
+                ItemCount = message.ReadUInt32();
             }
             return true;
         }
@@ -28,6 +35,12 @@ namespace OXGaming.TibiaAPI.Network.ClientPackets
         public override void AppendToNetworkMessage(NetworkMessage message)
         {
             message.Write((byte)ClientPacketType.StashAction);
+            message.Write(StashType);
+            if (StashType == 3)
+            {
+                message.Write(ItemId);
+                message.Write(ItemCount);
+            }
         }
     }
 }

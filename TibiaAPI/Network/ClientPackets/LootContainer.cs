@@ -25,6 +25,7 @@ namespace OXGaming.TibiaAPI.Network.ClientPackets
                 return false;
             }
 
+            // TODO: Figure out these unknowns.
             Unknown1 = message.ReadByte();
             ContainerId = message.ReadByte();
             Position = message.ReadPosition();

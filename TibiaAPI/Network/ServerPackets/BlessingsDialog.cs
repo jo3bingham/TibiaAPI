@@ -67,14 +67,15 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
         public override void AppendToNetworkMessage(NetworkMessage message)
         {
             message.Write((byte)ServerPacketType.BlessingsDialog);
-            var count = (byte)Math.Min(Blessings.Count, byte.MaxValue);
-            message.Write(count);
+            var count = Math.Min(Blessings.Count, byte.MaxValue);
+            message.Write((byte)count);
             for (var i = 0; i < count; ++i)
             {
                 var (BlessingId, Amount) = Blessings[i];
                 message.Write(BlessingId);
                 message.Write(Amount);
             }
+
             message.Write(IsPremium);
             message.Write(XpLossLower);
             message.Write(XpLossMinPvpDeath);
@@ -84,8 +85,9 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
             message.Write(InventoryLossPveDeath);
             message.Write(IsRedOrBlackSkull);
             message.Write(IsWearingAoL);
-            count = (byte)Math.Min(History.Count, byte.MaxValue);
-            message.Write(count);
+
+            count = Math.Min(History.Count, byte.MaxValue);
+            message.Write((byte)count);
             for (var i = 0; i < count; ++i)
             {
                 var (Timestamp, Color, Text) = History[i];

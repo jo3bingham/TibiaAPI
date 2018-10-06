@@ -37,8 +37,8 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
         {
             message.Write((byte)ServerPacketType.OwnOffer);
             message.Write(PlayerName);
-            var count = (byte)Math.Min(Items.Count, byte.MaxValue);
-            message.Write(count);
+            var count = Math.Min(Items.Count, byte.MaxValue);
+            message.Write((byte)count);
             for (var i = 0; i < count; ++i)
             {
                 message.Write(Items[i]);

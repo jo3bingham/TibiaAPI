@@ -44,8 +44,9 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
             message.Write((byte)ServerPacketType.MarketEnter);
             message.Write(AccountBalance);
             message.Write(ActiveOffers);
-            var count = (ushort)Math.Min(DepotObjects.Count, ushort.MaxValue);
-            message.Write(count);
+
+            var count = Math.Min(DepotObjects.Count, ushort.MaxValue);
+            message.Write((ushort)count);
             for (var i = 0; i < count; ++i)
             {
                 var (ObjectId, Count) = DepotObjects[i];

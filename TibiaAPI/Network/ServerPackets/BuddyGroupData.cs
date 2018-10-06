@@ -7,7 +7,8 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
 {
     public class BuddyGroupData : ServerPacket
     {
-        public List<(byte Id, string Name, bool IsModifiable)> Groups { get; } = new List<(byte Id, string Name, bool IsModifiable)>();
+        public List<(byte Id, string Name, bool IsModifiable)> Groups { get; } =
+            new List<(byte Id, string Name, bool IsModifiable)>();
 
         public byte NumberOfUserCreatedGroupsLeft { get; set; }
 
@@ -31,7 +32,6 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
                 var isModifiable = message.ReadBool();
                 Groups.Add((groupId, groupName, isModifiable));
             }
-
             NumberOfUserCreatedGroupsLeft = message.ReadByte();
             return true;
         }
@@ -39,8 +39,8 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
         public override void AppendToNetworkMessage(NetworkMessage message)
         {
             message.Write((byte)ServerPacketType.BuddyGroupData);
-            var count = (byte)Math.Min(Groups.Count, byte.MaxValue);
-            message.Write(count);
+            var count = Math.Min(Groups.Count, byte.MaxValue);
+            message.Write((byte)count);
             for (var i = 0; i < count; ++i)
             {
                 var (Id, Name, IsModifiable) = Groups[i];

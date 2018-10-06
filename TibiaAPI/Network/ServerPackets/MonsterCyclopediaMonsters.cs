@@ -39,8 +39,8 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
         {
             message.Write((byte)ServerPacketType.MonsterCyclopediaMonsters);
             message.Write(Name);
-            var count = (ushort)Math.Min(Monsters.Count, ushort.MaxValue);
-            message.Write(count);
+            var count = Math.Min(Monsters.Count, ushort.MaxValue);
+            message.Write((ushort)count);
             for (var i = 0; i < count; ++i)
             {
                 var (Id, CurrentStage) = Monsters[i];

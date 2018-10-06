@@ -34,6 +34,7 @@ namespace OXGaming.TibiaAPI.Network.ClientPackets
                 Category = message.ReadString();
             }
 
+            // TODO: Figure out this unknown.
             Unknown = message.ReadUInt32();
             return true;
         }

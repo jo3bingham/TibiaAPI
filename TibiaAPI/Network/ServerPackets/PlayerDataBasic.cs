@@ -48,8 +48,9 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
             message.Write(PremiumUntil);
             message.Write(Profession);
             message.Write(HasReachedMain);
-            var count = (ushort)Math.Min(KnownSpells.Count, ushort.MaxValue);
-            message.Write(count);
+
+            var count = Math.Min(KnownSpells.Count, ushort.MaxValue);
+            message.Write((ushort)count);
             for (var i = 0; i < count; ++i)
             {
                 message.Write(KnownSpells[i]);

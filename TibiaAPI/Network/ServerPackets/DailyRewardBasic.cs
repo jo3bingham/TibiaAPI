@@ -7,7 +7,8 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
 {
     public class DailyRewardBasic : ServerPacket
     {
-        public List<(string Text, byte UnlockStreak)> Bonuses { get; } = new List<(string Text, byte UnlockStreak)>();
+        public List<(string Text, byte UnlockStreak)> Bonuses { get; } =
+            new List<(string Text, byte UnlockStreak)>();
 
         public byte Unknown { get; set; }
 
@@ -23,7 +24,6 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
                 return false;
             }
 
-            // TODO
             var numberOfDailyRewards = message.ReadByte();
             for (var i = 0; i < numberOfDailyRewards; ++i)
             {
@@ -39,6 +39,7 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
                 Bonuses.Add((text, unlockStreak));
             }
 
+            // TODO: Figure out this unknown.
             Unknown = message.ReadByte();
             return true;
         }

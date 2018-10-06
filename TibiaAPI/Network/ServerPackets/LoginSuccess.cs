@@ -19,6 +19,7 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
 
         public bool BugReportsAllowed { get; set; }
         public bool CanChangePvpFramingOption { get; set; }
+        public bool EnableExivaOptionsButton { get; set; }
         public bool EnableExpertModeButton { get; set; }
 
         public LoginSuccess()
@@ -43,7 +44,7 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
             EnableExpertModeButton = message.ReadBool();
             StoreBaseUrl = message.ReadString();
             StoreCreditPackageSize = message.ReadUInt16();
-            Unknown = message.ReadByte();
+            EnableExivaOptionsButton = message.ReadBool();
             return true;
         }
 
@@ -60,7 +61,7 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
             message.Write(EnableExpertModeButton);
             message.Write(StoreBaseUrl);
             message.Write(StoreCreditPackageSize);
-            message.Write(Unknown);
+            message.Write(EnableExivaOptionsButton);
         }
     }
 }

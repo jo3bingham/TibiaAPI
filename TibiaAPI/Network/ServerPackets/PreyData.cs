@@ -32,7 +32,7 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
                         var preyOutfit = message.ReadCreatureOutfit(client);
                         var bonusType = message.ReadByte(); // 0 = damage, 1 = defense, 2 = exp, 3 = loot
                         var bonusPercentage = message.ReadUInt16();
-                        var bonusRatity = message.ReadByte();
+                        var bonusRarity = message.ReadByte();
                         var timeLeftInSeconds = message.ReadUInt16();
                     }
                     break;
@@ -50,7 +50,7 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
                     {
                         var bonusType = message.ReadByte();
                         var bonusPercentage = message.ReadUInt16();
-                        var bonusRatity = message.ReadByte();
+                        var bonusRarity = message.ReadByte();
 
                         var preyCount = message.ReadByte();
                         for (var i = 0; i < preyCount; i++)

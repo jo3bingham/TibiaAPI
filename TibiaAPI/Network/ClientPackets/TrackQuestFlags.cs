@@ -21,8 +21,8 @@ namespace OXGaming.TibiaAPI.Network.ClientPackets
                 return false;
             }
 
-            var count = message.ReadByte();
-            for (var i = 0; i < count; ++i)
+            QuestIds.Capacity = message.ReadByte();
+            for (var i = 0; i < QuestIds.Capacity; ++i)
             {
                 QuestIds.Add(message.ReadUInt16());
             }
@@ -32,8 +32,8 @@ namespace OXGaming.TibiaAPI.Network.ClientPackets
         public override void AppendToNetworkMessage(NetworkMessage message)
         {
             message.Write((byte)ClientPacketType.TrackQuestFlags);
-            var count = (byte)Math.Min(QuestIds.Count, byte.MaxValue);
-            message.Write(count);
+            var count = Math.Min(QuestIds.Count, byte.MaxValue);
+            message.Write((byte)count);
             for (var i = 0; i < count; ++i)
             {
                 message.Write(QuestIds[i]);

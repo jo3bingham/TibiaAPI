@@ -18,8 +18,8 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
                 return false;
             }
 
+            // TODO: Figure out all screenshot types.
             Type = message.ReadByte();
-            //07 = level up
             return true;
         }
 

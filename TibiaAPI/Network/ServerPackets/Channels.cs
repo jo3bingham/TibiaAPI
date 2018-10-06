@@ -24,9 +24,9 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
             ChannelList.Capacity = message.ReadByte();
             for (var i = 0; i < ChannelList.Capacity; ++i)
             {
-                var channelId = message.ReadUInt16();
-                var channelName = message.ReadString();
-                ChannelList.Add((channelId, channelName));
+                var id = message.ReadUInt16();
+                var name = message.ReadString();
+                ChannelList.Add((id, name));
             }
             return true;
         }
@@ -34,8 +34,8 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
         public override void AppendToNetworkMessage(NetworkMessage message)
         {
             message.Write((byte)ServerPacketType.Channels);
-            var count = (byte)Math.Min(ChannelList.Count, byte.MaxValue);
-            message.Write(count);
+            var count = Math.Min(ChannelList.Count, byte.MaxValue);
+            message.Write((byte)count);
             for (var i = 0; i < count; ++i)
             {
                 var (Id, Name) = ChannelList[i];

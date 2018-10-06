@@ -44,8 +44,8 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
             message.Write((byte)ServerPacketType.TransactionHistory);
             message.Write(CurrentPage);
             message.Write(NumberOfPages);
-            var count = (byte)Math.Min(Transactions.Count, byte.MaxValue);
-            message.Write(count);
+            var count = Math.Min(Transactions.Count, byte.MaxValue);
+            message.Write((byte)count);
             for (var i = 0; i < count; ++i)
             {
                 var transaction = Transactions[i];

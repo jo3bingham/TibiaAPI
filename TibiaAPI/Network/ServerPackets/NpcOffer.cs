@@ -43,8 +43,8 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
         {
             message.Write((byte)ServerPacketType.NpcOffer);
             message.Write(NpcName);
-            var count = (ushort)Math.Min(Offers.Count, ushort.MaxValue);
-            message.Write(count);
+            var count = Math.Min(Offers.Count, ushort.MaxValue);
+            message.Write((ushort)count);
             for (var i = 0; i < count; ++i)
             {
                 var offer = Offers[i];

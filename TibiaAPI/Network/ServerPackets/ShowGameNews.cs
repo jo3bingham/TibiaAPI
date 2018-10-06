@@ -20,8 +20,8 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
                 return false;
             }
 
-            CategoryId = message.ReadUInt32(); // Category Id?
-            PageNumber = message.ReadByte(); // Page Number?
+            CategoryId = message.ReadUInt32();
+            PageNumber = message.ReadByte();
             return true;
         }
 

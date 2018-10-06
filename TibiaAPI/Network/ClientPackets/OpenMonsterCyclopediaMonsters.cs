@@ -51,8 +51,8 @@ namespace OXGaming.TibiaAPI.Network.ClientPackets
             }
             else if (RaceType == 1)
             {
-                var count = (ushort)Math.Min(RaceIds.Count, ushort.MaxValue);
-                message.Write(count);
+                var count = Math.Min(RaceIds.Count, ushort.MaxValue);
+                message.Write((ushort)count);
                 for (var i = 0; i < count; ++i)
                 {
                     message.Write(RaceIds[i]);

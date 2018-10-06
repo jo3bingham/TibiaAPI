@@ -23,6 +23,7 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
             }
 
             IsInRestingArea = message.ReadBool();
+            // TODO: Figure out this unknown.
             Unknown = message.ReadByte();
             Text = message.ReadString();
             return true;

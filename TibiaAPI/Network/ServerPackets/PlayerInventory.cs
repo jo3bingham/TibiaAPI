@@ -35,8 +35,8 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
         public override void AppendToNetworkMessage(NetworkMessage message)
         {
             message.Write((byte)ServerPacketType.PlayerInventory);
-            var count = (ushort)Math.Min(Items.Count, ushort.MaxValue);
-            message.Write(count);
+            var count = Math.Min(Items.Count, ushort.MaxValue);
+            message.Write((ushort)count);
             for (var i = 0; i < count; ++i)
             {
                 var (Id, Data, Count) = Items[i];

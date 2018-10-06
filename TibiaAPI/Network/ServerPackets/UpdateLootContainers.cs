@@ -38,8 +38,8 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
         {
             message.Write((byte)ServerPacketType.UpdateLootContainers);
             message.Write(UseMainContainerAsFallback);
-            var count = (byte)Math.Min(LootContainers.Count, byte.MaxValue);
-            message.Write(count);
+            var count = Math.Min(LootContainers.Count, byte.MaxValue);
+            message.Write((byte)count);
             for (var i = 0; i < count; ++i)
             {
                 var lootContainer = LootContainers[i];

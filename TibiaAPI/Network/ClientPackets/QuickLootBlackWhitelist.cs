@@ -11,9 +11,6 @@ namespace OXGaming.TibiaAPI.Network.ClientPackets
 
         public byte LootListType { get; set; }
 
-        // This is more-than-likely a count variable.
-        public ushort Unknown { get; set; }
-
         public QuickLootBlackWhitelist()
         {
             PacketType = ClientPacketType.QuickLootBlackWhitelist;

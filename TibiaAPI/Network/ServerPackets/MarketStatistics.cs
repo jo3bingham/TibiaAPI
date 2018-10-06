@@ -35,8 +35,8 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
         public override void AppendToNetworkMessage(NetworkMessage message)
         {
             message.Write((byte)ServerPacketType.MarketStatistics);
-            var count = (ushort)Math.Min(MarketObjects.Count, ushort.MaxValue);
-            message.Write(count);
+            var count = Math.Min(MarketObjects.Count, ushort.MaxValue);
+            message.Write((ushort)count);
             for (var i = 0; i < count; ++i)
             {
                 var (ObjectId, Price) = MarketObjects[i];

@@ -65,8 +65,8 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
             message.Write(Title);
             message.Write(Text);
 
-            var count = (byte)Math.Min(FirstChoices.Count, byte.MaxValue);
-            message.Write(count);
+            var count = Math.Min(FirstChoices.Count, byte.MaxValue);
+            message.Write((byte)count);
             for (var i = 0; i < count; ++i)
             {
                 var choice = FirstChoices[i];
@@ -74,8 +74,8 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
                 message.Write(choice.Value);
             }
 
-            count = (byte)Math.Min(SecondChoices.Count, byte.MaxValue);
-            message.Write(count);
+            count = Math.Min(SecondChoices.Count, byte.MaxValue);
+            message.Write((byte)count);
             for (var i = 0; i < count; ++i)
             {
                 var choice = SecondChoices[i];

@@ -57,7 +57,52 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
         public override void AppendToNetworkMessage(NetworkMessage message)
         {
             message.Write((byte)ServerPacketType.PlayerSkills);
-            // TODO
+            message.Write(FistFighting.Level);
+            message.Write(FistFighting.Base);
+            message.Write(FistFighting.Progress);
+
+            message.Write(ClubFighting.Level);
+            message.Write(ClubFighting.Base);
+            message.Write(ClubFighting.Progress);
+
+            message.Write(SwordFighting.Level);
+            message.Write(SwordFighting.Base);
+            message.Write(SwordFighting.Progress);
+
+            message.Write(AxeFighting.Level);
+            message.Write(AxeFighting.Base);
+            message.Write(AxeFighting.Progress);
+
+            message.Write(DistanceFighting.Level);
+            message.Write(DistanceFighting.Base);
+            message.Write(DistanceFighting.Progress);
+
+            message.Write(Shielding.Level);
+            message.Write(Shielding.Base);
+            message.Write(Shielding.Progress);
+
+            message.Write(Fishing.Level);
+            message.Write(Fishing.Base);
+            message.Write(Fishing.Progress);
+
+            message.Write(CriticalHitChance.Level);
+            message.Write(CriticalHitChance.Base);
+
+            message.Write(CriticalHitDamage.Level);
+            message.Write(CriticalHitDamage.Base);
+
+            message.Write(LifeLeechChance.Level);
+            message.Write(LifeLeechChance.Base);
+
+            message.Write(LifeLeechAmount.Level);
+            message.Write(LifeLeechAmount.Base);
+
+            message.Write(ManaLeechChance.Level);
+            message.Write(ManaLeechChance.Base);
+
+            message.Write(ManaLeechAmount.Level);
+            message.Write(ManaLeechAmount.Base);
+
             message.Write(MaxCapacity);
             message.Write(BonusCapacity);
         }

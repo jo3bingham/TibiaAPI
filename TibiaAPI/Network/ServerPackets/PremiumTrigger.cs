@@ -32,8 +32,8 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
         public override void AppendToNetworkMessage(NetworkMessage message)
         {
             message.Write((byte)ServerPacketType.PremiumTrigger);
-            var count = (byte)Math.Min(PremiumTriggers.Count, byte.MaxValue);
-            message.Write(count);
+            var count = Math.Min(PremiumTriggers.Count, byte.MaxValue);
+            message.Write((byte)count);
             for (var i = 0; i < count; ++i)
             {
                 message.Write(PremiumTriggers[i]);

@@ -37,8 +37,8 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
         public override void AppendToNetworkMessage(NetworkMessage message)
         {
             message.Write((byte)ServerPacketType.DailyRewardHistory);
-            var count = (byte)Math.Min(History.Count, byte.MaxValue);
-            message.Write(count);
+            var count = Math.Min(History.Count, byte.MaxValue);
+            message.Write((byte)count);
             for (var i = 0; i < count; ++i)
             {
                 var (Timestamp, WasAdjustedByCustomerSupport, Text, StreakCount) = History[i];

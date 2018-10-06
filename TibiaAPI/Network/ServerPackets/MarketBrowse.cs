@@ -45,14 +45,16 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
         {
            message.Write((byte)ServerPacketType.MarketBrowse);
            message.Write(TypeId);
-           var count = (uint)Math.Min(BuyOffers.Count, uint.MaxValue);
-           message.Write(count);
+
+           var count = Math.Min(BuyOffers.Count, uint.MaxValue);
+           message.Write((uint)count);
            for (var i = 0; i < count; ++i)
            {
                message.Write(BuyOffers[i], TypeId);
            }
-           count = (uint)Math.Min(SellOffers.Count, uint.MaxValue);
-           message.Write(count);
+
+           count = Math.Min(SellOffers.Count, uint.MaxValue);
+           message.Write((uint)count);
            for (var i = 0; i < count; ++i)
            {
                message.Write(SellOffers[i], TypeId);

@@ -34,13 +34,13 @@ namespace OXGaming.TibiaAPI.Network.ClientPackets
         public override void AppendToNetworkMessage(NetworkMessage message)
         {
             message.Write((byte)ClientPacketType.GetObjectInfo);
-            var count = (byte)Math.Min(Objects.Count, byte.MaxValue);
-            message.Write(count);
+            var count = Math.Min(Objects.Count, byte.MaxValue);
+            message.Write((byte)count);
             for (var i = 0; i < count; ++i)
             {
-                var item = Objects[i];
-                message.Write(item.ObjectId);
-                message.Write(item.Data);
+                var (ObjectId, Data) = Objects[i];
+                message.Write(ObjectId);
+                message.Write(Data);
             }
         }
     }
