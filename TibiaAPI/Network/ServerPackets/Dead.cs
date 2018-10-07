@@ -8,6 +8,8 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
 
         public byte FairFightFactor { get; set; }
 
+        public bool Unknown { get; set; }
+
         public Dead()
         {
             PacketType = ServerPacketType.Dead;
@@ -25,6 +27,7 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
             {
                 FairFightFactor = message.ReadByte();
             }
+            Unknown = message.ReadBool();
             return true;
         }
 
@@ -36,6 +39,7 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
             {
                 message.Write(FairFightFactor);
             }
+            message.Write(Unknown);
         }
     }
 }

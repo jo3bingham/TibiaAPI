@@ -98,19 +98,39 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
                 case MessageModeType.Say:
                 case MessageModeType.Whisper:
                 case MessageModeType.Yell:
+                    {
+                        message.Write(Position);
+                    }
+                    break;
+                case MessageModeType.PrivateFrom:
+                    break;
+                case MessageModeType.Channel:
+                case MessageModeType.ChannelHighlight:
+                    {
+                        message.Write(ChannelId);
+                    }
+                    break;
                 case MessageModeType.Spell:
                     {
                         message.Write(Position);
                     }
                     break;
-                case MessageModeType.Channel:
-                case MessageModeType.ChannelHighlight:
+                case MessageModeType.NpcFromStartBlock:
+                    {
+                        message.Write(Position);
+                    }
+                    break;
+                case MessageModeType.NpcFrom:
+                    break;
+                case MessageModeType.GamemasterBroadcast:
+                    break;
                 case MessageModeType.GamemasterChannel:
                     {
                         message.Write(ChannelId);
                     }
                     break;
-                case MessageModeType.NpcFromStartBlock:
+                case MessageModeType.GamemasterPrivateFrom:
+                    break;
                 case MessageModeType.BarkLow:
                 case MessageModeType.BarkLoud:
                     {
