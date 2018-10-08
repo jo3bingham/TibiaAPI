@@ -170,27 +170,26 @@ namespace Extract
 
                         client.Proxy.OnReceivedServerFullMapPacket += (packet) =>
                         {
-                            if (file != null)
-                            {
-                                return true;
-                            }
-
                             var p = (FullMap)packet;
-                            var pos = p.Position;
-                            var currentDate = DateTime.UtcNow;
-                            var fileNameData = new object[]
+
+                            if (file == null)
                             {
+                                var pos = p.Position;
+                                var currentDate = DateTime.UtcNow;
+                                var fileNameData = new object[]
+                                {
                                 pos.X, pos.Y, pos.Z, currentDate.Day, currentDate.Month, currentDate.Year, currentDate.Hour, currentDate.Minute, currentDate.Second
-                            };
+                                };
 
-                            var otbmName = string.Format("{0}_{1}_{2}__{3}_{4}_{5}__{6}_{7}_{8}", fileNameData);
-                            var outputPath = $"{otbmName}.otbm";
-                            if (!string.IsNullOrEmpty(outputDirectory))
-                            {
-                                outputPath = Path.Combine(outputDirectory, outputPath);
+                                var otbmName = string.Format("{0}_{1}_{2}__{3}_{4}_{5}__{6}_{7}_{8}", fileNameData);
+                                var outputPath = $"{otbmName}.otbm";
+                                if (!string.IsNullOrEmpty(outputDirectory))
+                                {
+                                    outputPath = Path.Combine(outputDirectory, outputPath);
+                                }
+
+                                file = InitializeMapFile(otbmName, outputPath);
                             }
-
-                            file = InitializeMapFile(otbmName, outputPath);
 
                             foreach (var field in p.Fields)
                             {
