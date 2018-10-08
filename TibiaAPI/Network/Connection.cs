@@ -65,6 +65,8 @@ namespace OXGaming.TibiaAPI.Network
         public event ReceivedMessageEventHandler OnReceivedClientMessage;
         public event ReceivedMessageEventHandler OnReceivedServerMessage;
 
+        public bool IsConnected { get; private set; } = false;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="Connection"/> class that acts as a proxy
         /// between the Tibia client and the game server.
@@ -325,6 +327,7 @@ namespace OXGaming.TibiaAPI.Network
 
             _isStarted = false;
             _xteaKey = null;
+            IsConnected = false;
         }
 
         /// <summary>
@@ -362,6 +365,7 @@ namespace OXGaming.TibiaAPI.Network
             _clientSequenceNumber = 1;
             _serverSequenceNumber = 1;
             _xteaKey = null;
+            IsConnected = false;
         }
 
         /// <summary>
@@ -661,6 +665,8 @@ namespace OXGaming.TibiaAPI.Network
                 _serverSocket.Connect(world.ExternalAddressProtected, world.ExternalPortProtected);
                 _serverSocket.Send(_clientInMessage.GetBuffer(), 0, count, SocketFlags.None);
                 _serverSocket.BeginReceive(_serverInMessage.GetBuffer(), 0, 2, SocketFlags.None, new AsyncCallback(BeginReceiveServerCallback), 0);
+
+                IsConnected = true;
             }
             catch (SocketException)
             {
