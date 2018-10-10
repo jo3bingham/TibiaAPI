@@ -152,7 +152,6 @@ namespace Extract
                             return true;
                         };
 
-                        var hasSkippedLoginPacket = false;
                         while (reader.BaseStream.Position < reader.BaseStream.Length)
                         {
                             var packetType = PacketType.Server;
@@ -163,18 +162,16 @@ namespace Extract
                             }
 
                             var size = reader.ReadUInt32();
-                            var wholeSize = reader.ReadUInt16();
-                            var sequenceNumber = reader.ReadUInt32();
 
-                            // OXR files record the initial login packet from the client, but it doesn't have the same
-                            // header type as other packets. The information contained isn't currently needed, so skip it.
-                            if (isOxRecording && !hasSkippedLoginPacket && reader.PeekChar() == (int)ClientPacketType.Login)
+                            // We don't care about client packets right now, so skip them.
+                            if (packetType == PacketType.Client)
                             {
-                                hasSkippedLoginPacket = true;
-                                reader.BaseStream.Position += size - 6;
+                                reader.BaseStream.Position += size;
                                 continue;
                             }
 
+                            var wholeSize = reader.ReadUInt16();
+                            var sequenceNumber = reader.ReadUInt32();
                             var packetSize = reader.ReadUInt16();
                             var outMessage = new NetworkMessage();
                             var message = new NetworkMessage
