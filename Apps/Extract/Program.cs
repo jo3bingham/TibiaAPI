@@ -16,7 +16,7 @@ namespace Extract
 {
     class Program
     {
-        static byte[] _reverseFluidMap =
+        private static readonly byte[] _reverseFluidMap =
         {
             (byte)FluidColor.Transparent,
             (byte)FluidType.Water,
@@ -30,11 +30,13 @@ namespace Extract
             (byte)FluidType.Milk
         };
 
-        static HashSet<ulong> _knownPositions = new HashSet<ulong>();
+        private static readonly HashSet<ulong> _knownPositions = new HashSet<ulong>();
 
-        static HashSet<uint> _ignoreIds = new HashSet<uint>();
+        private static readonly HashSet<uint> _ignoreIds = new HashSet<uint>();
 
-        static Dictionary<uint, uint> _replaceIds = new Dictionary<uint, uint>();
+        private static readonly Dictionary<uint, uint> _replaceIds = new Dictionary<uint, uint>();
+
+        private static FileStream _file;
 
         static void Main(string[] args)
         {
@@ -46,18 +48,16 @@ namespace Extract
                     return;
                 }
 
-                var isDirectory = true;
-                if (args[0].EndsWith(".dat", StringComparison.CurrentCultureIgnoreCase))
-                {
-                    isDirectory = false;
-                }
+                var isDirectory = !(args[0].EndsWith(".dat", StringComparison.CurrentCultureIgnoreCase) ||
+                                    args[0].EndsWith(".oxr", StringComparison.CurrentCultureIgnoreCase));
 
                 if (isDirectory && !Directory.Exists(args[0]))
                 {
                     Console.WriteLine($"Directory does not exist: {args[0]}");
                     return;
                 }
-                else if (!isDirectory && !File.Exists(args[0]))
+
+                if (!isDirectory && !File.Exists(args[0]))
                 {
                     Console.WriteLine($"File does not exist: {args[0]}");
                     return;
@@ -67,6 +67,7 @@ namespace Extract
                 if (isDirectory)
                 {
                     filenames.AddRange(Directory.GetFiles(args[0]).Where(f => f.EndsWith(".dat", StringComparison.CurrentCultureIgnoreCase)));
+                    filenames.AddRange(Directory.GetFiles(args[0]).Where(f => f.EndsWith(".oxr", StringComparison.CurrentCultureIgnoreCase)));
                 }
                 else
                 {
@@ -83,6 +84,8 @@ namespace Extract
                     }
                 }
 
+                var tibiaDirectory = args.Length >= 3 ? args[2] : string.Empty;
+
                 LoadXML("ignore.xml");
                 LoadXML("replace.xml");
 
@@ -92,8 +95,18 @@ namespace Extract
                     Console.WriteLine($"Converting {filename} to OTBM file... ");
                     using (var reader = new BinaryReader(File.OpenRead(filename)))
                     {
-                        FileStream file = null;
-                        var client = new Client("Tibia11.dat");
+                        var isOxRecording = filename.EndsWith(".oxr", StringComparison.CurrentCultureIgnoreCase);
+                        if (isOxRecording)
+                        {
+                            // TODO: Handle the client version properly.
+                            // OXR files begin with the client version they were recorded with.
+                            // This will allows us to easily parse recordings from older client versions.
+                            var version = reader.ReadString();
+                            Console.WriteLine(version);
+                        }
+
+                        _file = null;
+                        var client = new Client(tibiaDirectory);
 
                         client.Proxy.OnReceivedServerLoginChallengePacket += (packet) =>
                         {
@@ -101,78 +114,19 @@ namespace Extract
                             return true;
                         };
 
-                        client.Proxy.OnReceivedServerBottomFloorPacket += (packet) =>
-                        {
-                            var p = (BottomFloor)packet;
-                            foreach (var field in p.Fields)
-                            {
-                                ParseField(file, field);
-                            }
-                            return true;
-                        };
-
-                        client.Proxy.OnReceivedServerBottomRowPacket += (packet) =>
-                        {
-                            var p = (BottomRow)packet;
-                            foreach (var field in p.Fields)
-                            {
-                                ParseField(file, field);
-                            }
-                            return true;
-                        };
-
-                        client.Proxy.OnReceivedServerTopFloorPacket += (packet) =>
-                        {
-                            var p = (TopFloor)packet;
-                            foreach (var field in p.Fields)
-                            {
-                                ParseField(file, field);
-                            }
-                            return true;
-                        };
-
-                        client.Proxy.OnReceivedServerTopRowPacket += (packet) =>
-                        {
-                            var p = (TopRow)packet;
-                            foreach (var field in p.Fields)
-                            {
-                                ParseField(file, field);
-                            }
-                            return true;
-                        };
-
-                        client.Proxy.OnReceivedServerLeftColumnPacket += (packet) =>
-                        {
-                            var p = (LeftColumn)packet;
-                            foreach (var field in p.Fields)
-                            {
-                                ParseField(file, field);
-                            }
-                            return true;
-                        };
-
-                        client.Proxy.OnReceivedServerRightColumnPacket += (packet) =>
-                        {
-                            var p = (RightColumn)packet;
-                            foreach (var field in p.Fields)
-                            {
-                                ParseField(file, field);
-                            }
-                            return true;
-                        };
-
-                        client.Proxy.OnReceivedServerFieldDataPacket += (packet) =>
-                        {
-                            var p = (FieldData)packet;
-                            ParseField(file, p.Field);
-                            return true;
-                        };
+                        client.Proxy.OnReceivedServerBottomFloorPacket += Proxy_OnReceivedMapPacket;
+                        client.Proxy.OnReceivedServerBottomRowPacket += Proxy_OnReceivedMapPacket;
+                        client.Proxy.OnReceivedServerTopFloorPacket += Proxy_OnReceivedMapPacket;
+                        client.Proxy.OnReceivedServerTopRowPacket += Proxy_OnReceivedMapPacket;
+                        client.Proxy.OnReceivedServerLeftColumnPacket += Proxy_OnReceivedMapPacket;
+                        client.Proxy.OnReceivedServerRightColumnPacket += Proxy_OnReceivedMapPacket;
+                        client.Proxy.OnReceivedServerFieldDataPacket += Proxy_OnReceivedMapPacket;
 
                         client.Proxy.OnReceivedServerFullMapPacket += (packet) =>
                         {
                             var p = (FullMap)packet;
 
-                            if (file == null)
+                            if (_file == null)
                             {
                                 var pos = p.Position;
                                 var currentDate = DateTime.UtcNow;
@@ -188,24 +142,41 @@ namespace Extract
                                     outputPath = Path.Combine(outputDirectory, outputPath);
                                 }
 
-                                file = InitializeMapFile(otbmName, outputPath);
+                                _file = InitializeMapFile(otbmName, outputPath);
                             }
 
                             foreach (var field in p.Fields)
                             {
-                                ParseField(file, field);
+                                ParseField(field);
                             }
                             return true;
                         };
 
+                        var hasSkippedLoginPacket = false;
                         while (reader.BaseStream.Position < reader.BaseStream.Length)
                         {
+                            var packetType = PacketType.Server;
+                            if (isOxRecording)
+                            {
+                                packetType = (PacketType)reader.ReadByte();
+                                var timestamp = reader.ReadInt64();
+                            }
+
                             var size = reader.ReadUInt32();
                             var wholeSize = reader.ReadUInt16();
                             var sequenceNumber = reader.ReadUInt32();
+
+                            // OXR files record the initial login packet from the client, but it doesn't have the same
+                            // header type as other packets. The information contained isn't currently needed, so skip it.
+                            if (isOxRecording && !hasSkippedLoginPacket && reader.PeekChar() == (int)ClientPacketType.Login)
+                            {
+                                hasSkippedLoginPacket = true;
+                                reader.BaseStream.Position += size - 10;
+                            }
+
                             var packetSize = reader.ReadUInt16();
                             var outMessage = new NetworkMessage();
-                            var message = new NetworkMessage()
+                            var message = new NetworkMessage
                             {
                                 Size = size
                             };
@@ -213,25 +184,32 @@ namespace Extract
                             reader.BaseStream.Position -= 8;
                             Array.Copy(reader.ReadBytes((int)message.Size), message.GetBuffer(), message.Size);
 
-                            client.Proxy.ParseServerMessage(client, message, outMessage);
+                            if (packetType == PacketType.Server)
+                            {
+                                client.Proxy.ParseServerMessage(client, message, outMessage);
+                            }
+                            else
+                            {
+                                client.Proxy.ParseClientMessage(client, message, outMessage);
+                            }
                         }
 
-                        if (file != null)
+                        if (_file != null)
                         {
                             // node towns
-                            file.WriteByte(254);
-                            file.WriteByte(6);
+                            _file.WriteByte(254);
+                            _file.WriteByte(6);
 
                             // end towns node
-                            file.WriteByte(255);
+                            _file.WriteByte(255);
 
                             // end map data node
-                            file.WriteByte(255);
+                            _file.WriteByte(255);
 
                             // end root node
-                            file.WriteByte(255);
+                            _file.WriteByte(255);
 
-                            file.Close();
+                            _file.Close();
                         }
 
                         _knownPositions.Clear();
@@ -247,6 +225,17 @@ namespace Extract
                 Console.WriteLine(ex);
             }
         }
+
+        static bool Proxy_OnReceivedMapPacket(Packet packet)
+        {
+            var p = (Map)packet;
+            foreach (var field in p.Fields)
+            {
+                ParseField(field);
+            }
+            return true;
+        }
+
 
         static void LoadXML(string filename)
         {
@@ -346,7 +335,7 @@ namespace Extract
             }
         }
 
-        static void ParseField(FileStream file, (Field, Position) field)
+        static void ParseField((Field, Position) field)
         {
             var position = field.Item2;
 
@@ -359,21 +348,21 @@ namespace Extract
             _knownPositions.Add(index);
 
             // node tile area
-            file.WriteByte(254);
-            file.WriteByte(4);
+            _file.WriteByte(254);
+            _file.WriteByte(4);
 
             // position
-            WriteData(file, BitConverter.GetBytes((ushort)(position.X & 0xFF00)));
-            WriteData(file, BitConverter.GetBytes((ushort)(position.Y & 0xFF00)));
-            WriteData(file, new byte[] { (byte)position.Z });
+            WriteData(_file, BitConverter.GetBytes((ushort)(position.X & 0xFF00)));
+            WriteData(_file, BitConverter.GetBytes((ushort)(position.Y & 0xFF00)));
+            WriteData(_file, new byte[] { (byte)position.Z });
 
             // node tile
-            file.WriteByte(254);
-            file.WriteByte(5);
+            _file.WriteByte(254);
+            _file.WriteByte(5);
 
             // x/y
-            WriteData(file, new byte[] { (byte)(position.X & 0xFF) });
-            WriteData(file, new byte[] { (byte)(position.Y & 0xFF) });
+            WriteData(_file, new byte[] { (byte)(position.X & 0xFF) });
+            WriteData(_file, new byte[] { (byte)(position.Y & 0xFF) });
 
             for (int i = 0; i < 10; ++i)
             {
@@ -384,44 +373,44 @@ namespace Extract
                 }
 
                 // node item
-                file.WriteByte(254);
-                file.WriteByte(6);
+                _file.WriteByte(254);
+                _file.WriteByte(6);
 
                 // item id
                 if (!_replaceIds.TryGetValue(item.Id, out uint id))
                 {
                     id = item.Id;
                 }
-                WriteData(file, BitConverter.GetBytes((ushort)id));
+                WriteData(_file, BitConverter.GetBytes((ushort)id));
 
                 // item data
                 if (item.Type != null && item.Type.Flags.Cumulative)
                 {
-                    file.WriteByte(15);
-                    WriteData(file, new byte[] { (byte)item.Data });
+                    _file.WriteByte(15);
+                    WriteData(_file, new byte[] { (byte)item.Data });
                 }
 
                 // item sub type
                 if (item.Type != null && (item.Type.Flags.Liquidcontainer || item.Type.Flags.Liquidpool))
                 {
-                    file.WriteByte(15);
+                    _file.WriteByte(15);
                     byte subType = 0;
                     if (item.Data >= 0 && item.Data < _reverseFluidMap.Length)
                     {
                         subType = _reverseFluidMap[item.Data];
                     }
-                    WriteData(file, new byte[] { subType });
+                    WriteData(_file, new byte[] { subType });
                 }
 
                 //end item node
-                file.WriteByte(255);
+                _file.WriteByte(255);
             }
 
             // end tile node
-            file.WriteByte(255);
+            _file.WriteByte(255);
 
             // end tile area node
-            file.WriteByte(255);
+            _file.WriteByte(255);
         }
     }
 }

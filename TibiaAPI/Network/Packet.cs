@@ -1,7 +1,5 @@
 ﻿using System;
 
-using OXGaming.TibiaAPI.Constants;
-
 namespace OXGaming.TibiaAPI.Network
 {
     public class Packet
