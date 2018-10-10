@@ -6,7 +6,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\TibiaAPI\TibiaAPI.csproj" />
+    <ProjectReference Include="..\..\TibiaAPI\TibiaAPI.csproj" />
   </ItemGroup>
-
 </Project>

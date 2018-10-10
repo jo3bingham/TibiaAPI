@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.IO;
+using System.Linq;
 
 using OXGaming.TibiaAPI.Constants;
 
@@ -11,9 +12,9 @@ namespace OXGaming.TibiaAPI.Appearances
         private uint lastObjectId;
         private uint lastOutfitId;
 
-        public void LoadAppearances(System.IO.FileStream datFile)
+        public void LoadAppearances(FileStream datFileStream)
         {
-            appearances = Utilities.Appearances.Parser.ParseFrom(datFile);
+            appearances = Utilities.Appearances.Parser.ParseFrom(datFileStream);
             lastObjectId = appearances.Object.Aggregate((last, current) => last.Id > current.Id ? last : current).Id;
             lastOutfitId = appearances.Outfit.Aggregate((last, current) => last.Id > current.Id ? last : current).Id;
         }

@@ -11,7 +11,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Track", "Apps\Track\Track.c
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Extract", "Apps\Extract\Extract.csproj", "{EE3A6146-B1A6-44F0-9C5D-CBD5D44CEF83}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Record", "Record\Record.csproj", "{75DB22C7-8FE1-4BF6-8778-AE67B236DFED}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Record", "Apps\Record\Record.csproj", "{75DB22C7-8FE1-4BF6-8778-AE67B236DFED}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

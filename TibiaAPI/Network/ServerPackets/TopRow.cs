@@ -1,16 +1,10 @@
-﻿using System.Collections.Generic;
-
-using OXGaming.TibiaAPI.Constants;
-using OXGaming.TibiaAPI.Utilities;
-using OXGaming.TibiaAPI.WorldMap;
+﻿using OXGaming.TibiaAPI.Constants;
 
 namespace OXGaming.TibiaAPI.Network.ServerPackets
 {
-    public class TopRow : ServerPacket
+    public class TopRow : Map
     {
         private const int MapSizeX = 18;
-
-        public List<(Field, Position)> Fields { get; } = new List<(Field, Position)>();
 
         public TopRow()
         {
