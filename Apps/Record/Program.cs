@@ -50,6 +50,11 @@ namespace Record
                     // Keep the application alive until the user disconnects.
                     while (client.Proxy.IsConnected)
                     {
+                        if (Console.In.Peek() != -1)
+                        {
+                            break;
+                        }
+                        System.Threading.Thread.Sleep(100);
                     }
 
                     client.StopProxy();

@@ -171,7 +171,8 @@ namespace Extract
                             if (isOxRecording && !hasSkippedLoginPacket && reader.PeekChar() == (int)ClientPacketType.Login)
                             {
                                 hasSkippedLoginPacket = true;
-                                reader.BaseStream.Position += size - 10;
+                                reader.BaseStream.Position += size - 6;
+                                continue;
                             }
 
                             var packetSize = reader.ReadUInt16();
