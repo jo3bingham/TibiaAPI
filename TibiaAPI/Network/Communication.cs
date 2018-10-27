@@ -251,7 +251,7 @@ namespace OXGaming.TibiaAPI.Network
         public event ReceivedPacketEventHandler OnReceivedServerPreyFreeListRerollAvailabilityPacket;
         public event ReceivedPacketEventHandler OnReceivedServerPreyTimeLeftPacket;
         public event ReceivedPacketEventHandler OnReceivedServerPreyDataPacket;
-        public event ReceivedPacketEventHandler OnReceivedServerPreyRerollPricePacket;
+        public event ReceivedPacketEventHandler OnReceivedServerPreyPricesPacket;
         public event ReceivedPacketEventHandler OnReceivedServerOfferDescription;
         public event ReceivedPacketEventHandler OnReceivedServerImbuingDialogRefreshPacket;
         public event ReceivedPacketEventHandler OnReceivedServerCloseImbuingDialogPacket;
@@ -3474,7 +3474,7 @@ namespace OXGaming.TibiaAPI.Network
                                 var packet = new ServerPackets.PreyPrices();
                                 if (packet.ParseFromNetworkMessage(client, inMessage))
                                 {
-                                    packet.Forward = OnReceivedServerPreyRerollPricePacket?.Invoke(packet) ?? true;
+                                    packet.Forward = OnReceivedServerPreyPricesPacket?.Invoke(packet) ?? true;
                                     if (packet.Forward)
                                     {
                                         packet.AppendToNetworkMessage(outMessage);
