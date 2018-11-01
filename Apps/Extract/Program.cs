@@ -145,17 +145,13 @@ namespace Extract
                     filenames.Add(args[0]);
                 }
 
-                var outputDirectory = string.Empty;
-                if (args.Length >= 2)
+                if (!string.IsNullOrEmpty(_outDirectory))
                 {
-                    outputDirectory = args[1];
-                    if (!Directory.Exists(outputDirectory))
+                    if (!Directory.Exists(_outDirectory))
                     {
-                        Directory.CreateDirectory(outputDirectory);
+                        Directory.CreateDirectory(_outDirectory);
                     }
                 }
-
-                var tibiaDirectory = args.Length >= 3 ? args[2] : string.Empty;
 
                 LoadXML("ignore.xml");
                 LoadXML("replace.xml");
@@ -177,7 +173,7 @@ namespace Extract
                         }
 
                         _file = null;
-                        var client = new Client(tibiaDirectory);
+                        var client = new Client(_tibiaDirectory);
 
                         client.Proxy.OnReceivedServerLoginChallengePacket += (packet) =>
                         {
@@ -208,9 +204,9 @@ namespace Extract
 
                                 var otbmName = string.Format("{0}_{1}_{2}__{3}_{4}_{5}__{6}_{7}_{8}", fileNameData);
                                 var outputPath = $"{otbmName}.otbm";
-                                if (!string.IsNullOrEmpty(outputDirectory))
+                                if (!string.IsNullOrEmpty(_outDirectory))
                                 {
-                                    outputPath = Path.Combine(outputDirectory, outputPath);
+                                    outputPath = Path.Combine(_outDirectory, outputPath);
                                 }
 
                                 _file = InitializeMapFile(otbmName, outputPath);
