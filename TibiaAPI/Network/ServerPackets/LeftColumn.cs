@@ -1,16 +1,10 @@
-﻿using System.Collections.Generic;
-
-using OXGaming.TibiaAPI.Constants;
-using OXGaming.TibiaAPI.Utilities;
-using OXGaming.TibiaAPI.WorldMap;
+﻿using OXGaming.TibiaAPI.Constants;
 
 namespace OXGaming.TibiaAPI.Network.ServerPackets
 {
-    public class LeftColumn : ServerPacket
+    public class LeftColumn : Map
     {
         private const int MapSizeY = 14;
-
-        public List<(Field, Position)> Fields { get; } = new List<(Field, Position)>();
 
         public LeftColumn()
         {
