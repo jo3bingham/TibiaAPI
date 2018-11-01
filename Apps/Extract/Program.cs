@@ -38,6 +38,55 @@ namespace Extract
 
         private static FileStream _file;
 
+        private static string _outDirectory;
+        private static string _recording;
+        private static string _tibiaDirectory;
+
+        static bool ParseArgs(string[] args)
+        {
+            var foundRecording = false;
+            foreach (var arg in args)
+            {
+                if (!arg.Contains('=', StringComparison.CurrentCultureIgnoreCase))
+                {
+                    continue;
+                }
+
+                var splitArg = arg.Split('=');
+                if (splitArg.Length != 2)
+                {
+                    continue;
+                }
+
+                switch (splitArg[0])
+                {
+                    case "-r":
+                    case "--recording":
+                    case "--recordings":
+                        {
+                            foundRecording = true;
+                            _recording = splitArg[1];
+                        }
+                        break;
+                    case "-o":
+                    case "--outdirectory":
+                        {
+                            _outDirectory = splitArg[1];
+                        }
+                        break;
+                    case "-t":
+                    case "--tibiadirectory":
+                        {
+                            _tibiaDirectory = splitArg[1];
+                        }
+                        break;
+                    default:
+                        break;
+                }
+            }
+            return foundRecording;
+        }
+
         static void Main(string[] args)
         {
             try
@@ -45,6 +94,28 @@ namespace Extract
                 if (args.Length <= 0)
                 {
                     Console.WriteLine("Invalid argument.");
+                    return;
+                }
+
+                if (args[0] == "--help" || args[0] == "-h")
+                {
+                    Console.WriteLine("[required] -r=<path>, --recording=<path>, or --recordings=<path>: " +
+                        "<path> can either be a recording file or directory of recording files.");
+                    Console.WriteLine("[optional] -o=<path> or --outdirectory=<path>:" +
+                        "<path> is the directory you want the OTBM file to be written to. " +
+                        "If the directory does not exist, it will be created. " +
+                        "If not supplied, the OTBM file will be written to the current directory.");
+                    Console.WriteLine("[optional] -t=<path> or --tibiadirectory=<path>: " +
+                        "<path> is the package directory of the Tibia client to target. " +
+                        "By default, TibiaAPI will use the default path CipSoft uses upon installation if one isn't supplied. " +
+                        "This is useful when targeting older client versions.");
+                    return;
+                }
+
+                if (!ParseArgs(args))
+                {
+                    Console.WriteLine("A recording, or directory of recordings, was not specified.");
+                    Console.WriteLine("Use -h, or --help, for help.");
                     return;
                 }
 
