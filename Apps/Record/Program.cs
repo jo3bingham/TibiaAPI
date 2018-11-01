@@ -40,21 +40,8 @@ namespace Record
                     // Disable packet parsing as we only care about the raw, decrypted packets and speed.
                     client.StartProxy(enablePacketParsing: false);
 
-                    // This first loop could potentially be infinite, but only if the user never connects
-                    // to a game server. If that's the case, then killing the application is fine because
-                    // there's no useful data in the recording anyway.
-                    while (!client.Proxy.IsConnected)
+                    while (Console.ReadLine() != "quit")
                     {
-                    }
-
-                    // Keep the application alive until the user disconnects.
-                    while (client.Proxy.IsConnected)
-                    {
-                        if (Console.In.Peek() != -1)
-                        {
-                            break;
-                        }
-                        System.Threading.Thread.Sleep(100);
                     }
 
                     client.StopProxy();
