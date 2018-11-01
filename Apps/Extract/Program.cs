@@ -42,9 +42,8 @@ namespace Extract
         private static string _recording;
         private static string _tibiaDirectory;
 
-        static bool ParseArgs(string[] args)
+        static void ParseArgs(string[] args)
         {
-            var foundRecording = false;
             foreach (var arg in args)
             {
                 if (!arg.Contains('=', StringComparison.CurrentCultureIgnoreCase))
@@ -64,7 +63,6 @@ namespace Extract
                     case "--recording":
                     case "--recordings":
                         {
-                            foundRecording = true;
                             _recording = splitArg[1];
                         }
                         break;
@@ -84,7 +82,6 @@ namespace Extract
                         break;
                 }
             }
-            return foundRecording;
         }
 
         static void Main(string[] args)
@@ -112,7 +109,8 @@ namespace Extract
                     return;
                 }
 
-                if (!ParseArgs(args))
+                ParseArgs(args);
+                if (string.IsNullOrEmpty(_recording))
                 {
                     Console.WriteLine("A recording, or directory of recordings, was not specified.");
                     Console.WriteLine("Use -h, or --help, for help.");
