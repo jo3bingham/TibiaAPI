@@ -1,17 +1,11 @@
-﻿using System.Collections.Generic;
-
-using OXGaming.TibiaAPI.Constants;
-using OXGaming.TibiaAPI.Utilities;
-using OXGaming.TibiaAPI.WorldMap;
+﻿using OXGaming.TibiaAPI.Constants;
 
 namespace OXGaming.TibiaAPI.Network.ServerPackets
 {
-    public class TopFloor : ServerPacket
+    public class TopFloor : Map
     {
         private const int GroundLayer = 7;
         private const int UndergroundLayer = 2;
-
-        public List<(Field, Position)> Fields { get; } = new List<(Field, Position)>();
 
         public TopFloor()
         {

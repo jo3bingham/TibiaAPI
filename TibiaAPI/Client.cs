@@ -1,31 +1,36 @@
 ﻿using System;
 using System.IO;
+using System.Runtime.InteropServices;
 
 namespace OXGaming.TibiaAPI
 {
     public class Client : IDisposable
     {
+        private string _appearanceDatFile;
+
         public Appearances.AppearanceStorage AppearanceStorage { get; } = new Appearances.AppearanceStorage();
 
         public WorldMap.WorldMapStorage WorldMapStorage { get; } = new WorldMap.WorldMapStorage();
 
         public Network.Connection Proxy { get; }
 
-        public Client(string datFileName)
+        public string Version { get; private set; }
+
+        public Client(string tibiaDirectory = "")
         {
-            if (string.IsNullOrEmpty(datFileName))
+            if (tibiaDirectory == null)
             {
-                throw new ArgumentNullException(nameof(datFileName));
+                throw new ArgumentNullException(nameof(tibiaDirectory));
             }
 
-            if (!File.Exists(datFileName))
+            if (!Initialize(tibiaDirectory))
             {
-                throw new FileNotFoundException("Tibia dat file not found.", datFileName);
+                throw new Exception("Failed to initialize.");
             }
 
-            using (var datFile = File.OpenRead(datFileName))
+            using (var datFileStream = File.OpenRead(_appearanceDatFile))
             {
-                AppearanceStorage.LoadAppearances(datFile);
+                AppearanceStorage.LoadAppearances(datFileStream);
             }
 
             Proxy = new Network.Connection(this);
@@ -39,6 +44,101 @@ namespace OXGaming.TibiaAPI
         public void StopProxy()
         {
             Proxy.Stop();
+        }
+
+        private bool Initialize(string tibiaDirectory = "")
+        {
+            if (string.IsNullOrEmpty(tibiaDirectory))
+            {
+                if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+                {
+                    tibiaDirectory = Path.Combine(new string[] {
+                        "~", ".local", "share", "CipSoft GmbH", "Tibia", "packages", "Tibia" });
+                }
+                else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+                {
+                    tibiaDirectory = Path.Combine(new string[] {
+                        Environment.GetFolderPath(Environment.SpecialFolder.UserProfile),
+                        "Library", "Application Support", "CipSoft GmbH", "Tibia", "packages", "Tibia.app" });
+                }
+                else if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                {
+                    tibiaDirectory = Path.Combine(new string[] {
+                        Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
+                        "Tibia", "packages", "Tibia" });
+                }
+            }
+
+            if (string.IsNullOrEmpty(tibiaDirectory) || !Directory.Exists(tibiaDirectory))
+            {
+                Console.WriteLine($"Directory does not exist: {tibiaDirectory}");
+                return false;
+            }
+
+            var packageJsonFile = Path.Combine(tibiaDirectory, "package.json");
+            if (!File.Exists(packageJsonFile))
+            {
+                Console.WriteLine($"package.json file does not exist: {packageJsonFile}");
+                return false;
+            }
+
+            var packageJson = string.Empty;
+            using (var reader = new StreamReader(packageJsonFile))
+            {
+                packageJson = reader.ReadToEnd();
+                if (string.IsNullOrEmpty(packageJson))
+                {
+                    Console.WriteLine($"Failed to read package.json file.");
+                    return false;
+                }
+            }
+
+            dynamic packageData = Newtonsoft.Json.JsonConvert.DeserializeObject(packageJson);
+            if (packageData == null || packageData.version == null)
+            {
+                Console.WriteLine("Failed to deserialize package.json file.");
+                return false;
+            }
+
+            Version = packageData.version;
+            if (string.IsNullOrEmpty(Version))
+            {
+                Console.WriteLine($"Failed to get client version.");
+                return false;
+            }
+
+            var assetsDirectory = string.Empty;
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+            {
+                assetsDirectory = Path.Combine(new string[] { tibiaDirectory, "Contents", "Resources", "assets" });
+            }
+            else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux) || RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            {
+                assetsDirectory = Path.Combine(tibiaDirectory, "assets");
+            }
+
+            if (!Directory.Exists(assetsDirectory))
+            {
+                Console.WriteLine($"Assets directory does not exist: {assetsDirectory}");
+                return false;
+            }
+
+            var appearanceDatFiles = Directory.GetFiles(assetsDirectory, "*appearances-*.dat");
+            if (appearanceDatFiles.Length != 1)
+            {
+                Console.WriteLine($"Invalid number of appearances dat files: {appearanceDatFiles.Length}");
+                return false;
+            }
+
+            _appearanceDatFile = appearanceDatFiles[0];
+
+            if (string.IsNullOrEmpty(_appearanceDatFile) || !File.Exists(_appearanceDatFile))
+            {
+                Console.WriteLine($"Appearances .dat file does not exist: {_appearanceDatFile}");
+                return false;
+            }
+
+            return true;
         }
 
         #region IDisposable Support

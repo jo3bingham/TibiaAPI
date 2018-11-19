@@ -1,17 +1,12 @@
-﻿using System.Collections.Generic;
-
-using OXGaming.TibiaAPI.Constants;
+﻿using OXGaming.TibiaAPI.Constants;
 using OXGaming.TibiaAPI.Utilities;
-using OXGaming.TibiaAPI.WorldMap;
 
 namespace OXGaming.TibiaAPI.Network.ServerPackets
 {
-    public class FullMap : ServerPacket
+    public class FullMap : Map
     {
         private const int MapSizeX = 18;
         private const int MapSizeY = 14;
-
-        public List<(Field, Position)> Fields { get; } = new List<(Field, Position)>();
 
         public Position Position { get; set; }
 

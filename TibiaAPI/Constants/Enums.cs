@@ -6,6 +6,12 @@
         Sell = 1
     }
 
+    public enum PacketType
+    {
+        Client = 0,
+        Server = 1
+    }
+
     public enum MarketRequestType
     {
         OwnOffers = 65534,
