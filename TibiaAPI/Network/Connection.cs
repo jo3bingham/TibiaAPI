@@ -18,6 +18,10 @@ namespace OXGaming.TibiaAPI.Network
     /// </summary>
     public class Connection : Communication, IDisposable
     {
+        private const string loginWebService1100 = "https://secure.tibia.com/services/login.php";
+        private const string loginWebService1132 = "https://secure.tibia.com/services/clientservices.php";
+        private const string loginWebService1186 = "https://www.tibia.com/services/clientservices.php";
+
         private readonly object _clientSendLock = new object();
         private readonly object _serverSendLock = new object();
         private readonly object _clientSequenceNumberLock = new object();
@@ -854,7 +858,7 @@ namespace OXGaming.TibiaAPI.Network
             {
                 var postContent = new StringContent(content, Encoding.UTF8, "application/json");
                 var response = await _httpClient
-                    .PostAsync(new Uri("https://secure.tibia.com/services/clientservices.php"), postContent)
+                    .PostAsync(new Uri(GetLoginWebService()), postContent)
                     .ConfigureAwait(false);
                 response.EnsureSuccessStatusCode();
                 return await response.Content.ReadAsStringAsync().ConfigureAwait(false);
@@ -865,6 +869,21 @@ namespace OXGaming.TibiaAPI.Network
                 // TODO: Log exception.
                 return string.Empty;
             }
+        }
+
+        private string GetLoginWebService()
+        {
+            if (_client.VersionNumber >= 11867253)
+            {
+                return loginWebService1186;
+            }
+
+            if (_client.VersionNumber >= 11325206)
+            {
+                return loginWebService1132;
+            }
+
+            return loginWebService1100;
         }
 
         #region IDisposable Support

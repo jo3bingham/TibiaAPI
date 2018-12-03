@@ -20,6 +20,7 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
                 return false;
             }
 
+            // TODO: Figure out this unknown.
             Unknown = message.ReadUInt16();
             StoreServiceType = (StoreServiceType)message.ReadByte();
             return true;

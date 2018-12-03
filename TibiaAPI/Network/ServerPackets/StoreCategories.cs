@@ -16,7 +16,6 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
                 return false;
             }
 
-            // TODO
             var numberOfShopCategories = message.ReadUInt16();
             for (var i = 0; i < numberOfShopCategories; ++i)
             {

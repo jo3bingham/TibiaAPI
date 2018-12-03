@@ -23,6 +23,7 @@ namespace OXGaming.TibiaAPI.Network.ClientPackets
                 return false;
             }
 
+            // TODO: Figure out this unknown.
             Unknown = message.ReadByte();
             Rewards.Capacity = message.ReadByte();
             for (var i = 0; i < Rewards.Capacity; ++i)
@@ -38,13 +39,13 @@ namespace OXGaming.TibiaAPI.Network.ClientPackets
         {
             message.Write((byte)ClientPacketType.CollectDailyReward);
             message.Write(Unknown);
-            var count = (byte)Math.Min(Rewards.Count, byte.MaxValue);
-            message.Write(count);
+            var count = Math.Min(Rewards.Count, byte.MaxValue);
+            message.Write((byte)count);
             for (var i = 0; i < count; ++i)
             {
-                var reward = Rewards[i];
-                message.Write(reward.ObjectId);
-                message.Write(reward.Amount);
+                var (ObjectId, Amount) = Rewards[i];
+                message.Write(ObjectId);
+                message.Write(Amount);
             }
         }
     }

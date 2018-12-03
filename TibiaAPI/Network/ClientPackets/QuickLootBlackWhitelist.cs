@@ -1,13 +1,15 @@
-﻿using OXGaming.TibiaAPI.Constants;
+﻿using System;
+using System.Collections.Generic;
+
+using OXGaming.TibiaAPI.Constants;
 
 namespace OXGaming.TibiaAPI.Network.ClientPackets
 {
     public class QuickLootBlackWhitelist : ClientPacket
     {
-        public byte LootListType { get; set; }
+        public List<ushort> Items { get; } = new List<ushort>();
 
-        // This is more-than-likely a count variable.
-        public ushort Unknown { get; set; }
+        public byte LootListType { get; set; }
 
         public QuickLootBlackWhitelist()
         {
@@ -22,7 +24,11 @@ namespace OXGaming.TibiaAPI.Network.ClientPackets
             }
 
             LootListType = message.ReadByte();
-            Unknown = message.ReadUInt16();
+            Items.Capacity = message.ReadUInt16();
+            for (var i = 0; i < Items.Capacity; ++i)
+            {
+                Items.Add(message.ReadUInt16());
+            }
             return true;
         }
 
@@ -30,7 +36,12 @@ namespace OXGaming.TibiaAPI.Network.ClientPackets
         {
             message.Write((byte)ClientPacketType.QuickLootBlackWhitelist);
             message.Write(LootListType);
-            message.Write(Unknown);
+            var count = Math.Min(Items.Count, ushort.MaxValue);
+            message.Write((ushort)count);
+            for (var i = 0; i < count; ++i)
+            {
+                message.Write(Items[i]);
+            }
         }
     }
 }

@@ -10,7 +10,6 @@ namespace OXGaming.TibiaAPI.Network
     {
         public delegate bool ReceivedPacketEventHandler(Packet packet);
 
-        public event ReceivedPacketEventHandler OnReceivedClientLoginPacket;
         public event ReceivedPacketEventHandler OnReceivedClientSecondaryLoginPacket;
         public event ReceivedPacketEventHandler OnReceivedClientEnterWorldPacket;
         public event ReceivedPacketEventHandler OnReceivedClientQuitGamePacket;
@@ -188,7 +187,6 @@ namespace OXGaming.TibiaAPI.Network
         public event ReceivedPacketEventHandler OnReceivedServerCreaturePartyPacket;
         public event ReceivedPacketEventHandler OnReceivedServerCreatureUnpassPacket;
         public event ReceivedPacketEventHandler OnReceivedServerCreatureMarksPacket;
-        public event ReceivedPacketEventHandler OnReceivedServerCreaturePvpHelpersPacket;
         public event ReceivedPacketEventHandler OnReceivedServerCreatureTypePacket;
         public event ReceivedPacketEventHandler OnReceivedServerEditTextPacket;
         public event ReceivedPacketEventHandler OnReceivedServerEditListPacket;
@@ -253,7 +251,7 @@ namespace OXGaming.TibiaAPI.Network
         public event ReceivedPacketEventHandler OnReceivedServerPreyFreeListRerollAvailabilityPacket;
         public event ReceivedPacketEventHandler OnReceivedServerPreyTimeLeftPacket;
         public event ReceivedPacketEventHandler OnReceivedServerPreyDataPacket;
-        public event ReceivedPacketEventHandler OnReceivedServerPreyRerollPricePacket;
+        public event ReceivedPacketEventHandler OnReceivedServerPreyPricesPacket;
         public event ReceivedPacketEventHandler OnReceivedServerOfferDescription;
         public event ReceivedPacketEventHandler OnReceivedServerImbuingDialogRefreshPacket;
         public event ReceivedPacketEventHandler OnReceivedServerCloseImbuingDialogPacket;
@@ -301,19 +299,6 @@ namespace OXGaming.TibiaAPI.Network
                     currentPacket = (ClientPacketType)inMessage.PeekByte();
                     switch (currentPacket)
                     {
-                        case ClientPacketType.Login:
-                            {
-                                var packet = new ClientPackets.Login();
-                                if (packet.ParseFromNetworkMessage(client, inMessage))
-                                {
-                                    packet.Forward = OnReceivedClientLoginPacket?.Invoke(packet) ?? true;
-                                    if (packet.Forward)
-                                    {
-                                        packet.AppendToNetworkMessage(outMessage);
-                                    }
-                                }
-                            }
-                            break;
                         case ClientPacketType.SecondaryLogin:
                             {
                                 var packet = new ClientPackets.SecondaryLogin();
@@ -2652,19 +2637,6 @@ namespace OXGaming.TibiaAPI.Network
                                 }
                             }
                             break;
-                        case ServerPacketType.CreaturePvpHelpers:
-                            {
-                                var packet = new ServerPackets.CreaturePvpHelpers();
-                                if (packet.ParseFromNetworkMessage(client, inMessage))
-                                {
-                                    packet.Forward = OnReceivedServerCreaturePvpHelpersPacket?.Invoke(packet) ?? true;
-                                    if (packet.Forward)
-                                    {
-                                        packet.AppendToNetworkMessage(outMessage);
-                                    }
-                                }
-                            }
-                            break;
                         case ServerPacketType.CreatureType:
                             {
                                 var packet = new ServerPackets.CreatureType();
@@ -3497,12 +3469,12 @@ namespace OXGaming.TibiaAPI.Network
                                 }
                             }
                             break;
-                        case ServerPacketType.PreyRerollPrice:
+                        case ServerPacketType.PreyPrices:
                             {
-                                var packet = new ServerPackets.PreyRerollPrice();
+                                var packet = new ServerPackets.PreyPrices();
                                 if (packet.ParseFromNetworkMessage(client, inMessage))
                                 {
-                                    packet.Forward = OnReceivedServerPreyRerollPricePacket?.Invoke(packet) ?? true;
+                                    packet.Forward = OnReceivedServerPreyPricesPacket?.Invoke(packet) ?? true;
                                     if (packet.Forward)
                                     {
                                         packet.AppendToNetworkMessage(outMessage);

@@ -55,8 +55,9 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
             message.Write(Icon);
             message.Write(NotifyOnLogin);
             message.Write(ConnectionStatus);
-            var count = (byte)Math.Min(GroupsIds.Count, byte.MaxValue);
-            message.Write(count);
+
+            var count = Math.Min(GroupsIds.Count, byte.MaxValue);
+            message.Write((byte)count);
             for (var i = 0; i < count; ++i)
             {
                 message.Write(GroupsIds[i]);

@@ -19,7 +19,7 @@ namespace OXGaming.TibiaAPI.Network.ClientPackets
             }
 
             CreatureId = message.ReadUInt32();
-            message.ReadUInt32(); // Creature id again.
+            message.ReadUInt32(); // Creature ID again.
             return true;
         }
 

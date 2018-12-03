@@ -48,14 +48,16 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
             message.Write((byte)ServerPacketType.OpenOwnChannel);
             message.Write(ChannelId);
             message.Write(ChannelName);
-            var count = (ushort)Math.Min(JoinedPlayers.Count, ushort.MaxValue);
-            message.Write(count);
+
+            var count = Math.Min(JoinedPlayers.Count, ushort.MaxValue);
+            message.Write((ushort)count);
             for (var i = 0; i < count; ++i)
             {
                 message.Write(JoinedPlayers[i]);
             }
-            count = (ushort)Math.Min(InvitedPlayers.Count, ushort.MaxValue);
-            message.Write(count);
+
+            count = Math.Min(InvitedPlayers.Count, ushort.MaxValue);
+            message.Write((ushort)count);
             for (var i = 0; i < count; ++i)
             {
                 message.Write(InvitedPlayers[i]);

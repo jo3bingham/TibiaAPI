@@ -81,8 +81,8 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
                 }
             }
 
-            var count = (byte)Math.Min(BuyStatistics.Count, byte.MaxValue);
-            message.Write(count);
+            var count = Math.Min(BuyStatistics.Count, byte.MaxValue);
+            message.Write((byte)count);
             for (var i = 0; i < BuyStatistics.Count; ++i)
             {
                 var (TotalTransactions, TotalPrice, MaximumPrice, MinimumPrice) = BuyStatistics[i];
@@ -92,8 +92,8 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
                 message.Write(MinimumPrice);
             }
 
-            count = (byte)Math.Min(SellStatistics.Count, byte.MaxValue);
-            message.Write(count);
+            count = Math.Min(SellStatistics.Count, byte.MaxValue);
+            message.Write((byte)count);
             for (var i = 0; i < SellStatistics.Count; ++i)
             {
                 var (TotalTransactions, TotalPrice, MaximumPrice, MinimumPrice) = SellStatistics[i];

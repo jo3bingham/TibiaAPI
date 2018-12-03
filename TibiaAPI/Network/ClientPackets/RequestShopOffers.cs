@@ -10,7 +10,7 @@ namespace OXGaming.TibiaAPI.Network.ClientPackets
 
         public uint OfferId { get; set; }
 
-        public ushort Unknown { get; set; }
+        public uint Unknown { get; set; }
 
         public RequestShopOffers()
         {
@@ -34,7 +34,8 @@ namespace OXGaming.TibiaAPI.Network.ClientPackets
                 Category = message.ReadString();
             }
 
-            Unknown = message.ReadUInt16();
+            // TODO: Figure out this unknown.
+            Unknown = message.ReadUInt32();
             return true;
         }
 

@@ -2,30 +2,37 @@
 
 namespace OXGaming.TibiaAPI.Network.ServerPackets
 {
-    public class PreyRerollPrice : ServerPacket
+    public class PreyPrices : ServerPacket
     {
         public uint ListRerollPrice { get; set; }
 
-        public PreyRerollPrice()
+        public byte AutomaticBonusReroll { get; set; }
+        public byte LockPrey { get; set; }
+
+        public PreyPrices()
         {
-            PacketType = ServerPacketType.PreyRerollPrice;
+            PacketType = ServerPacketType.PreyPrices;
         }
 
         public override bool ParseFromNetworkMessage(Client client, NetworkMessage message)
         {
-            if (message.ReadByte() != (byte)ServerPacketType.PreyRerollPrice)
+            if (message.ReadByte() != (byte)ServerPacketType.PreyPrices)
             {
                 return false;
             }
 
             ListRerollPrice = message.ReadUInt32();
+            AutomaticBonusReroll = message.ReadByte();
+            LockPrey = message.ReadByte();
             return true;
         }
 
         public override void AppendToNetworkMessage(NetworkMessage message)
         {
-            message.Write((byte)ServerPacketType.PreyRerollPrice);
+            message.Write((byte)ServerPacketType.PreyPrices);
             message.Write(ListRerollPrice);
+            message.Write(AutomaticBonusReroll);
+            message.Write(LockPrey);
         }
     }
 }

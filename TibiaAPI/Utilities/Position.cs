@@ -24,5 +24,10 @@
         {
             return new Position(X, Y, Z);
         }
+
+        public override string ToString()
+        {
+            return $"{X} {Y} {Z}";
+        }
     }
 }

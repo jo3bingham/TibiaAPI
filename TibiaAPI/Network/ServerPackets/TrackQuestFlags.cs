@@ -61,8 +61,8 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
             if (IsPremium)
             {
                 message.Write(AvailableTrackingSlots);
-                var count = (byte)Math.Min(TrackedQuests.Count, byte.MaxValue);
-                message.Write(count);
+                var count = Math.Min(TrackedQuests.Count, byte.MaxValue);
+                message.Write((byte)count);
                 for (var i = 0; i < count; ++i)
                 {
                     var quest = TrackedQuests[i];

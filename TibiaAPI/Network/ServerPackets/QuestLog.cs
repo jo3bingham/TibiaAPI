@@ -7,7 +7,8 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
 {
     public class QuestLog : ServerPacket
     {
-        public List<(ushort Id, string Name, bool IsCompleted)> Quests { get; } = new List<(ushort Id, string Name, bool IsCompleted)>();
+        public List<(ushort Id, string Name, bool IsCompleted)> Quests { get; } =
+            new List<(ushort Id, string Name, bool IsCompleted)>();
 
         public QuestLog()
         {
@@ -35,14 +36,14 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
         public override void AppendToNetworkMessage(NetworkMessage message)
         {
             message.Write((byte)ServerPacketType.QuestLog);
-            var count = (ushort)Math.Min(Quests.Count, ushort.MaxValue);
-            message.Write(count);
+            var count = Math.Min(Quests.Count, ushort.MaxValue);
+            message.Write((ushort)count);
             for (var i = 0; i < count; ++i)
             {
-                var quest = Quests[i];
-                message.Write(quest.Id);
-                message.Write(quest.Name);
-                message.Write(quest.IsCompleted);
+                var (Id, Name, IsCompleted) = Quests[i];
+                message.Write(Id);
+                message.Write(Name);
+                message.Write(IsCompleted);
             }
         }
     }

@@ -38,6 +38,7 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
                 MonsterRaces.Add((name, total, known));
             }
 
+            // Todo: Figure out this unknown.
             Unknown1 = message.ReadByte(); // Always 216?
             CharmPoints = message.ReadUInt32();
 

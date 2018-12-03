@@ -25,10 +25,11 @@ namespace OXGaming.TibiaAPI.Network.ClientPackets
             }
 
             InspectionType = message.ReadByte();
-            if (InspectionType == 3) // cyclopedia
+            if (InspectionType == 3) // Cyclopedia
             {
                 ObjectId = message.ReadUInt16();
-                Unknown = message.ReadByte(); // always 0 in my tests
+                // TODO: Figure out this unknown. Always 0 in my tests. Probably "data".
+                Unknown = message.ReadByte();
             }
             else
             {

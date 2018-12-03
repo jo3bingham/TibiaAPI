@@ -86,8 +86,8 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
             message.Write(Addons);
             message.Write(MountId);
 
-            var count = (byte)Math.Min(Outfits.Count, byte.MaxValue);
-            message.Write(count);
+            var count = Math.Min(Outfits.Count, byte.MaxValue);
+            message.Write((byte)count);
             for (var i = 0; i < count; ++i)
             {
                 var outfit = Outfits[i];
@@ -101,8 +101,8 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
                 }
             }
 
-            count = (byte)Math.Min(Mounts.Count, byte.MaxValue);
-            message.Write(count);
+            count = Math.Min(Mounts.Count, byte.MaxValue);
+            message.Write((byte)count);
             for (var i = 0; i < count; ++i)
             {
                 var mount = Mounts[i];

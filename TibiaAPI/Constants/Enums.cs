@@ -149,6 +149,19 @@
         SouthEast = 8
     }
 
+    public enum CyclopediaMapDataType
+    {
+        DiscoveryData = 1,
+        ActiveRaid = 2,
+        ImminentRaidMainArea = 3,
+        ImminentRaidSubArea = 4,
+        SetDiscoveryArea = 5,
+        Passage = 6,
+        SubAreaMonsters = 7,
+        Donations = 9,
+        SetCurrentArea = 10
+    }
+
     public enum MarketDetailField
     {
         Armor = 0,
@@ -427,7 +440,6 @@
         CreatureParty = 0x91,
         CreatureUnpass = 0x92,
         CreatureMarks = 0x93,
-        CreaturePvpHelpers = 0x94,
         CreatureType = 0x95,
         EditText = 0x96,
         EditList = 0x97,
@@ -492,7 +504,7 @@
         PreyFreeListRerollAvailability = 0xE6,
         PreyTimeLeft = 0xE7,
         PreyData = 0xE8,
-        PreyRerollPrice = 0xE9,
+        PreyPrices = 0xE9,
         OfferDescription = 0xEA,
         ImbuingDialogRefresh = 0xEB,
         CloseImbuingDialog = 0xEC,

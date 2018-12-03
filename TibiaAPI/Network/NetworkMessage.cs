@@ -251,7 +251,7 @@ namespace OXGaming.TibiaAPI.Network
         public string ReadString()
         {
             var length = ReadUInt16();
-            return Encoding.ASCII.GetString(ReadBytes(length));
+            return length == 0 ? string.Empty : Encoding.ASCII.GetString(ReadBytes(length));
         }
 
         public Position ReadPosition(int x = -1, int y = -1, int z = -1)
@@ -289,15 +289,13 @@ namespace OXGaming.TibiaAPI.Network
                 var addons = ReadByte();
                 return client.AppearanceStorage.CreateOutfitInstance(outfitId, colorHead, colorTorso, colorLegs, colorDetail, addons);
             }
-            else
+
+            var itemId = ReadUInt16();
+            if (itemId == 0)
             {
-                var itemId = ReadUInt16();
-                if (itemId == 0)
-                {
-                    return client.AppearanceStorage.CreateOutfitInstance(0, 0, 0, 0, 0, 0);
-                }
-                return client.AppearanceStorage.CreateObjectInstance(itemId, 0);
+                return client.AppearanceStorage.CreateOutfitInstance(0, 0, 0, 0, 0, 0);
             }
+            return client.AppearanceStorage.CreateObjectInstance(itemId, 0);
         }
 
         public ObjectInstance ReadObjectInstance(Client client, ushort id = 0)
@@ -309,7 +307,7 @@ namespace OXGaming.TibiaAPI.Network
 
             if (id == 0)
             {
-                return null;
+                return new ObjectInstance(id, null);
             }
 
             if (id <= 99)
@@ -326,7 +324,7 @@ namespace OXGaming.TibiaAPI.Network
             var objectType = objectInstance.Type;
             if (objectType == null)
             {
-                throw new Exception($"[NetworkMessage.ReadObjectInstance] Invalid object id: {id}");
+                return objectInstance;
             }
 
             if (objectType.Flags.Liquidcontainer || objectType.Flags.Liquidpool || objectType.Flags.Cumulative)
@@ -871,12 +869,17 @@ namespace OXGaming.TibiaAPI.Network
 
         public void Write(ObjectInstance value)
         {
-            if (value == null || value.Type == null)
+            if (value == null)
             {
                 throw new ArgumentNullException(nameof(value));
             }
 
             Write((ushort)value.Id);
+
+            if (value.Type == null)
+            {
+                return;
+            }
 
             if (value.Type.Flags.Liquidcontainer || value.Type.Flags.Liquidpool || value.Type.Flags.Cumulative)
             {

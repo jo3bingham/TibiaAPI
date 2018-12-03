@@ -1,11 +1,12 @@
 ﻿using OXGaming.TibiaAPI.Constants;
+using OXGaming.TibiaAPI.Utilities;
 
 namespace OXGaming.TibiaAPI.Network.ClientPackets
 {
     public class MoveObject : ClientPacket
     {
-        //public Position FromPosition { get; set; }
-        //public Position ToPosition { get; set; }
+        public Position FromPosition { get; set; }
+        public Position ToPosition { get; set; }
 
         public ushort ObjectId { get; set; }
 
@@ -24,10 +25,10 @@ namespace OXGaming.TibiaAPI.Network.ClientPackets
                 return false;
             }
 
-            //FromPosition = message.ReadPosition();
+            FromPosition = message.ReadPosition();
             ObjectId = message.ReadUInt16();
             StackPosition = message.ReadByte();
-            //ToPosition = message.ReadPosition();
+            ToPosition = message.ReadPosition();
             Amount = message.ReadByte();
             return true;
         }
@@ -35,10 +36,10 @@ namespace OXGaming.TibiaAPI.Network.ClientPackets
         public override void AppendToNetworkMessage(NetworkMessage message)
         {
             message.Write((byte)ClientPacketType.MoveObject);
-            //message.WritePosition(FromPosition);
+            message.Write(FromPosition);
             message.Write(ObjectId);
             message.Write(StackPosition);
-            //message.WritePosition(ToPosition);
+            message.Write(ToPosition);
             message.Write(Amount);
         }
     }

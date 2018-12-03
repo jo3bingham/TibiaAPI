@@ -32,8 +32,8 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
         public override void AppendToNetworkMessage(NetworkMessage message)
         {
             message.Write((byte)ServerPacketType.Trappers);
-            var count = (byte)Math.Min(CreatureIds.Count, byte.MaxValue);
-            message.Write(count);
+            var count = Math.Min(CreatureIds.Count, byte.MaxValue);
+            message.Write((byte)count);
             for (var i = 0; i < count; ++i)
             {
                 message.Write(CreatureIds[i]);

@@ -38,8 +38,8 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
         {
             message.Write((byte)ServerPacketType.PlayerGoods);
             message.Write(Money);
-            var count = (byte)Math.Min(Goods.Count, byte.MaxValue);
-            message.Write(count);
+            var count = Math.Min(Goods.Count, byte.MaxValue);
+            message.Write((byte)count);
             for (var i = 0; i < count; ++i)
             {
                 var (Id, Count) = Goods[i];
