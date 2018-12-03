@@ -16,6 +16,8 @@ namespace OXGaming.TibiaAPI
 
         public string Version { get; private set; }
 
+        public uint VersionNumber { get; private set; } = 0;
+
         public Client(string tibiaDirectory = "")
         {
             if (tibiaDirectory == null)
@@ -105,6 +107,14 @@ namespace OXGaming.TibiaAPI
             {
                 Console.WriteLine($"Failed to get client version.");
                 return false;
+            }
+            if (uint.TryParse(Version.Replace(".", ""), out var versionNumber))
+            {
+                VersionNumber = versionNumber;
+            }
+            else
+            {
+                Console.WriteLine($"Failed to convert the client version to a numerical value: {Version}");
             }
 
             var assetsDirectory = string.Empty;
