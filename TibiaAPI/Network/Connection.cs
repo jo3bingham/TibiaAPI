@@ -46,7 +46,6 @@ namespace OXGaming.TibiaAPI.Network
 
         private ZStream _zStream = new ZStream();
 
-        private LoginData _loginData;
 
         private Socket _clientSocket;
         private Socket _serverSocket;
@@ -55,6 +54,8 @@ namespace OXGaming.TibiaAPI.Network
         private Thread _serverSendThread;
 
         private TcpListener _tcpListener;
+
+        private dynamic _loginData;
 
         private uint _clientSequenceNumber = 1;
         private uint _serverSequenceNumber = 1;
@@ -247,7 +248,7 @@ namespace OXGaming.TibiaAPI.Network
         /// connection requests from the Tibia client.
         /// </summary>
         /// <returns></returns>
-        internal bool Start(bool enablePacketParsing = true)
+        internal bool Start(bool enablePacketParsing = true, int httpPort = 80)
         {
             if (_isStarted)
             {
@@ -261,11 +262,10 @@ namespace OXGaming.TibiaAPI.Network
                     _tcpListener = new TcpListener(IPAddress.Loopback, 0);
                 }
 
-                if (!_httpListener.Prefixes.Contains("http://127.0.0.1:80/"))
+                var uriPrefix = $"http://127.0.0.1:{httpPort}/";
+                if (!_httpListener.Prefixes.Contains(uriPrefix))
                 {
-                    // The HTTP listener must be listening on port 80 as the
-                    // Tibia client sends HTTP requests over port 80.
-                    _httpListener.Prefixes.Add("http://127.0.0.1:80/");
+                    _httpListener.Prefixes.Add(uriPrefix);
                 }
 
                 //_zStream.deflateInit(zlibConst.Z_DEFAULT_COMPRESSION, -15);
@@ -544,24 +544,24 @@ namespace OXGaming.TibiaAPI.Network
                 }
 
                 // Login data is the only thing we have to modify, everything else can be piped through.
-                var loginData = JsonConvert.DeserializeObject<LoginData>(response);
-                if (loginData != null && loginData.Session != null)
+                dynamic loginData = JsonConvert.DeserializeObject(response);
+                if (loginData != null && loginData.session != null)
                 {
                     // Change the address and port of each game world to that of the TCP listener so that
                     // the Tibia client connects to the TCP listener instead of a game world.
                     var address = ((IPEndPoint)_tcpListener.LocalEndpoint).Address.ToString();
                     var port = ((IPEndPoint)_tcpListener.LocalEndpoint).Port;
-                    foreach (var world in loginData.PlayData.Worlds)
+                    foreach (var world in loginData.playdata.worlds)
                     {
-                        world.ExternalAddressProtected = address;
-                        world.ExternalAddressUnprotected = address;
-                        world.ExternalPortProtected = port;
-                        world.ExternalPortUnprotected = port;
+                        world.externaladdressprotected = address;
+                        world.externaladdressunprotected = address;
+                        world.externalportprotected = port;
+                        world.externalportunprotected = port;
                     }
 
                     // Store the original login data so when the Tibia client tries to connect to a game world
                     // the server socket can recall the address and port to connect to.
-                    _loginData = JsonConvert.DeserializeObject<LoginData>(response);
+                    _loginData = JsonConvert.DeserializeObject(response);
                     response = JsonConvert.SerializeObject(loginData);
                 }
 
@@ -653,18 +653,22 @@ namespace OXGaming.TibiaAPI.Network
                 }
 
                 var worldName = Encoding.UTF8.GetString(_clientInMessage.GetBuffer(), 0, count - 1);
-                var world = _loginData.PlayData.Worlds.Find(w => w.Name.Equals(worldName, StringComparison.CurrentCultureIgnoreCase));
-                if (world == null)
+                foreach (var world in _loginData.playdata.worlds)
                 {
-                    throw new Exception($"[Connection.BeginReceiveWorldNameCallback] Login data not found for world: {worldName}.");
+                    var name = (string)world.name;
+                    if (name.Equals(worldName, StringComparison.CurrentCultureIgnoreCase))
+                    {
+                        _clientSocket.BeginReceive(_clientInMessage.GetBuffer(), 0, 2, SocketFlags.None, new AsyncCallback(BeginReceiveClientCallback), 0);
+
+                        _serverSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+                        _serverSocket.Connect((string)world.externaladdressprotected, (int)world.externalportprotected);
+                        _serverSocket.Send(_clientInMessage.GetBuffer(), 0, count, SocketFlags.None);
+                        _serverSocket.BeginReceive(_serverInMessage.GetBuffer(), 0, 2, SocketFlags.None, new AsyncCallback(BeginReceiveServerCallback), 0);
+                        return;
+                    }
                 }
 
-                _clientSocket.BeginReceive(_clientInMessage.GetBuffer(), 0, 2, SocketFlags.None, new AsyncCallback(BeginReceiveClientCallback), 0);
-
-                _serverSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-                _serverSocket.Connect(world.ExternalAddressProtected, world.ExternalPortProtected);
-                _serverSocket.Send(_clientInMessage.GetBuffer(), 0, count, SocketFlags.None);
-                _serverSocket.BeginReceive(_serverInMessage.GetBuffer(), 0, 2, SocketFlags.None, new AsyncCallback(BeginReceiveServerCallback), 0);
+                throw new Exception($"[Connection.BeginReceiveWorldNameCallback] Login data not found for world: {worldName}.");
             }
             catch (SocketException)
             {

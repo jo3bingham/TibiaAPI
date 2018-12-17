@@ -63,19 +63,19 @@ namespace Extract
                     case "--recording":
                     case "--recordings":
                         {
-                            _recording = splitArg[1];
+                            _recording = splitArg[1].Replace("\"", "");
                         }
                         break;
                     case "-o":
                     case "--outdirectory":
                         {
-                            _outDirectory = splitArg[1];
+                            _outDirectory = splitArg[1].Replace("\"", "");
                         }
                         break;
                     case "-t":
                     case "--tibiadirectory":
                         {
-                            _tibiaDirectory = splitArg[1];
+                            _tibiaDirectory = splitArg[1].Replace("\"", "");
                         }
                         break;
                     default:

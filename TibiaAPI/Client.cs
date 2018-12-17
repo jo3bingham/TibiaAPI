@@ -38,9 +38,9 @@ namespace OXGaming.TibiaAPI
             Proxy = new Network.Connection(this);
         }
 
-        public bool StartProxy(bool enablePacketParsing = true)
+        public bool StartProxy(bool enablePacketParsing = true, int httpPort = 80)
         {
-            return Proxy.Start(enablePacketParsing);
+            return Proxy.Start(enablePacketParsing, httpPort);
         }
 
         public void StopProxy()
@@ -55,7 +55,8 @@ namespace OXGaming.TibiaAPI
                 if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
                 {
                     tibiaDirectory = Path.Combine(new string[] {
-                        "~", ".local", "share", "CipSoft GmbH", "Tibia", "packages", "Tibia" });
+                        Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
+                        "CipSoft GmbH", "Tibia", "packages", "Tibia" });
                 }
                 else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
                 {

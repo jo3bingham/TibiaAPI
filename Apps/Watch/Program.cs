@@ -30,7 +30,47 @@ namespace Watch
 
         static string _recordingName;
 
+        static int _httpPort = 80;
+
         static bool _userQuit;
+
+        static void ParseArgs(string[] args)
+        {
+            foreach (var arg in args)
+            {
+                if (!arg.Contains('=', StringComparison.CurrentCultureIgnoreCase))
+                {
+                    continue;
+                }
+
+                var splitArg = arg.Split('=');
+                if (splitArg.Length != 2)
+                {
+                    continue;
+                }
+
+                switch (splitArg[0])
+                {
+                    case "-r":
+                    case "--recording":
+                        {
+                            _recordingName = splitArg[1].Replace("\"", "");
+                        }
+                        break;
+                    case "-p":
+                    case "--port":
+                        {
+                            if (int.TryParse(splitArg[1], out var port))
+                            {
+                                _httpPort = port;
+                            }
+                        }
+                        break;
+                    default:
+                        break;
+                }
+            }
+        }
 
         static void Main(string[] args)
         {
@@ -40,7 +80,8 @@ namespace Watch
                 return;
             }
 
-            _recordingName = args[0];
+            ParseArgs(args);
+
             if (string.IsNullOrEmpty(_recordingName) || !_recordingName.EndsWith(".oxr", StringComparison.CurrentCultureIgnoreCase))
             {
                 Console.WriteLine($"Invalid recording file: {_recordingName ?? "null"}");
@@ -68,11 +109,12 @@ namespace Watch
                 }
 
                 _httpListener = new HttpListener();
-                if (!_httpListener.Prefixes.Contains("http://127.0.0.1:80/"))
+                var uriPrefix = $"http://127.0.0.1:{_httpPort}/";
+                if (!_httpListener.Prefixes.Contains(uriPrefix))
                 {
                     // The HTTP listener must be listening on port 80 as the
                     // Tibia client sends HTTP requests over port 80.
-                    _httpListener.Prefixes.Add("http://127.0.0.1:80/");
+                    _httpListener.Prefixes.Add(uriPrefix);
                 }
 
                 _httpListener.Start();
@@ -125,35 +167,45 @@ namespace Watch
                 var filename = Path.GetFileNameWithoutExtension(_recordingName);
                 var address = ((IPEndPoint)_tcpListener.LocalEndpoint).Address.ToString();
                 var port = ((IPEndPoint)_tcpListener.LocalEndpoint).Port;
-
-                var loginData = new LoginData
-                {
-                    Session = new Session(),
-                    PlayData = new PlayData
-                    {
-                        Worlds = new List<World>
-                        {
-                            new World
-                            {
-                                Name = OxWorldName,
-                                ExternalPortProtected = port,
-                                ExternalPortUnprotected = port,
-                                ExternalAddressProtected = address,
-                                ExternalAddressUnprotected = address
-                            }
-                        },
-                        Characters = new List<Character>
-                        {
-                            new Character
-                            {
-                                Name = filename,
-                                WorldId = 0
-                            }
-                        }
-                    }
-                };
-
-                var response = Newtonsoft.Json.JsonConvert.SerializeObject(loginData);
+                var response = "{\"session\":" +
+                                    "{\"sessionkey\": null," +
+                                    "\"lastlogintime\": 0," +
+                                    "\"ispremium\": false," +
+                                    "\"premiumuntil\": 0," +
+                                    "\"status\": null," +
+                                    "\"returnernotification\": false," +
+                                    "\"showrewardnews\": false," +
+                                    "\"isreturner\": false," +
+                                    "\"fpstracking\": false," +
+                                    "\"optiontracking\": false}" +
+                                ",\"playdata\":" +
+                                    "{\"worlds\":" +
+                                        "[{\"id\": 0," +
+                                        "\"name\": \"" + OxWorldName + "\"," +
+                                        "\"externaladdressprotected\": \"" + address + "\"," +
+                                        "\"externalportprotected\": " + port + "," +
+                                        "\"externaladdressunprotected\": \"" + address + "\"," +
+                                        "\"externalportunprotected\": " + port + "," +
+                                        "\"previewstate\": 0," +
+                                        "\"location\": null," +
+                                        "\"anticheatprotection\": false," +
+                                        "\"pvptype\": 0}]" +
+                                    ",\"characters\":" +
+                                        "[{\"worldid\": 0," +
+                                        "\"name\": \"" + filename + "\"," +
+                                        "\"level\": 0," +
+                                        "\"vocation\": null," +
+                                        "\"ismale\": false," +
+                                        "\"ishidden\": false," +
+                                        "\"tutorial\": false," +
+                                        "\"outfitid\": 0," +
+                                        "\"headcolor\": 0," +
+                                        "\"torsocolor\": 0," +
+                                        "\"legscolor\": 0," +
+                                        "\"detailcolor\": 0," +
+                                        "\"addonsflags\": 0}]" +
+                                    "}" +
+                                "}";
 
                 var data = Encoding.UTF8.GetBytes(response);
                 context.Response.ContentLength64 = data.Length;
@@ -161,9 +213,6 @@ namespace Watch
                 context.Response.Close();
 
                 _httpListener.BeginGetContext(new AsyncCallback(BeginGetContextCallback), _httpListener);
-            }
-            catch (ObjectDisposedException)
-            {
             }
             catch (Exception ex)
             {
@@ -335,12 +384,10 @@ namespace Watch
 
                         Thread.Sleep((int)(timestamp - lastTimestamp));
                         lastTimestamp = timestamp;
+                        Console.WriteLine($"Sending packet at {reader.BaseStream.Position}:{reader.BaseStream.Length}");
                         SendToClient(message);
                     }
                 }
-            }
-            catch (SocketException)
-            {
             }
             catch (Exception ex)
             {

@@ -15,13 +15,55 @@ namespace Record
 
         static BinaryWriter _binaryWriter;
 
+        static string _tibiaDirectory = string.Empty;
+
+        static int _httpPort = 80;
+
+        static void ParseArgs(string[] args)
+        {
+            foreach (var arg in args)
+            {
+                if (!arg.Contains('=', StringComparison.CurrentCultureIgnoreCase))
+                {
+                    continue;
+                }
+
+                var splitArg = arg.Split('=');
+                if (splitArg.Length != 2)
+                {
+                    continue;
+                }
+
+                switch (splitArg[0])
+                {
+                    case "-t":
+                    case "--tibiadirectory":
+                        {
+                            _tibiaDirectory = splitArg[1].Replace("\"", "");
+                        }
+                        break;
+                    case "-p":
+                    case "--port":
+                        {
+                            if (int.TryParse(splitArg[1], out var port))
+                            {
+                                _httpPort = port;
+                            }
+                        }
+                        break;
+                    default:
+                        break;
+                }
+            }
+        }
+
         static void Main(string[] args)
         {
             try
             {
-                var tibiaDirectory = args.Length > 0 ? args[1] : string.Empty;
+                ParseArgs(args);
 
-                using (var client = new Client(tibiaDirectory))
+                using (var client = new Client(_tibiaDirectory))
                 {
                     var utcNow = DateTime.UtcNow;
                     var filename = $"{utcNow.Day}_{utcNow.Month}_{utcNow.Year}__{utcNow.Hour}_{utcNow.Minute}_{utcNow.Second}.oxr";
@@ -38,7 +80,7 @@ namespace Record
                     client.Proxy.OnReceivedServerMessage += Proxy_OnReceivedServerMessage;
 
                     // Disable packet parsing as we only care about the raw, decrypted packets and speed.
-                    client.StartProxy(enablePacketParsing: false);
+                    client.StartProxy(enablePacketParsing: false, httpPort: _httpPort);
 
                     while (Console.ReadLine() != "quit")
                     {
