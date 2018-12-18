@@ -118,7 +118,7 @@ namespace Extract
                 }
 
                 var isDirectory = !(_recording.EndsWith(".dat", StringComparison.CurrentCultureIgnoreCase) ||
-									_recording.EndsWith(".oxr", StringComparison.CurrentCultureIgnoreCase));
+                                    _recording.EndsWith(".oxr", StringComparison.CurrentCultureIgnoreCase));
 
                 if (isDirectory && !Directory.Exists(_recording))
                 {
