@@ -384,7 +384,6 @@ namespace Watch
 
                         Thread.Sleep((int)(timestamp - lastTimestamp));
                         lastTimestamp = timestamp;
-                        Console.WriteLine($"Sending packet at {reader.BaseStream.Position}:{reader.BaseStream.Length}");
                         SendToClient(message);
                     }
                 }
