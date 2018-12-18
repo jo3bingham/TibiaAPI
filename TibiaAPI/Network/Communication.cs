@@ -175,7 +175,7 @@ namespace OXGaming.TibiaAPI.Network
         public event ReceivedPacketEventHandler OnReceivedServerCounterOfferPacket;
         public event ReceivedPacketEventHandler OnReceivedServerCloseTradePacket;
         public event ReceivedPacketEventHandler OnReceivedServerAmbientePacket;
-        public event ReceivedPacketEventHandler OnReceivedServerGraphicalEffectPacket;
+        public event ReceivedPacketEventHandler OnReceivedServerGraphicalEffectsPacket;
         public event ReceivedPacketEventHandler OnReceivedServerRemoveGraphicalEffectPacket;
         public event ReceivedPacketEventHandler OnReceivedServerMissileEffectPacket;
         public event ReceivedPacketEventHandler OnReceivedServerTrappersPacket;
@@ -2481,12 +2481,12 @@ namespace OXGaming.TibiaAPI.Network
                                 }
                             }
                             break;
-                        case ServerPacketType.GraphicalEffect:
+                        case ServerPacketType.GraphicalEffects:
                             {
-                                var packet = new ServerPackets.GraphicalEffect(client);
+                                var packet = new ServerPackets.GraphicalEffects(client);
                                 if (packet.ParseFromNetworkMessage(inMessage))
                                 {
-                                    packet.Forward = OnReceivedServerGraphicalEffectPacket?.Invoke(packet) ?? true;
+                                    packet.Forward = OnReceivedServerGraphicalEffectsPacket?.Invoke(packet) ?? true;
                                     if (packet.Forward)
                                     {
                                         packet.AppendToNetworkMessage(outMessage);

@@ -428,7 +428,7 @@
         CounterOffer = 0x7E,
         CloseTrade = 0x7F,
         Ambiente = 0x82,
-        GraphicalEffect = 0x83,
+        GraphicalEffects = 0x83,
         RemoveGraphicalEffect = 0x84,
         MissileEffect = 0x85,
         Trappers = 0x87,

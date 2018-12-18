@@ -245,15 +245,18 @@ namespace Extract
                             };
 
                             reader.BaseStream.Position -= 8;
-                            Array.Copy(reader.ReadBytes((int)message.Size), message.GetBuffer(), message.Size);
+                            if ((reader.BaseStream.Length - reader.BaseStream.Position) >= message.Size)
+                            {
+                                Array.Copy(reader.ReadBytes((int)message.Size), message.GetBuffer(), message.Size);
 
-                            if (packetType == PacketType.Server)
-                            {
-                                client.Proxy.ParseServerMessage(client, message, outMessage);
-                            }
-                            else
-                            {
-                                client.Proxy.ParseClientMessage(client, message, outMessage);
+                                if (packetType == PacketType.Server)
+                                {
+                                    client.Proxy.ParseServerMessage(client, message, outMessage);
+                                }
+                                else
+                                {
+                                    client.Proxy.ParseClientMessage(client, message, outMessage);
+                                }
                             }
                         }
 
