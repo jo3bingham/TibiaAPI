@@ -40,7 +40,7 @@ namespace Extract
 
         private static string _outDirectory;
         private static string _recording;
-        private static string _tibiaDirectory;
+        private static string _tibiaDirectory = string.Empty;
 
         static void ParseArgs(string[] args)
         {
@@ -117,30 +117,30 @@ namespace Extract
                     return;
                 }
 
-                var isDirectory = !(args[0].EndsWith(".dat", StringComparison.CurrentCultureIgnoreCase) ||
-                                    args[0].EndsWith(".oxr", StringComparison.CurrentCultureIgnoreCase));
+                var isDirectory = !(_recording.EndsWith(".dat", StringComparison.CurrentCultureIgnoreCase) ||
+									_recording.EndsWith(".oxr", StringComparison.CurrentCultureIgnoreCase));
 
-                if (isDirectory && !Directory.Exists(args[0]))
+                if (isDirectory && !Directory.Exists(_recording))
                 {
-                    Console.WriteLine($"Directory does not exist: {args[0]}");
+                    Console.WriteLine($"Directory does not exist: {_recording}");
                     return;
                 }
 
-                if (!isDirectory && !File.Exists(args[0]))
+                if (!isDirectory && !File.Exists(_recording))
                 {
-                    Console.WriteLine($"File does not exist: {args[0]}");
+                    Console.WriteLine($"File does not exist: {_recording}");
                     return;
                 }
 
                 var filenames = new List<string>();
                 if (isDirectory)
                 {
-                    filenames.AddRange(Directory.GetFiles(args[0]).Where(f => f.EndsWith(".dat", StringComparison.CurrentCultureIgnoreCase)));
-                    filenames.AddRange(Directory.GetFiles(args[0]).Where(f => f.EndsWith(".oxr", StringComparison.CurrentCultureIgnoreCase)));
+                    filenames.AddRange(Directory.GetFiles(_recording).Where(f => f.EndsWith(".dat", StringComparison.CurrentCultureIgnoreCase)));
+                    filenames.AddRange(Directory.GetFiles(_recording).Where(f => f.EndsWith(".oxr", StringComparison.CurrentCultureIgnoreCase)));
                 }
                 else
                 {
-                    filenames.Add(args[0]);
+                    filenames.Add(_recording);
                 }
 
                 if (!string.IsNullOrEmpty(_outDirectory))
