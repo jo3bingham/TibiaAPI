@@ -12,12 +12,13 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
 
         public byte StackPosition { get; set; }
 
-        public MoveCreature()
+        public MoveCreature(Client client)
         {
+            Client = client;
             PacketType = ServerPacketType.MoveCreature;
         }
 
-        public override bool ParseFromNetworkMessage(Client client, NetworkMessage message)
+        public override bool ParseFromNetworkMessage(NetworkMessage message)
         {
             if (message.ReadByte() != (byte)ServerPacketType.MoveCreature)
             {

@@ -4,12 +4,13 @@ namespace OXGaming.TibiaAPI.Network.ClientPackets
 {
     public class LeaveParty : ClientPacket
     {
-        public LeaveParty()
+        public LeaveParty(Client client)
         {
+            Client = client;
             PacketType = ClientPacketType.LeaveParty;
         }
 
-        public override bool ParseFromNetworkMessage(Client client, NetworkMessage message)
+        public override bool ParseFromNetworkMessage(NetworkMessage message)
         {
             if (message.ReadByte() != (byte)ClientPacketType.LeaveParty)
             {

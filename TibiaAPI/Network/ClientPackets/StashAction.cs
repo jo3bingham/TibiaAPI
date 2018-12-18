@@ -10,12 +10,13 @@ namespace OXGaming.TibiaAPI.Network.ClientPackets
 
         public byte StashType { get; set; }
 
-        public StashAction()
+        public StashAction(Client client)
         {
+            Client = client;
             PacketType = ClientPacketType.StashAction;
         }
 
-        public override bool ParseFromNetworkMessage(Client client, NetworkMessage message)
+        public override bool ParseFromNetworkMessage(NetworkMessage message)
         {
             if (message.ReadByte() != (byte)ClientPacketType.StashAction)
             {

@@ -10,12 +10,13 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
         public List<(ushort ObjectId, uint Price)> MarketObjects { get; } =
             new List<(ushort ObjectId, uint Price)>();
 
-        public MarketStatistics()
+        public MarketStatistics(Client client)
         {
+            Client = client;
             PacketType = ServerPacketType.MarketStatistics;
         }
 
-        public override bool ParseFromNetworkMessage(Client client, NetworkMessage message)
+        public override bool ParseFromNetworkMessage(NetworkMessage message)
         {
             if (message.ReadByte() != (byte)ServerPacketType.MarketStatistics)
             {

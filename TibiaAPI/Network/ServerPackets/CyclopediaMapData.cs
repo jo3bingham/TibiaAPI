@@ -6,12 +6,13 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
     {
         public CyclopediaMapDataType DataType { get; set; }
 
-        public CyclopediaMapData()
+        public CyclopediaMapData(Client client)
         {
+            Client = client;
             PacketType = ServerPacketType.CyclopediaMapData;
         }
 
-        public override bool ParseFromNetworkMessage(Client client, NetworkMessage message)
+        public override bool ParseFromNetworkMessage(NetworkMessage message)
         {
             if (message.ReadByte() != (byte)ServerPacketType.CyclopediaMapData)
             {

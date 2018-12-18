@@ -8,12 +8,13 @@ namespace OXGaming.TibiaAPI.Network.ClientPackets
 
         public byte Data { get; set; }
 
-        public EquipObject()
+        public EquipObject(Client client)
         {
+            Client = client;
             PacketType = ClientPacketType.EquipObject;
         }
 
-        public override bool ParseFromNetworkMessage(Client client, NetworkMessage message)
+        public override bool ParseFromNetworkMessage(NetworkMessage message)
         {
             if (message.ReadByte() != (byte)ClientPacketType.EquipObject)
             {

@@ -4,12 +4,13 @@ namespace OXGaming.TibiaAPI.Network.ClientPackets
 {
     public class UpdateExivaOptions : ClientPacket
     {
-        public UpdateExivaOptions()
+        public UpdateExivaOptions(Client client)
         {
+            Client = client;
             PacketType = ClientPacketType.UpdateExivaOptions;
         }
 
-        public override bool ParseFromNetworkMessage(Client client, NetworkMessage message)
+        public override bool ParseFromNetworkMessage(NetworkMessage message)
         {
             if (message.ReadByte() != (byte)ClientPacketType.UpdateExivaOptions)
             {

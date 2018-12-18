@@ -6,12 +6,13 @@ namespace OXGaming.TibiaAPI.Network.ClientPackets
     {
         public ushort Id { get; set; }
 
-        public OpenMonsterCyclopediaRace()
+        public OpenMonsterCyclopediaRace(Client client)
         {
+            Client = client;
             PacketType = ClientPacketType.OpenMonsterCyclopediaRace;
         }
 
-        public override bool ParseFromNetworkMessage(Client client, NetworkMessage message)
+        public override bool ParseFromNetworkMessage(NetworkMessage message)
         {
             if (message.ReadByte() != (byte)ClientPacketType.OpenMonsterCyclopediaRace)
             {

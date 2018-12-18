@@ -8,12 +8,13 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
 
         public bool IsDamage { get; set; }
 
-        public ImpactTracking()
+        public ImpactTracking(Client client)
         {
+            Client = client;
             PacketType = ServerPacketType.ImpactTracking;
         }
 
-        public override bool ParseFromNetworkMessage(Client client, NetworkMessage message)
+        public override bool ParseFromNetworkMessage(NetworkMessage message)
         {
             if (message.ReadByte() != (byte)ServerPacketType.ImpactTracking)
             {

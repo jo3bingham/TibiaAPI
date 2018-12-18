@@ -7,12 +7,13 @@ namespace OXGaming.TibiaAPI.Network.ClientPackets
         public byte Index { get; set; }
         public byte Side { get; set; }
 
-        public LookTrade()
+        public LookTrade(Client client)
         {
+            Client = client;
             PacketType = ClientPacketType.LookTrade;
         }
 
-        public override bool ParseFromNetworkMessage(Client client, NetworkMessage message)
+        public override bool ParseFromNetworkMessage(NetworkMessage message)
         {
             if (message.ReadByte() != (byte)ClientPacketType.LookTrade)
             {

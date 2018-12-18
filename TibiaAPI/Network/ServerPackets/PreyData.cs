@@ -4,12 +4,13 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
 {
     public class PreyData : ServerPacket
     {
-        public PreyData()
+        public PreyData(Client client)
         {
+            Client = client;
             PacketType = ServerPacketType.PreyData;
         }
 
-        public override bool ParseFromNetworkMessage(Client client, NetworkMessage message)
+        public override bool ParseFromNetworkMessage(NetworkMessage message)
         {
             if (message.ReadByte() != (byte)ServerPacketType.PreyData)
             {
@@ -29,7 +30,7 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
                 case PreyDataState.Active:
                     {
                         var preyName = message.ReadString();
-                        var preyOutfit = message.ReadCreatureOutfit(client);
+                        var preyOutfit = message.ReadCreatureOutfit(Client);
                         var bonusType = message.ReadByte(); // 0 = damage, 1 = defense, 2 = exp, 3 = loot
                         var bonusPercentage = message.ReadUInt16();
                         var bonusRarity = message.ReadByte();
@@ -42,7 +43,7 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
                         for (var i = 0; i < preyCount; i++)
                         {
                             var preyName = message.ReadString();
-                            var preyOutfit = message.ReadCreatureOutfit(client);
+                            var preyOutfit = message.ReadCreatureOutfit(Client);
                         }
                     }
                     break;
@@ -56,7 +57,7 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
                         for (var i = 0; i < preyCount; i++)
                         {
                             var preyName = message.ReadString();
-                            var preyOutfit = message.ReadCreatureOutfit(client);
+                            var preyOutfit = message.ReadCreatureOutfit(Client);
                         }
                     }
                     break;

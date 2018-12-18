@@ -9,12 +9,13 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
         public uint CreatureId { get; set; }
         public uint SummonerId { get; set; }
 
-        public CreatureType()
+        public CreatureType(Client client)
         {
+            Client = client;
             PacketType = ServerPacketType.CreatureType;
         }
 
-        public override bool ParseFromNetworkMessage(Client client, NetworkMessage message)
+        public override bool ParseFromNetworkMessage(NetworkMessage message)
         {
             if (message.ReadByte() != (byte)ServerPacketType.CreatureType)
             {

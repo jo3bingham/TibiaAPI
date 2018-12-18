@@ -7,39 +7,40 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
         private const int GroundLayer = 7;
         private const int UndergroundLayer = 2;
 
-        public TopFloor()
+        public TopFloor(Client client)
         {
+            Client = client;
             PacketType = ServerPacketType.TopFloor;
         }
 
-        public override bool ParseFromNetworkMessage(Client client, NetworkMessage message)
+        public override bool ParseFromNetworkMessage(NetworkMessage message)
         {
             if (message.ReadByte() != (byte)ServerPacketType.TopFloor)
             {
                 return false;
             }
 
-            var position = client.WorldMapStorage.GetPosition();
+            var position = Client.WorldMapStorage.GetPosition();
             position.X++;
             position.Y++;
             position.Z--;
 
-            client.WorldMapStorage.SetPosition(position.X, position.Y, position.Z);
+            Client.WorldMapStorage.SetPosition(position.X, position.Y, position.Z);
 
             if (position.Z > GroundLayer)
             {
-               client.WorldMapStorage.ScrollMap(0, 0, -1);
-               message.ReadFloor(client, (2 * UndergroundLayer), 0, Fields);
+               Client.WorldMapStorage.ScrollMap(0, 0, -1);
+               message.ReadFloor(Client, (2 * UndergroundLayer), 0, Fields);
             }
             else if (position.Z == GroundLayer)
             {
-               client.WorldMapStorage.ScrollMap(0, 0, -(UndergroundLayer + 1));
+               Client.WorldMapStorage.ScrollMap(0, 0, -(UndergroundLayer + 1));
 
                var numberOfTilesToSkip = 0;
                var floorNumber = UndergroundLayer;
                while (floorNumber <= GroundLayer)
                {
-                   numberOfTilesToSkip = message.ReadFloor(client, floorNumber, numberOfTilesToSkip, Fields);
+                   numberOfTilesToSkip = message.ReadFloor(Client, floorNumber, numberOfTilesToSkip, Fields);
                    floorNumber++;
                }
             }

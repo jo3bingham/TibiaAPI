@@ -10,12 +10,13 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
 
         public uint CreatureId { get; set; }
 
-        public CreatureOutfit()
+        public CreatureOutfit(Client client)
         {
+            Client = client;
             PacketType = ServerPacketType.CreatureOutfit;
         }
 
-        public override bool ParseFromNetworkMessage(Client client, NetworkMessage message)
+        public override bool ParseFromNetworkMessage(NetworkMessage message)
         {
             if (message.ReadByte() != (byte)ServerPacketType.CreatureOutfit)
             {
@@ -23,8 +24,8 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
             }
 
             CreatureId = message.ReadUInt32();
-            Outfit = message.ReadCreatureOutfit(client);
-            Mount = message.ReadMountOutfit(client);
+            Outfit = message.ReadCreatureOutfit(Client);
+            Mount = message.ReadMountOutfit(Client);
             return true;
         }
 

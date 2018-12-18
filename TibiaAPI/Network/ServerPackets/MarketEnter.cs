@@ -14,12 +14,13 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
 
         public byte ActiveOffers { get; set; }
 
-        public MarketEnter()
+        public MarketEnter(Client client)
         {
+            Client = client;
             PacketType = ServerPacketType.MarketEnter;
         }
 
-        public override bool ParseFromNetworkMessage(Client client, NetworkMessage message)
+        public override bool ParseFromNetworkMessage(NetworkMessage message)
         {
             if (message.ReadByte() != (byte)ServerPacketType.MarketEnter)
             {

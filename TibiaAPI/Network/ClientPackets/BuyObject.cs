@@ -12,12 +12,13 @@ namespace OXGaming.TibiaAPI.Network.ClientPackets
         public bool IgnoreCapacity { get; set; }
         public bool WithBackpacks { get; set; }
 
-        public BuyObject()
+        public BuyObject(Client client)
         {
+            Client = client;
             PacketType = ClientPacketType.BuyObject;
         }
 
-        public override bool ParseFromNetworkMessage(Client client, NetworkMessage message)
+        public override bool ParseFromNetworkMessage(NetworkMessage message)
         {
             if (message.ReadByte() != (byte)ClientPacketType.BuyObject)
             {

@@ -9,39 +9,63 @@ namespace OXGaming.TibiaAPI.Network.ClientPackets
 
         public ushort ObjectId { get; set; }
 
-        public byte ContainerId { get; set; }
-        public byte Unknown1 { get; set; }
-        public byte Unknown2 { get; set; }
+        public byte Index { get; set; }
+        public byte ItemCategory { get; set; }
+        public byte Type { get; set; }
 
-        public LootContainer()
+        public bool UseMainContainerAsFallback { get; set; }
+
+        public LootContainer(Client client)
         {
+            Client = client;
             PacketType = ClientPacketType.LootContainer;
         }
 
-        public override bool ParseFromNetworkMessage(Client client, NetworkMessage message)
+        public override bool ParseFromNetworkMessage(NetworkMessage message)
         {
             if (message.ReadByte() != (byte)ClientPacketType.LootContainer)
             {
                 return false;
             }
 
-            // TODO: Figure out these unknowns.
-            Unknown1 = message.ReadByte();
-            ContainerId = message.ReadByte();
-            Position = message.ReadPosition();
-            ObjectId = message.ReadUInt16();
-            Unknown2 = message.ReadByte();
+            Type = message.ReadByte();
+            if (Type == 0)
+            {
+                ItemCategory = message.ReadByte();
+                Position = message.ReadPosition();
+                ObjectId = message.ReadUInt16();
+                Index = message.ReadByte();
+            }
+            else if (Type == 1)
+            {
+                ItemCategory = message.ReadByte();
+            }
+            else if (Type == 3)
+            {
+                UseMainContainerAsFallback = message.ReadBool();
+            }
             return true;
         }
 
         public override void AppendToNetworkMessage(NetworkMessage message)
         {
             message.Write((byte)ClientPacketType.LootContainer);
-            message.Write(Unknown1);
-            message.Write(ContainerId);
-            message.Write(Position);
-            message.Write(ObjectId);
-            message.Write(Unknown2);
+            message.Write(Type);
+            if (Type == 0)
+            {
+                message.Write(ItemCategory);
+                message.Write(Position);
+                message.Write(ObjectId);
+                message.Write(Index);
+            }
+            else if (Type == 1)
+            {
+                message.Write(ItemCategory);
+            }
+            else if (Type == 3)
+            {
+                message.Write(UseMainContainerAsFallback);
+            }
         }
     }
 }

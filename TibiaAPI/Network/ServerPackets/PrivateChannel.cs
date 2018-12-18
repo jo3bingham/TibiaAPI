@@ -6,12 +6,13 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
     {
         public string ChannelName { get; set; }
 
-        public PrivateChannel()
+        public PrivateChannel(Client client)
         {
+            Client = client;
             PacketType = ServerPacketType.PrivateChannel;
         }
 
-        public override bool ParseFromNetworkMessage(Client client, NetworkMessage message)
+        public override bool ParseFromNetworkMessage(NetworkMessage message)
         {
             if (message.ReadByte() != (byte)ServerPacketType.PrivateChannel)
             {

@@ -7,23 +7,24 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
         private const int MapSizeX = 18;
         private const int MapSizeY = 14;
 
-        public BottomRow()
+        public BottomRow(Client client)
         {
+            Client = client;
             PacketType = ServerPacketType.BottomRow;
         }
 
-        public override bool ParseFromNetworkMessage(Client client, NetworkMessage message)
+        public override bool ParseFromNetworkMessage(NetworkMessage message)
         {
             if (message.ReadByte() != (byte)ServerPacketType.BottomRow)
             {
                 return false;
             }
 
-            var position = client.WorldMapStorage.GetPosition();
+            var position = Client.WorldMapStorage.GetPosition();
             position.Y++;
-            client.WorldMapStorage.SetPosition(position.X, position.Y, position.Z);
-            client.WorldMapStorage.ScrollMap(0, -1);
-            message.ReadArea(client, 0, (MapSizeY - 1), (MapSizeX - 1), (MapSizeY - 1), Fields);
+            Client.WorldMapStorage.SetPosition(position.X, position.Y, position.Z);
+            Client.WorldMapStorage.ScrollMap(0, -1);
+            message.ReadArea(Client, 0, (MapSizeY - 1), (MapSizeX - 1), (MapSizeY - 1), Fields);
             return true;
         }
 

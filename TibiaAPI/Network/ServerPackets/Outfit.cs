@@ -22,12 +22,13 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
         public byte LegsColor { get; set; }
         public byte TorsoColor { get; set; }
 
-        public Outfit()
+        public Outfit(Client client)
         {
+            Client = client;
             PacketType = ServerPacketType.Outfit;
         }
 
-        public override bool ParseFromNetworkMessage(Client client, NetworkMessage message)
+        public override bool ParseFromNetworkMessage(NetworkMessage message)
         {
             if (message.ReadByte() != (byte)ServerPacketType.Outfit)
             {

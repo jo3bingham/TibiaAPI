@@ -8,43 +8,44 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
         private const int UndergroundLayer = 2;
         private const int MapMaxZ = 15;
 
-        public BottomFloor()
+        public BottomFloor(Client client)
         {
+            Client = client;
             PacketType = ServerPacketType.BottomFloor;
         }
 
-        public override bool ParseFromNetworkMessage(Client client, NetworkMessage message)
+        public override bool ParseFromNetworkMessage(NetworkMessage message)
         {
             if (message.ReadByte() != (byte)ServerPacketType.BottomFloor)
             {
                 return false;
             }
 
-            var position = client.WorldMapStorage.GetPosition();
+            var position = Client.WorldMapStorage.GetPosition();
             position.X--;
             position.Y--;
             position.Z++;
 
-            client.WorldMapStorage.SetPosition(position.X, position.Y, position.Z);
+            Client.WorldMapStorage.SetPosition(position.X, position.Y, position.Z);
 
             if (position.Z > (GroundLayer + 1))
             {
-               client.WorldMapStorage.ScrollMap(0, 0, 1);
+               Client.WorldMapStorage.ScrollMap(0, 0, 1);
 
                if (position.Z <= (MapMaxZ - UndergroundLayer))
                {
-                   message.ReadFloor(client, 0, 0, Fields);
+                   message.ReadFloor(Client, 0, 0, Fields);
                }
             }
             else if (position.Z == (GroundLayer + 1))
             {
-               client.WorldMapStorage.ScrollMap(0, 0, (UndergroundLayer + 1));
+               Client.WorldMapStorage.ScrollMap(0, 0, (UndergroundLayer + 1));
 
                var numberOfTilesToSkip = 0;
                var floorNumber = UndergroundLayer;
                while (floorNumber >= 0)
                {
-                   numberOfTilesToSkip = message.ReadFloor(client, floorNumber, numberOfTilesToSkip, Fields);
+                   numberOfTilesToSkip = message.ReadFloor(Client, floorNumber, numberOfTilesToSkip, Fields);
                    floorNumber--;
                }
             }

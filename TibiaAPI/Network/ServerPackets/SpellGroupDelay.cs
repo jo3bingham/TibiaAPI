@@ -8,12 +8,13 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
 
         public byte SpellId { get; set; }
 
-        public SpellGroupDelay()
+        public SpellGroupDelay(Client client)
         {
+            Client = client;
             PacketType = ServerPacketType.SpellGroupDelay;
         }
 
-        public override bool ParseFromNetworkMessage(Client client, NetworkMessage message)
+        public override bool ParseFromNetworkMessage(NetworkMessage message)
         {
             if (message.ReadByte() != (byte)ServerPacketType.SpellGroupDelay)
             {

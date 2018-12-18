@@ -9,12 +9,13 @@ namespace OXGaming.TibiaAPI.Network.ClientPackets
     {
         public List<Direction> Directions { get; } = new List<Direction>();
 
-        public GoPath()
+        public GoPath(Client client)
         {
+            Client = client;
             PacketType = ClientPacketType.GoPath;
         }
 
-        public override bool ParseFromNetworkMessage(Client client, NetworkMessage message)
+        public override bool ParseFromNetworkMessage(NetworkMessage message)
         {
             if (message.ReadByte() != (byte)ClientPacketType.GoPath)
             {

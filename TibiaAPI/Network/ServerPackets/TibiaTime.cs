@@ -7,12 +7,13 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
         public byte Hour { get; set; }
         public byte Minute { get; set; }
 
-        public TibiaTime()
+        public TibiaTime(Client client)
         {
+            Client = client;
             PacketType = ServerPacketType.TibiaTime;
         }
 
-        public override bool ParseFromNetworkMessage(Client client, NetworkMessage message)
+        public override bool ParseFromNetworkMessage(NetworkMessage message)
         {
             if (message.ReadByte() != (byte)ServerPacketType.TibiaTime)
             {

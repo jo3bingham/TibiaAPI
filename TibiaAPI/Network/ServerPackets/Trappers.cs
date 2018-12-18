@@ -9,12 +9,13 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
     {
         public List<uint> CreatureIds { get; } = new List<uint>();
 
-        public Trappers()
+        public Trappers(Client client)
         {
+            Client = client;
             PacketType = ServerPacketType.Trappers;
         }
 
-        public override bool ParseFromNetworkMessage(Client client, NetworkMessage message)
+        public override bool ParseFromNetworkMessage(NetworkMessage message)
         {
             if (message.ReadByte() != (byte)ServerPacketType.Trappers)
             {

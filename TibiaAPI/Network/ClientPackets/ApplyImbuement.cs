@@ -10,12 +10,13 @@ namespace OXGaming.TibiaAPI.Network.ClientPackets
 
         public bool UseProtectionCharm { get; set; }
 
-        public ApplyImbuement()
+        public ApplyImbuement(Client client)
         {
+            Client = client;
             PacketType = ClientPacketType.ApplyImbuement;
         }
 
-        public override bool ParseFromNetworkMessage(Client client, NetworkMessage message)
+        public override bool ParseFromNetworkMessage(NetworkMessage message)
         {
             if (message.ReadByte() != (byte)ClientPacketType.ApplyImbuement)
             {

@@ -11,12 +11,13 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
 
         public byte Unknown { get; set; }
 
-        public StoreSuccess()
+        public StoreSuccess(Client client)
         {
+            Client = client;
             PacketType = ServerPacketType.StoreSuccess;
         }
 
-        public override bool ParseFromNetworkMessage(Client client, NetworkMessage message)
+        public override bool ParseFromNetworkMessage(NetworkMessage message)
         {
             if (message.ReadByte() != (byte)ServerPacketType.StoreSuccess)
             {

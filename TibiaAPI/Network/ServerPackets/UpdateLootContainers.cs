@@ -8,14 +8,16 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
     public class UpdateLootContainers : ServerPacket
     {
         public List<(byte Id, ushort ObjectId)> LootContainers { get; } = new List<(byte Id, ushort ObjectId)>();
+
         public bool UseMainContainerAsFallback { get; set; }
 
-        public UpdateLootContainers()
+        public UpdateLootContainers(Client client)
         {
+            Client = client;
             PacketType = ServerPacketType.UpdateLootContainers;
         }
 
-        public override bool ParseFromNetworkMessage(Client client, NetworkMessage message)
+        public override bool ParseFromNetworkMessage(NetworkMessage message)
         {
             if (message.ReadByte() != (byte)ServerPacketType.UpdateLootContainers)
             {
@@ -42,9 +44,9 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
             message.Write((byte)count);
             for (var i = 0; i < count; ++i)
             {
-                var lootContainer = LootContainers[i];
-                message.Write(lootContainer.Id);
-                message.Write(lootContainer.ObjectId);
+                var (Id, ObjectId) = LootContainers[i];
+                message.Write(Id);
+                message.Write(ObjectId);
             }
         }
     }

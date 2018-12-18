@@ -9,12 +9,13 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
     {
         public List<(ushort Id, byte Data, ushort Count)> Items { get; } = new List<(ushort Id, byte Data, ushort Count)>();
 
-        public PlayerInventory()
+        public PlayerInventory(Client client)
         {
+            Client = client;
             PacketType = ServerPacketType.PlayerInventory;
         }
 
-        public override bool ParseFromNetworkMessage(Client client, NetworkMessage message)
+        public override bool ParseFromNetworkMessage(NetworkMessage message)
         {
             if (message.ReadByte() != (byte)ServerPacketType.PlayerInventory)
             {

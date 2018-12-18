@@ -6,12 +6,13 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
     {
         public string Text { get; set; }
 
-        public LoginError()
+        public LoginError(Client client)
         {
+            Client = client;
             PacketType = ServerPacketType.LoginError;
         }
 
-        public override bool ParseFromNetworkMessage(Client client, NetworkMessage message)
+        public override bool ParseFromNetworkMessage(NetworkMessage message)
         {
             if (message.ReadByte() != (byte)ServerPacketType.LoginError)
             {

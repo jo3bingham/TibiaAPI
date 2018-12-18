@@ -4,13 +4,14 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
 {
     public class PlayerSkills : ServerPacket
     {
-        public (ushort Level, ushort Base, byte Progress) AxeFighting { get; set; }
-        public (ushort Level, ushort Base, byte Progress) ClubFighting { get; set; }
-        public (ushort Level, ushort Base, byte Progress) DistanceFighting { get; set; }
-        public (ushort Level, ushort Base, byte Progress) Fishing { get; set; }
-        public (ushort Level, ushort Base, byte Progress) FistFighting { get; set; }
-        public (ushort Level, ushort Base, byte Progress) Shielding { get; set; }
-        public (ushort Level, ushort Base, byte Progress) SwordFighting { get; set; }
+        public (ushort Level, ushort Base, ushort Unknown, ushort Progress) AxeFighting { get; set; }
+        public (ushort Level, ushort Base, ushort Unknown, ushort Progress) ClubFighting { get; set; }
+        public (ushort Level, ushort Base, ushort Unknown, ushort Progress) DistanceFighting { get; set; }
+        public (ushort Level, ushort Base, ushort Unknown, ushort Progress) Fishing { get; set; }
+        public (ushort Level, ushort Base, ushort Unknown, ushort Progress) FistFighting { get; set; }
+        public (ushort Level, ushort Base, ushort Unknown, ushort Progress) Magic { get; set; }
+        public (ushort Level, ushort Base, ushort Unknown, ushort Progress) Shielding { get; set; }
+        public (ushort Level, ushort Base, ushort Unknown, ushort Progress) SwordFighting { get; set; }
 
         public (ushort Level, ushort Base) CriticalHitChance { get; set; }
         public (ushort Level, ushort Base) CriticalHitDamage { get; set; }
@@ -22,25 +23,26 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
         public uint BonusCapacity { get; set; }
         public uint MaxCapacity { get; set; }
 
-        public PlayerSkills()
+        public PlayerSkills(Client client)
         {
+            Client = client;
             PacketType = ServerPacketType.PlayerSkills;
         }
 
-        public override bool ParseFromNetworkMessage(Client client, NetworkMessage message)
+        public override bool ParseFromNetworkMessage(NetworkMessage message)
         {
             if (message.ReadByte() != (byte)ServerPacketType.PlayerSkills)
             {
                 return false;
             }
 
-            FistFighting = (message.ReadUInt16(), message.ReadUInt16(), message.ReadByte());
-            ClubFighting = (message.ReadUInt16(), message.ReadUInt16(), message.ReadByte());
-            SwordFighting = (message.ReadUInt16(), message.ReadUInt16(), message.ReadByte());
-            AxeFighting = (message.ReadUInt16(), message.ReadUInt16(), message.ReadByte());
-            DistanceFighting = (message.ReadUInt16(), message.ReadUInt16(), message.ReadByte());
-            Shielding = (message.ReadUInt16(), message.ReadUInt16(), message.ReadByte());
-            Fishing = (message.ReadUInt16(), message.ReadUInt16(), message.ReadByte());
+            FistFighting = (message.ReadUInt16(), message.ReadUInt16(), 0, message.ReadUInt16());
+            ClubFighting = (message.ReadUInt16(), message.ReadUInt16(), 0, message.ReadUInt16());
+            SwordFighting = (message.ReadUInt16(), message.ReadUInt16(), 0, message.ReadUInt16());
+            AxeFighting = (message.ReadUInt16(), message.ReadUInt16(), 0, message.ReadUInt16());
+            DistanceFighting = (message.ReadUInt16(), message.ReadUInt16(), 0, message.ReadUInt16());
+            Shielding = (message.ReadUInt16(), message.ReadUInt16(), 0, message.ReadUInt16());
+            Fishing = (message.ReadUInt16(), message.ReadUInt16(), 0, message.ReadUInt16());
 
             CriticalHitChance = (message.ReadUInt16(), message.ReadUInt16());
             CriticalHitDamage = (message.ReadUInt16(), message.ReadUInt16());
@@ -57,6 +59,7 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
         public override void AppendToNetworkMessage(NetworkMessage message)
         {
             message.Write((byte)ServerPacketType.PlayerSkills);
+
             message.Write(FistFighting.Level);
             message.Write(FistFighting.Base);
             message.Write(FistFighting.Progress);

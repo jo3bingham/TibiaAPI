@@ -8,12 +8,13 @@ namespace OXGaming.TibiaAPI.Network.ClientPackets
 
         public bool ShowWindow { get; set; }
 
-        public FeatureEvent()
+        public FeatureEvent(Client client)
         {
+            Client = client;
             PacketType = ClientPacketType.FeatureEvent;
         }
 
-        public override bool ParseFromNetworkMessage(Client client, NetworkMessage message)
+        public override bool ParseFromNetworkMessage(NetworkMessage message)
         {
             if (message.ReadByte() != (byte)ClientPacketType.FeatureEvent)
             {

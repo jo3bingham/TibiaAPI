@@ -4,12 +4,13 @@ namespace OXGaming.TibiaAPI.Network.ClientPackets
 {
     public class MonsterBonusEffectAction : ClientPacket
     {
-        public MonsterBonusEffectAction()
+        public MonsterBonusEffectAction(Client client)
         {
+            Client = client;
             PacketType = ClientPacketType.MonsterBonusEffectAction;
         }
 
-        public override bool ParseFromNetworkMessage(Client client, NetworkMessage message)
+        public override bool ParseFromNetworkMessage(NetworkMessage message)
         {
             if (message.ReadByte() != (byte)ClientPacketType.MonsterBonusEffectAction)
             {

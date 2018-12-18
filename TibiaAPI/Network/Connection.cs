@@ -74,12 +74,6 @@ namespace OXGaming.TibiaAPI.Network
         /// Initializes a new instance of the <see cref="Connection"/> class that acts as a proxy
         /// between the Tibia client and the game server.
         /// </summary>
-        /// <remarks>
-        /// The Tibia client's web service address needs to be changed to http://127.0.0.1/ so
-        /// that it will connect to this proxy. The Tibia client connects over port 80, and the proxy
-        /// listens on port 80, so there's no need to specify a port. However, since the proxy listens
-        /// on port 80, that means it needs to be ran in an elevated environment (i.e., root/administrator).
-        /// </remarks>
         public Connection(Client client)
         {
             _client = client ?? throw new ArgumentNullException(nameof(client));

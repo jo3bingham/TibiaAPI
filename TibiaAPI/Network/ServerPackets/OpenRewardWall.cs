@@ -17,12 +17,13 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
         public bool IsRewardShrine { get; set; }
         public bool HasWarningForNextReward { get; set; }
 
-        public OpenRewardWall()
+        public OpenRewardWall(Client client)
         {
+            Client = client;
             PacketType = ServerPacketType.OpenRewardWall;
         }
 
-        public override bool ParseFromNetworkMessage(Client client, NetworkMessage message)
+        public override bool ParseFromNetworkMessage(NetworkMessage message)
         {
             if (message.ReadByte() != (byte)ServerPacketType.OpenRewardWall)
             {
