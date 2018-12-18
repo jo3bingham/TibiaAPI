@@ -281,7 +281,9 @@ namespace Watch
                 {
                     SequenceNumber = 0
                 };
-                var loginChallengePacket = new LoginChallenge
+                // null should never be passed for the Client parameter in a packet constructor,
+                // however, the LoginChallenge packet never uses it so it's safe here.
+                var loginChallengePacket = new LoginChallenge(null)
                 {
                     Timestamp = (uint)DateTime.Now.Subtract(new DateTime(1970, 1, 1, 0, 0, 0)).TotalSeconds,
                     Random = 0xFF
