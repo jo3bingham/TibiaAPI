@@ -55,9 +55,12 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
             HuntingBoostFactor = message.ReadUInt16();
             CurrentMana = message.ReadUInt16();
             MaxMana = message.ReadUInt16();
-            MagicLevel = message.ReadByte();
-            MagicLevelBase = message.ReadByte();
-            MagicLevelPercent = message.ReadByte();
+            if (Client.VersionNumber < 12000000)
+            {
+                MagicLevel = message.ReadByte();
+                MagicLevelBase = message.ReadByte();
+                MagicLevelPercent = message.ReadByte();
+            }
             Soul = message.ReadByte();
             Stamina = message.ReadUInt16();
             Speed = message.ReadUInt16();
@@ -83,9 +86,12 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
             message.Write(HuntingBoostFactor);
             message.Write(CurrentMana);
             message.Write(MaxMana);
-            message.Write(MagicLevel);
-            message.Write(MagicLevelBase);
-            message.Write(MagicLevelPercent);
+            if (Client.VersionNumber < 12000000)
+            {
+                message.Write(MagicLevel);
+                message.Write(MagicLevelBase);
+                message.Write(MagicLevelPercent);
+            }
             message.Write(Soul);
             message.Write(Stamina);
             message.Write(Speed);

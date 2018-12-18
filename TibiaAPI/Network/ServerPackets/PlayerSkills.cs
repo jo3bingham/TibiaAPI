@@ -36,13 +36,27 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
                 return false;
             }
 
-            FistFighting = (message.ReadUInt16(), message.ReadUInt16(), 0, message.ReadUInt16());
-            ClubFighting = (message.ReadUInt16(), message.ReadUInt16(), 0, message.ReadUInt16());
-            SwordFighting = (message.ReadUInt16(), message.ReadUInt16(), 0, message.ReadUInt16());
-            AxeFighting = (message.ReadUInt16(), message.ReadUInt16(), 0, message.ReadUInt16());
-            DistanceFighting = (message.ReadUInt16(), message.ReadUInt16(), 0, message.ReadUInt16());
-            Shielding = (message.ReadUInt16(), message.ReadUInt16(), 0, message.ReadUInt16());
-            Fishing = (message.ReadUInt16(), message.ReadUInt16(), 0, message.ReadUInt16());
+            if (Client.VersionNumber < 12000000)
+            {
+                FistFighting = (message.ReadUInt16(), message.ReadUInt16(), 0, message.ReadUInt16());
+                ClubFighting = (message.ReadUInt16(), message.ReadUInt16(), 0, message.ReadUInt16());
+                SwordFighting = (message.ReadUInt16(), message.ReadUInt16(), 0, message.ReadUInt16());
+                AxeFighting = (message.ReadUInt16(), message.ReadUInt16(), 0, message.ReadUInt16());
+                DistanceFighting = (message.ReadUInt16(), message.ReadUInt16(), 0, message.ReadUInt16());
+                Shielding = (message.ReadUInt16(), message.ReadUInt16(), 0, message.ReadUInt16());
+                Fishing = (message.ReadUInt16(), message.ReadUInt16(), 0, message.ReadUInt16());
+            }
+            else
+            {
+                Magic = (message.ReadUInt16(), message.ReadUInt16(), message.ReadUInt16(), message.ReadUInt16());
+                FistFighting = (message.ReadUInt16(), message.ReadUInt16(), message.ReadUInt16(), message.ReadUInt16());
+                ClubFighting = (message.ReadUInt16(), message.ReadUInt16(), message.ReadUInt16(), message.ReadUInt16());
+                SwordFighting = (message.ReadUInt16(), message.ReadUInt16(), message.ReadUInt16(), message.ReadUInt16());
+                AxeFighting = (message.ReadUInt16(), message.ReadUInt16(), message.ReadUInt16(), message.ReadUInt16());
+                DistanceFighting = (message.ReadUInt16(), message.ReadUInt16(), message.ReadUInt16(), message.ReadUInt16());
+                Shielding = (message.ReadUInt16(), message.ReadUInt16(), message.ReadUInt16(), message.ReadUInt16());
+                Fishing = (message.ReadUInt16(), message.ReadUInt16(), message.ReadUInt16(), message.ReadUInt16());
+            }
 
             CriticalHitChance = (message.ReadUInt16(), message.ReadUInt16());
             CriticalHitDamage = (message.ReadUInt16(), message.ReadUInt16());
@@ -59,33 +73,68 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
         public override void AppendToNetworkMessage(NetworkMessage message)
         {
             message.Write((byte)ServerPacketType.PlayerSkills);
+            if (Client.VersionNumber >= 12000000)
+            {
+                message.Write(Magic.Level);
+                message.Write(Magic.Base);
+                message.Write(Magic.Unknown);
+                message.Write(Magic.Progress);
+            }
 
             message.Write(FistFighting.Level);
             message.Write(FistFighting.Base);
+            if (Client.VersionNumber >= 12000000)
+            {
+                message.Write(FistFighting.Unknown);
+            }
             message.Write(FistFighting.Progress);
 
             message.Write(ClubFighting.Level);
             message.Write(ClubFighting.Base);
+            if (Client.VersionNumber >= 12000000)
+            {
+                message.Write(ClubFighting.Unknown);
+            }
             message.Write(ClubFighting.Progress);
 
             message.Write(SwordFighting.Level);
             message.Write(SwordFighting.Base);
+            if (Client.VersionNumber >= 12000000)
+            {
+                message.Write(SwordFighting.Unknown);
+            }
             message.Write(SwordFighting.Progress);
 
             message.Write(AxeFighting.Level);
             message.Write(AxeFighting.Base);
+            if (Client.VersionNumber >= 12000000)
+            {
+                message.Write(AxeFighting.Unknown);
+            }
             message.Write(AxeFighting.Progress);
 
             message.Write(DistanceFighting.Level);
             message.Write(DistanceFighting.Base);
+            if (Client.VersionNumber >= 12000000)
+            {
+                message.Write(DistanceFighting.Unknown);
+            }
             message.Write(DistanceFighting.Progress);
 
             message.Write(Shielding.Level);
             message.Write(Shielding.Base);
+            if (Client.VersionNumber >= 12000000)
+            {
+                message.Write(Shielding.Unknown);
+            }
             message.Write(Shielding.Progress);
 
             message.Write(Fishing.Level);
             message.Write(Fishing.Base);
+            if (Client.VersionNumber >= 12000000)
+            {
+                message.Write(Fishing.Unknown);
+            }
             message.Write(Fishing.Progress);
 
             message.Write(CriticalHitChance.Level);
