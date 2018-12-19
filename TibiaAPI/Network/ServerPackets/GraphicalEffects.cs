@@ -26,7 +26,10 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
 
             Position = message.ReadPosition();
             Effect = message.ReadByte();
-            Unknown = message.ReadUInt32();
+            if (Client.VersionNumber >= 12000000)
+            {
+                Unknown = message.ReadUInt32();
+            }
             return true;
         }
 
@@ -35,7 +38,10 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
             message.Write((byte)ServerPacketType.GraphicalEffects);
             message.Write(Position);
             message.Write(Effect);
-            message.Write(Unknown);
+            if (Client.VersionNumber >= 12000000)
+            {
+                message.Write(Unknown);
+            }
         }
     }
 }

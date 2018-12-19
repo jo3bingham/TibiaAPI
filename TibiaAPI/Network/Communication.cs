@@ -108,6 +108,7 @@ namespace OXGaming.TibiaAPI.Network
         public event ReceivedPacketEventHandler OnReceivedClientOpenMonsterCyclopediaMonstersPacket;
         public event ReceivedPacketEventHandler OnReceivedClientOpenMonsterCyclopediaRacePacket;
         public event ReceivedPacketEventHandler OnReceivedClientMonsterBonusEffectActionPacket;
+        public event ReceivedPacketEventHandler OnReceivedClientOpenCyclopediaCharacterInfoPacket;
         public event ReceivedPacketEventHandler OnReceivedClientBugReportPacket;
         public event ReceivedPacketEventHandler OnReceivedClientThankYouPacket;
         public event ReceivedPacketEventHandler OnReceivedClientGetOfferDescription;
@@ -238,6 +239,7 @@ namespace OXGaming.TibiaAPI.Network
         public event ReceivedPacketEventHandler OnReceivedServerMonsterCyclopediaRacePacket;
         public event ReceivedPacketEventHandler OnReceivedServerMonsterCyclopediaBonusEffectsPacket;
         public event ReceivedPacketEventHandler OnReceivedServerMonsterCyclopediaNewDetailsPacket;
+        public event ReceivedPacketEventHandler OnReceivedServerCyclopediaCharacterInfoPacket;
         public event ReceivedPacketEventHandler OnReceivedServerTutorialHintPacket;
         public event ReceivedPacketEventHandler OnReceivedServerCyclopediaMapDataPacket;
         public event ReceivedPacketEventHandler OnReceivedServerDailyRewardCollectionStatePacket;
@@ -1566,6 +1568,19 @@ namespace OXGaming.TibiaAPI.Network
                                 if (packet.ParseFromNetworkMessage(inMessage))
                                 {
                                     packet.Forward = OnReceivedClientMonsterBonusEffectActionPacket?.Invoke(packet) ?? true;
+                                    if (packet.Forward)
+                                    {
+                                        packet.AppendToNetworkMessage(outMessage);
+                                    }
+                                }
+                            }
+                            break;
+                        case ClientPacketType.OpenCyclopediaCharacterInfo:
+                            {
+                                var packet = new ClientPackets.OpenCyclopediaCharacterInfo(client);
+                                if (packet.ParseFromNetworkMessage(inMessage))
+                                {
+                                    packet.Forward = OnReceivedClientOpenCyclopediaCharacterInfoPacket?.Invoke(packet) ?? true;
                                     if (packet.Forward)
                                     {
                                         packet.AppendToNetworkMessage(outMessage);
@@ -3293,6 +3308,19 @@ namespace OXGaming.TibiaAPI.Network
                                 if (packet.ParseFromNetworkMessage(inMessage))
                                 {
                                     packet.Forward = OnReceivedServerMonsterCyclopediaNewDetailsPacket?.Invoke(packet) ?? true;
+                                    if (packet.Forward)
+                                    {
+                                        packet.AppendToNetworkMessage(outMessage);
+                                    }
+                                }
+                            }
+                            break;
+                        case ServerPacketType.CyclopediaCharacterInfo:
+                            {
+                                var packet = new ServerPackets.CyclopediaCharacterInfo(client);
+                                if (packet.ParseFromNetworkMessage(inMessage))
+                                {
+                                    packet.Forward = OnReceivedServerCyclopediaCharacterInfoPacket?.Invoke(packet) ?? true;
                                     if (packet.Forward)
                                     {
                                         packet.AppendToNetworkMessage(outMessage);
