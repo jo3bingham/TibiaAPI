@@ -24,6 +24,10 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
                 return false;
             }
 
+            // Apparently, there's more information than I thought, and it doesn't make sense.
+            //83 53 7E D6 7D 06 01 61 03 04 03 09 00
+            //83 54 7E D7 7D 07 01 1D 03 26 01 01 03 26 01 01 03 26 01 01 03 26 01 01 03 26 01 01 03 26 01 01 03 26 00
+
             Position = message.ReadPosition();
             Effect = message.ReadByte();
             if (Client.VersionNumber >= 12000000)

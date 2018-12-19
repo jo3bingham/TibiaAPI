@@ -38,19 +38,21 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
             //6E 00 base speed
             //40 9C 00 00
             //40 9C 00 00
-            //78 82 00 00 08 01
-            //02 00 02 00 02 00 A8 04 0B magic
-            //0A 00 0A 00 0A 00 00 00 09 fist
-            //0C 00 0C 00 0C 00 82 14 08 club
-            //0C 00 0C 00 0C 00 B0 1D 0A sword
-            //0C 00 0C 00 0C 00 82 14 07 axe
-            //0C 00 0C 00 0C 00 82 14 06 distance
-            //0A 00 0A 00 0A 00 00 00 0D shielding
-            //0A 00 0A 00 0A 00 00 00 DA fishing
-            //00
+            //78 82 00 00
+            //08 number of skills
+            //01 02 00 02 00 02 00 A8 04 magic
+            //0B 0A 00 0A 00 0A 00 00 00 fist
+            //09 0C 00 0C 00 0C 00 82 14 club
+            //08 0C 00 0C 00 0C 00 B0 1D sword
+            //0A 0C 00 0C 00 0C 00 82 14 axe
+            //07 0C 00 0C 00 0C 00 82 14 distance
+            //06 0A 00 0A 00 0A 00 00 00 shielding
+            //0D 0A 00 0A 00 0A 00 00 00 fishing
+            //00 DA
             //07 00 4E 69 6B 6F 6C 75 73 player name
             //04 00 4E 6F 6E 65 vocation
-            //01 00 80 00 4E 45 3A 4C 0
+            //01 00 level, again?
+            //80 00 4E 45 3A 4C 0
 
             var type = message.ReadByte();
             if (type == 1)
@@ -80,25 +82,41 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
 
                 message.ReadBytes(4);
                 message.ReadBytes(4);
-                message.ReadBytes(6);
+                message.ReadBytes(4);
 
-                // (Level, Base, Unknown, Progress, Unknown)
-                var magic = (message.ReadUInt16(), message.ReadUInt16(), message.ReadUInt16(), message.ReadUInt16(), message.ReadByte());
-                var fistFighting = (message.ReadUInt16(), message.ReadUInt16(), message.ReadUInt16(), message.ReadUInt16(), message.ReadByte());
-                var clubFighting = (message.ReadUInt16(), message.ReadUInt16(), message.ReadUInt16(), message.ReadUInt16(), message.ReadByte());
-                var swordFighting = (message.ReadUInt16(), message.ReadUInt16(), message.ReadUInt16(), message.ReadUInt16(), message.ReadByte());
-                var axeFighting = (message.ReadUInt16(), message.ReadUInt16(), message.ReadUInt16(), message.ReadUInt16(), message.ReadByte());
-                var distanceFighting = (message.ReadUInt16(), message.ReadUInt16(), message.ReadUInt16(), message.ReadUInt16(), message.ReadByte());
-                var shielding = (message.ReadUInt16(), message.ReadUInt16(), message.ReadUInt16(), message.ReadUInt16(), message.ReadByte());
-                var fishing = (message.ReadUInt16(), message.ReadUInt16(), message.ReadUInt16(), message.ReadUInt16(), message.ReadByte());
+                var numberOfSkills = message.ReadByte();
 
-                message.ReadBytes(1);
+                // (Icon/Skill Id?, Level, Base, Unknown, Progress)
+                var magic = (message.ReadByte(), message.ReadUInt16(), message.ReadUInt16(), message.ReadUInt16(), message.ReadUInt16());
+                var fistFighting = (message.ReadByte(), message.ReadUInt16(), message.ReadUInt16(), message.ReadUInt16(), message.ReadUInt16());
+                var clubFighting = (message.ReadByte(), message.ReadUInt16(), message.ReadUInt16(), message.ReadUInt16(), message.ReadUInt16());
+                var swordFighting = (message.ReadByte(), message.ReadUInt16(), message.ReadUInt16(), message.ReadUInt16(), message.ReadUInt16());
+                var axeFighting = (message.ReadByte(), message.ReadUInt16(), message.ReadUInt16(), message.ReadUInt16(), message.ReadUInt16());
+                var distanceFighting = (message.ReadByte(), message.ReadUInt16(), message.ReadUInt16(), message.ReadUInt16(), message.ReadUInt16());
+                var shielding = (message.ReadByte(), message.ReadUInt16(), message.ReadUInt16(), message.ReadUInt16(), message.ReadUInt16());
+                var fishing = (message.ReadByte(), message.ReadUInt16(), message.ReadUInt16(), message.ReadUInt16(), message.ReadUInt16());
+
+                message.ReadBytes(2);
 
                 var playerName = message.ReadString();
                 var vocation = message.ReadString();
 
-                message.ReadBytes(9);
+                var levelAgain = message.ReadUInt16();
+
+                message.ReadBytes(7);
             }
+
+            //02 type
+            //00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 07 57 00 00 00 00 contains crit/leech, attack value, and converted damage
+            //1F 00 armor value
+            //44 00 defence value
+            //01 00 02
+
+            //05 type
+            //03 00 B3 00 02 00 C4 00 13 7D 4C 58 01
+            //12 00 53 61 66 65 6C 79 20 53 74 6F 72 65 64 20 41 77 61 79 achievement name
+            //3F 00 44 6F 6E 27 74 20 77 6F 72 72 79 2C 20 6E 6F 20 6F 6E 65 20 77 69 6C 6C 20 62 65 20 61 62 6C 65 20 74 6F 20 74 61 6B 65 20 69 74 20 66 72 6F 6D 20 79 6F 75 2E 20 50 72 6F 62 61 62 6C 79 2E achievement description
+            //01 B4 01 0F 52 6A 5A 00 8D 32 FE 53 03 06 65
             return true;
         }
 
