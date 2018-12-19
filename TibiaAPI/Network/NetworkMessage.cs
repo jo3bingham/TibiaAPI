@@ -860,11 +860,18 @@ namespace OXGaming.TibiaAPI.Network
         public void Write(OutfitInstance value)
         {
             Write((ushort)value.Id);
-            Write(value.ColorHead);
-            Write(value.ColorTorso);
-            Write(value.ColorLegs);
-            Write(value.ColorDetail);
-            Write(value.Addons);
+            if (value.Id == 0)
+            {
+                Write((ushort)0);
+            }
+            else
+            {
+                Write(value.ColorHead);
+                Write(value.ColorTorso);
+                Write(value.ColorLegs);
+                Write(value.ColorDetail);
+                Write(value.Addons);
+            }
         }
 
         public void Write(ObjectInstance value)
