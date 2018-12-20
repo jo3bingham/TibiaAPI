@@ -7,8 +7,6 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
     {
         public Position Position { get; set; }
 
-        public uint Unknown { get; set; }
-
         public byte Effect { get; set; }
 
         public GraphicalEffects(Client client)
@@ -24,15 +22,36 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
                 return false;
             }
 
-            // Apparently, there's more information than I thought, and it doesn't make sense.
-            //83 53 7E D6 7D 06 01 61 03 04 03 09 00
-            //83 54 7E D7 7D 07 01 1D 03 26 01 01 03 26 01 01 03 26 01 01 03 26 01 01 03 26 01 01 03 26 01 01 03 26 00
-
             Position = message.ReadPosition();
-            Effect = message.ReadByte();
-            if (Client.VersionNumber >= 12000000)
+
+            if (Client.VersionNumber < 12000000)
             {
-                Unknown = message.ReadUInt32();
+                Effect = message.ReadByte();
+            }
+            else
+            {
+                // TODO: Store new structure in a sensible manner
+                // that is easy to append to a networkmessage.
+                while (true)
+                {
+                    var type = message.ReadByte();
+                    if (type == 0)
+                    {
+                        break;
+                    }
+                    else if (type == 1)
+                    {
+                        var tilesToMove = message.ReadByte();
+                    }
+                    else if (type == 3)
+                    {
+                        var effectId = message.ReadByte();
+                    }
+                    else
+                    {
+                        throw new System.Exception($"[ServerPackets.GraphicalEffects] Unknown type: {type}");
+                    }
+                }
             }
             return true;
         }
@@ -41,10 +60,13 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
         {
             message.Write((byte)ServerPacketType.GraphicalEffects);
             message.Write(Position);
-            message.Write(Effect);
-            if (Client.VersionNumber >= 12000000)
+            if (Client.VersionNumber < 12000000)
             {
-                message.Write(Unknown);
+                message.Write(Effect);
+            }
+            else
+            {
+                // TODO: Write new structure to message.
             }
         }
     }
