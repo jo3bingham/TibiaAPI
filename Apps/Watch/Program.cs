@@ -1,11 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading;
 
+using OXGaming.TibiaAPI;
 using OXGaming.TibiaAPI.Constants;
 using OXGaming.TibiaAPI.Network;
 using OXGaming.TibiaAPI.Network.ServerPackets;
@@ -15,6 +15,8 @@ namespace Watch
     class Program
     {
         const string OxWorldName = "OXGaming Recording";
+
+        static readonly Client _client = new Client();
 
         static uint[] _xteaKey;
 
@@ -277,7 +279,7 @@ namespace Watch
                     throw new Exception($"World name does not match {OxWorldName}: {worldName}.");
                 }
 
-                var loginChallengeMessage = new NetworkMessage
+                var loginChallengeMessage = new NetworkMessage(_client)
                 {
                     SequenceNumber = 0
                 };
@@ -329,7 +331,7 @@ namespace Watch
                     count += read;
                 }
 
-                var message = new NetworkMessage();
+                var message = new NetworkMessage(_client);
                 message.Seek(0, SeekOrigin.Begin);
                 message.Write(_clientBuffer);
 
@@ -378,7 +380,7 @@ namespace Watch
                             continue;
                         }
 
-                        var message = new NetworkMessage
+                        var message = new NetworkMessage(_client)
                         {
                             SequenceNumber = sequenceNumber
                         };

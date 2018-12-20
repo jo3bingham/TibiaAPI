@@ -40,11 +40,11 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
                     Id == (int)CreatureInstanceType.OutdatedCreature ||
                     Id == (int)CreatureInstanceType.Creature)
                 {
-                    Creature = message.ReadCreatureInstance(Client, Id, Position);
+                    Creature = message.ReadCreatureInstance(Id, Position);
                 }
                 else
                 {
-                    Item = message.ReadObjectInstance(Client, Id);
+                    Item = message.ReadObjectInstance(Id);
                 }
             }
             else
@@ -55,7 +55,7 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
                     Id == (int)CreatureInstanceType.OutdatedCreature ||
                     Id == (int)CreatureInstanceType.Creature)
                 {
-                    Creature = message.ReadCreatureInstance(Client, Id);
+                    Creature = message.ReadCreatureInstance(Id);
                 }
             }
             return true;

@@ -20,7 +20,7 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
             var position = message.ReadPosition();
             var mapPosition = Client.WorldMapStorage.ToMap(position);
             Client.WorldMapStorage.ResetField(mapPosition.X, mapPosition.Y, mapPosition.Z);
-            message.ReadField(Client, mapPosition.X, mapPosition.Y, mapPosition.Z, Fields);
+            message.ReadField(mapPosition.X, mapPosition.Y, mapPosition.Z, Fields);
             return true;
         }
 

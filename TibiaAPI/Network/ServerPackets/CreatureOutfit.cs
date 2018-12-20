@@ -24,8 +24,8 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
             }
 
             CreatureId = message.ReadUInt32();
-            Outfit = message.ReadCreatureOutfit(Client);
-            Mount = message.ReadMountOutfit(Client);
+            Outfit = message.ReadCreatureOutfit();
+            Mount = message.ReadMountOutfit();
             return true;
         }
 

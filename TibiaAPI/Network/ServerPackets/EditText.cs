@@ -29,7 +29,7 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
             }
 
             WindowId = message.ReadUInt32();
-            Window = message.ReadObjectInstance(Client);
+            Window = message.ReadObjectInstance();
             MaxTextLength = message.ReadUInt16();
             Text = message.ReadString();
             Author = message.ReadString();

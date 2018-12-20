@@ -23,7 +23,7 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
             position.Y--;
             Client.WorldMapStorage.SetPosition(position.X, position.Y, position.Z);
             Client.WorldMapStorage.ScrollMap(0, 1);
-            message.ReadArea(Client, 0, 0, (MapSizeX - 1), 0, Fields);
+            message.ReadArea(0, 0, (MapSizeX - 1), 0, Fields);
             return true;
         }
 

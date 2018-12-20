@@ -23,7 +23,7 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
             }
 
             Slot = message.ReadByte();
-            Item = message.ReadObjectInstance(Client);
+            Item = message.ReadObjectInstance();
             return true;
         }
 

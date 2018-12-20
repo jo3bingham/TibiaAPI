@@ -28,11 +28,11 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
             }
 
             CreatureName = message.ReadString();
-            CreatureOutfit = message.ReadCreatureOutfit(Client);
+            CreatureOutfit = message.ReadCreatureOutfit();
             Loot.Capacity = message.ReadByte();
             for (var i = 0; i < Loot.Capacity; ++i)
             {
-                Loot.Add(message.ReadObjectInstance(Client));
+                Loot.Add(message.ReadObjectInstance());
             }
             return true;
         }

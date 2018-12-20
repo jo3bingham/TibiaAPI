@@ -26,7 +26,7 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
 
             ContainerId = message.ReadByte();
             Index = message.ReadUInt16();
-            Item = message.ReadObjectInstance(Client);
+            Item = message.ReadObjectInstance();
             return true;
         }
 

@@ -38,7 +38,7 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
             }
 
             ContainerId = message.ReadByte();
-            ContainerObject = message.ReadObjectInstance(Client);
+            ContainerObject = message.ReadObjectInstance();
             ContainerName = message.ReadString();
             NumberOfSlotsPerPage = message.ReadByte();
             IsSubContainer = message.ReadBool();
@@ -50,7 +50,7 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
             ContainerObjects.Capacity = message.ReadByte();
             for (var i = 0; i < ContainerObjects.Capacity; ++i)
             {
-                ContainerObjects.Add(message.ReadObjectInstance(Client));
+                ContainerObjects.Add(message.ReadObjectInstance());
             }
             return true;
         }

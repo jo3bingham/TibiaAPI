@@ -30,7 +30,7 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
                 case PreyDataState.Active:
                     {
                         var preyName = message.ReadString();
-                        var preyOutfit = message.ReadCreatureOutfit(Client);
+                        var preyOutfit = message.ReadCreatureOutfit();
                         var bonusType = message.ReadByte(); // 0 = damage, 1 = defense, 2 = exp, 3 = loot
                         var bonusPercentage = message.ReadUInt16();
                         var bonusRarity = message.ReadByte();
@@ -43,7 +43,7 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
                         for (var i = 0; i < preyCount; i++)
                         {
                             var preyName = message.ReadString();
-                            var preyOutfit = message.ReadCreatureOutfit(Client);
+                            var preyOutfit = message.ReadCreatureOutfit();
                         }
                     }
                     break;
@@ -57,7 +57,7 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
                         for (var i = 0; i < preyCount; i++)
                         {
                             var preyName = message.ReadString();
-                            var preyOutfit = message.ReadCreatureOutfit(Client);
+                            var preyOutfit = message.ReadCreatureOutfit();
                         }
                     }
                     break;

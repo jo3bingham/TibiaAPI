@@ -34,7 +34,7 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
 
                if (position.Z <= (MapMaxZ - UndergroundLayer))
                {
-                   message.ReadFloor(Client, 0, 0, Fields);
+                   message.ReadFloor(0, 0, Fields);
                }
             }
             else if (position.Z == (GroundLayer + 1))
@@ -45,7 +45,7 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
                var floorNumber = UndergroundLayer;
                while (floorNumber >= 0)
                {
-                   numberOfTilesToSkip = message.ReadFloor(Client, floorNumber, numberOfTilesToSkip, Fields);
+                   numberOfTilesToSkip = message.ReadFloor(floorNumber, numberOfTilesToSkip, Fields);
                    floorNumber--;
                }
             }

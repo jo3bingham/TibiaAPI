@@ -4,6 +4,8 @@ namespace OXGaming.TibiaAPI.Network.ClientPackets
 {
     public class OpenCyclopediaCharacterInfo : ClientPacket
     {
+        public uint Unknown { get; set; }
+
         public byte State { get; set; }
 
         public OpenCyclopediaCharacterInfo(Client client)
@@ -20,6 +22,10 @@ namespace OXGaming.TibiaAPI.Network.ClientPackets
             }
 
             State = message.ReadByte();
+            if (State == 3 || State == 4)
+            {
+                Unknown = message.ReadUInt32();
+            }
             return true;
         }
 
@@ -27,6 +33,10 @@ namespace OXGaming.TibiaAPI.Network.ClientPackets
         {
             message.Write((byte)ClientPacketType.OpenCyclopediaCharacterInfo);
             message.Write(State);
+            if (State == 3 || State == 4)
+            {
+                message.Write(Unknown);
+            }
         }
     }
 }

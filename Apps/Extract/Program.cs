@@ -238,8 +238,8 @@ namespace Extract
                             var wholeSize = reader.ReadUInt16();
                             var sequenceNumber = reader.ReadUInt32();
                             var packetSize = reader.ReadUInt16();
-                            var outMessage = new NetworkMessage();
-                            var message = new NetworkMessage
+                            var outMessage = new NetworkMessage(client);
+                            var message = new NetworkMessage(client)
                             {
                                 Size = size
                             };

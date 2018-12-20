@@ -32,10 +32,10 @@ namespace OXGaming.TibiaAPI.Network
         private readonly HttpClient _httpClient = new HttpClient();
         private readonly HttpListener _httpListener = new HttpListener();
 
-        private readonly NetworkMessage _clientInMessage = new NetworkMessage();
-        private readonly NetworkMessage _clientOutMessage = new NetworkMessage();
-        private readonly NetworkMessage _serverInMessage = new NetworkMessage();
-        private readonly NetworkMessage _serverOutMessage = new NetworkMessage();
+        private readonly NetworkMessage _clientInMessage;
+        private readonly NetworkMessage _clientOutMessage;
+        private readonly NetworkMessage _serverInMessage;
+        private readonly NetworkMessage _serverOutMessage;
 
         private readonly Queue<byte[]> _clientSendQueue = new Queue<byte[]>();
         private readonly Queue<byte[]> _serverSendQueue = new Queue<byte[]>();
@@ -77,7 +77,11 @@ namespace OXGaming.TibiaAPI.Network
         public Connection(Client client)
         {
             _client = client ?? throw new ArgumentNullException(nameof(client));
-        }
+            _clientInMessage = new NetworkMessage(_client);
+            _clientOutMessage = new NetworkMessage(_client);
+            _serverInMessage = new NetworkMessage(_client);
+            _serverOutMessage = new NetworkMessage(_client);
+    }
 
         public void SendToClient(ServerPacket packet)
         {
@@ -86,7 +90,7 @@ namespace OXGaming.TibiaAPI.Network
                 throw new ArgumentNullException(nameof(packet));
             }
 
-            var message = new NetworkMessage();
+            var message = new NetworkMessage(_client);
             packet.AppendToNetworkMessage(message);
             SendToClient(message);
         }
@@ -165,7 +169,7 @@ namespace OXGaming.TibiaAPI.Network
                 throw new ArgumentNullException(nameof(packet));
             }
 
-            var message = new NetworkMessage();
+            var message = new NetworkMessage(_client);
             packet.AppendToNetworkMessage(message);
             SendToServer(message);
         }

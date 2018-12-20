@@ -31,7 +31,7 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
                     var slotId = message.ReadByte();
                 }
 
-                var Item = message.ReadObjectInstance(Client);
+                var Item = message.ReadObjectInstance();
 
                 var imbuementSlots = message.ReadByte();
                 for (var x = 0; x < imbuementSlots; ++x)
@@ -50,7 +50,7 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
             if (IsPlayer)
             {
                 var playerName = message.ReadString();
-                var playerOutfit = message.ReadCreatureOutfit(Client);
+                var playerOutfit = message.ReadCreatureOutfit();
 
                 var numberOfDetails = message.ReadByte();
                 for (var n = 0; n < numberOfDetails; ++n)

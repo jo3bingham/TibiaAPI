@@ -29,7 +29,7 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
             Items.Capacity = message.ReadByte();
             for (var i = 0; i < Items.Capacity; ++i)
             {
-                Items.Add(message.ReadObjectInstance(Client));
+                Items.Add(message.ReadObjectInstance());
             }
             return true;
         }

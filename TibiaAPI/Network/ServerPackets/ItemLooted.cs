@@ -22,7 +22,7 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
                 return false;
             }
 
-            Item = message.ReadObjectInstance(Client);
+            Item = message.ReadObjectInstance();
             ItemDescription = message.ReadString();
             return true;
         }
