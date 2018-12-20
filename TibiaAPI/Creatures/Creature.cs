@@ -21,6 +21,7 @@ namespace OXGaming.TibiaAPI.Creatures
         public uint RemoveCreatureId { get; set; }
         public uint SummonerCreatureId { get; set; }
 
+        public ushort PvpHelpers { get; set; }
         public ushort Speed { get; set; }
 
         public byte Brightness { get; set; }

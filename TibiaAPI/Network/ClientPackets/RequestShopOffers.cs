@@ -36,7 +36,7 @@ namespace OXGaming.TibiaAPI.Network.ClientPackets
             }
 
             // TODO: Figure out this unknown.
-            Unknown = message.ReadUInt32();
+            Unknown = (Client.VersionNumber >= 11900000) ? message.ReadUInt32() : message.ReadUInt16();
             return true;
         }
 
@@ -52,7 +52,14 @@ namespace OXGaming.TibiaAPI.Network.ClientPackets
             {
                 message.Write(Category);
             }
-            message.Write(Unknown);
+            if (Client.VersionNumber >= 11900000)
+            {
+                message.Write(Unknown);
+            }
+            else
+            {
+                message.Write((ushort)Unknown);
+            }
         }
     }
 }

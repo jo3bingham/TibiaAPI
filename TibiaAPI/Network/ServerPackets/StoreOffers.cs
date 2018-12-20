@@ -31,7 +31,10 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
                 var subCategoryName = message.ReadString();
             }
 
-            message.ReadUInt16();
+            if (Client.VersionNumber >= 11900000)
+            {
+                message.ReadUInt16();
+            }
 
             var numberOfOffers = message.ReadUInt16();
             for (var i = 0; i < numberOfOffers; ++i)
@@ -43,7 +46,10 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
                     var offerId = message.ReadUInt32();
                     var offerCount = message.ReadUInt16();
                     var offerPrice = message.ReadUInt32();
-                    message.ReadByte();
+                    if (Client.VersionNumber >= 11900000)
+                    {
+                        message.ReadByte();
+                    }
                     var isDisabled = message.ReadBool();
                     if (isDisabled)
                     {

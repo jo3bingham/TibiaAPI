@@ -188,6 +188,7 @@ namespace OXGaming.TibiaAPI.Network
         public event ReceivedPacketEventHandler OnReceivedServerCreaturePartyPacket;
         public event ReceivedPacketEventHandler OnReceivedServerCreatureUnpassPacket;
         public event ReceivedPacketEventHandler OnReceivedServerCreatureMarksPacket;
+        public event ReceivedPacketEventHandler OnReceivedServerCreaturePvpHelpersPacket;
         public event ReceivedPacketEventHandler OnReceivedServerCreatureTypePacket;
         public event ReceivedPacketEventHandler OnReceivedServerEditTextPacket;
         public event ReceivedPacketEventHandler OnReceivedServerEditListPacket;
@@ -2645,6 +2646,19 @@ namespace OXGaming.TibiaAPI.Network
                                 if (packet.ParseFromNetworkMessage(inMessage))
                                 {
                                     packet.Forward = OnReceivedServerCreatureMarksPacket?.Invoke(packet) ?? true;
+                                    if (packet.Forward)
+                                    {
+                                        packet.AppendToNetworkMessage(outMessage);
+                                    }
+                                }
+                            }
+                            break;
+                        case ServerPacketType.CreaturePvpHelpers:
+                            {
+                                var packet = new ServerPackets.CreaturePvpHelpers(client);
+                                if (packet.ParseFromNetworkMessage(inMessage))
+                                {
+                                    packet.Forward = OnReceivedServerCreaturePvpHelpersPacket?.Invoke(packet) ?? true;
                                     if (packet.Forward)
                                     {
                                         packet.AppendToNetworkMessage(outMessage);

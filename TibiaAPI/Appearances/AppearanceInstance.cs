@@ -8,6 +8,7 @@ namespace OXGaming.TibiaAPI.Appearances
 
         public uint Id { get; }
 
+        public byte Mark { get; set; }
         public byte Phase { get; set; }
 
         public AppearanceInstance(uint id, Appearance type)

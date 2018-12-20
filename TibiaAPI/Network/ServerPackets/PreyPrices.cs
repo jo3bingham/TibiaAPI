@@ -23,8 +23,11 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
             }
 
             ListRerollPrice = message.ReadUInt32();
-            AutomaticBonusReroll = message.ReadByte();
-            LockPrey = message.ReadByte();
+            if (Client.VersionNumber >= 11900000)
+            {
+                AutomaticBonusReroll = message.ReadByte();
+                LockPrey = message.ReadByte();
+            }
             return true;
         }
 
@@ -32,8 +35,11 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
         {
             message.Write((byte)ServerPacketType.PreyPrices);
             message.Write(ListRerollPrice);
-            message.Write(AutomaticBonusReroll);
-            message.Write(LockPrey);
+            if (Client.VersionNumber >= 11900000)
+            {
+                message.Write(AutomaticBonusReroll);
+                message.Write(LockPrey);
+            }
         }
     }
 }

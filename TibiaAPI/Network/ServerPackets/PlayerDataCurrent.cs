@@ -22,6 +22,7 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
         public ushort Speed { get; set; }
         public ushort Stamina { get; set; }
         public ushort StoreBoostAddend { get; set; }
+        public ushort VoucherAddend { get; set; }
 
         public byte LevelPercent { get; set; }
         public byte MagicLevel { get; set; }
@@ -50,6 +51,10 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
             Level = message.ReadUInt16();
             LevelPercent = message.ReadByte();
             BaseXpGain = message.ReadUInt16();
+            if (Client.VersionNumber < 11900000)
+            {
+                VoucherAddend = message.ReadUInt16();
+            }
             GrindingAddend = message.ReadUInt16();
             StoreBoostAddend = message.ReadUInt16();
             HuntingBoostFactor = message.ReadUInt16();
@@ -81,6 +86,10 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
             message.Write(Level);
             message.Write(LevelPercent);
             message.Write(BaseXpGain);
+            if (Client.VersionNumber < 11900000)
+            {
+                message.Write(VoucherAddend);
+            }
             message.Write(GrindingAddend);
             message.Write(StoreBoostAddend);
             message.Write(HuntingBoostFactor);

@@ -21,8 +21,11 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
                 return false;
             }
 
-            // TODO: Figure out this unknown.
-            Unknown = message.ReadUInt16();
+            if (Client.VersionNumber >= 11900000)
+            {
+                // TODO: Figure out this unknown.
+                Unknown = message.ReadUInt16();
+            }
             StoreServiceType = (StoreServiceType)message.ReadByte();
             return true;
         }
@@ -30,7 +33,10 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
         public override void AppendToNetworkMessage(NetworkMessage message)
         {
             message.Write((byte)ServerPacketType.SetStoreDeepLink);
-            message.Write(Unknown);
+            if (Client.VersionNumber >= 11900000)
+            {
+                message.Write(Unknown);
+            }
             message.Write((byte)StoreServiceType);
         }
     }

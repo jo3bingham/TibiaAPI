@@ -331,9 +331,9 @@ namespace OXGaming.TibiaAPI.Network
                 return objectInstance;
             }
 
-            if (_client.VersionNumber < 19000000)
+            if (_client.VersionNumber < 11900000)
             {
-                ReadByte(); // mark
+                objectInstance.Mark = ReadByte();
             }
 
             if (objectType.Flags.Liquidcontainer || objectType.Flags.Liquidpool || objectType.Flags.Cumulative)
@@ -414,6 +414,10 @@ namespace OXGaming.TibiaAPI.Network
                         creature.SpeechCategory = ReadByte();
                         creature.Mark = ReadByte();
                         creature.InspectionState = ReadByte();
+                        if (_client.VersionNumber < 11900000)
+                        {
+                            creature.PvpHelpers = ReadUInt16();
+                        }
                         creature.IsUnpassable = ReadBool();
                     }
                     break;
@@ -443,6 +447,10 @@ namespace OXGaming.TibiaAPI.Network
                         creature.SpeechCategory = ReadByte();
                         creature.Mark = ReadByte();
                         creature.InspectionState = ReadByte();
+                        if (_client.VersionNumber < 11900000)
+                        {
+                            creature.PvpHelpers = ReadUInt16();
+                        }
                         creature.IsUnpassable = ReadBool();
                     }
                     break;
@@ -580,6 +588,7 @@ namespace OXGaming.TibiaAPI.Network
 
         public int ReadField(int x, int y, int z, List<(Field, Position)> fields)
         {
+            var hasSetEnvironmentalEffect = false;
             var thingsCount = 0;
             var numberOfTilesToSkip = 0;
             var mapPosition = new Position(x, y, z);
@@ -592,6 +601,15 @@ namespace OXGaming.TibiaAPI.Network
                 {
                     numberOfTilesToSkip = thingId - 65280;
                     break;
+                }
+
+                if (!hasSetEnvironmentalEffect)
+                {
+                    hasSetEnvironmentalEffect = true;
+                    if (_client.VersionNumber < 11900000)
+                    {
+                        continue;
+                    }
                 }
 
                 if (thingId == (int)CreatureInstanceType.UnknownCreature ||
@@ -897,6 +915,11 @@ namespace OXGaming.TibiaAPI.Network
                 return;
             }
 
+            if (_client.VersionNumber < 11900000)
+            {
+                Write(value.Mark);
+            }
+
             if (value.Type.Flags.Liquidcontainer || value.Type.Flags.Liquidpool || value.Type.Flags.Cumulative)
             {
                 Write((byte)value.Data);
@@ -961,6 +984,10 @@ namespace OXGaming.TibiaAPI.Network
                         Write(value.SpeechCategory);
                         Write(value.Mark);
                         Write(value.InspectionState);
+                        if (_client.VersionNumber < 11900000)
+                        {
+                            Write(value.PvpHelpers);
+                        }
                         Write(value.IsUnpassable);
                     }
                     break;
@@ -995,6 +1022,10 @@ namespace OXGaming.TibiaAPI.Network
                         Write(value.SpeechCategory);
                         Write(value.Mark);
                         Write(value.InspectionState);
+                        if (_client.VersionNumber < 11900000)
+                        {
+                            Write(value.PvpHelpers);
+                        }
                         Write(value.IsUnpassable);
                     }
                     break;
