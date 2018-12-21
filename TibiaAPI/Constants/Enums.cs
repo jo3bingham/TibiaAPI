@@ -159,6 +159,7 @@
         SetDiscoveryArea = 5,
         Passage = 6,
         SubAreaMonsters = 7,
+        Unknown = 8,
         Donations = 9,
         SetCurrentArea = 10
     }

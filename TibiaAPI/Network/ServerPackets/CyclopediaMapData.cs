@@ -87,6 +87,11 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
                     }
                 }
             }
+            else if (DataType == CyclopediaMapDataType.Unknown)
+            {
+                var raceId = message.ReadUInt16();
+                var unlocked = message.ReadBool(); //?
+            }
             else if (DataType == CyclopediaMapDataType.Donations)
             {
                 var minimumGoldDonation = message.ReadUInt64();
