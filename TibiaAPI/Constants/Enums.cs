@@ -100,7 +100,8 @@
         Inactive = 1,
         Active = 2,
         Selection = 3,
-        SelectionChangeMonster = 4
+        SelectionChangeMonster = 4,
+        Unknown = 6
     }
 
     public enum ResourceType

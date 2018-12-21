@@ -25,8 +25,8 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
                 case PreyDataState.Locked:
                     {
                         var unlockOption = message.ReadByte(); // 0 = temporary and permanent, 1 = permanent
-                        break;
                     }
+                    break;
                 case PreyDataState.Active:
                     {
                         var preyName = message.ReadString();
@@ -58,6 +58,16 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
                         {
                             var preyName = message.ReadString();
                             var preyOutfit = message.ReadCreatureOutfit();
+                        }
+                    }
+                    break;
+                case PreyDataState.Unknown:
+                    {
+                        message.ReadBytes(4);
+                        var count = message.ReadUInt16();
+                        while (count-- > 0)
+                        {
+                            message.ReadBytes(2);
                         }
                     }
                     break;

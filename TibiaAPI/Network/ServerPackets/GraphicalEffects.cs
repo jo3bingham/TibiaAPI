@@ -47,6 +47,10 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
                     {
                         var effectId = message.ReadByte();
                     }
+                    else if (type == 4 || type == 5)
+                    {
+                        message.ReadBytes(3);
+                    }
                     else
                     {
                         throw new System.Exception($"[ServerPackets.GraphicalEffects] Unknown type: {type}");
