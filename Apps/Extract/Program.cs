@@ -42,6 +42,8 @@ namespace Extract
         private static string _recording;
         private static string _tibiaDirectory = string.Empty;
 
+        private static bool _convertToNewFormat = false;
+
         static void ParseArgs(string[] args)
         {
             foreach (var arg in args)
@@ -52,34 +54,46 @@ namespace Extract
                 }
 
                 var splitArg = arg.Split('=');
-                if (splitArg.Length != 2)
+                if (splitArg.Length == 1)
                 {
-                    continue;
+                    switch (splitArg[0])
+                    {
+                        case "-c":
+                        case "--convert":
+                            {
+                                _convertToNewFormat = true;
+                            }
+                            break;
+                        default:
+                            break;
+                    }
                 }
-
-                switch (splitArg[0])
+                else if (splitArg.Length == 2)
                 {
-                    case "-r":
-                    case "--recording":
-                    case "--recordings":
-                        {
-                            _recording = splitArg[1].Replace("\"", "");
-                        }
-                        break;
-                    case "-o":
-                    case "--outdirectory":
-                        {
-                            _outDirectory = splitArg[1].Replace("\"", "");
-                        }
-                        break;
-                    case "-t":
-                    case "--tibiadirectory":
-                        {
-                            _tibiaDirectory = splitArg[1].Replace("\"", "");
-                        }
-                        break;
-                    default:
-                        break;
+                    switch (splitArg[0])
+                    {
+                        case "-r":
+                        case "--recording":
+                        case "--recordings":
+                            {
+                                _recording = splitArg[1].Replace("\"", "");
+                            }
+                            break;
+                        case "-o":
+                        case "--outdirectory":
+                            {
+                                _outDirectory = splitArg[1].Replace("\"", "");
+                            }
+                            break;
+                        case "-t":
+                        case "--tibiadirectory":
+                            {
+                                _tibiaDirectory = splitArg[1].Replace("\"", "");
+                            }
+                            break;
+                        default:
+                            break;
+                    }
                 }
             }
         }
@@ -163,15 +177,32 @@ namespace Extract
                         var isOxRecording = filename.EndsWith(".oxr", StringComparison.CurrentCultureIgnoreCase);
                         if (isOxRecording)
                         {
-                            // TODO: Handle the client version properly.
                             // OXR files begin with the client version they were recorded with.
                             // This will allows us to easily parse recordings from older client versions.
                             var version = reader.ReadString();
-                            Console.WriteLine(version);
+                            Console.WriteLine($"Client version: {version}");
+                            if (int.TryParse(version.Replace(".", ""), out var versionNumber))
+                            {
+                                if (!Directory.Exists($"ClientData/{versionNumber}"))
+                                {
+                                    Console.WriteLine($"ClientData directory for version {version} doesn't exist. Falling back to Tibia directory.");
+                                }
+                            }
+                            else
+                            {
+                                Console.WriteLine($"Invalid client version at beginning of recording: {version}");
+                            }
                         }
 
                         _file = null;
                         var client = new Client(_tibiaDirectory);
+                        var oxrFile = (isOxRecording || !_convertToNewFormat) ? null :
+                            new BinaryWriter(File.Open(Path.Combine(Path.GetDirectoryName(filename), Path.GetFileNameWithoutExtension(filename) + ".oxr"), FileMode.Create));
+                        if (oxrFile != null)
+                        {
+                            Console.WriteLine("Converting to new format...");
+                            oxrFile.Write(client.Version);
+                        }
 
                         client.Proxy.OnReceivedServerLoginChallengePacket += (packet) =>
                         {
@@ -228,6 +259,16 @@ namespace Extract
 
                             var size = reader.ReadUInt32();
 
+                            if (oxrFile != null)
+                            {
+                                oxrFile.Write((byte)PacketType.Server);
+                                // Unfortunately, we don't know the timestamp of each packet.
+                                oxrFile.Write(0L);
+                                oxrFile.Write(size);
+                                oxrFile.Write(reader.ReadBytes((int)size));
+                                reader.BaseStream.Position -= size;
+                            }
+
                             // We don't care about client packets right now, so skip them.
                             if (packetType == PacketType.Client)
                             {
@@ -244,6 +285,14 @@ namespace Extract
                                 Size = size
                             };
 
+                            // Tibia10 recordings seem to contain login data (worlds, characters, etc.)
+                            // in their first packet. We don't parse this, and we don't need to, so skip it.
+                            if (client.VersionNumber <= 11405409 && sequenceNumber == 0 && reader.PeekChar() == 0x28)
+                            {
+                                reader.BaseStream.Position += size - 8;
+                                continue;
+                            }
+
                             reader.BaseStream.Position -= 8;
                             if ((reader.BaseStream.Length - reader.BaseStream.Position) >= message.Size)
                             {
@@ -258,6 +307,12 @@ namespace Extract
                                     client.Proxy.ParseClientMessage(client, message, outMessage);
                                 }
                             }
+                        }
+
+                        if (oxrFile != null)
+                        {
+                            oxrFile.Close();
+                            Console.WriteLine("Done");
                         }
 
                         if (_file != null)
