@@ -19,14 +19,28 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
                 return false;
             }
 
-            State = message.ReadUInt32();
+            if (Client.VersionNumber >= 11400000)
+            {
+                State = message.ReadUInt32();
+            }
+            else
+            {
+                State = message.ReadUInt16();
+            }
             return true;
         }
 
         public override void AppendToNetworkMessage(NetworkMessage message)
         {
             message.Write((byte)ServerPacketType.PlayerState);
-            message.Write(State);
+            if (Client.VersionNumber >= 11400000)
+            {
+                message.Write(State);
+            }
+            else
+            {
+                message.Write((ushort)State);
+            }
         }
     }
 }

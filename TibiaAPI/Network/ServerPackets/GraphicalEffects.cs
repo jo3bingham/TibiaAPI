@@ -43,6 +43,10 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
                     {
                         var tilesToMove = message.ReadByte();
                     }
+                    else if (type == 2)
+                    {
+                        message.ReadUInt16();
+                    }
                     else if (type == 3)
                     {
                         var effectId = message.ReadByte();

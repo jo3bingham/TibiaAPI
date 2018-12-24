@@ -331,7 +331,7 @@ namespace OXGaming.TibiaAPI.Network
                 return objectInstance;
             }
 
-            if (_client.VersionNumber < 11900000)
+            if (_client.VersionNumber < 11887288)
             {
                 objectInstance.Mark = ReadByte();
             }
@@ -341,7 +341,7 @@ namespace OXGaming.TibiaAPI.Network
                 objectInstance.Data = ReadByte();
             }
 
-            if (objectType.Flags.Container)
+            if (_client.VersionNumber >= 11506055 && objectType.Flags.Container)
             {
                 objectInstance.IsLootContainer = ReadBool();
                 if (objectInstance.IsLootContainer)
@@ -606,7 +606,7 @@ namespace OXGaming.TibiaAPI.Network
                 if (!hasSetEnvironmentalEffect)
                 {
                     hasSetEnvironmentalEffect = true;
-                    if (_client.VersionNumber < 11900000)
+                    if (_client.VersionNumber < 11880000)
                     {
                         continue;
                     }

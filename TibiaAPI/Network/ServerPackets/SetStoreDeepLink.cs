@@ -21,7 +21,7 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
                 return false;
             }
 
-            if (Client.VersionNumber >= 11900000)
+            if (Client.VersionNumber >= 11887288)
             {
                 // TODO: Figure out this unknown.
                 Unknown = message.ReadUInt16();
@@ -33,7 +33,7 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
         public override void AppendToNetworkMessage(NetworkMessage message)
         {
             message.Write((byte)ServerPacketType.SetStoreDeepLink);
-            if (Client.VersionNumber >= 11900000)
+            if (Client.VersionNumber >= 11887288)
             {
                 message.Write(Unknown);
             }

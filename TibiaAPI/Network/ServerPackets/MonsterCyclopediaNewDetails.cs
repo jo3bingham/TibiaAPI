@@ -23,7 +23,7 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
 
             RaceId = message.ReadUInt16();
 
-            if (Client.VersionNumber < 11900000)
+            if (Client.VersionNumber < 11900000 && Client.VersionNumber > 11596424)
             {
                 _unknown = message.ReadBytes(3);
             }

@@ -243,6 +243,7 @@ namespace OXGaming.TibiaAPI.Network
         public event ReceivedPacketEventHandler OnReceivedServerCyclopediaCharacterInfoPacket;
         public event ReceivedPacketEventHandler OnReceivedServerTutorialHintPacket;
         public event ReceivedPacketEventHandler OnReceivedServerCyclopediaMapDataPacket;
+        public event ReceivedPacketEventHandler OnReceivedServerAutomapFlagPacket;
         public event ReceivedPacketEventHandler OnReceivedServerDailyRewardCollectionStatePacket;
         public event ReceivedPacketEventHandler OnReceivedServerCreditBalancePacket;
         public event ReceivedPacketEventHandler OnReceivedServerIngameShopErrorPacket;
@@ -273,6 +274,7 @@ namespace OXGaming.TibiaAPI.Network
         public event ReceivedPacketEventHandler OnReceivedServerMarketBrowsePacket;
         public event ReceivedPacketEventHandler OnReceivedServerShowModalDialogPacket;
         public event ReceivedPacketEventHandler OnReceivedServerStoreCategoriesPacket;
+        public event ReceivedPacketEventHandler OnReceivedServerPremiumShopPacket;
         public event ReceivedPacketEventHandler OnReceivedServerStoreOffersPacket;
         public event ReceivedPacketEventHandler OnReceivedServerTransactionHistoryPacket;
         public event ReceivedPacketEventHandler OnReceivedServerStoreSuccessPacket;
@@ -3358,13 +3360,28 @@ namespace OXGaming.TibiaAPI.Network
                             break;
                         case ServerPacketType.CyclopediaMapData:
                             {
-                                var packet = new ServerPackets.CyclopediaMapData(client);
-                                if (packet.ParseFromNetworkMessage(inMessage))
+                                if (client.VersionNumber >= 11800000)
                                 {
-                                    packet.Forward = OnReceivedServerCyclopediaMapDataPacket?.Invoke(packet) ?? true;
-                                    if (packet.Forward)
+                                    var packet = new ServerPackets.CyclopediaMapData(client);
+                                    if (packet.ParseFromNetworkMessage(inMessage))
                                     {
-                                        packet.AppendToNetworkMessage(outMessage);
+                                        packet.Forward = OnReceivedServerCyclopediaMapDataPacket?.Invoke(packet) ?? true;
+                                        if (packet.Forward)
+                                        {
+                                            packet.AppendToNetworkMessage(outMessage);
+                                        }
+                                    }
+                                }
+                                else
+                                {
+                                    var packet = new ServerPackets.AutomapFlag(client);
+                                    if (packet.ParseFromNetworkMessage(inMessage))
+                                    {
+                                        packet.Forward = OnReceivedServerAutomapFlagPacket?.Invoke(packet) ?? true;
+                                        if (packet.Forward)
+                                        {
+                                            packet.AppendToNetworkMessage(outMessage);
+                                        }
                                     }
                                 }
                             }
@@ -3748,13 +3765,28 @@ namespace OXGaming.TibiaAPI.Network
                             break;
                         case ServerPacketType.StoreCategories:
                             {
-                                var packet = new ServerPackets.StoreCategories(client);
-                                if (packet.ParseFromNetworkMessage(inMessage))
+                                if (client.VersionNumber >= 11600000)
                                 {
-                                    packet.Forward = OnReceivedServerStoreCategoriesPacket?.Invoke(packet) ?? true;
-                                    if (packet.Forward)
+                                    var packet = new ServerPackets.StoreCategories(client);
+                                    if (packet.ParseFromNetworkMessage(inMessage))
                                     {
-                                        packet.AppendToNetworkMessage(outMessage);
+                                        packet.Forward = OnReceivedServerStoreCategoriesPacket?.Invoke(packet) ?? true;
+                                        if (packet.Forward)
+                                        {
+                                            packet.AppendToNetworkMessage(outMessage);
+                                        }
+                                    }
+                                }
+                                else
+                                {
+                                    var packet = new ServerPackets.PremiumShop(client);
+                                    if (packet.ParseFromNetworkMessage(inMessage))
+                                    {
+                                        packet.Forward = OnReceivedServerPremiumShopPacket?.Invoke(packet) ?? true;
+                                        if (packet.Forward)
+                                        {
+                                            packet.AppendToNetworkMessage(outMessage);
+                                        }
                                     }
                                 }
                             }

@@ -7,6 +7,7 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
         public ulong Experience { get; set; }
 
         public uint FreeCapacity { get; set; }
+        public uint MaxCapacity { get; set; }
 
         public ushort BaseXpGain { get; set; }
         public ushort CurrentHealth { get; set; }
@@ -47,6 +48,10 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
             CurrentHealth = message.ReadUInt16();
             MaxHealth = message.ReadUInt16();
             FreeCapacity = message.ReadUInt32();
+            if (Client.VersionNumber <= 11496030)
+            {
+                MaxCapacity = message.ReadUInt32();
+            }
             Experience = message.ReadUInt64();
             Level = message.ReadUInt16();
             LevelPercent = message.ReadByte();
@@ -82,6 +87,10 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
             message.Write(CurrentHealth);
             message.Write(MaxHealth);
             message.Write(FreeCapacity);
+            if (Client.VersionNumber <= 11496030)
+            {
+                message.Write(MaxCapacity);
+            }
             message.Write(Experience);
             message.Write(Level);
             message.Write(LevelPercent);

@@ -65,8 +65,11 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
             ManaLeechChance = (message.ReadUInt16(), message.ReadUInt16());
             ManaLeechAmount = (message.ReadUInt16(), message.ReadUInt16());
 
-            MaxCapacity = message.ReadUInt32();
-            BonusCapacity = message.ReadUInt32();
+            if (Client.VersionNumber >= 11506055)
+            {
+                MaxCapacity = message.ReadUInt32();
+                BonusCapacity = message.ReadUInt32();
+            }
             return true;
         }
 
@@ -155,8 +158,11 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
             message.Write(ManaLeechAmount.Level);
             message.Write(ManaLeechAmount.Base);
 
-            message.Write(MaxCapacity);
-            message.Write(BonusCapacity);
+            if (Client.VersionNumber >= 11506055)
+            {
+                message.Write(MaxCapacity);
+                message.Write(BonusCapacity);
+            }
         }
     }
 }

@@ -5,7 +5,7 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
 {
     public class MoveCreature : ServerPacket
     {
-        public Position FromPosition { get; set; }
+        public Position FromPosition { get; set; } = new Position(0xFFFF, 0xFFFF, 7);
         public Position ToPosition { get; set; }
 
         public uint CreatureId { get; set; }

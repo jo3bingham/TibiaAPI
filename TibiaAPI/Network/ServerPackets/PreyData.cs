@@ -74,7 +74,10 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
             }
 
             var timeLeftUntilFreeListReroll = message.ReadUInt16();
-            var preyOption = message.ReadByte(); // 0 = none, 1 = automatic reroll, 2 = locked
+            if (Client.VersionNumber > 11606457)
+            {
+                var preyOption = message.ReadByte(); // 0 = none, 1 = automatic reroll, 2 = locked
+            }
             return true;
         }
 
