@@ -16,12 +16,13 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
 
         public ushort TypeId { get; set; }
 
-        public MarketDetail()
+        public MarketDetail(Client client)
         {
+            Client = client;
             PacketType = ServerPacketType.MarketDetail;
         }
 
-        public override bool ParseFromNetworkMessage(Client client, NetworkMessage message)
+        public override bool ParseFromNetworkMessage(NetworkMessage message)
         {
             if (message.ReadByte() != (byte)ServerPacketType.MarketDetail)
             {

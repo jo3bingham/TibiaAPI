@@ -10,12 +10,13 @@ namespace OXGaming.TibiaAPI.Network.ClientPackets
 
         public uint OfferId { get; set; }
 
-        public BuyIngameShopOffer()
+        public BuyIngameShopOffer(Client client)
         {
+            Client = client;
             PacketType = ClientPacketType.BuyIngameShopOffer;
         }
 
-        public override bool ParseFromNetworkMessage(Client client, NetworkMessage message)
+        public override bool ParseFromNetworkMessage(NetworkMessage message)
         {
             if (message.ReadByte() != (byte)ClientPacketType.BuyIngameShopOffer)
             {

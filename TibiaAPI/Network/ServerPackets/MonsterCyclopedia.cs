@@ -17,12 +17,13 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
 
         public byte Unknown1 { get; set; }
 
-        public MonsterCyclopedia()
+        public MonsterCyclopedia(Client client)
         {
+            Client = client;
             PacketType = ServerPacketType.MonsterCyclopedia;
         }
 
-        public override bool ParseFromNetworkMessage(Client client, NetworkMessage message)
+        public override bool ParseFromNetworkMessage(NetworkMessage message)
         {
             if (message.ReadByte() != (byte)ServerPacketType.MonsterCyclopedia)
             {

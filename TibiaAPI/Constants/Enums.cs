@@ -100,7 +100,8 @@
         Inactive = 1,
         Active = 2,
         Selection = 3,
-        SelectionChangeMonster = 4
+        SelectionChangeMonster = 4,
+        Unknown = 6
     }
 
     public enum ResourceType
@@ -158,6 +159,7 @@
         SetDiscoveryArea = 5,
         Passage = 6,
         SubAreaMonsters = 7,
+        Unknown = 8,
         Donations = 9,
         SetCurrentArea = 10
     }
@@ -357,6 +359,7 @@
         OpenMonsterCyclopediaMonsters = 0xE2,
         OpenMonsterCyclopediaRace = 0xE3,
         MonsterBonusEffectAction = 0xE4,
+        OpenCyclopediaCharacterInfo = 0xE5,
         BugReport = 0xE6,
         ThankYou = 0xE7,
         GetOfferDescription = 0xE8,
@@ -428,7 +431,7 @@
         CounterOffer = 0x7E,
         CloseTrade = 0x7F,
         Ambiente = 0x82,
-        GraphicalEffect = 0x83,
+        GraphicalEffects = 0x83,
         RemoveGraphicalEffect = 0x84,
         MissileEffect = 0x85,
         Trappers = 0x87,
@@ -440,6 +443,7 @@
         CreatureParty = 0x91,
         CreatureUnpass = 0x92,
         CreatureMarks = 0x93,
+        CreaturePvpHelpers = 0x94,
         CreatureType = 0x95,
         EditText = 0x96,
         EditList = 0x97,
@@ -491,6 +495,7 @@
         MonsterCyclopediaRace = 0xD7,
         MonsterCyclopediaBonusEffects = 0xD8,
         MonsterCyclopediaNewDetails = 0xD9,
+        CyclopediaCharacterInfo = 0xDA,
         TutorialHint = 0xDC,
         CyclopediaMapData = 0xDD,
         DailyRewardCollectionState = 0xDE,

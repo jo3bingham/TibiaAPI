@@ -9,12 +9,13 @@ namespace OXGaming.TibiaAPI.Network.ClientPackets
         public byte ButtonId { get; set; }
         public byte Choice { get; set; }
 
-        public AnswerModalDialog()
+        public AnswerModalDialog(Client client)
         {
+            Client = client;
             PacketType = ClientPacketType.AnswerModalDialog;
         }
 
-        public override bool ParseFromNetworkMessage(Client client, NetworkMessage message)
+        public override bool ParseFromNetworkMessage(NetworkMessage message)
         {
             if (message.ReadByte() != (byte)ClientPacketType.AnswerModalDialog)
             {

@@ -9,12 +9,13 @@ namespace OXGaming.TibiaAPI.Network.ClientPackets
         public byte MonsterIndex { get; set; }
         public byte PreyId { get; set; }
 
-        public PreyAction()
+        public PreyAction(Client client)
         {
+            Client = client;
             PacketType = ClientPacketType.PreyAction;
         }
 
-        public override bool ParseFromNetworkMessage(Client client, NetworkMessage message)
+        public override bool ParseFromNetworkMessage(NetworkMessage message)
         {
             if (message.ReadByte() != (byte)ClientPacketType.PreyAction)
             {

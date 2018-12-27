@@ -19,12 +19,13 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
 
         public bool NotifyOnLogin { get; set; }
 
-        public BuddyData()
+        public BuddyData(Client client)
         {
+            Client = client;
             PacketType = ServerPacketType.BuddyData;
         }
 
-        public override bool ParseFromNetworkMessage(Client client, NetworkMessage message)
+        public override bool ParseFromNetworkMessage(NetworkMessage message)
         {
             if (message.ReadByte() != (byte)ServerPacketType.BuddyData)
             {

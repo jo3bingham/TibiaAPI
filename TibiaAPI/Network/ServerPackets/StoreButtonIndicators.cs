@@ -7,12 +7,13 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
         public bool IsNewBannerVisible { get; set; }
         public bool IsSaleBannerVisible { get; set; }
 
-        public StoreButtonIndicators()
+        public StoreButtonIndicators(Client client)
         {
+            Client = client;
             PacketType = ServerPacketType.StoreButtonIndicators;
         }
 
-        public override bool ParseFromNetworkMessage(Client client, NetworkMessage message)
+        public override bool ParseFromNetworkMessage(NetworkMessage message)
         {
             if (message.ReadByte() != (byte)ServerPacketType.StoreButtonIndicators)
             {

@@ -6,12 +6,13 @@ namespace OXGaming.TibiaAPI.Network.ClientPackets
     {
         public ushort QuestLineId { get; set; }
 
-        public GetQuestLine()
+        public GetQuestLine(Client client)
         {
+            Client = client;
             PacketType = ClientPacketType.GetQuestLine;
         }
 
-        public override bool ParseFromNetworkMessage(Client client, NetworkMessage message)
+        public override bool ParseFromNetworkMessage(NetworkMessage message)
         {
             if (message.ReadByte() != (byte)ClientPacketType.GetQuestLine)
             {

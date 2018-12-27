@@ -32,10 +32,10 @@ namespace OXGaming.TibiaAPI.Network
         private readonly HttpClient _httpClient = new HttpClient();
         private readonly HttpListener _httpListener = new HttpListener();
 
-        private readonly NetworkMessage _clientInMessage = new NetworkMessage();
-        private readonly NetworkMessage _clientOutMessage = new NetworkMessage();
-        private readonly NetworkMessage _serverInMessage = new NetworkMessage();
-        private readonly NetworkMessage _serverOutMessage = new NetworkMessage();
+        private readonly NetworkMessage _clientInMessage;
+        private readonly NetworkMessage _clientOutMessage;
+        private readonly NetworkMessage _serverInMessage;
+        private readonly NetworkMessage _serverOutMessage;
 
         private readonly Queue<byte[]> _clientSendQueue = new Queue<byte[]>();
         private readonly Queue<byte[]> _serverSendQueue = new Queue<byte[]>();
@@ -74,16 +74,14 @@ namespace OXGaming.TibiaAPI.Network
         /// Initializes a new instance of the <see cref="Connection"/> class that acts as a proxy
         /// between the Tibia client and the game server.
         /// </summary>
-        /// <remarks>
-        /// The Tibia client's web service address needs to be changed to http://127.0.0.1/ so
-        /// that it will connect to this proxy. The Tibia client connects over port 80, and the proxy
-        /// listens on port 80, so there's no need to specify a port. However, since the proxy listens
-        /// on port 80, that means it needs to be ran in an elevated environment (i.e., root/administrator).
-        /// </remarks>
         public Connection(Client client)
         {
             _client = client ?? throw new ArgumentNullException(nameof(client));
-        }
+            _clientInMessage = new NetworkMessage(_client);
+            _clientOutMessage = new NetworkMessage(_client);
+            _serverInMessage = new NetworkMessage(_client);
+            _serverOutMessage = new NetworkMessage(_client);
+    }
 
         public void SendToClient(ServerPacket packet)
         {
@@ -92,7 +90,7 @@ namespace OXGaming.TibiaAPI.Network
                 throw new ArgumentNullException(nameof(packet));
             }
 
-            var message = new NetworkMessage();
+            var message = new NetworkMessage(_client);
             packet.AppendToNetworkMessage(message);
             SendToClient(message);
         }
@@ -171,7 +169,7 @@ namespace OXGaming.TibiaAPI.Network
                 throw new ArgumentNullException(nameof(packet));
             }
 
-            var message = new NetworkMessage();
+            var message = new NetworkMessage(_client);
             packet.AppendToNetworkMessage(message);
             SendToServer(message);
         }

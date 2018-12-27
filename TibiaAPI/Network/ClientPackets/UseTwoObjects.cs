@@ -14,12 +14,13 @@ namespace OXGaming.TibiaAPI.Network.ClientPackets
         public byte FromStackPositionOrData { get; set; }
         public byte ToStackPosition { get; set; }
 
-        public UseTwoObjects()
+        public UseTwoObjects(Client client)
         {
+            Client = client;
             PacketType = ClientPacketType.UseTwoObjects;
         }
 
-        public override bool ParseFromNetworkMessage(Client client, NetworkMessage message)
+        public override bool ParseFromNetworkMessage(NetworkMessage message)
         {
             if (message.ReadByte() != (byte)ClientPacketType.UseTwoObjects)
             {

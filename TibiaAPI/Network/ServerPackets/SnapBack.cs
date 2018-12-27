@@ -6,12 +6,13 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
     {
         public Direction Direction { get; set; }
 
-        public SnapBack()
+        public SnapBack(Client client)
         {
+            Client = client;
             PacketType = ServerPacketType.SnapBack;
         }
 
-        public override bool ParseFromNetworkMessage(Client client, NetworkMessage message)
+        public override bool ParseFromNetworkMessage(NetworkMessage message)
         {
             if (message.ReadByte() != (byte)ServerPacketType.SnapBack)
             {

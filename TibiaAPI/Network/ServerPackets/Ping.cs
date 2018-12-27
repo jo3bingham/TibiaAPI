@@ -4,12 +4,13 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
 {
     public class Ping : ServerPacket
     {
-        public Ping()
+        public Ping(Client client)
         {
+            Client = client;
             PacketType = ServerPacketType.Ping;
         }
 
-        public override bool ParseFromNetworkMessage(Client client, NetworkMessage message)
+        public override bool ParseFromNetworkMessage(NetworkMessage message)
         {
             if (message.ReadByte() != (byte)ServerPacketType.Ping)
             {

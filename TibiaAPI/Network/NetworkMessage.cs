@@ -44,6 +44,8 @@ namespace OXGaming.TibiaAPI.Network
 
         private readonly byte[] _buffer = new byte[MaxMessageSize];
 
+        private Client _client;
+
         private uint _size = PayloadDataPosition;
 
         /// <value>
@@ -89,8 +91,9 @@ namespace OXGaming.TibiaAPI.Network
             }
         }
 
-        public NetworkMessage()
+        public NetworkMessage(Client client)
         {
+            _client = client ?? throw new ArgumentNullException(nameof(client));
             SequenceNumber = ~CompressedFlag;
         }
 
@@ -271,13 +274,13 @@ namespace OXGaming.TibiaAPI.Network
             return new Position(x, y, z);
         }
 
-        public AppearanceInstance ReadMountOutfit(Client client)
+        public AppearanceInstance ReadMountOutfit()
         {
             var mountId = ReadUInt16();
-            return client.AppearanceStorage.CreateOutfitInstance(mountId, 0, 0, 0, 0, 0);
+            return _client.AppearanceStorage.CreateOutfitInstance(mountId, 0, 0, 0, 0, 0);
         }
 
-        public AppearanceInstance ReadCreatureOutfit(Client client)
+        public AppearanceInstance ReadCreatureOutfit()
         {
             var outfitId = ReadUInt16();
             if (outfitId != 0)
@@ -287,18 +290,19 @@ namespace OXGaming.TibiaAPI.Network
                 var colorLegs = ReadByte();
                 var colorDetail = ReadByte();
                 var addons = ReadByte();
-                return client.AppearanceStorage.CreateOutfitInstance(outfitId, colorHead, colorTorso, colorLegs, colorDetail, addons);
+                return 
+                    _client.AppearanceStorage.CreateOutfitInstance(outfitId, colorHead, colorTorso, colorLegs, colorDetail, addons);
             }
 
             var itemId = ReadUInt16();
             if (itemId == 0)
             {
-                return client.AppearanceStorage.CreateOutfitInstance(0, 0, 0, 0, 0, 0);
+                return _client.AppearanceStorage.CreateOutfitInstance(0, 0, 0, 0, 0, 0);
             }
-            return client.AppearanceStorage.CreateObjectInstance(itemId, 0);
+            return _client.AppearanceStorage.CreateObjectInstance(itemId, 0);
         }
 
-        public ObjectInstance ReadObjectInstance(Client client, ushort id = 0)
+        public ObjectInstance ReadObjectInstance(ushort id = 0)
         {
             if (id == 0)
             {
@@ -315,7 +319,7 @@ namespace OXGaming.TibiaAPI.Network
                 throw new Exception($"[NetworkMessage.ReadObjectInstance] Invalid object id: {id}");
             }
 
-            var objectInstance = client.AppearanceStorage.CreateObjectInstance(id, 0);
+            var objectInstance = _client.AppearanceStorage.CreateObjectInstance(id, 0);
             if (objectInstance == null)
             {
                 throw new Exception($"[NetworkMessage.ReadObjectInstance] Invalid object id: {id}");
@@ -327,12 +331,17 @@ namespace OXGaming.TibiaAPI.Network
                 return objectInstance;
             }
 
+            if (_client.VersionNumber < 11887288)
+            {
+                objectInstance.Mark = ReadByte();
+            }
+
             if (objectType.Flags.Liquidcontainer || objectType.Flags.Liquidpool || objectType.Flags.Cumulative)
             {
                 objectInstance.Data = ReadByte();
             }
 
-            if (objectType.Flags.Container)
+            if (_client.VersionNumber >= 11506055 && objectType.Flags.Container)
             {
                 objectInstance.IsLootContainer = ReadBool();
                 if (objectInstance.IsLootContainer)
@@ -349,7 +358,7 @@ namespace OXGaming.TibiaAPI.Network
             return objectInstance;
         }
 
-        public Creature ReadCreatureInstance(Client client, int id = -1, Position position = null)
+        public Creature ReadCreatureInstance(int id = -1, Position position = null)
         {
             if (id == -1)
             {
@@ -372,7 +381,7 @@ namespace OXGaming.TibiaAPI.Network
                         var removeCreatureId = ReadUInt32();
                         var creatureId = ReadUInt32();
 
-                        //creature = (creatureId == client.Player.Id) ? client.Player : new Creature(creatureId);
+                        //creature = (creatureId == _client.Player.Id) ? _client.Player : new Creature(creatureId);
                         creature = new Creature(creatureId)
                         {
                             Type = (CreatureType)ReadByte(),
@@ -387,8 +396,8 @@ namespace OXGaming.TibiaAPI.Network
                         creature.Name = ReadString();
                         creature.HealthPercent = ReadByte();
                         creature.Direction = (Direction)ReadByte();
-                        creature.Outfit = ReadCreatureOutfit(client);
-                        creature.Mount = ReadMountOutfit(client);
+                        creature.Outfit = ReadCreatureOutfit();
+                        creature.Mount = ReadMountOutfit();
                         creature.Brightness = ReadByte();
                         creature.LightColor = ReadByte();
                         creature.Speed = ReadUInt16();
@@ -405,6 +414,10 @@ namespace OXGaming.TibiaAPI.Network
                         creature.SpeechCategory = ReadByte();
                         creature.Mark = ReadByte();
                         creature.InspectionState = ReadByte();
+                        if (_client.VersionNumber < 11900000)
+                        {
+                            creature.PvpHelpers = ReadUInt16();
+                        }
                         creature.IsUnpassable = ReadBool();
                     }
                     break;
@@ -417,8 +430,8 @@ namespace OXGaming.TibiaAPI.Network
                             Direction = (Direction)ReadByte()
                         };
 
-                        creature.Outfit = ReadCreatureOutfit(client);
-                        creature.Mount = ReadMountOutfit(client);
+                        creature.Outfit = ReadCreatureOutfit();
+                        creature.Mount = ReadMountOutfit();
                         creature.Brightness = ReadByte();
                         creature.LightColor = ReadByte();
                         creature.Speed = ReadUInt16();
@@ -434,6 +447,10 @@ namespace OXGaming.TibiaAPI.Network
                         creature.SpeechCategory = ReadByte();
                         creature.Mark = ReadByte();
                         creature.InspectionState = ReadByte();
+                        if (_client.VersionNumber < 11900000)
+                        {
+                            creature.PvpHelpers = ReadUInt16();
+                        }
                         creature.IsUnpassable = ReadBool();
                     }
                     break;
@@ -569,12 +586,13 @@ namespace OXGaming.TibiaAPI.Network
             }
         }
 
-        public int ReadField(Client client, int x, int y, int z, List<(Field, Position)> fields)
+        public int ReadField(int x, int y, int z, List<(Field, Position)> fields)
         {
+            var hasSetEnvironmentalEffect = false;
             var thingsCount = 0;
             var numberOfTilesToSkip = 0;
             var mapPosition = new Position(x, y, z);
-            var absolutePosition = client.WorldMapStorage.ToAbsolute(mapPosition);
+            var absolutePosition = _client.WorldMapStorage.ToAbsolute(mapPosition);
 
             while (true)
             {
@@ -585,25 +603,34 @@ namespace OXGaming.TibiaAPI.Network
                     break;
                 }
 
+                if (!hasSetEnvironmentalEffect)
+                {
+                    hasSetEnvironmentalEffect = true;
+                    if (_client.VersionNumber < 11880000)
+                    {
+                        continue;
+                    }
+                }
+
                 if (thingId == (int)CreatureInstanceType.UnknownCreature ||
                     thingId == (int)CreatureInstanceType.OutdatedCreature ||
                     thingId == (int)CreatureInstanceType.Creature)
                 {
-                    var creature = ReadCreatureInstance(client, thingId, absolutePosition);
-                    var objectInstance = client.AppearanceStorage.CreateObjectInstance(99, creature.Id);
+                    var creature = ReadCreatureInstance(thingId, absolutePosition);
+                    var objectInstance = _client.AppearanceStorage.CreateObjectInstance(99, creature.Id);
 
                     if (thingsCount < MapSizeW)
                     {
-                        client.WorldMapStorage.AppendObject(x, y, z, objectInstance);
+                        _client.WorldMapStorage.AppendObject(x, y, z, objectInstance);
                     }
                 }
                 else
                 {
-                    var objectInstance = ReadObjectInstance(client, thingId);
+                    var objectInstance = ReadObjectInstance(thingId);
 
                     if (thingsCount < MapSizeW)
                     {
-                        client.WorldMapStorage.AppendObject(x, y, z, objectInstance);
+                        _client.WorldMapStorage.AppendObject(x, y, z, objectInstance);
                     }
                     else
                     {
@@ -614,7 +641,7 @@ namespace OXGaming.TibiaAPI.Network
                 thingsCount++;
             }
 
-            var field = client.WorldMapStorage.GetField(x, y, z);
+            var field = _client.WorldMapStorage.GetField(x, y, z);
             if (field != null)
             {
                 fields.Add((field, absolutePosition));
@@ -623,7 +650,7 @@ namespace OXGaming.TibiaAPI.Network
             return numberOfTilesToSkip;
         }
 
-        public int ReadFloor(Client client, int floorNumber, int numberOfTilesToSkip, List<(Field, Position)> fields)
+        public int ReadFloor(int floorNumber, int numberOfTilesToSkip, List<(Field, Position)> fields)
         {
             if (floorNumber < 0 || floorNumber >= MapSizeZ)
             {
@@ -643,7 +670,7 @@ namespace OXGaming.TibiaAPI.Network
                     }
                     else
                     {
-                        numberOfTilesToSkip = ReadField(client, currentX, currentY, floorNumber, fields);
+                        numberOfTilesToSkip = ReadField(currentX, currentY, floorNumber, fields);
                     }
                     currentY++;
                 }
@@ -653,7 +680,7 @@ namespace OXGaming.TibiaAPI.Network
             return numberOfTilesToSkip;
         }
 
-        public int ReadArea(Client client, int startX, int startY, int endX, int endY, List<(Field, Position)> fields)
+        public int ReadArea(int startX, int startY, int endX, int endY, List<(Field, Position)> fields)
         {
             var endZ = 0;
             var stepZ = 0;
@@ -661,7 +688,7 @@ namespace OXGaming.TibiaAPI.Network
             var currentX = 0;
             var currentY = 0;
             var currentZ = 0;
-            var position = client.WorldMapStorage.GetPosition();
+            var position = _client.WorldMapStorage.GetPosition();
 
             if (position.Z <= GroundLayer)
             {
@@ -690,7 +717,7 @@ namespace OXGaming.TibiaAPI.Network
                         }
                         else
                         {
-                            numberOfTilesToSkip = ReadField(client, currentX, currentY, currentZ, fields);
+                            numberOfTilesToSkip = ReadField(currentX, currentY, currentZ, fields);
                         }
                         currentY++;
                     }
@@ -860,11 +887,18 @@ namespace OXGaming.TibiaAPI.Network
         public void Write(OutfitInstance value)
         {
             Write((ushort)value.Id);
-            Write(value.ColorHead);
-            Write(value.ColorTorso);
-            Write(value.ColorLegs);
-            Write(value.ColorDetail);
-            Write(value.Addons);
+            if (value.Id == 0)
+            {
+                Write((ushort)0);
+            }
+            else
+            {
+                Write(value.ColorHead);
+                Write(value.ColorTorso);
+                Write(value.ColorLegs);
+                Write(value.ColorDetail);
+                Write(value.Addons);
+            }
         }
 
         public void Write(ObjectInstance value)
@@ -879,6 +913,11 @@ namespace OXGaming.TibiaAPI.Network
             if (value.Type == null)
             {
                 return;
+            }
+
+            if (_client.VersionNumber < 11900000)
+            {
+                Write(value.Mark);
             }
 
             if (value.Type.Flags.Liquidcontainer || value.Type.Flags.Liquidpool || value.Type.Flags.Cumulative)
@@ -945,6 +984,10 @@ namespace OXGaming.TibiaAPI.Network
                         Write(value.SpeechCategory);
                         Write(value.Mark);
                         Write(value.InspectionState);
+                        if (_client.VersionNumber < 11900000)
+                        {
+                            Write(value.PvpHelpers);
+                        }
                         Write(value.IsUnpassable);
                     }
                     break;
@@ -979,6 +1022,10 @@ namespace OXGaming.TibiaAPI.Network
                         Write(value.SpeechCategory);
                         Write(value.Mark);
                         Write(value.InspectionState);
+                        if (_client.VersionNumber < 11900000)
+                        {
+                            Write(value.PvpHelpers);
+                        }
                         Write(value.IsUnpassable);
                     }
                     break;

@@ -11,12 +11,13 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
 
         public ulong Money { get; set; }
 
-        public PlayerGoods()
+        public PlayerGoods(Client client)
         {
+            Client = client;
             PacketType = ServerPacketType.PlayerGoods;
         }
 
-        public override bool ParseFromNetworkMessage(Client client, NetworkMessage message)
+        public override bool ParseFromNetworkMessage(NetworkMessage message)
         {
             if (message.ReadByte() != (byte)ServerPacketType.PlayerGoods)
             {

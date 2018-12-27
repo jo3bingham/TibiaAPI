@@ -13,12 +13,13 @@ namespace OXGaming.TibiaAPI.Network.ClientPackets
 
         public byte RaceType { get; set; }
 
-        public OpenMonsterCyclopediaMonsters()
+        public OpenMonsterCyclopediaMonsters(Client client)
         {
-           PacketType = ClientPacketType.OpenMonsterCyclopediaMonsters;
+            Client = client;
+            PacketType = ClientPacketType.OpenMonsterCyclopediaMonsters;
         }
 
-        public override bool ParseFromNetworkMessage(Client client, NetworkMessage message)
+        public override bool ParseFromNetworkMessage(NetworkMessage message)
         {
             if (message.ReadByte() != (byte)ClientPacketType.OpenMonsterCyclopediaMonsters)
             {

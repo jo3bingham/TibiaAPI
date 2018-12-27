@@ -4,12 +4,13 @@ namespace OXGaming.TibiaAPI.Network.ClientPackets
 {
     public class MarketLeave : ClientPacket
     {
-        public MarketLeave()
+        public MarketLeave(Client client)
         {
+            Client = client;
             PacketType = ClientPacketType.MarketLeave;
         }
 
-        public override bool ParseFromNetworkMessage(Client client, NetworkMessage message)
+        public override bool ParseFromNetworkMessage(NetworkMessage message)
         {
             if (message.ReadByte() != (byte)ClientPacketType.MarketLeave)
             {

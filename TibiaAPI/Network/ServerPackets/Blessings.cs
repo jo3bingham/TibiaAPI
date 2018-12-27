@@ -8,12 +8,13 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
 
         public byte Amount { get; set; }
 
-        public Blessings()
+        public Blessings(Client client)
         {
+            Client = client;
             PacketType = ServerPacketType.Blessings;
         }
 
-        public override bool ParseFromNetworkMessage(Client client, NetworkMessage message)
+        public override bool ParseFromNetworkMessage(NetworkMessage message)
         {
             if (message.ReadByte() != (byte)ServerPacketType.Blessings)
             {

@@ -4,12 +4,13 @@ namespace OXGaming.TibiaAPI.Network.ClientPackets
 {
     public class CloseNpcChannel : ClientPacket
     {
-        public CloseNpcChannel()
+        public CloseNpcChannel(Client client)
         {
+            Client = client;
             PacketType = ClientPacketType.CloseNpcChannel;
         }
 
-        public override bool ParseFromNetworkMessage(Client client, NetworkMessage message)
+        public override bool ParseFromNetworkMessage(NetworkMessage message)
         {
             if (message.ReadByte() != (byte)ClientPacketType.CloseNpcChannel)
             {

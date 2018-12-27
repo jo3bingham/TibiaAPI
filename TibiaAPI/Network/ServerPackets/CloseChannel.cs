@@ -6,12 +6,13 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
     {
         public ushort ChannelId { get; set; }
 
-        public CloseChannel()
+        public CloseChannel(Client client)
         {
+            Client = client;
             PacketType = ServerPacketType.CloseChannel;
         }
 
-        public override bool ParseFromNetworkMessage(Client client, NetworkMessage message)
+        public override bool ParseFromNetworkMessage(NetworkMessage message)
         {
             if (message.ReadByte() != (byte)ServerPacketType.CloseChannel)
             {

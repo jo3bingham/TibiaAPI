@@ -12,12 +12,13 @@ namespace OXGaming.TibiaAPI.Network.ClientPackets
 
         public uint Unknown { get; set; }
 
-        public RequestShopOffers()
+        public RequestShopOffers(Client client)
         {
+            Client = client;
             PacketType = ClientPacketType.RequestShopOffers;
         }
 
-        public override bool ParseFromNetworkMessage(Client client, NetworkMessage message)
+        public override bool ParseFromNetworkMessage(NetworkMessage message)
         {
             if (message.ReadByte() != (byte)ClientPacketType.RequestShopOffers)
             {
@@ -35,7 +36,7 @@ namespace OXGaming.TibiaAPI.Network.ClientPackets
             }
 
             // TODO: Figure out this unknown.
-            Unknown = message.ReadUInt32();
+            Unknown = (Client.VersionNumber >= 11900000) ? message.ReadUInt32() : message.ReadUInt16();
             return true;
         }
 
@@ -51,7 +52,14 @@ namespace OXGaming.TibiaAPI.Network.ClientPackets
             {
                 message.Write(Category);
             }
-            message.Write(Unknown);
+            if (Client.VersionNumber >= 11900000)
+            {
+                message.Write(Unknown);
+            }
+            else
+            {
+                message.Write((ushort)Unknown);
+            }
         }
     }
 }

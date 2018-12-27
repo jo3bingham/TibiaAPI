@@ -8,12 +8,13 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
 
         public long Balance { get; set; }
 
-        public RequestResourceBalance()
+        public RequestResourceBalance(Client client)
         {
+            Client = client;
             PacketType = ServerPacketType.RequestResourceBalance;
         }
 
-        public override bool ParseFromNetworkMessage(Client client, NetworkMessage message)
+        public override bool ParseFromNetworkMessage(NetworkMessage message)
         {
             if (message.ReadByte() != (byte)ServerPacketType.RequestResourceBalance)
             {
@@ -33,7 +34,14 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
                     break;
                 case ResourceType.CharmPoints:
                     {
-                        Balance = message.ReadUInt32();
+                        if (Client.VersionNumber > 11586239)
+                        {
+                            Balance = message.ReadUInt32();
+                        }
+                        else
+                        {
+                            Balance = message.ReadInt64();
+                        }
                     }
                     break;
                 default:
@@ -48,7 +56,14 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
             message.Write((byte)ResourceType);
             if (ResourceType == ResourceType.CharmPoints)
             {
-                message.Write((uint)Balance);
+                if (Client.VersionNumber > 11586239)
+                {
+                    message.Write((uint)Balance);
+                }
+                else
+                {
+                    message.Write(Balance);
+                }
             }
             else
             {

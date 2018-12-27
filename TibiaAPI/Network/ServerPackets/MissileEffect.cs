@@ -10,12 +10,13 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
 
         public byte Effect { get; set; }
 
-        public MissileEffect()
+        public MissileEffect(Client client)
         {
+            Client = client;
             PacketType = ServerPacketType.MissileEffect;
         }
 
-        public override bool ParseFromNetworkMessage(Client client, NetworkMessage message)
+        public override bool ParseFromNetworkMessage(NetworkMessage message)
         {
             if (message.ReadByte() != (byte)ServerPacketType.MissileEffect)
             {

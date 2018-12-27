@@ -6,12 +6,13 @@ namespace OXGaming.TibiaAPI.Network.ClientPackets
     {
         public byte EntriesPerPage { get; set; }
 
-        public OpenTransactionHistory()
+        public OpenTransactionHistory(Client client)
         {
+            Client = client;
             PacketType = ClientPacketType.OpenTransactionHistory;
         }
 
-        public override bool ParseFromNetworkMessage(Client client, NetworkMessage message)
+        public override bool ParseFromNetworkMessage(NetworkMessage message)
         {
             if (message.ReadByte() != (byte)ClientPacketType.OpenTransactionHistory)
             {

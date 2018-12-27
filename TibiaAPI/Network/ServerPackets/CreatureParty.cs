@@ -8,12 +8,13 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
 
         public byte PartyShield { get; set; }
 
-        public CreatureParty()
+        public CreatureParty(Client client)
         {
+            Client = client;
             PacketType = ServerPacketType.CreatureParty;
         }
 
-        public override bool ParseFromNetworkMessage(Client client, NetworkMessage message)
+        public override bool ParseFromNetworkMessage(NetworkMessage message)
         {
             if (message.ReadByte() != (byte)ServerPacketType.CreatureParty)
             {

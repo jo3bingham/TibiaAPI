@@ -4,12 +4,13 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
 {
     public class FieldData : Map
     {
-        public FieldData()
+        public FieldData(Client client)
         {
+            Client = client;
             PacketType = ServerPacketType.FieldData;
         }
 
-        public override bool ParseFromNetworkMessage(Client client, NetworkMessage message)
+        public override bool ParseFromNetworkMessage(NetworkMessage message)
         {
             if (message.ReadByte() != (byte)ServerPacketType.FieldData)
             {
@@ -17,9 +18,9 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
             }
 
             var position = message.ReadPosition();
-            var mapPosition = client.WorldMapStorage.ToMap(position);
-            client.WorldMapStorage.ResetField(mapPosition.X, mapPosition.Y, mapPosition.Z);
-            message.ReadField(client, mapPosition.X, mapPosition.Y, mapPosition.Z, Fields);
+            var mapPosition = Client.WorldMapStorage.ToMap(position);
+            Client.WorldMapStorage.ResetField(mapPosition.X, mapPosition.Y, mapPosition.Z);
+            message.ReadField(mapPosition.X, mapPosition.Y, mapPosition.Z, Fields);
             return true;
         }
 

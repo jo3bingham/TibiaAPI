@@ -12,12 +12,13 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
 
         public string PlayerName { get; set; }
 
-        public CounterOffer()
+        public CounterOffer(Client client)
         {
+            Client = client;
             PacketType = ServerPacketType.CounterOffer;
         }
 
-        public override bool ParseFromNetworkMessage(Client client, NetworkMessage message)
+        public override bool ParseFromNetworkMessage(NetworkMessage message)
         {
             if (message.ReadByte() != (byte)ServerPacketType.CounterOffer)
             {
@@ -28,7 +29,7 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
             Items.Capacity = message.ReadByte();
             for (var i = 0; i < Items.Capacity; ++i)
             {
-                Items.Add(message.ReadObjectInstance(client));
+                Items.Add(message.ReadObjectInstance());
             }
             return true;
         }

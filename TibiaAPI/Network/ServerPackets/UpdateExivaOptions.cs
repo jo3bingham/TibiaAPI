@@ -20,12 +20,13 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
         public bool AllowMyPartyMembers { get; set; }
         public bool AllowMyVips { get; set; }
 
-        public UpdateExivaOptions()
+        public UpdateExivaOptions(Client client)
         {
+            Client = client;
             PacketType = ServerPacketType.UpdateExivaOptions;
         }
 
-        public override bool ParseFromNetworkMessage(Client client, NetworkMessage message)
+        public override bool ParseFromNetworkMessage(NetworkMessage message)
         {
             if (message.ReadByte() != (byte)ServerPacketType.UpdateExivaOptions)
             {

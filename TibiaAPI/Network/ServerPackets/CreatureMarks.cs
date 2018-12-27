@@ -9,12 +9,13 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
         public byte Mark { get; set; }
         public byte MarkType { get; set; }
 
-        public CreatureMarks()
+        public CreatureMarks(Client client)
         {
+            Client = client;
             PacketType = ServerPacketType.CreatureMarks;
         }
 
-        public override bool ParseFromNetworkMessage(Client client, NetworkMessage message)
+        public override bool ParseFromNetworkMessage(NetworkMessage message)
         {
             if (message.ReadByte() != (byte)ServerPacketType.CreatureMarks)
             {

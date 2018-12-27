@@ -9,12 +9,13 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
         public byte PvpMode { get; set; }
         public byte SecureMode { get; set; }
 
-        public SetTactics()
+        public SetTactics(Client client)
         {
+            Client = client;
             PacketType = ServerPacketType.SetTactics;
         }
 
-        public override bool ParseFromNetworkMessage(Client client, NetworkMessage message)
+        public override bool ParseFromNetworkMessage(NetworkMessage message)
         {
             if (message.ReadByte() != (byte)ServerPacketType.SetTactics)
             {

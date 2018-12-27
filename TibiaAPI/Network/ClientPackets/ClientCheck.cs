@@ -9,12 +9,13 @@ namespace OXGaming.TibiaAPI.Network.ClientPackets
     {
         public List<byte> Data { get; } = new List<byte>();
 
-        public ClientCheck()
+        public ClientCheck(Client client)
         {
+            Client = client;
             PacketType = ClientPacketType.ClientCheck;
         }
 
-        public override bool ParseFromNetworkMessage(Client client, NetworkMessage message)
+        public override bool ParseFromNetworkMessage(NetworkMessage message)
         {
             if (message.ReadByte() != (byte)ClientPacketType.ClientCheck)
             {

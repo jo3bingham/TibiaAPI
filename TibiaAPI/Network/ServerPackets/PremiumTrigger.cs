@@ -9,12 +9,13 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
     {
         public List<byte> PremiumTriggers { get; } = new List<byte>();
 
-        public PremiumTrigger()
+        public PremiumTrigger(Client client)
         {
+            Client = client;
             PacketType = ServerPacketType.PremiumTrigger;
         }
 
-        public override bool ParseFromNetworkMessage(Client client, NetworkMessage message)
+        public override bool ParseFromNetworkMessage(NetworkMessage message)
         {
             if (message.ReadByte() != (byte)ServerPacketType.PremiumTrigger)
             {

@@ -20,12 +20,13 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
 
         public bool HasPriority { get; set; }
 
-        public ShowModalDialog()
+        public ShowModalDialog(Client client)
         {
+            Client = client;
             PacketType = ServerPacketType.ShowModalDialog;
         }
 
-        public override bool ParseFromNetworkMessage(Client client, NetworkMessage message)
+        public override bool ParseFromNetworkMessage(NetworkMessage message)
         {
             if (message.ReadByte() != (byte)ServerPacketType.ShowModalDialog)
             {

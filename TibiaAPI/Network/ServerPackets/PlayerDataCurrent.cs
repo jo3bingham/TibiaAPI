@@ -7,6 +7,7 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
         public ulong Experience { get; set; }
 
         public uint FreeCapacity { get; set; }
+        public uint MaxCapacity { get; set; }
 
         public ushort BaseXpGain { get; set; }
         public ushort CurrentHealth { get; set; }
@@ -22,6 +23,7 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
         public ushort Speed { get; set; }
         public ushort Stamina { get; set; }
         public ushort StoreBoostAddend { get; set; }
+        public ushort VoucherAddend { get; set; }
 
         public byte LevelPercent { get; set; }
         public byte MagicLevel { get; set; }
@@ -30,12 +32,13 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
         public byte Soul { get; set; }
         public bool CanBuyMoreStoreXpBoosts { get; set; }
 
-        public PlayerDataCurrent()
+        public PlayerDataCurrent(Client client)
         {
+            Client = client;
             PacketType = ServerPacketType.PlayerDataCurrent;
         }
 
-        public override bool ParseFromNetworkMessage(Client client, NetworkMessage message)
+        public override bool ParseFromNetworkMessage(NetworkMessage message)
         {
             if (message.ReadByte() != (byte)ServerPacketType.PlayerDataCurrent)
             {
@@ -45,18 +48,29 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
             CurrentHealth = message.ReadUInt16();
             MaxHealth = message.ReadUInt16();
             FreeCapacity = message.ReadUInt32();
+            if (Client.VersionNumber <= 11496030)
+            {
+                MaxCapacity = message.ReadUInt32();
+            }
             Experience = message.ReadUInt64();
             Level = message.ReadUInt16();
             LevelPercent = message.ReadByte();
             BaseXpGain = message.ReadUInt16();
+            if (Client.VersionNumber < 11900000)
+            {
+                VoucherAddend = message.ReadUInt16();
+            }
             GrindingAddend = message.ReadUInt16();
             StoreBoostAddend = message.ReadUInt16();
             HuntingBoostFactor = message.ReadUInt16();
             CurrentMana = message.ReadUInt16();
             MaxMana = message.ReadUInt16();
-            MagicLevel = message.ReadByte();
-            MagicLevelBase = message.ReadByte();
-            MagicLevelPercent = message.ReadByte();
+            if (Client.VersionNumber < 12000000)
+            {
+                MagicLevel = message.ReadByte();
+                MagicLevelBase = message.ReadByte();
+                MagicLevelPercent = message.ReadByte();
+            }
             Soul = message.ReadByte();
             Stamina = message.ReadUInt16();
             Speed = message.ReadUInt16();
@@ -73,18 +87,29 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
             message.Write(CurrentHealth);
             message.Write(MaxHealth);
             message.Write(FreeCapacity);
+            if (Client.VersionNumber <= 11496030)
+            {
+                message.Write(MaxCapacity);
+            }
             message.Write(Experience);
             message.Write(Level);
             message.Write(LevelPercent);
             message.Write(BaseXpGain);
+            if (Client.VersionNumber < 11900000)
+            {
+                message.Write(VoucherAddend);
+            }
             message.Write(GrindingAddend);
             message.Write(StoreBoostAddend);
             message.Write(HuntingBoostFactor);
             message.Write(CurrentMana);
             message.Write(MaxMana);
-            message.Write(MagicLevel);
-            message.Write(MagicLevelBase);
-            message.Write(MagicLevelPercent);
+            if (Client.VersionNumber < 12000000)
+            {
+                message.Write(MagicLevel);
+                message.Write(MagicLevelBase);
+                message.Write(MagicLevelPercent);
+            }
             message.Write(Soul);
             message.Write(Stamina);
             message.Write(Speed);

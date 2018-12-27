@@ -6,12 +6,13 @@ namespace OXGaming.TibiaAPI.Network.ClientPackets
     {
         public uint PlayerId { get; set; }
 
-        public InviteToParty()
+        public InviteToParty(Client client)
         {
+            Client = client;
             PacketType = ClientPacketType.InviteToParty;
         }
 
-        public override bool ParseFromNetworkMessage(Client client, NetworkMessage message)
+        public override bool ParseFromNetworkMessage(NetworkMessage message)
         {
             if (message.ReadByte() != (byte)ClientPacketType.InviteToParty)
             {

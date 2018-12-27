@@ -9,4 +9,7 @@
     <ProjectReference Include="..\..\TibiaAPI\TibiaAPI.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Include="$(SolutionDir)ClientData\**" CopyToOutputDirectory="PreserveNewest" LinkBase="ClientData\" />
+  </ItemGroup>
 </Project>

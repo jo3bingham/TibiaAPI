@@ -30,12 +30,13 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
         public byte CurrentKillStage { get; set; }
         public byte UnknownByte { get; set; }
 
-        public MonsterCyclopediaRace()
+        public MonsterCyclopediaRace(Client client)
         {
+            Client = client;
             PacketType = ServerPacketType.MonsterCyclopediaRace;
         }
 
-        public override bool ParseFromNetworkMessage(Client client, NetworkMessage message)
+        public override bool ParseFromNetworkMessage(NetworkMessage message)
         {
             if (message.ReadByte() != (byte)ServerPacketType.MonsterCyclopediaRace)
             {

@@ -4,12 +4,13 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
 {
     public class PreyData : ServerPacket
     {
-        public PreyData()
+        public PreyData(Client client)
         {
+            Client = client;
             PacketType = ServerPacketType.PreyData;
         }
 
-        public override bool ParseFromNetworkMessage(Client client, NetworkMessage message)
+        public override bool ParseFromNetworkMessage(NetworkMessage message)
         {
             if (message.ReadByte() != (byte)ServerPacketType.PreyData)
             {
@@ -24,12 +25,12 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
                 case PreyDataState.Locked:
                     {
                         var unlockOption = message.ReadByte(); // 0 = temporary and permanent, 1 = permanent
-                        break;
                     }
+                    break;
                 case PreyDataState.Active:
                     {
                         var preyName = message.ReadString();
-                        var preyOutfit = message.ReadCreatureOutfit(client);
+                        var preyOutfit = message.ReadCreatureOutfit();
                         var bonusType = message.ReadByte(); // 0 = damage, 1 = defense, 2 = exp, 3 = loot
                         var bonusPercentage = message.ReadUInt16();
                         var bonusRarity = message.ReadByte();
@@ -42,7 +43,7 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
                         for (var i = 0; i < preyCount; i++)
                         {
                             var preyName = message.ReadString();
-                            var preyOutfit = message.ReadCreatureOutfit(client);
+                            var preyOutfit = message.ReadCreatureOutfit();
                         }
                     }
                     break;
@@ -56,14 +57,27 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
                         for (var i = 0; i < preyCount; i++)
                         {
                             var preyName = message.ReadString();
-                            var preyOutfit = message.ReadCreatureOutfit(client);
+                            var preyOutfit = message.ReadCreatureOutfit();
+                        }
+                    }
+                    break;
+                case PreyDataState.Unknown:
+                    {
+                        message.ReadBytes(4);
+                        var count = message.ReadUInt16();
+                        while (count-- > 0)
+                        {
+                            message.ReadBytes(2);
                         }
                     }
                     break;
             }
 
             var timeLeftUntilFreeListReroll = message.ReadUInt16();
-            var preyOption = message.ReadByte(); // 0 = none, 1 = automatic reroll, 2 = locked
+            if (Client.VersionNumber > 11606457)
+            {
+                var preyOption = message.ReadByte(); // 0 = none, 1 = automatic reroll, 2 = locked
+            }
             return true;
         }
 

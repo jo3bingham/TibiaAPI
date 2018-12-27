@@ -8,12 +8,13 @@ namespace OXGaming.TibiaAPI.Network.ClientPackets
 
         public uint WindowId { get; set; }
 
-        public EditText()
+        public EditText(Client client)
         {
+            Client = client;
             PacketType = ClientPacketType.EditText;
         }
 
-        public override bool ParseFromNetworkMessage(Client client, NetworkMessage message)
+        public override bool ParseFromNetworkMessage(NetworkMessage message)
         {
             if (message.ReadByte() != (byte)ClientPacketType.EditText)
             {

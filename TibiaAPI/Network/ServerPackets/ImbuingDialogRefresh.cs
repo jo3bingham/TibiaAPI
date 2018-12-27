@@ -14,12 +14,13 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
         
         public ushort AppearanceTypeId { get; set; }
 
-        public ImbuingDialogRefresh()
+        public ImbuingDialogRefresh(Client client)
         {
+            Client = client;
             PacketType = ServerPacketType.ImbuingDialogRefresh;
         }
 
-        public override bool ParseFromNetworkMessage(Client client, NetworkMessage message)
+        public override bool ParseFromNetworkMessage(NetworkMessage message)
         {
             if (message.ReadByte() != (byte)ServerPacketType.ImbuingDialogRefresh)
             {

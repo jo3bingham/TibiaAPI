@@ -7,12 +7,13 @@ namespace OXGaming.TibiaAPI.Network.ClientPackets
     {
         public Position Position { get; set; }
 
-        public BrowseField()
+        public BrowseField(Client client)
         {
+            Client = client;
             PacketType = ClientPacketType.BrowseField;
         }
 
-        public override bool ParseFromNetworkMessage(Client client, NetworkMessage message)
+        public override bool ParseFromNetworkMessage(NetworkMessage message)
         {
             if (message.ReadByte() != (byte)ClientPacketType.BrowseField)
             {

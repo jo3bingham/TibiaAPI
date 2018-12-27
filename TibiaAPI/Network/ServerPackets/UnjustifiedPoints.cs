@@ -12,12 +12,13 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
         public byte ProgressWeek { get; set; }
         public byte SkullDuration { get; set; }
 
-        public UnjustifiedPoints()
+        public UnjustifiedPoints(Client client)
         {
+            Client = client;
             PacketType = ServerPacketType.UnjustifiedPoints;
         }
 
-        public override bool ParseFromNetworkMessage(Client client, NetworkMessage message)
+        public override bool ParseFromNetworkMessage(NetworkMessage message)
         {
             if (message.ReadByte() != (byte)ServerPacketType.UnjustifiedPoints)
             {

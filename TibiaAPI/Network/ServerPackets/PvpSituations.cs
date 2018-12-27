@@ -6,12 +6,13 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
     {
         public byte OpenPvpSituations { get; set; }
 
-        public PvpSituations()
+        public PvpSituations(Client client)
         {
+            Client = client;
             PacketType = ServerPacketType.PvpSituations;
         }
 
-        public override bool ParseFromNetworkMessage(Client client, NetworkMessage message)
+        public override bool ParseFromNetworkMessage(NetworkMessage message)
         {
             if (message.ReadByte() != (byte)ServerPacketType.PvpSituations)
             {

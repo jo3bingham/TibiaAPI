@@ -13,12 +13,13 @@ namespace OXGaming.TibiaAPI.Network.ClientPackets
         public string SpeakerName { get; set; }
         public string TypoText { get; set; }
 
-        public BugReport()
+        public BugReport(Client client)
         {
+            Client = client;
             PacketType = ClientPacketType.BugReport;
         }
 
-        public override bool ParseFromNetworkMessage(Client client, NetworkMessage message)
+        public override bool ParseFromNetworkMessage(NetworkMessage message)
         {
             if (message.ReadByte() != (byte)ClientPacketType.BugReport)
             {

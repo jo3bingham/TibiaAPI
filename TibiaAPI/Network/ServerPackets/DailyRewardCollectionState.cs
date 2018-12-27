@@ -6,12 +6,13 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
     {
         public byte CollectionState { get; set; }
 
-        public DailyRewardCollectionState()
+        public DailyRewardCollectionState(Client client)
         {
+            Client = client;
             PacketType = ServerPacketType.DailyRewardCollectionState;
         }
 
-        public override bool ParseFromNetworkMessage(Client client, NetworkMessage message)
+        public override bool ParseFromNetworkMessage(NetworkMessage message)
         {
             if (message.ReadByte() != (byte)ServerPacketType.DailyRewardCollectionState)
             {

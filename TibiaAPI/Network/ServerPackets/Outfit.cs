@@ -22,12 +22,13 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
         public byte LegsColor { get; set; }
         public byte TorsoColor { get; set; }
 
-        public Outfit()
+        public Outfit(Client client)
         {
+            Client = client;
             PacketType = ServerPacketType.Outfit;
         }
 
-        public override bool ParseFromNetworkMessage(Client client, NetworkMessage message)
+        public override bool ParseFromNetworkMessage(NetworkMessage message)
         {
             if (message.ReadByte() != (byte)ServerPacketType.Outfit)
             {
@@ -42,13 +43,13 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
             Addons = message.ReadByte();
             MountId = message.ReadUInt16();
 
-            Outfits.Capacity = message.ReadUInt16();
+            Outfits.Capacity = Client.VersionNumber >= 11750000 ? message.ReadUInt16() : message.ReadByte();
             for (var i = 0; i < Outfits.Capacity; ++i)
             {
                 var id = message.ReadUInt16();
                 var name = message.ReadString();
                 var addons = message.ReadByte();
-                var enableStoreLink = message.ReadBool();
+                var enableStoreLink = Client.VersionNumber >= 11750000 ? message.ReadBool() : false;
                 uint storeOfferId = 0;
                 if (enableStoreLink)
                 {
@@ -57,12 +58,12 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
                 Outfits.Add((id, name, addons, enableStoreLink, storeOfferId));
             }
 
-            Mounts.Capacity = message.ReadUInt16();
+            Mounts.Capacity = Client.VersionNumber >= 11750000 ? message.ReadUInt16() : message.ReadByte();
             for (var i = 0; i < Mounts.Capacity; ++i)
             {
                 var id = message.ReadUInt16();
                 var name = message.ReadString();
-                var enableStoreLink = message.ReadBool();
+                var enableStoreLink = Client.VersionNumber >= 11750000 ? message.ReadBool(): false;
                 uint storeOfferId = 0;
                 if (enableStoreLink)
                 {
@@ -71,7 +72,7 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
                 Mounts.Add((id, name, enableStoreLink, storeOfferId));
             }
 
-            WindowType = (OutfitWindowType)message.ReadUInt16();
+            WindowType = Client.VersionNumber >= 11750000 ? (OutfitWindowType)message.ReadUInt16() : OutfitWindowType.SelectOutfit;
             return true;
         }
 
@@ -86,33 +87,63 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
             message.Write(Addons);
             message.Write(MountId);
 
-            var count = Math.Min(Outfits.Count, byte.MaxValue);
-            message.Write((byte)count);
+            var count = 0;
+            if (Client.VersionNumber >= 11750000)
+            {
+                count = Math.Min(Outfits.Count, ushort.MaxValue);
+                message.Write((ushort)count);
+            }
+            else
+            {
+                count = Math.Min(Outfits.Count, byte.MaxValue);
+                message.Write((byte)count);
+            }
+
             for (var i = 0; i < count; ++i)
             {
                 var outfit = Outfits[i];
                 message.Write(outfit.Id);
                 message.Write(outfit.Name);
                 message.Write(outfit.Addons);
-                message.Write(outfit.EnableStoreLink);
-                if (outfit.EnableStoreLink)
+                if (Client.VersionNumber >= 11750000)
                 {
-                    message.Write(outfit.StoreOfferId);
+                    message.Write(outfit.EnableStoreLink);
+                    if (outfit.EnableStoreLink)
+                    {
+                        message.Write(outfit.StoreOfferId);
+                    }
                 }
             }
 
-            count = Math.Min(Mounts.Count, byte.MaxValue);
-            message.Write((byte)count);
+            if (Client.VersionNumber >= 11750000)
+            {
+                count = Math.Min(Mounts.Count, ushort.MaxValue);
+                message.Write((ushort)count);
+            }
+            else
+            {
+                count = Math.Min(Mounts.Count, byte.MaxValue);
+                message.Write((byte)count);
+            }
+
             for (var i = 0; i < count; ++i)
             {
-                var mount = Mounts[i];
-                message.Write(mount.Id);
-                message.Write(mount.Name);
-                message.Write(mount.EnableStoreLink);
-                if (mount.EnableStoreLink)
+                var (Id, Name, EnableStoreLink, StoreOfferId) = Mounts[i];
+                message.Write(Id);
+                message.Write(Name);
+                if (Client.VersionNumber >= 11750000)
                 {
-                    message.Write(mount.StoreOfferId);
+                    message.Write(EnableStoreLink);
+                    if (EnableStoreLink)
+                    {
+                        message.Write(StoreOfferId);
+                    }
                 }
+            }
+
+            if (Client.VersionNumber >= 11750000)
+            {
+                message.Write((ushort)WindowType);
             }
         }
     }

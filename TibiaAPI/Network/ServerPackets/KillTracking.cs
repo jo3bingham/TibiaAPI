@@ -14,12 +14,13 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
 
         public string CreatureName { get; set; }
 
-        public KillTracking()
+        public KillTracking(Client client)
         {
+            Client = client;
             PacketType = ServerPacketType.KillTracking;
         }
 
-        public override bool ParseFromNetworkMessage(Client client, NetworkMessage message)
+        public override bool ParseFromNetworkMessage(NetworkMessage message)
         {
             if (message.ReadByte() != (byte)ServerPacketType.KillTracking)
             {
@@ -27,11 +28,11 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
             }
 
             CreatureName = message.ReadString();
-            CreatureOutfit = message.ReadCreatureOutfit(client);
+            CreatureOutfit = message.ReadCreatureOutfit();
             Loot.Capacity = message.ReadByte();
             for (var i = 0; i < Loot.Capacity; ++i)
             {
-                Loot.Add(message.ReadObjectInstance(client));
+                Loot.Add(message.ReadObjectInstance());
             }
             return true;
         }

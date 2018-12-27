@@ -5,17 +5,18 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
 {
     public class CreatureOutfit : ServerPacket
     {
-        AppearanceInstance Mount { get; set; }
-        AppearanceInstance Outfit { get; set; }
+        public AppearanceInstance Mount { get; set; }
+        public AppearanceInstance Outfit { get; set; }
 
         public uint CreatureId { get; set; }
 
-        public CreatureOutfit()
+        public CreatureOutfit(Client client)
         {
+            Client = client;
             PacketType = ServerPacketType.CreatureOutfit;
         }
 
-        public override bool ParseFromNetworkMessage(Client client, NetworkMessage message)
+        public override bool ParseFromNetworkMessage(NetworkMessage message)
         {
             if (message.ReadByte() != (byte)ServerPacketType.CreatureOutfit)
             {
@@ -23,8 +24,8 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
             }
 
             CreatureId = message.ReadUInt32();
-            Outfit = message.ReadCreatureOutfit(client);
-            Mount = message.ReadMountOutfit(client);
+            Outfit = message.ReadCreatureOutfit();
+            Mount = message.ReadMountOutfit();
             return true;
         }
 
@@ -32,7 +33,6 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
         {
             message.Write((byte)ServerPacketType.CreatureOutfit);
             message.Write(CreatureId);
-            message.Write(Mount.Id);
             if (Outfit is OutfitInstance)
             {
                 message.Write((OutfitInstance)Outfit);
@@ -40,8 +40,9 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
             else if (Outfit is ObjectInstance)
             {
                 message.Write((ushort)0);
-                message.Write(Outfit.Id);
+                message.Write((ushort)Outfit.Id);
             }
+            message.Write((ushort)Mount.Id);
         }
     }
 }

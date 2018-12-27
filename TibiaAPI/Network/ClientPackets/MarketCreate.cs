@@ -13,12 +13,13 @@ namespace OXGaming.TibiaAPI.Network.ClientPackets
 
         public bool IsAnonymous { get; set; }
 
-        public MarketCreate()
+        public MarketCreate(Client client)
         {
+            Client = client;
             PacketType = ClientPacketType.MarketCreate;
         }
 
-        public override bool ParseFromNetworkMessage(Client client, NetworkMessage message)
+        public override bool ParseFromNetworkMessage(NetworkMessage message)
         {
             if (message.ReadByte() != (byte)ClientPacketType.MarketCreate)
             {

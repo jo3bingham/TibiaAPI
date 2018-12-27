@@ -11,12 +11,13 @@ namespace OXGaming.TibiaAPI.Network.ClientPackets
 
         public byte StackPosition { get; set; }
 
-        public ToggleWrapState()
+        public ToggleWrapState(Client client)
         {
+            Client = client;
             PacketType = ClientPacketType.ToggleWrapState;
         }
 
-        public override bool ParseFromNetworkMessage(Client client, NetworkMessage message)
+        public override bool ParseFromNetworkMessage(NetworkMessage message)
         {
             if (message.ReadByte() != (byte)ClientPacketType.ToggleWrapState)
             {

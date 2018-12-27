@@ -8,12 +8,13 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
 
         public byte Skull { get; set; }
 
-        public CreatureSkull()
+        public CreatureSkull(Client client)
         {
+            Client = client;
             PacketType = ServerPacketType.CreatureSkull;
         }
 
-        public override bool ParseFromNetworkMessage(Client client, NetworkMessage message)
+        public override bool ParseFromNetworkMessage(NetworkMessage message)
         {
             if (message.ReadByte() != (byte)ServerPacketType.CreatureSkull)
             {

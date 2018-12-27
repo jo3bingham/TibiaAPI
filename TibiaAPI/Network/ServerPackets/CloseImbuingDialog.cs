@@ -4,12 +4,13 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
 {
     public class CloseImbuingDialog : ServerPacket
     {
-        public CloseImbuingDialog()
+        public CloseImbuingDialog(Client client)
         {
+            Client = client;
             PacketType = ServerPacketType.CloseImbuingDialog;
         }
 
-        public override bool ParseFromNetworkMessage(Client client, NetworkMessage message)
+        public override bool ParseFromNetworkMessage(NetworkMessage message)
         {
             if (message.ReadByte() != (byte)ServerPacketType.CloseImbuingDialog)
             {

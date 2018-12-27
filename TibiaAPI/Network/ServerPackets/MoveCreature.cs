@@ -5,19 +5,20 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
 {
     public class MoveCreature : ServerPacket
     {
-        public Position FromPosition { get; set; }
+        public Position FromPosition { get; set; } = new Position(0xFFFF, 0xFFFF, 7);
         public Position ToPosition { get; set; }
 
         public uint CreatureId { get; set; }
 
         public byte StackPosition { get; set; }
 
-        public MoveCreature()
+        public MoveCreature(Client client)
         {
+            Client = client;
             PacketType = ServerPacketType.MoveCreature;
         }
 
-        public override bool ParseFromNetworkMessage(Client client, NetworkMessage message)
+        public override bool ParseFromNetworkMessage(NetworkMessage message)
         {
             if (message.ReadByte() != (byte)ServerPacketType.MoveCreature)
             {
