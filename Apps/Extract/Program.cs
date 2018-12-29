@@ -16,6 +16,8 @@ namespace Extract
 {
     class Program
     {
+        private const int MapSizeW = 10;
+
         private static readonly byte[] _reverseFluidMap =
         {
             (byte)FluidColor.Transparent,
@@ -31,37 +33,63 @@ namespace Extract
         };
 
         private static readonly HashSet<ulong> _knownPositions = new HashSet<ulong>();
+        private static readonly HashSet<uint> _knownMonsterIds = new HashSet<uint>();
+        private static readonly HashSet<uint> _knownNpcIds = new HashSet<uint>();
 
         private static readonly HashSet<uint> _ignoreIds = new HashSet<uint>();
 
         private static readonly Dictionary<uint, uint> _replaceIds = new Dictionary<uint, uint>();
 
-        private static FileStream _file;
+        private static Client _client;
+
+        private static FileStream _otbmFile;
+
+        private static StreamWriter _itemFile;
+        private static StreamWriter _monsterFile;
+        private static StreamWriter _npcFile;
 
         private static string _outDirectory;
         private static string _recording;
         private static string _tibiaDirectory = string.Empty;
 
         private static bool _convertToNewFormat = false;
+        private static bool _extractItemData = false;
+        private static bool _extractMapData = false;
+        private static bool _extractMonsterData = false;
+        private static bool _extractNpcData = false;
 
         static void ParseArgs(string[] args)
         {
             foreach (var arg in args)
             {
-                if (!arg.Contains('=', StringComparison.CurrentCultureIgnoreCase))
-                {
-                    continue;
-                }
-
                 var splitArg = arg.Split('=');
                 if (splitArg.Length == 1)
                 {
                     switch (splitArg[0])
                     {
-                        case "-c":
                         case "--convert":
                             {
                                 _convertToNewFormat = true;
+                            }
+                            break;
+                        case "--items":
+                            {
+                                _extractItemData = true;
+                            }
+                            break;
+                        case "--map":
+                            {
+                                _extractMapData = true;
+                            }
+                            break;
+                        case "--monsters":
+                            {
+                                _extractMonsterData = true;
+                            }
+                            break;
+                        case "--npcs":
+                            {
+                                _extractNpcData = true;
                             }
                             break;
                         default:
@@ -133,7 +161,6 @@ namespace Extract
 
                 var isDirectory = !(_recording.EndsWith(".dat", StringComparison.CurrentCultureIgnoreCase) ||
                                     _recording.EndsWith(".oxr", StringComparison.CurrentCultureIgnoreCase));
-
                 if (isDirectory && !Directory.Exists(_recording))
                 {
                     Console.WriteLine($"Directory does not exist: {_recording}");
@@ -149,8 +176,7 @@ namespace Extract
                 var filenames = new List<string>();
                 if (isDirectory)
                 {
-                    filenames.AddRange(Directory.GetFiles(_recording).Where(f => f.EndsWith(".dat", StringComparison.CurrentCultureIgnoreCase)));
-                    filenames.AddRange(Directory.GetFiles(_recording).Where(f => f.EndsWith(".oxr", StringComparison.CurrentCultureIgnoreCase)));
+                    filenames.AddRange(Directory.GetFiles(_recording, "*.oxr", SearchOption.AllDirectories));
                 }
                 else
                 {
@@ -165,13 +191,34 @@ namespace Extract
                     }
                 }
 
-                LoadXML("ignore.xml");
-                LoadXML("replace.xml");
+                if (_extractMapData)
+                {
+                    LoadXML("ignore.xml");
+                    LoadXML("replace.xml");
+                }
 
-                Console.WriteLine($"Converting {filenames.Count} recordings...");
+                if (_extractItemData)
+                {
+                    Console.WriteLine("Extracting item data...");
+                    _itemFile = new StreamWriter("items.txt", true);
+                }
+
+                if (_extractMonsterData)
+                {
+                    Console.WriteLine("Extracting monster data...");
+                    _monsterFile = new StreamWriter("monsters.txt", true);
+                }
+
+                if (_extractNpcData)
+                {
+                    Console.WriteLine("Extracting npc data...");
+                    _npcFile = new StreamWriter("npcs.txt", true);
+                }
+
+                Console.WriteLine($"Extracting data from {filenames.Count} recordings...");
                 foreach (var filename in filenames)
                 {
-                    Console.WriteLine($"Converting {filename} to OTBM file... ");
+                    Console.WriteLine($"Extracting data from {filename}...");
                     using (var reader = new BinaryReader(File.OpenRead(filename)))
                     {
                         var isOxRecording = filename.EndsWith(".oxr", StringComparison.CurrentCultureIgnoreCase);
@@ -199,36 +246,84 @@ namespace Extract
                             }
                         }
 
-                        _file = null;
-                        var client = new Client(_tibiaDirectory);
+                        _otbmFile = null;
+                        _client = new Client(_tibiaDirectory);
                         var oxrFile = (isOxRecording || !_convertToNewFormat) ? null :
                             new BinaryWriter(File.Open(Path.Combine(Path.GetDirectoryName(filename), Path.GetFileNameWithoutExtension(filename) + ".oxr"), FileMode.Create));
                         if (oxrFile != null)
                         {
-                            Console.WriteLine("Converting to new format...");
-                            oxrFile.Write(client.Version);
+                            Console.WriteLine("Converting to .oxr format...");
+                            oxrFile.Write(_client.Version);
                         }
 
-                        client.Proxy.OnReceivedServerLoginChallengePacket += (packet) =>
+                        _client.Proxy.OnReceivedServerLoginChallengePacket += (packet) =>
                         {
-                            client.WorldMapStorage.ResetMap();
+                            _client.CreatureStorage.Reset();
+                            _client.WorldMapStorage.ResetMap();
                             return true;
                         };
 
-                        client.Proxy.OnReceivedServerBottomFloorPacket += Proxy_OnReceivedMapPacket;
-                        client.Proxy.OnReceivedServerBottomRowPacket += Proxy_OnReceivedMapPacket;
-                        client.Proxy.OnReceivedServerTopFloorPacket += Proxy_OnReceivedMapPacket;
-                        client.Proxy.OnReceivedServerTopRowPacket += Proxy_OnReceivedMapPacket;
-                        client.Proxy.OnReceivedServerLeftColumnPacket += Proxy_OnReceivedMapPacket;
-                        client.Proxy.OnReceivedServerRightColumnPacket += Proxy_OnReceivedMapPacket;
-                        client.Proxy.OnReceivedServerFieldDataPacket += Proxy_OnReceivedMapPacket;
+                        _client.Proxy.OnReceivedServerChangeOnMapPacket += (packet) =>
+                        {
+                            var p = (ChangeOnMap)packet;
+                            if (_extractItemData && p.ObjectInstance != null)
+                            {
+                                _itemFile.WriteLine($"{p.ObjectInstance.Id} {p.Position.ToString()}");
+                            }
+                            else if (p.Creature != null)
+                            {
+                                if (_extractMonsterData && p.Creature.Type == OXGaming.TibiaAPI.Constants.CreatureType.Monster && !_knownMonsterIds.Contains(p.Creature.Id))
+                                {
+                                    _monsterFile.WriteLine($"{p.Creature.Name} {p.Creature.Position}");
+                                    _knownMonsterIds.Add(p.Creature.Id);
+                                }
+                                else if (_extractNpcData && p.Creature.Type == OXGaming.TibiaAPI.Constants.CreatureType.Npc && !_knownNpcIds.Contains(p.Creature.Id))
+                                {
+                                    _npcFile.WriteLine($"{p.Creature.Name} {p.Creature.Position}");
+                                    _knownNpcIds.Add(p.Creature.Id);
+                                }
+                            }
+                            return true;
+                        };
 
-                        client.Proxy.OnReceivedServerFullMapPacket += (packet) =>
+                        _client.Proxy.OnReceivedServerCreateOnMapPacket += (packet) =>
+                        {
+                            var p = (CreateOnMap)packet;
+                            if (_extractItemData && p.ObjectInstance != null)
+                            {
+                                _itemFile.WriteLine($"{p.ObjectInstance.Id} {p.Position.ToString()}");
+                            }
+                            else if (p.Creature != null)
+                            {
+                                if (_extractMonsterData && p.Creature.Type == OXGaming.TibiaAPI.Constants.CreatureType.Monster && !_knownMonsterIds.Contains(p.Creature.Id))
+                                {
+                                    _monsterFile.WriteLine($"{p.Creature.Name} {p.Creature.Position}");
+                                    _knownMonsterIds.Add(p.Creature.Id);
+                                }
+                                else if (_extractNpcData && p.Creature.Type == OXGaming.TibiaAPI.Constants.CreatureType.Npc && !_knownNpcIds.Contains(p.Creature.Id))
+                                {
+                                    _npcFile.WriteLine($"{p.Creature.Name} {p.Creature.Position}");
+                                    _knownNpcIds.Add(p.Creature.Id);
+                                }
+                            }
+                            return true;
+                        };
+
+                        _client.Proxy.OnReceivedServerBottomFloorPacket += Proxy_OnReceivedMapPacket;
+                        _client.Proxy.OnReceivedServerBottomRowPacket += Proxy_OnReceivedMapPacket;
+                        _client.Proxy.OnReceivedServerTopFloorPacket += Proxy_OnReceivedMapPacket;
+                        _client.Proxy.OnReceivedServerTopRowPacket += Proxy_OnReceivedMapPacket;
+                        _client.Proxy.OnReceivedServerLeftColumnPacket += Proxy_OnReceivedMapPacket;
+                        _client.Proxy.OnReceivedServerRightColumnPacket += Proxy_OnReceivedMapPacket;
+                        _client.Proxy.OnReceivedServerFieldDataPacket += Proxy_OnReceivedMapPacket;
+
+                        _client.Proxy.OnReceivedServerFullMapPacket += (packet) =>
                         {
                             var p = (FullMap)packet;
 
-                            if (_file == null)
+                            if (_extractMapData && _otbmFile == null)
                             {
+                                Console.WriteLine($"Extracting map data... ");
                                 var pos = p.Position;
                                 var currentDate = DateTime.UtcNow;
                                 var fileNameData = new object[]
@@ -243,12 +338,48 @@ namespace Extract
                                     outputPath = Path.Combine(_outDirectory, outputPath);
                                 }
 
-                                _file = InitializeMapFile(otbmName, outputPath);
+                                _otbmFile = InitializeMapFile(otbmName, outputPath);
                             }
 
                             foreach (var field in p.Fields)
                             {
-                                ParseField(field);
+                                if (_extractMapData)
+                                {
+                                    ParseField(field);
+                                }
+
+                                for (var i = 0; i < MapSizeW; ++i)
+                                {
+                                    var obj = field.Item1.GetObject(i);
+                                    if (obj == null)
+                                    {
+                                        continue;
+                                    }
+
+                                    if (_extractItemData && obj.Id > (int)CreatureInstanceType.Creature)
+                                    {
+                                        _itemFile.WriteLine($"{obj.Id} {field.Item2.ToString()}");
+                                    }
+                                    else if (obj.Id <= (int)CreatureInstanceType.Creature)
+                                    {
+                                        var creature = _client.CreatureStorage.GetCreature(obj.Data);
+                                        if (creature == null)
+                                        {
+                                            continue;
+                                        }
+
+                                        if (_extractMonsterData && creature.Type == OXGaming.TibiaAPI.Constants.CreatureType.Monster && !_knownMonsterIds.Contains(creature.Id))
+                                        {
+                                            _monsterFile.WriteLine($"{creature.Name} {creature.Position}");
+                                            _knownMonsterIds.Add(creature.Id);
+                                        }
+                                        else if (_extractNpcData && creature.Type == OXGaming.TibiaAPI.Constants.CreatureType.Npc && !_knownNpcIds.Contains(creature.Id))
+                                        {
+                                            _npcFile.WriteLine($"{creature.Name} {creature.Position}");
+                                            _knownNpcIds.Add(creature.Id);
+                                        }
+                                    }
+                                }
                             }
                             return true;
                         };
@@ -284,15 +415,15 @@ namespace Extract
                             var wholeSize = reader.ReadUInt16();
                             var sequenceNumber = reader.ReadUInt32();
                             var packetSize = reader.ReadUInt16();
-                            var outMessage = new NetworkMessage(client);
-                            var message = new NetworkMessage(client)
+                            var outMessage = new NetworkMessage(_client);
+                            var message = new NetworkMessage(_client)
                             {
                                 Size = size
                             };
 
                             // Tibia10 recordings seem to contain login data (worlds, characters, etc.)
                             // in their first packet. We don't parse this, and we don't need to, so skip it.
-                            if (client.VersionNumber <= 11405409 && sequenceNumber == 0 && reader.PeekChar() == 0x28)
+                            if (_client.VersionNumber <= 11405409 && sequenceNumber == 0 && reader.PeekChar() == 0x28)
                             {
                                 reader.BaseStream.Position += size - 8;
                                 continue;
@@ -305,37 +436,39 @@ namespace Extract
 
                                 if (packetType == PacketType.Server)
                                 {
-                                    client.Proxy.ParseServerMessage(client, message, outMessage);
+                                    _client.Proxy.ParseServerMessage(_client, message, outMessage);
                                 }
                                 else
                                 {
-                                    client.Proxy.ParseClientMessage(client, message, outMessage);
+                                    _client.Proxy.ParseClientMessage(_client, message, outMessage);
                                 }
                             }
                         }
 
+                        _client.Dispose();
+                        _knownMonsterIds.Clear();
+
                         if (oxrFile != null)
                         {
                             oxrFile.Close();
-                            Console.WriteLine("Done");
                         }
 
-                        if (_file != null)
+                        if (_otbmFile != null)
                         {
                             // node towns
-                            _file.WriteByte(254);
-                            _file.WriteByte(6);
+                            _otbmFile.WriteByte(254);
+                            _otbmFile.WriteByte(6);
 
                             // end towns node
-                            _file.WriteByte(255);
+                            _otbmFile.WriteByte(255);
 
                             // end map data node
-                            _file.WriteByte(255);
+                            _otbmFile.WriteByte(255);
 
                             // end root node
-                            _file.WriteByte(255);
+                            _otbmFile.WriteByte(255);
 
-                            _file.Close();
+                            _otbmFile.Close();
                         }
 
                         _knownPositions.Clear();
@@ -344,7 +477,22 @@ namespace Extract
                     Console.WriteLine("Done");
                 }
 
-                Console.WriteLine("Conversion complete");
+                if (_itemFile != null)
+                {
+                    _itemFile.Close();
+                }
+
+                if (_monsterFile != null)
+                {
+                    _monsterFile.Close();
+                }
+
+                if (_npcFile != null)
+                {
+                    _npcFile.Close();
+                }
+
+                Console.WriteLine("Extraction complete");
             }
             catch (Exception ex)
             {
@@ -357,7 +505,43 @@ namespace Extract
             var p = (Map)packet;
             foreach (var field in p.Fields)
             {
-                ParseField(field);
+                if (_extractMapData)
+                {
+                    ParseField(field);
+                }
+
+                for (var i = 0; i < MapSizeW; ++i)
+                {
+                    var obj = field.Item1.GetObject(i);
+                    if (obj == null)
+                    {
+                        continue;
+                    }
+
+                    if (_extractItemData && obj.Id > (int)CreatureInstanceType.Creature)
+                    {
+                        _itemFile.WriteLine($"{obj.Id} {field.Item2.ToString()}");
+                    }
+                    else if (obj.Id <= (int)CreatureInstanceType.Creature)
+                    {
+                        var creature = _client.CreatureStorage.GetCreature(obj.Data);
+                        if (creature == null)
+                        {
+                            continue;
+                        }
+
+                        if (_extractMonsterData && creature.Type == OXGaming.TibiaAPI.Constants.CreatureType.Monster && !_knownMonsterIds.Contains(creature.Id))
+                        {
+                            _monsterFile.WriteLine($"{creature.Name} {creature.Position}");
+                            _knownMonsterIds.Add(creature.Id);
+                        }
+                        else if (_extractNpcData && creature.Type == OXGaming.TibiaAPI.Constants.CreatureType.Npc && !_knownNpcIds.Contains(creature.Id))
+                        {
+                            _npcFile.WriteLine($"{creature.Name} {creature.Position}");
+                            _knownNpcIds.Add(creature.Id);
+                        }
+                    }
+                }
             }
             return true;
         }
@@ -474,21 +658,21 @@ namespace Extract
             _knownPositions.Add(index);
 
             // node tile area
-            _file.WriteByte(254);
-            _file.WriteByte(4);
+            _otbmFile.WriteByte(254);
+            _otbmFile.WriteByte(4);
 
             // position
-            WriteData(_file, BitConverter.GetBytes((ushort)(position.X & 0xFF00)));
-            WriteData(_file, BitConverter.GetBytes((ushort)(position.Y & 0xFF00)));
-            WriteData(_file, new byte[] { (byte)position.Z });
+            WriteData(_otbmFile, BitConverter.GetBytes((ushort)(position.X & 0xFF00)));
+            WriteData(_otbmFile, BitConverter.GetBytes((ushort)(position.Y & 0xFF00)));
+            WriteData(_otbmFile, new byte[] { (byte)position.Z });
 
             // node tile
-            _file.WriteByte(254);
-            _file.WriteByte(5);
+            _otbmFile.WriteByte(254);
+            _otbmFile.WriteByte(5);
 
             // x/y
-            WriteData(_file, new byte[] { (byte)(position.X & 0xFF) });
-            WriteData(_file, new byte[] { (byte)(position.Y & 0xFF) });
+            WriteData(_otbmFile, new byte[] { (byte)(position.X & 0xFF) });
+            WriteData(_otbmFile, new byte[] { (byte)(position.Y & 0xFF) });
 
             for (int i = 0; i < 10; ++i)
             {
@@ -499,44 +683,44 @@ namespace Extract
                 }
 
                 // node item
-                _file.WriteByte(254);
-                _file.WriteByte(6);
+                _otbmFile.WriteByte(254);
+                _otbmFile.WriteByte(6);
 
                 // item id
                 if (!_replaceIds.TryGetValue(item.Id, out uint id))
                 {
                     id = item.Id;
                 }
-                WriteData(_file, BitConverter.GetBytes((ushort)id));
+                WriteData(_otbmFile, BitConverter.GetBytes((ushort)id));
 
                 // item data
                 if (item.Type != null && item.Type.Flags.Cumulative)
                 {
-                    _file.WriteByte(15);
-                    WriteData(_file, new byte[] { (byte)item.Data });
+                    _otbmFile.WriteByte(15);
+                    WriteData(_otbmFile, new byte[] { (byte)item.Data });
                 }
 
                 // item sub type
                 if (item.Type != null && (item.Type.Flags.Liquidcontainer || item.Type.Flags.Liquidpool))
                 {
-                    _file.WriteByte(15);
+                    _otbmFile.WriteByte(15);
                     byte subType = 0;
                     if (item.Data >= 0 && item.Data < _reverseFluidMap.Length)
                     {
                         subType = _reverseFluidMap[item.Data];
                     }
-                    WriteData(_file, new byte[] { subType });
+                    WriteData(_otbmFile, new byte[] { subType });
                 }
 
                 //end item node
-                _file.WriteByte(255);
+                _otbmFile.WriteByte(255);
             }
 
             // end tile node
-            _file.WriteByte(255);
+            _otbmFile.WriteByte(255);
 
             // end tile area node
-            _file.WriteByte(255);
+            _otbmFile.WriteByte(255);
         }
     }
 }
