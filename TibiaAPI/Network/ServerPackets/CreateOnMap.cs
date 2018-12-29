@@ -1,4 +1,6 @@
-﻿using OXGaming.TibiaAPI.Appearances;
+﻿using System;
+
+using OXGaming.TibiaAPI.Appearances;
 using OXGaming.TibiaAPI.Constants;
 using OXGaming.TibiaAPI.Creatures;
 using OXGaming.TibiaAPI.Utilities;
@@ -7,9 +9,11 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
 {
     public class CreateOnMap : ServerPacket
     {
+        private const int MapSizeW = 10;
+
         public Creature Creature { get; set; }
 
-        public ObjectInstance Item { get; set; }
+        public ObjectInstance ObjectInstance { get; set; }
 
         public Position Position { get; set; }
 
@@ -31,6 +35,12 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
             }
 
             Position = message.ReadPosition();
+            if (!Client.WorldMapStorage.IsVisible(Position.X, Position.Y, Position.Z, true))
+            {
+                throw new Exception($"[CreateOnMap.ParseFromNetworkMessage] Co-ordinate {Position} is out of range.");
+            }
+
+            var mapPosition = Client.WorldMapStorage.ToMap(Position);
             StackPosition = message.ReadByte();
             Id = message.ReadUInt16();
             if (Id == (int)CreatureInstanceType.UnknownCreature ||
@@ -38,10 +48,24 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
                 Id == (int)CreatureInstanceType.Creature)
             {
                 Creature = message.ReadCreatureInstance(Id, Position);
+                ObjectInstance = Client.AppearanceStorage.CreateObjectInstance((uint)CreatureInstanceType.Creature, Creature.Id);
             }
             else
             {
-                Item = message.ReadObjectInstance(Id);
+                ObjectInstance = message.ReadObjectInstance(Id);
+            }
+
+            if (StackPosition == 255)
+            {
+                Client.WorldMapStorage.PutObject(mapPosition.X, mapPosition.Y, mapPosition.Z, ObjectInstance);
+            }
+            else
+            {
+                if (StackPosition > MapSizeW)
+                {
+                    throw new Exception("[CreateOnMap.ParseFromNetworkMessage] Invalid position.");
+                }
+                Client.WorldMapStorage.InsertObject(mapPosition.X, mapPosition.Y, mapPosition.Z, StackPosition, ObjectInstance);
             }
             return true;
         }
@@ -60,7 +84,7 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
             }
             else
             {
-                message.Write(Item);
+                message.Write(ObjectInstance);
             }
         }
     }

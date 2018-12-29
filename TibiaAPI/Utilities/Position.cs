@@ -20,6 +20,11 @@
             Z = 0;
         }
 
+        public Position Subtract(Position position)
+        {
+            return new Position(X - position.X, Y - position.Y, Z - position.Z);
+        }
+
         public Position Clone()
         {
             return new Position(X, Y, Z);
@@ -27,7 +32,7 @@
 
         public override string ToString()
         {
-            return $"{X} {Y} {Z}";
+            return $"{X},{Y},{Z}";
         }
     }
 }

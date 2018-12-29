@@ -35,6 +35,8 @@ namespace OXGaming.TibiaAPI.Creatures
         public byte PkFlag { get; set; }
         public byte SpeechCategory { get; set; }
 
+        public bool Visible { get; set; }
+
         public bool IsSummon
         {
             get
@@ -48,6 +50,17 @@ namespace OXGaming.TibiaAPI.Creatures
             Id = id;
             Type = type;
             Name = name;
+        }
+
+        public void Reset()
+        {
+            //ResetSkills();
+            Direction = 0;
+            Id = 0;
+            Name = null;
+            Type = CreatureType.Monster;
+            Visible = false;
+            Position.SetZero();
         }
     }
 }
