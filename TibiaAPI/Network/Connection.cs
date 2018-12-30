@@ -371,7 +371,7 @@ namespace OXGaming.TibiaAPI.Network
             _clientSequenceNumber = 1;
             _serverSequenceNumber = 1;
             _xteaKey = null;
-            ConnectionState = ConnectionState.Disconnected;
+            ConnectionState = ConnectionState.ConnectingStage1;
         }
 
         /// <summary>
