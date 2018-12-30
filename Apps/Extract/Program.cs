@@ -255,13 +255,6 @@ namespace Extract
                             oxrFile.Write(_client.Version);
                         }
 
-                        _client.Proxy.OnReceivedServerLoginChallengePacket += (packet) =>
-                        {
-                            _client.CreatureStorage.Reset();
-                            _client.WorldMapStorage.ResetMap();
-                            return true;
-                        };
-
                         _client.Proxy.OnReceivedServerChangeOnMapPacket += (packet) =>
                         {
                             var p = (ChangeOnMap)packet;

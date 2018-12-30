@@ -9,7 +9,10 @@ using System.Threading;
 using System.Threading.Tasks;
 
 using ComponentAce.Compression.Libs.zlib;
+
 using Newtonsoft.Json;
+
+using OXGaming.TibiaAPI.Constants;
 
 namespace OXGaming.TibiaAPI.Network
 {
@@ -69,6 +72,8 @@ namespace OXGaming.TibiaAPI.Network
 
         public event ReceivedMessageEventHandler OnReceivedClientMessage;
         public event ReceivedMessageEventHandler OnReceivedServerMessage;
+
+        public ConnectionState ConnectionState { get; set; } = ConnectionState.Disconnected;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Connection"/> class that acts as a proxy
@@ -277,6 +282,7 @@ namespace OXGaming.TibiaAPI.Network
 
                 _isPacketParsingEnabled = enablePacketParsing;
                 _isStarted = true;
+                ConnectionState = ConnectionState.ConnectingStage1;
             }
             catch (Exception ex)
             {
@@ -327,6 +333,7 @@ namespace OXGaming.TibiaAPI.Network
 
             _isStarted = false;
             _xteaKey = null;
+            ConnectionState = ConnectionState.Disconnected;
         }
 
         /// <summary>
@@ -364,6 +371,7 @@ namespace OXGaming.TibiaAPI.Network
             _clientSequenceNumber = 1;
             _serverSequenceNumber = 1;
             _xteaKey = null;
+            ConnectionState = ConnectionState.Disconnected;
         }
 
         /// <summary>

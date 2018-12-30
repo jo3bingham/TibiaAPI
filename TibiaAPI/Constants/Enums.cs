@@ -85,6 +85,15 @@
         Timed = 3
     }
 
+    public enum ConnectionState
+    {
+        Disconnected = 0,
+        ConnectingStage1 = 1,
+        ConnectingStage2 = 2,
+        Pending = 3,
+        Game = 4
+    }
+
     public enum CreatureType
     {
         Player = 0,
