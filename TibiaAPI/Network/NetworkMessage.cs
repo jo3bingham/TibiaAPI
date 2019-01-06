@@ -346,7 +346,7 @@ namespace OXGaming.TibiaAPI.Network
                 objectInstance.IsLootContainer = ReadBool();
                 if (objectInstance.IsLootContainer)
                 {
-                    objectInstance.LootContainerUnknown = ReadUInt32(); // TODO
+                    objectInstance.LootCategoryFlags = ReadUInt32();
                 }
             }
 
@@ -941,7 +941,7 @@ namespace OXGaming.TibiaAPI.Network
                 Write(value.IsLootContainer);
                 if (value.IsLootContainer)
                 {
-                    Write(value.LootContainerUnknown);
+                    Write(value.LootCategoryFlags);
                 }
             }
 

@@ -255,7 +255,7 @@ namespace Extract
                             oxrFile.Write(_client.Version);
                         }
 
-                        _client.Proxy.OnReceivedServerChangeOnMapPacket += (packet) =>
+                        _client.Connection.OnReceivedServerChangeOnMapPacket += (packet) =>
                         {
                             var p = (ChangeOnMap)packet;
                             if (_extractItemData && p.ObjectInstance != null)
@@ -278,7 +278,7 @@ namespace Extract
                             return true;
                         };
 
-                        _client.Proxy.OnReceivedServerCreateOnMapPacket += (packet) =>
+                        _client.Connection.OnReceivedServerCreateOnMapPacket += (packet) =>
                         {
                             var p = (CreateOnMap)packet;
                             if (_extractItemData && p.ObjectInstance != null)
@@ -301,15 +301,15 @@ namespace Extract
                             return true;
                         };
 
-                        _client.Proxy.OnReceivedServerBottomFloorPacket += Proxy_OnReceivedMapPacket;
-                        _client.Proxy.OnReceivedServerBottomRowPacket += Proxy_OnReceivedMapPacket;
-                        _client.Proxy.OnReceivedServerTopFloorPacket += Proxy_OnReceivedMapPacket;
-                        _client.Proxy.OnReceivedServerTopRowPacket += Proxy_OnReceivedMapPacket;
-                        _client.Proxy.OnReceivedServerLeftColumnPacket += Proxy_OnReceivedMapPacket;
-                        _client.Proxy.OnReceivedServerRightColumnPacket += Proxy_OnReceivedMapPacket;
-                        _client.Proxy.OnReceivedServerFieldDataPacket += Proxy_OnReceivedMapPacket;
+                        _client.Connection.OnReceivedServerBottomFloorPacket += Proxy_OnReceivedMapPacket;
+                        _client.Connection.OnReceivedServerBottomRowPacket += Proxy_OnReceivedMapPacket;
+                        _client.Connection.OnReceivedServerTopFloorPacket += Proxy_OnReceivedMapPacket;
+                        _client.Connection.OnReceivedServerTopRowPacket += Proxy_OnReceivedMapPacket;
+                        _client.Connection.OnReceivedServerLeftColumnPacket += Proxy_OnReceivedMapPacket;
+                        _client.Connection.OnReceivedServerRightColumnPacket += Proxy_OnReceivedMapPacket;
+                        _client.Connection.OnReceivedServerFieldDataPacket += Proxy_OnReceivedMapPacket;
 
-                        _client.Proxy.OnReceivedServerFullMapPacket += (packet) =>
+                        _client.Connection.OnReceivedServerFullMapPacket += (packet) =>
                         {
                             var p = (FullMap)packet;
 
@@ -428,11 +428,11 @@ namespace Extract
 
                                 if (packetType == PacketType.Server)
                                 {
-                                    _client.Proxy.ParseServerMessage(_client, message, outMessage);
+                                    _client.Connection.ParseServerMessage(_client, message, outMessage);
                                 }
                                 else
                                 {
-                                    _client.Proxy.ParseClientMessage(_client, message, outMessage);
+                                    _client.Connection.ParseClientMessage(_client, message, outMessage);
                                 }
                             }
                         }

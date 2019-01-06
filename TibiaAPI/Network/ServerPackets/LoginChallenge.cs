@@ -23,7 +23,7 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
 
             Timestamp = message.ReadUInt32();
             Random = message.ReadByte();
-            Client.Proxy.ConnectionState = ConnectionState.ConnectingStage2;
+            Client.Connection.ConnectionState = ConnectionState.ConnectingStage2;
             return true;
         }
 

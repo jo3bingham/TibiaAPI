@@ -36,13 +36,17 @@ namespace OXGaming.TibiaAPI.Network.ClientPackets
                 ObjectId = message.ReadUInt16();
                 Index = message.ReadByte();
             }
-            else if (Type == 1)
+            else if (Type == 1 || Type == 2)
             {
                 ItemCategory = message.ReadByte();
             }
             else if (Type == 3)
             {
                 UseMainContainerAsFallback = message.ReadBool();
+            }
+            else
+            {
+                throw new System.Exception($"[LootContainer.ParseFromNetworkMessage] Invalid type: {Type}");
             }
             return true;
         }
@@ -58,7 +62,7 @@ namespace OXGaming.TibiaAPI.Network.ClientPackets
                 message.Write(ObjectId);
                 message.Write(Index);
             }
-            else if (Type == 1)
+            else if (Type == 1 || Type == 2)
             {
                 message.Write(ItemCategory);
             }

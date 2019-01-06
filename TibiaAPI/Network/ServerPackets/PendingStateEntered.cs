@@ -17,7 +17,7 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
                 return false;
             }
 
-            Client.Proxy.ConnectionState = ConnectionState.Pending;
+            Client.Connection.ConnectionState = ConnectionState.Pending;
             return true;
         }
 
