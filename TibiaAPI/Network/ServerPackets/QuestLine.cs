@@ -7,9 +7,9 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
 {
     public class QuestLine : ServerPacket
     {
-        public List<(ushort Id, string Name, string Description)> QuestFlags { get; } = new List<(ushort Id, string Name, string Description)>();
+        public List<(ushort Id, string Name, string Description)> Questflags { get; } = new List<(ushort Id, string Name, string Description)>();
 
-        public ushort QuestLineId { get; set; }
+        public ushort QuestId { get; set; }
 
         public QuestLine(Client client)
         {
@@ -24,14 +24,14 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
                 return false;
             }
 
-            QuestLineId = message.ReadUInt16();
-            QuestFlags.Capacity = message.ReadByte();
-            for (var i = 0; i < QuestFlags.Capacity; ++i)
+            QuestId = message.ReadUInt16();
+            Questflags.Capacity = message.ReadByte();
+            for (var i = 0; i < Questflags.Capacity; ++i)
             {
                 var id = message.ReadUInt16();
                 var name = message.ReadString();
                 var description = message.ReadString();
-                QuestFlags.Add((id, name, description));
+                Questflags.Add((id, name, description));
             }
             return true;
         }
@@ -39,15 +39,15 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
         public override void AppendToNetworkMessage(NetworkMessage message)
         {
             message.Write((byte)ServerPacketType.QuestLine);
-            message.Write(QuestLineId);
-            var count = Math.Min(QuestFlags.Count, byte.MaxValue);
+            message.Write(QuestId);
+            var count = Math.Min(Questflags.Count, byte.MaxValue);
             message.Write((byte)count);
             for (var i = 0; i < count; ++i)
             {
-                var questFlag = QuestFlags[i];
-                message.Write(questFlag.Id);
-                message.Write(questFlag.Name);
-                message.Write(questFlag.Description);
+                var (Id, Name, Description) = Questflags[i];
+                message.Write(Id);
+                message.Write(Name);
+                message.Write(Description);
             }
         }
     }

@@ -20,7 +20,13 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
             }
 
             DataType = (CyclopediaMapDataType)message.ReadByte();
-            if (DataType == CyclopediaMapDataType.DiscoveryData)
+            if (DataType == CyclopediaMapDataType.MinimapMarker)
+            {
+                var position = message.ReadPosition();
+                var mark = message.ReadByte();
+                var description = message.ReadString();
+            }
+            else if (DataType == CyclopediaMapDataType.DiscoveryData)
             {
                 var numberOfMainAreas = message.ReadUInt16();
                 for (var i = 0; i < numberOfMainAreas; ++i)
@@ -106,6 +112,10 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
             else if (DataType == CyclopediaMapDataType.SetCurrentArea)
             {
                 var areaId = message.ReadUInt16();
+            }
+            else
+            {
+                throw new System.Exception($"[CyclopediaMapData.ParseFromNetworkMessage] Unknown type: {DataType}");
             }
             return true;
         }

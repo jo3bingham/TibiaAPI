@@ -161,6 +161,7 @@
 
     public enum CyclopediaMapDataType
     {
+        MinimapMarker = 0,
         DiscoveryData = 1,
         ActiveRaid = 2,
         ImminentRaidMainArea = 3,
@@ -347,7 +348,7 @@
         InspectObject = 0xCD,
         InspectPlayer = 0xCE,
         BlessingsDialog = 0xCF,
-        TrackQuestFlags = 0xD0,
+        TrackQuestflags = 0xD0,
         MarketStatistics = 0xD1,
         GetOutfit = 0xD2,
         SetOutfit = 0xD3,
@@ -494,7 +495,7 @@
         MarketStatistics = 0xCD,
         ItemWasted = 0xCE,
         ItemLooted = 0xCF,
-        TrackQuestFlags = 0xD0,
+        TrackQuestflags = 0xD0,
         KillTracking = 0xD1,
         BuddyData = 0xD2,
         BuddyStatusChange = 0xD3,

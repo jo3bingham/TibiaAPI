@@ -5,39 +5,39 @@ using OXGaming.TibiaAPI.Constants;
 
 namespace OXGaming.TibiaAPI.Network.ClientPackets
 {
-    public class TrackQuestFlags : ClientPacket
+    public class TrackQuestflags : ClientPacket
     {
-        public List<ushort> QuestIds { get; } = new List<ushort>();
+        public List<ushort> Ids { get; } = new List<ushort>();
 
-        public TrackQuestFlags(Client client)
+        public TrackQuestflags(Client client)
         {
             Client = client;
-            PacketType = ClientPacketType.TrackQuestFlags;
+            PacketType = ClientPacketType.TrackQuestflags;
         }
 
         public override bool ParseFromNetworkMessage(NetworkMessage message)
         {
-            if (message.ReadByte() != (byte)ClientPacketType.TrackQuestFlags)
+            if (message.ReadByte() != (byte)ClientPacketType.TrackQuestflags)
             {
                 return false;
             }
 
-            QuestIds.Capacity = message.ReadByte();
-            for (var i = 0; i < QuestIds.Capacity; ++i)
+            Ids.Capacity = message.ReadByte();
+            for (var i = 0; i < Ids.Capacity; ++i)
             {
-                QuestIds.Add(message.ReadUInt16());
+                Ids.Add(message.ReadUInt16());
             }
             return true;
         }
 
         public override void AppendToNetworkMessage(NetworkMessage message)
         {
-            message.Write((byte)ClientPacketType.TrackQuestFlags);
-            var count = Math.Min(QuestIds.Count, byte.MaxValue);
+            message.Write((byte)ClientPacketType.TrackQuestflags);
+            var count = Math.Min(Ids.Count, byte.MaxValue);
             message.Write((byte)count);
             for (var i = 0; i < count; ++i)
             {
-                message.Write(QuestIds[i]);
+                message.Write(Ids[i]);
             }
         }
     }
