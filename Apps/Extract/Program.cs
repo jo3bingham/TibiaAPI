@@ -233,7 +233,7 @@ namespace Extract
                                 var currentDate = DateTime.UtcNow;
                                 var fileNameData = new object[]
                                 {
-								Path.GetFileNameWithoutExtension(filename), pos.X, pos.Y, pos.Z, currentDate.Day, currentDate.Month, currentDate.Year, currentDate.Hour, currentDate.Minute, currentDate.Second
+                                Path.GetFileNameWithoutExtension(filename), pos.X, pos.Y, pos.Z, currentDate.Day, currentDate.Month, currentDate.Year, currentDate.Hour, currentDate.Minute, currentDate.Second
                                 };
 
                                 var otbmName = string.Format("{0}__{1}_{2}_{3}__{4}_{5}_{6}__{7}_{8}_{9}", fileNameData);
