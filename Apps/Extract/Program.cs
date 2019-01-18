@@ -412,9 +412,9 @@ namespace Extract
                 WriteData(file, BitConverter.GetBytes((uint)2));
 
                 // map width
-                WriteData(file, BitConverter.GetBytes((ushort)64764));
+                WriteData(file, BitConverter.GetBytes((ushort)65000));
                 // map height
-                WriteData(file, BitConverter.GetBytes((ushort)64764));
+                WriteData(file, BitConverter.GetBytes((ushort)65000));
 
                 // otb major version
                 WriteData(file, BitConverter.GetBytes((uint)3));
