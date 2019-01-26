@@ -165,8 +165,8 @@ namespace Extract
                     }
                 }
 
-                LoadXML("ignore.xml");
-                LoadXML("replace.xml");
+                LoadXML("itemsIgnore.xml");
+                LoadXML("itemsReplace.xml");
 
                 Console.WriteLine($"Converting {filenames.Count} recordings...");
                 foreach (var filename in filenames)
