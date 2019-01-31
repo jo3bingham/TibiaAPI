@@ -272,7 +272,7 @@
 	<item fromid="21438" toid="1852"/>
 	<!-- remains of an old amphora -> large amphora -->
 	<item fromid="21443" toid="21945"/>
-	<!--  -->
+	<!-- strange machine (on) -> strange machine (off) -->
 	<item fromid="21744" toid="21743"/>
 	<!-- nacre altar -> broken nacre altar -->
 	<item fromid="21749" toid="21787"/>
@@ -312,6 +312,12 @@
 	<item fromid="21946" toid="21945"/>
 	<!-- hole (ice) -> pitfall (ice) -->
 	<item fromid="21971" toid="21972"/>
+	<!-- stone tile (minimap red) -> stone tile (minimap white) -->
+	<item fromid="22539" toid="22538"/>
+	<!-- stone tile (minimap green) -> stone tile (minimap white) -->
+	<item fromid="22540" toid="22538"/>
+	<!-- stone tile (minimap yellow) -> stone tile (minimap white) -->
+	<item fromid="22541" toid="22538"/>
 	<!-- stone -> sleeping hyaena -->
 	<item fromid="22677" toid="22664"/>
 	<!-- dead goblin (state 3) -> dead goblin (state 2) -->
