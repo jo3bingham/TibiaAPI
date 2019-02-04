@@ -138,15 +138,24 @@ namespace Extract
                 if (args[0] == "--help" || args[0] == "-h")
                 {
                     Console.WriteLine("[required] -r=<path>, --recording=<path>, or --recordings=<path>: " +
-                        "<path> can either be a recording file or directory of recording files.");
+                        "<path> can either be a recording file or directory of recording files.\n");
                     Console.WriteLine("[optional] -o=<path> or --outdirectory=<path>:" +
                         "<path> is the directory you want the OTBM file to be written to. " +
                         "If the directory does not exist, it will be created. " +
-                        "If not supplied, the OTBM file will be written to the current directory.");
+                        "If not supplied, the OTBM file will be written to the current directory.\n");
                     Console.WriteLine("[optional] -t=<path> or --tibiadirectory=<path>: " +
                         "<path> is the package directory of the Tibia client to target. " +
-                        "By default, TibiaAPI will use the default path CipSoft uses upon installation if one isn't supplied. " +
-                        "This is useful when targeting older client versions.");
+                        "If this parameter is not specified, and an OXR file is being used, " +
+                        "the Extract app will first try to find the equivalent client version in the ClientData folder. " +
+                        "Otherwise, it will use the default path CipSoft uses upon installation.\n");
+
+                    Console.WriteLine("The following options can be combined to extract multiple data sets at once, or individually, " +
+                        "but at least one option must be specified or the extraction process won't proceed.\n");
+                    Console.WriteLine("--convert: Used for converting an old recording (.dat) to the new format (.oxr).\n");
+                    Console.WriteLine("--items: Used for extracting item information to items.txt.\n");
+                    Console.WriteLine("--map: Used for extracting map data to the OTBM format.\n");
+                    Console.WriteLine("--monsters: Used for extracting monster information to monsters.txt.\n");
+                    Console.WriteLine("--npcs: Used for extracting npc information to npcs.txt.\n");
                     return;
                 }
 
@@ -154,6 +163,13 @@ namespace Extract
                 if (string.IsNullOrEmpty(_recording))
                 {
                     Console.WriteLine("A recording, or directory of recordings, was not specified.");
+                    Console.WriteLine("Use -h, or --help, for help.");
+                    return;
+                }
+
+                if (!_convertToNewFormat && !_extractItemData && !_extractMapData && !_extractMonsterData && !_extractNpcData)
+                {
+                    Console.WriteLine("You must specificy at least one extraction option.");
                     Console.WriteLine("Use -h, or --help, for help.");
                     return;
                 }
@@ -224,7 +240,7 @@ namespace Extract
                         if (isOxRecording)
                         {
                             // OXR files begin with the client version they were recorded with.
-                            // This will allows us to easily parse recordings from older client versions.
+                            // This allows us to easily parse recordings from older client versions.
                             var version = reader.ReadString();
                             Console.WriteLine($"Client version: {version}");
                             if (int.TryParse(version.Replace(".", ""), out var versionNumber))
