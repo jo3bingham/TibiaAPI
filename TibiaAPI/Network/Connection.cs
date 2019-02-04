@@ -734,6 +734,13 @@ namespace OXGaming.TibiaAPI.Network
 
                     OnReceivedClientMessage?.Invoke(_clientInMessage.GetData());
 
+                    if (_isPacketParsingEnabled)
+                    {
+                        _clientOutMessage.Reset();
+                        _clientInMessage.Seek(6, SeekOrigin.Begin);
+                        ParseClientMessage(_client, _clientInMessage, _clientOutMessage);
+                    }
+
                     _xteaKey = new uint[4];
                     for (var i = 0; i < 4; ++i)
                     {
