@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace OXGaming.TibiaAPI.Creatures
 {
@@ -11,71 +12,28 @@ namespace OXGaming.TibiaAPI.Creatures
 
         public void Reset()
         {
-            _creatures.ForEach(c => c.Reset());
             _creatures.Clear();
         }
 
         public Creature GetCreature(uint creatureId)
         {
-            var counter = 0;
-            var count = _creatures.Count - 1;
-            while (counter <= count)
-            {
-                var index = counter + count >> 1;
-                var creature = _creatures[index];
-                if (creature.Id == creatureId)
-                {
-                    return creature;
-                }
-
-                if (creature.Id < creatureId)
-                {
-                    counter = index + 1;
-                    continue;
-                }
-
-                count = index - 1;
-            }
-
-            return null;
+            return _creatures.FirstOrDefault(c => c.Id == creatureId);
         }
 
         public void RemoveCreature(uint creatureId)
         {
-            Creature creature = null;
-            var index = 0;
-            var counter = 0;
-            var count = _creatures.Count - 1;
-            while (counter <= count)
+            var creature = GetCreature(creatureId);
+            if (creature == null)
             {
-                index = counter + count >> 1;
-                creature = _creatures[index];
-                if (creature.Id == creatureId)
-                {
-                    break;
-                }
-
-                if (creature.Id < creatureId)
-                {
-                    counter = index + 1;
-                    continue;
-                }
-
-                count = index - 1;
-            }
-
-            if (creature == null || index < 0)
-            {
-                throw new Exception("CreatureStorage.removeCreature: Creature " + creatureId + " not found.");
+                throw new Exception($"[CreatureStorage.RemoveCreature] Creature not found: {creatureId}");
             }
 
             //if (creature == Player)
             //{
-            //    throw new Exception(@"CreatureStorage.removeCreature: Can't remove the player.");
+            //    throw new Exception("[CreatureStorage.RemoveCreature] Can't remove the player.");
             //}
 
-            //creature.Reset();
-            _creatures.RemoveAt(index);
+            _creatures.Remove(creature);
         }
 
         public Creature ReplaceCreature(Creature newCreature, uint removeCreatureId = 0)
@@ -87,30 +45,16 @@ namespace OXGaming.TibiaAPI.Creatures
 
             if (_creatures.Count >= MaxCreaturesCount)
             {
-                throw new Exception($"[CreatureStorage.ReplaceCreature] No space left to append {newCreature.Id}");
+                throw new Exception($"[CreatureStorage.ReplaceCreature] No space left to add creature: {newCreature.Id}");
             }
 
-            var counter = 0;
-            var count = _creatures.Count - 1;
-            while (counter <= count)
+            var creature = GetCreature(newCreature.Id);
+            if (creature != null)
             {
-                var index = counter + count >> 1;
-                var creature = _creatures[index];
-                if (creature.Id == newCreature.Id)
-                {
-                    return newCreature;
-                }
-
-                if (creature.Id < newCreature.Id)
-                {
-                    counter = index + 1;
-                    continue;
-                }
-
-                count = index - 1;
+                return newCreature;
             }
 
-            _creatures.Insert(counter, newCreature);
+            _creatures.Add(newCreature);
             return newCreature;
         }
     }

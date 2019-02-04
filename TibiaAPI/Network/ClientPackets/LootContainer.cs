@@ -7,11 +7,12 @@ namespace OXGaming.TibiaAPI.Network.ClientPackets
     {
         Position Position { get; set; }
 
+        public LootContainerType Type { get; set; }
+
         public ushort ObjectId { get; set; }
 
         public byte Index { get; set; }
         public byte ItemCategory { get; set; }
-        public byte Type { get; set; }
 
         public bool UseMainContainerAsFallback { get; set; }
 
@@ -28,19 +29,19 @@ namespace OXGaming.TibiaAPI.Network.ClientPackets
                 return false;
             }
 
-            Type = message.ReadByte();
-            if (Type == 0)
+            Type = (LootContainerType)message.ReadByte();
+            if (Type == LootContainerType.Add)
             {
                 ItemCategory = message.ReadByte();
                 Position = message.ReadPosition();
                 ObjectId = message.ReadUInt16();
                 Index = message.ReadByte();
             }
-            else if (Type == 1 || Type == 2)
+            else if (Type == LootContainerType.Remove || Type == LootContainerType.Open)
             {
                 ItemCategory = message.ReadByte();
             }
-            else if (Type == 3)
+            else if (Type == LootContainerType.UseMainContainerAsFallback)
             {
                 UseMainContainerAsFallback = message.ReadBool();
             }
@@ -54,19 +55,19 @@ namespace OXGaming.TibiaAPI.Network.ClientPackets
         public override void AppendToNetworkMessage(NetworkMessage message)
         {
             message.Write((byte)ClientPacketType.LootContainer);
-            message.Write(Type);
-            if (Type == 0)
+            message.Write((byte)Type);
+            if (Type == LootContainerType.Add)
             {
                 message.Write(ItemCategory);
                 message.Write(Position);
                 message.Write(ObjectId);
                 message.Write(Index);
             }
-            else if (Type == 1 || Type == 2)
+            else if (Type == LootContainerType.Remove || Type == LootContainerType.Open)
             {
                 message.Write(ItemCategory);
             }
-            else if (Type == 3)
+            else if (Type == LootContainerType.UseMainContainerAsFallback)
             {
                 message.Write(UseMainContainerAsFallback);
             }

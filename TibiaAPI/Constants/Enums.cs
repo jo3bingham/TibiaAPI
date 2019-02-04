@@ -69,6 +69,14 @@
         NoPenalty = 3
     }
 
+    public enum LootContainerType
+    {
+        Add = 0,
+        Remove = 1,
+        Open = 2,
+        UseMainContainerAsFallback = 3
+    }
+
     public enum MarketOfferTerminationReason
     {
         Active = 0,

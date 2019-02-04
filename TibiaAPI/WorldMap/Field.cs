@@ -53,11 +53,11 @@ namespace OXGaming.TibiaAPI.WorldMap
             }
 
             var removedThing = objectsNetwork[stackPosition];
-            objectsCount = Math.Max(0, (objectsCount - 1));
+            objectsCount = Math.Max(0, objectsCount - 1);
 
             while (stackPosition < objectsCount)
             {
-                objectsNetwork[stackPosition] = objectsNetwork[(stackPosition + 1)];
+                objectsNetwork[stackPosition] = objectsNetwork[stackPosition + 1];
                 stackPosition++;
             }
 
@@ -119,7 +119,7 @@ namespace OXGaming.TibiaAPI.WorldMap
             if (objectsCount >= MapSizeW)
             {
                 objectsCount = MapSizeW;
-                removedThing = objectsNetwork[(MapSizeW - 1)];
+                removedThing = objectsNetwork[MapSizeW - 1];
             }
             else
             {
@@ -129,7 +129,7 @@ namespace OXGaming.TibiaAPI.WorldMap
             var count = objectsCount - 1;
             while (count > stackPosition)
             {
-                objectsNetwork[count] = objectsNetwork[(count - 1)];
+                objectsNetwork[count] = objectsNetwork[count - 1];
                 count--;
             }
 

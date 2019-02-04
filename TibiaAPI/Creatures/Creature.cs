@@ -51,16 +51,5 @@ namespace OXGaming.TibiaAPI.Creatures
             Type = type;
             Name = name;
         }
-
-        public void Reset()
-        {
-            //ResetSkills();
-            Direction = 0;
-            Id = 0;
-            Name = null;
-            Type = CreatureType.Monster;
-            Visible = false;
-            Position.SetZero();
-        }
     }
 }
