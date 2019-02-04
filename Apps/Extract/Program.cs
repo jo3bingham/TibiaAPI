@@ -192,8 +192,8 @@ namespace Extract
 
                 if (_extractMapData)
                 {
-                    LoadXML("itemsIgnore.xml");
-                    LoadXML("itemsReplace.xml");
+                    LoadXML("ItemsIgnore.xml");
+                    LoadXML("ItemsReplace.xml");
                 }
 
                 if (_extractItemData)
