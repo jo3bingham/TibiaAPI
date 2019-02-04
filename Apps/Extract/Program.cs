@@ -192,8 +192,8 @@ namespace Extract
 
                 if (_extractMapData)
                 {
-                    LoadXML("ignore.xml");
-                    LoadXML("replace.xml");
+                    LoadXML("itemsIgnore.xml");
+                    LoadXML("itemsReplace.xml");
                 }
 
                 if (_extractItemData)
@@ -320,10 +320,10 @@ namespace Extract
                                 var currentDate = DateTime.UtcNow;
                                 var fileNameData = new object[]
                                 {
-                                pos.X, pos.Y, pos.Z, currentDate.Day, currentDate.Month, currentDate.Year, currentDate.Hour, currentDate.Minute, currentDate.Second
+                                Path.GetFileNameWithoutExtension(filename), pos.X, pos.Y, pos.Z, currentDate.Day, currentDate.Month, currentDate.Year, currentDate.Hour, currentDate.Minute, currentDate.Second
                                 };
 
-                                var otbmName = string.Format("{0}_{1}_{2}__{3}_{4}_{5}__{6}_{7}_{8}", fileNameData);
+                                var otbmName = string.Format("{0}__{1}_{2}_{3}__{4}_{5}_{6}__{7}_{8}_{9}", fileNameData);
                                 var outputPath = $"{otbmName}.otbm";
                                 if (!string.IsNullOrEmpty(_outDirectory))
                                 {
@@ -588,9 +588,9 @@ namespace Extract
                 WriteData(file, BitConverter.GetBytes((uint)2));
 
                 // map width
-                WriteData(file, BitConverter.GetBytes((ushort)64764));
+                WriteData(file, BitConverter.GetBytes((ushort)65000));
                 // map height
-                WriteData(file, BitConverter.GetBytes((ushort)64764));
+                WriteData(file, BitConverter.GetBytes((ushort)65000));
 
                 // otb major version
                 WriteData(file, BitConverter.GetBytes((uint)3));

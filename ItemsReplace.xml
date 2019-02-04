@@ -1,0 +1,473 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<items>
+	<!-- ################## -->
+	<!-- # DECAYING ITEMS # -->
+	<!-- ################## -->
+
+	<item fromid="188" toid="182" fromname="the remains of a spider web (horizontal, open)" toname="the remains of a spider web (horizontal, closed)" />
+	<item fromid="189" toid="183" fromname="the remains of a spider web (vertical, open)" toname="the remains of a spider web (vertical, closed)" />
+	<item fromid="198" toid="197" fromname="large seashell (giant shimmering pearl, open)" toname="large seashell (giant shimmering pearl, closed)" />
+	<item fromid="211" toid="181" fromname="the remains of a spider egg" toname="spider egg" />
+	<item fromid="234" toid="233" fromname="the remains of a spider egg" toname="spider egg" />
+	<item fromid="294" toid="293" fromname="pitfall (grass)" toname="pitfall (grass, closed)" />
+	<item fromid="394" toid="372" fromname="hole (earth)" toname="hole (earth, closed)" />
+	<item fromid="398" toid="2525" fromname="wooden trash" toname="beer cask" />
+	<item fromid="476" toid="475" fromname="open trapdoor" toname="closed trapdoor" />
+	<item fromid="594" toid="593" fromname="hole (grass)" toname="loose stone pile (grass)" />
+	<item fromid="607" toid="606" fromname="hole (sand)" toname="loose stone pile (sand)" />
+	<item fromid="609" toid="608" fromname="hole (ice)" toname="loose stone pile (ice)" />
+	<item fromid="615" toid="614" fromname="hole (sand)" toname="sand (hidden dig spot)" />
+	<item fromid="868" toid="867" fromname="hole (earth)" toname="large hole (earth)" />
+	<item fromid="1067" toid="1066" fromname="pitfall (transparent, open)" toname="pitfall (transparent, closed)" />
+	<item fromid="2146" toid="2145" fromname="blades" toname="strange slits" />
+	<item fromid="2661" toid="2660" fromname="cuckoo clock (on)" toname="cuckoo clock (off)" />
+	<item fromid="2663" toid="2662" fromname="cuckoo clock (on)" toname="cuckoo clock (off)" />
+	<item fromid="3145" toid="2296" fromname="trashed wooden bars (horizontal)" toname="wooden bars (horizontal)" />
+	<item fromid="3146" toid="2295" fromname="trashed wooden bars (vertical)" toname="wooden bars (vertical)" />
+	<item fromid="3651" toid="3653" fromname="wheat (state 3)" toname="wheat (state 1)" />
+	<item fromid="3652" toid="3653" fromname="wheat (state 2)" toname="wheat (state 1)" />
+	<item fromid="3695" toid="3696" fromname="jungle grass (cut)" toname="jungle grass (grown)" />
+	<item fromid="3700" toid="3699" fromname="blueberry bush (empty)" toname="blueberry bush (filled)" />
+	<item fromid="3701" toid="3702" fromname="jungle grass (cut)" toname="jungle grass (grown)" />
+	<item fromid="3945" toid="3944" fromname="jungle maw (closed)" toname="jungle maw (open)" />
+	<item fromid="4849" toid="4848" fromname="wooden trash" toname="small cask" />
+	<item fromid="4851" toid="4850" fromname="smashed stone head" toname="statue of the snake god" />
+	<item fromid="4996" toid="4995" fromname="destroyed canopic jar" toname="canopic jar" />
+	<item fromid="5462" toid="5465" fromname="sugar cane (cut)" toname="sugar cane (grown)" />
+	<item fromid="5463" toid="5465" fromname="sugar cane (burned down)" toname="sugar cane (grown)" />
+	<item fromid="5464" toid="5465" fromname="sugar cane (burning)" toname="sugar cane (grown)" />
+	<item fromid="5470" toid="5465" fromname="sugar cane (growing)" toname="sugar cane (grown)" />
+	<item fromid="5512" toid="5468" fromname="distilling machine (horizontal, fluid source)" toname="distilling machine (horizontal, none)" />
+	<item fromid="5513" toid="5469" fromname="distilling machine (vertical, fluid source)" toname="distilling machine (vertical, none)" />
+	<item fromid="5731" toid="5730" fromname="hole (sand)" toname="sand (hidden dig spot)" />
+	<item fromid="5763" toid="5764" fromname="trapdoor" toname="ventilation grille" />
+	<item fromid="6594" toid="799" fromname="snow (footprints)" toname="snow (clean)" />
+	<item fromid="6595" toid="6580" fromname="snow (footprints)" toname="snow (clean)" />
+	<item fromid="6596" toid="6581" fromname="snow (footprints)" toname="snow (clean)" />
+	<item fromid="6597" toid="6582" fromname="snow (footprints)" toname="snow (clean)" />
+	<item fromid="6598" toid="6583" fromname="snow (footprints)" toname="snow (clean)" />
+	<item fromid="6599" toid="6584" fromname="snow (footprints)" toname="snow (clean)" />
+	<item fromid="6600" toid="6585" fromname="snow (footprints)" toname="snow (clean)" />
+	<item fromid="6601" toid="6586" fromname="snow (footprints)" toname="snow (clean)" />
+	<item fromid="6602" toid="6587" fromname="snow (footprints)" toname="snow (clean)" />
+	<item fromid="6603" toid="6588" fromname="snow (footprints)" toname="snow (clean)" />
+	<item fromid="6604" toid="6589" fromname="snow (footprints)" toname="snow (clean)" />
+	<item fromid="6605" toid="6590" fromname="snow (footprints)" toname="snow (clean)" />
+	<item fromid="6606" toid="6591" fromname="snow (footprints)" toname="snow (clean)" />
+	<item fromid="6607" toid="6592" fromname="snow (footprints)" toname="snow (clean)" />
+	<item fromid="6608" toid="6593" fromname="snow (footprints)" toname="snow (clean)" />
+	<item fromid="7175" toid="7174" fromname="bear (deep sleep)" toname="bear (tight sleep)" />
+	<item fromid="7177" toid="7176" fromname="mammoth (knocked out)" toname="mammoth (angry)" />
+	<item fromid="7186" toid="7185" fromname="big crack in the ice" toname="small crack in the ice" />
+	<item fromid="7236" toid="7200" fromname="ice hole (fish, open)" toname="fragile ice" />
+	<item fromid="7237" toid="7200" fromname="ice hole (open)" toname="fragile ice" />
+	<item fromid="7252" toid="7178" fromname="baby seal (paint)" toname="baby seal" />
+	<item fromid="7744" toid="7741" fromname="ice statue" toname="ice cube" />
+	<item fromid="7745" toid="7743" fromname="lava hole" toname="inactive lava hole" />
+	<item fromid="7746" toid="7742" fromname="dead man's saddle (big)" toname="dead man's saddle (small)" />
+	<item fromid="7755" toid="7749" fromname="hole (grass)" toname="loose stone pile (grass)" />
+	<item fromid="7868" toid="7869" fromname="closed door" toname="open door" />
+	<item fromid="7926" toid="7925" fromname="the shadow nexus (state 2)" toname="the shadow nexus (state 1)" />
+	<item fromid="7927" toid="7925" fromname="the shadow nexus (state 3)" toname="the shadow nexus (state 1)" />
+	<item fromid="7928" toid="7925" fromname="the shadow nexus (state 4)" toname="the shadow nexus (state 1)" />
+	<item fromid="7929" toid="7925" fromname="the shadow nexus (state 5)" toname="the shadow nexus (state 1)" />
+	<item fromid="7930" toid="7925" fromname="the shadow nexus (state 6)" toname="the shadow nexus (state 1)" />
+	<item fromid="7931" toid="7925" fromname="the shadow nexus (state 7)" toname="the shadow nexus (state 1)" />
+	<item fromid="8709" toid="8708" fromname="open trapdoor" toname="closed trapdoor" />
+	<item fromid="9119" toid="7814" fromname="crucible (on)" toname="crucible (off)" />
+	<item fromid="9123" toid="7814" fromname="crucible (on)" toname="crucible (off)" />
+	<item fromid="9124" toid="7814" fromname="crucible (on)" toname="crucible (off)" />
+	<item fromid="10187" toid="10186" fromname="shattered crystal ball" toname="scrying ball" />
+	<item fromid="10197" toid="7062" fromname="jungle grass" toname="rock" />
+	<item fromid="10220" toid="8843" fromname="evil tree spirit" toname="tree" />
+	<item fromid="10489" toid="10493" fromname="lamp (off)" toname="lamp (on)" />
+	<item fromid="10507" toid="10491" fromname="lamp (off)" toname="lamp (on)" />
+	<item fromid="11345" toid="2113" fromname="basin full of sacred coal" toname="coal basin" />
+	<item fromid="11348" toid="10494" fromname="water" toname="muddy water" />
+	<item fromid="14065" toid="14064" fromname="overgrown hive pore" toname="hive pore" />
+	<item fromid="15701" toid="15829" fromname="churned ground" toname="mold floor" />
+	<item fromid="15816" toid="15704" fromname="puffball mushroom (inactive)" toname="puffball mushroom (active)" />
+	<item fromid="15830" toid="15829" fromname="some truffels" toname="mold floor" />
+	<item fromid="15831" toid="15709" fromname="crystal cannon (inactive)" toname="crystal cannon (active)" />
+	<item fromid="16170" toid="16169" fromname="large blue crystal (medium)" toname="large blue crystal (large)" />
+	<item fromid="16171" toid="16169" fromname="large blue crystal (small)" toname="large blue crystal (large)" />
+	<item fromid="17151" toid="17153" fromname="freshly cut venorean spice" toname="venorean spice" />
+	<item fromid="17152" toid="17153" fromname="growing venorean spice" toname="venorean spice" />
+	<item fromid="17678" toid="17677" fromname="smashed trunk" toname="junk trunk" />
+	<item fromid="17680" toid="17679" fromname="advertisement sign" toname="cracked stone" />
+	<item fromid="19076" toid="19075" fromname="the remains of a dusty amphora" toname="dusty amphora" />
+	<item fromid="19210" toid="19209" fromname="destroyed monster nest" toname="monster nest" />
+	<item fromid="19212" toid="19211" fromname="opened ominous mound" toname="ominous mound" />
+	<item fromid="19213" toid="19208" fromname="charged ghost pacifier" toname="ghost pacifier" />
+	<item fromid="19379" toid="19217" fromname="chargeless monolith" toname="magnetic monolith" />
+	<item fromid="20109" toid="20105" fromname="pester maws (inactive)" toname="pester maws (active)" />
+	<item fromid="20111" toid="20103" fromname="ether captor (inactive)" toname="ether captor (active)" />
+	<item fromid="20112" toid="20104" fromname="rooted evil (inactive)" toname="rooted evil (active)" />
+	<item fromid="20113" toid="20106" fromname="crimson fin (inactive)" toname="crimson fin (active)" />
+	<item fromid="20114" toid="20107" fromname="cormo dementi (inactive)" toname="cormo dementi (active)" />
+	<item fromid="20115" toid="20108" fromname="blister egg plant (inactive)" toname="blister egg plant (active)" />
+	<item fromid="20116" toid="20101" fromname="tall dusky cypress (inactive)" toname="tall dusky cypress (active)" />
+	<item fromid="20117" toid="20102" fromname="tall gloomy cypress (inactive)" toname="tall gloomy cypress (active)" />
+	<item fromid="20118" toid="20099" fromname="sleepless twine (inactive)" toname="sleepless twine (active)" />
+	<item fromid="20119" toid="20100" fromname="sleepless twine (inactive)" toname="sleepless twine (active)" />
+	<item fromid="20134" toid="20135" fromname="small pile of gravel" toname="large pile of gravel" />
+	<item fromid="20136" toid="20125" fromname="chalk residues" toname="chalk" />
+	<item fromid="20164" toid="5015" fromname="desecrated skull" toname="skull" />
+	<item fromid="20180" toid="20179" fromname="ransacked pile of bones" toname="large pile of various bones" />
+	<item fromid="21090" toid="21088" fromname="peppermoon bells (cut)" toname="peppermoon bells (grown)" />
+	<item fromid="21106" toid="21104" fromname="harvested root" toname="juicy root" />
+	<item fromid="21107" toid="21105" fromname="harvested root" toname="juicy root" />
+	<item fromid="21129" toid="21125" fromname="red lever (right)" toname="red lever (left)" />
+	<item fromid="21130" toid="21126" fromname="yellow lever (right)" toname="yellow lever (left)" />
+	<item fromid="21131" toid="21127" fromname="green lever (right)" toname="green lever (left)" />
+	<item fromid="21132" toid="21128" fromname="violet lever (right)" toname="violet lever (left)" />
+	<item fromid="21148" toid="21151" fromname="valve" toname="slimy valve" />
+	<item fromid="21152" toid="21300" fromname="strangely coloured glooth" toname="stone" />
+	<item fromid="21161" toid="21163" fromname="mootant armor rack (burnt)" toname="mootant armor rack (clean)" />
+	<item fromid="21342" toid="21341" fromname="hole (dark grass)" toname="loose stone pile (dark grass)" />
+	<item fromid="21387" toid="2074" fromname="small pagoda (lit)" toname="small pagoda (off)" />
+	<item fromid="21438" toid="1852" fromname="ornamented fountain" toname="stones" />
+	<item fromid="21443" toid="21945" fromname="remains of an old amphora" toname="large amphora" />
+	<item fromid="21744" toid="21743" fromname="strange machine (on)" toname="strange machine (off)" />
+	<item fromid="21749" toid="21787" fromname="nacre altar" toname="broken nacre altar" />
+	<item fromid="21793" toid="21792" fromname="valve plug" toname="copper valve" />
+	<item fromid="21797" toid="21791" fromname="strange statue (text)" toname="strange statue (no text)" />
+	<item fromid="21799" toid="21798" fromname="large seashell (open)" toname="large seashell (close)" />
+	<item fromid="21807" toid="21806" fromname="crimson crest mushroom stem" toname="crimson crest mushroom" />
+	<item fromid="21830" toid="21831" fromname="spider (no silk)" toname="spider (with silk)" />
+	<item fromid="21842" toid="21836" fromname="harvested mushroom" toname="edible rock fungus" />
+	<item fromid="21843" toid="2062" fromname="flower-adorned statue" toname="sacred statue" />
+	<item fromid="21844" toid="21826" fromname="small gloothworm tubes (small)" toname="small gloothworm tubes (big)" />
+	<item fromid="21845" toid="21827" fromname="small gloothworm tubes (small)" toname="small gloothworm tubes (big)" />
+	<item fromid="21846" toid="21847" fromname="glooth data machine (inactive)" toname="glooth data machine (active)" />
+	<item fromid="21849" toid="21848" fromname="glooth data machine (inactive)" toname="glooth data machine (active)" />
+	<item fromid="21854" toid="21851" fromname="dinky moss floret stalks (vertical)" toname="dinky moss floret (vertical)" />
+	<item fromid="21855" toid="21852" fromname="dinky moss floret stalks (horizontal)" toname="dinky moss floret (horizontal)" />
+	<item fromid="21855" toid="21852" fromname="dinky moss floret stalks" toname="dinky moss floret" />
+	<item fromid="21878" toid="21832" fromname="spider (no silk)" toname="spider (silk)" />
+	<item fromid="21934" toid="10797" fromname="black crystal shards" toname="large black crystal" />
+	<item fromid="21935" toid="21388" fromname="grass" toname="lion's mane flower" />
+	<item fromid="21946" toid="21945" fromname="remains of an old amphora" toname="large amphora" />
+	<item fromid="21971" toid="21972" fromname="hole (ice)" toname="pitfall (transparent)" />
+	<item fromid="22539" toid="22538" fromname="stone tile (minimap red)" toname="stone tile (minimap white)" />
+	<item fromid="22540" toid="22538" fromname="stone tile (minimap green)" toname="stone tile (minimap white)" />
+	<item fromid="22541" toid="22538" fromname="stone tile (minimap yellow)" toname="stone tile (minimap white)" />
+	<item fromid="22677" toid="22664" fromname="stone" toname="sleeping hyaena" />
+	<item fromid="22685" toid="22686" fromname="dead goblin (state 3)" toname="dead goblin (state 2)" />
+	<item fromid="22689" toid="22683" fromname="crude treadmill (working)" toname="crude treadmill (not working)" />
+	<item fromid="22690" toid="22684" fromname="greasy stone (empty)" toname="greasy stone (inhabitated)" />
+	<item fromid="22691" toid="22687" fromname="dead goblin (state 3)" toname="dead goblin (state 1)" />
+	<item fromid="22697" toid="22696" fromname="crude water conveyor (fixed)" toname="crude water conveyor (not fixed)" />
+	<item fromid="22703" toid="22695" fromname="crystallized salt (small)" toname="crystallized salt (big)" />
+	<item fromid="22709" toid="22361" fromname="dry floor" toname="golden quartzes" />
+	<item fromid="22881" toid="22645" fromname="stalk" toname="skull orchid" />
+
+	<!-- ################# -->
+	<!-- ## DOORS  ETC. ## -->
+	<!-- ################# -->
+
+	<!-- <item fromid="1630" toid="1629"/> -->
+	<!-- <item fromid="1633" toid="1632"/> -->
+	<!-- <item fromid="1639" toid="1638"/> -->
+	<!-- <item fromid="1641" toid="1640"/> -->
+	<!-- <item fromid="1643" toid="1642"/> -->
+	<!-- <item fromid="1645" toid="1644"/> -->
+	<!-- <item fromid="1647" toid="1646"/> -->
+	<!-- <item fromid="1649" toid="1648"/> -->
+	<!-- <item fromid="1652" toid="1651"/> -->
+	<!-- <item fromid="1655" toid="1654"/> -->
+	<!-- <item fromid="1657" toid="1656"/> -->
+	<!-- <item fromid="1659" toid="1658"/> -->
+	<!-- <item fromid="1661" toid="1660"/> -->
+	<!-- <item fromid="1663" toid="1662"/> -->
+	<!-- <item fromid="1665" toid="1664"/> -->
+	<!-- <item fromid="1667" toid="1666"/> -->
+	<!-- <item fromid="1670" toid="1669"/> -->
+	<!-- <item fromid="1673" toid="1672"/> -->
+	<!-- <item fromid="1675" toid="1674"/> -->
+	<!-- <item fromid="1677" toid="1676"/> -->
+	<!-- <item fromid="1679" toid="1678"/> -->
+	<!-- <item fromid="1681" toid="1680"/> -->
+	<!-- <item fromid="1684" toid="1683"/> -->
+	<!-- <item fromid="1686" toid="1685"/> -->
+	<!-- <item fromid="1688" toid="1687"/> -->
+	<!-- <item fromid="1690" toid="1689"/> -->
+	<!-- <item fromid="1693" toid="1692"/> -->
+	<!-- <item fromid="1695" toid="1694"/> -->
+	<!-- <item fromid="1697" toid="1696"/> -->
+	<!-- <item fromid="1699" toid="1698"/> -->
+	<!-- <item fromid="2178" toid="2177"/> -->
+	<!-- <item fromid="2180" toid="2179"/> -->
+	<!-- <item fromid="2335" toid="2334"/> -->
+	<!-- <item fromid="2337" toid="2336"/> -->
+	<!-- <item fromid="2339" toid="2338"/> -->
+	<!-- <item fromid="2341" toid="2340"/> -->
+	<!-- <item fromid="4911" toid="4912"/> -->
+	<!-- <item fromid="4914" toid="4913"/> -->
+	<!-- <item fromid="5083" toid="5082"/> -->
+	<!-- <item fromid="5085" toid="5084"/> -->
+	<!-- <item fromid="5099" toid="5098"/> -->
+	<!-- <item fromid="5101" toid="5100"/> -->
+	<!-- <item fromid="5103" toid="5102"/> -->
+	<!-- <item fromid="5105" toid="5104"/> -->
+	<!-- <item fromid="5108" toid="5107"/> -->
+	<!-- <item fromid="5110" toid="5109"/> -->
+	<!-- <item fromid="5112" toid="5111"/> -->
+	<!-- <item fromid="5114" toid="5113"/> -->
+	<!-- <item fromid="5117" toid="5116"/> -->
+	<!-- <item fromid="5119" toid="5118"/> -->
+	<!-- <item fromid="5121" toid="5120"/> -->
+	<!-- <item fromid="5123" toid="5122"/> -->
+	<!-- <item fromid="5126" toid="5125"/> -->
+	<!-- <item fromid="5128" toid="5127"/> -->
+	<!-- <item fromid="5130" toid="5129"/> -->
+	<!-- <item fromid="5132" toid="5131"/> -->
+	<!-- <item fromid="5135" toid="5134"/> -->
+	<!-- <item fromid="5138" toid="5137"/> -->
+	<!-- <item fromid="5141" toid="5140"/> -->
+	<!-- <item fromid="5144" toid="5143"/> -->
+	<!-- <item fromid="5279" toid="5278"/> -->
+	<!-- <item fromid="5282" toid="5281"/> -->
+	<!-- <item fromid="5284" toid="5283"/> -->
+	<!-- <item fromid="5286" toid="5285"/> -->
+	<!-- <item fromid="5288" toid="5287"/> -->
+	<!-- <item fromid="5290" toid="5289"/> -->
+	<!-- <item fromid="5292" toid="5291"/> -->
+	<!-- <item fromid="5294" toid="5293"/> -->
+	<!-- <item fromid="5515" toid="5514"/> -->
+	<!-- <item fromid="5517" toid="5516"/> -->
+	<!-- <item fromid="5734" toid="5732"/> -->
+	<!-- <item fromid="5737" toid="5735"/> -->
+	<!-- <item fromid="5746" toid="5745"/> -->
+	<!-- <item fromid="5748" toid="5749"/> -->
+	<!-- <item fromid="6193" toid="6192"/> -->
+	<!-- <item fromid="6196" toid="6195"/> -->
+	<!-- <item fromid="6198" toid="6197"/> -->
+	<!-- <item fromid="6200" toid="6199"/> -->
+	<!-- <item fromid="6202" toid="6201"/> -->
+	<!-- <item fromid="6204" toid="6203"/> -->
+	<!-- <item fromid="6206" toid="6205"/> -->
+	<!-- <item fromid="6208" toid="6207"/> -->
+	<!-- <item fromid="6250" toid="6249"/> -->
+	<!-- <item fromid="6253" toid="6252"/> -->
+	<!-- <item fromid="6255" toid="6254"/> -->
+	<!-- <item fromid="6257" toid="6256"/> -->
+	<!-- <item fromid="6259" toid="6258"/> -->
+	<!-- <item fromid="6261" toid="6260"/> -->
+	<!-- <item fromid="6263" toid="6262"/> -->
+	<!-- <item fromid="6265" toid="6264"/> -->
+	<!-- <item fromid="6800" toid="6799"/> -->
+	<!-- <item fromid="6802" toid="6801"/> -->
+	<!-- <item fromid="6893" toid="6892"/> -->
+	<!-- <item fromid="6895" toid="6894"/> -->
+	<!-- <item fromid="6897" toid="6896"/> -->
+	<!-- <item fromid="6899" toid="6898"/> -->
+	<!-- <item fromid="6902" toid="6901"/> -->
+	<!-- <item fromid="6904" toid="6903"/> -->
+	<!-- <item fromid="6906" toid="6905"/> -->
+	<!-- <item fromid="6908" toid="6907"/> -->
+	<!-- <item fromid="7035" toid="7034"/> -->
+	<!-- <item fromid="7037" toid="7036"/> -->
+	<!-- <item fromid="7039" toid="7038"/> -->
+	<!-- <item fromid="7041" toid="7040"/> -->
+	<!-- <item fromid="7044" toid="7043"/> -->
+	<!-- <item fromid="7046" toid="7045"/> -->
+	<!-- <item fromid="7048" toid="7047"/> -->
+	<!-- <item fromid="7050" toid="7049"/> -->
+	<!-- <item fromid="7055" toid="7054"/> -->
+	<!-- <item fromid="7057" toid="7056"/> -->
+	<!-- <item fromid="7713" toid="7712"/> -->
+	<!-- <item fromid="7716" toid="7715"/> -->
+	<!-- <item fromid="7718" toid="7717"/> -->
+	<!-- <item fromid="7720" toid="7719"/> -->
+	<!-- <item fromid="7722" toid="7721"/> -->
+	<!-- <item fromid="7724" toid="7723"/> -->
+	<!-- <item fromid="7726" toid="7725"/> -->
+	<!-- <item fromid="7728" toid="7727"/> -->
+	<!-- <item fromid="8251" toid="8250"/> -->
+	<!-- <item fromid="8254" toid="8253"/> -->
+	<!-- <item fromid="8256" toid="8255"/> -->
+	<!-- <item fromid="8258" toid="8257"/> -->
+	<!-- <item fromid="8260" toid="8259"/> -->
+	<!-- <item fromid="8262" toid="8261"/> -->
+	<!-- <item fromid="8264" toid="8263"/> -->
+	<!-- <item fromid="8266" toid="8265"/> -->
+	<!-- <item fromid="8353" toid="8352"/> -->
+	<!-- <item fromid="8356" toid="8355"/> -->
+	<!-- <item fromid="8358" toid="8357"/> -->
+	<!-- <item fromid="8360" toid="8359"/> -->
+	<!-- <item fromid="8362" toid="8361"/> -->
+	<!-- <item fromid="8364" toid="8363"/> -->
+	<!-- <item fromid="8366" toid="8365"/> -->
+	<!-- <item fromid="8368" toid="8367"/> -->
+	<!-- <item fromid="9353" toid="9352"/> -->
+	<!-- <item fromid="9356" toid="9355"/> -->
+	<!-- <item fromid="9358" toid="9357"/> -->
+	<!-- <item fromid="9360" toid="9359"/> -->
+	<!-- <item fromid="9362" toid="9361"/> -->
+	<!-- <item fromid="9364" toid="9363"/> -->
+	<!-- <item fromid="9366" toid="9365"/> -->
+	<!-- <item fromid="9368" toid="9367"/> -->
+	<!-- <item fromid="9553" toid="9552"/> -->
+	<!-- <item fromid="9555" toid="9554"/> -->
+	<!-- <item fromid="9557" toid="9556"/> -->
+	<!-- <item fromid="9559" toid="9558"/> -->
+	<!-- <item fromid="9562" toid="9561"/> -->
+	<!-- <item fromid="9564" toid="9563"/> -->
+	<!-- <item fromid="9566" toid="9565"/> -->
+	<!-- <item fromid="9568" toid="9567"/> -->
+	<!-- <item fromid="9860" toid="9859"/> -->
+	<!-- <item fromid="9864" toid="9863"/> -->
+	<!-- <item fromid="9866" toid="9865"/> -->
+	<!-- <item fromid="9869" toid="9868"/> -->
+	<!-- <item fromid="9873" toid="9872"/> -->
+	<!-- <item fromid="9875" toid="9874"/> -->
+	<!-- <item fromid="11138" toid="11137"/> -->
+	<!-- <item fromid="11140" toid="11139"/> -->
+	<!-- <item fromid="11142" toid="11141"/> -->
+	<!-- <item fromid="11145" toid="11144"/> -->
+	<!-- <item fromid="11147" toid="11146"/> -->
+	<!-- <item fromid="11149" toid="11148"/> -->
+	<!-- <item fromid="11234" toid="11233"/> -->
+	<!-- <item fromid="11238" toid="11237"/> -->
+	<!-- <item fromid="11240" toid="11239"/> -->
+	<!-- <item fromid="11243" toid="11242"/> -->
+	<!-- <item fromid="11247" toid="11246"/> -->
+	<!-- <item fromid="11249" toid="11248"/> -->
+	<!-- <item fromid="11708" toid="11705"/> -->
+	<!-- <item fromid="11716" toid="11714"/> -->
+	<!-- <item fromid="12034" toid="12033"/> -->
+	<!-- <item fromid="12036" toid="12035"/> -->
+	<!-- <item fromid="13137" toid="13136"/> -->
+	<!-- <item fromid="13144" toid="13143"/> -->
+	<!-- <item fromid="15688" toid="15687"/> -->
+	<!-- <item fromid="15891" toid="15890"/> -->
+	<!-- <item fromid="15893" toid="15892"/> -->
+	<!-- <item fromid="17562" toid="17561"/> -->
+	<!-- <item fromid="17564" toid="17563"/> -->
+	<!-- <item fromid="17566" toid="17565"/> -->
+	<!-- <item fromid="17568" toid="17567"/> -->
+	<!-- <item fromid="17571" toid="17570"/> -->
+	<!-- <item fromid="17573" toid="17572"/> -->
+	<!-- <item fromid="17575" toid="17574"/> -->
+	<!-- <item fromid="17577" toid="17576"/> -->
+	<!-- <item fromid="17702" toid="17701"/> -->
+	<!-- <item fromid="17704" toid="17703"/> -->
+	<!-- <item fromid="17706" toid="17705"/> -->
+	<!-- <item fromid="17708" toid="17707"/> -->
+	<!-- <item fromid="17711" toid="17710"/> -->
+	<!-- <item fromid="17713" toid="17712"/> -->
+	<!-- <item fromid="17715" toid="17714"/> -->
+	<!-- <item fromid="17717" toid="17716"/> -->
+	<!-- <item fromid="17995" toid="17994"/> -->
+	<!-- <item fromid="17997" toid="17996"/> -->
+	<!-- <item fromid="17999" toid="17998"/> -->
+	<!-- <item fromid="18001" toid="18000"/> -->
+	<!-- <item fromid="18004" toid="18003"/> -->
+	<!-- <item fromid="18006" toid="18005"/> -->
+	<!-- <item fromid="18008" toid="18007"/> -->
+	<!-- <item fromid="18010" toid="18009"/> -->
+	<!-- <item fromid="18025" toid="17383"/> -->
+	<!-- <item fromid="18026" toid="17386"/> -->
+	<!-- <item fromid="20445" toid="20443"/> -->
+	<!-- <item fromid="20447" toid="20446"/> -->
+	<!-- <item fromid="20449" toid="20448"/> -->
+	<!-- <item fromid="20451" toid="20450"/> -->
+	<!-- <item fromid="20454" toid="20452"/> -->
+	<!-- <item fromid="20456" toid="20455"/> -->
+	<!-- <item fromid="20458" toid="20457"/> -->
+	<!-- <item fromid="20460" toid="20459"/> -->
+	<!-- <item fromid="20488" toid="21034"/> -->
+	<!-- <item fromid="20489" toid="20490"/> -->
+
+	<!-- ################# -->
+	<!-- # ITEM SWITCHES # -->
+	<!-- ################# -->
+
+	<item fromid="2062" toid="2063" fromname="sacred statue (horizontal, off)" toname="sacred statue (horizontal, on)" />
+	<item fromid="2064" toid="2065" fromname="sacred statue (vertical, off)" toname="sacred statue (vertical, on)" />
+	<item fromid="2108" toid="2109" fromname="street lamp (off)" toname="street lamp (on)" />
+	<item fromid="2116" toid="2117" fromname="bamboo lamp (off)" toname="bamboo lamp (on)" />
+	<item fromid="2535" toid="2536" fromname="oven (horizontal, on)" toname="oven (horizontal, off)" />
+	<item fromid="2537" toid="2538" fromname="oven (vertical, on)" toname="oven (vertical, off)" />
+	<item fromid="2539" toid="2540" fromname="oven (horizontal, on)" toname="oven (horizontal, off)" />
+	<item fromid="2541" toid="2542" fromname="oven (vertical, on)" toname="oven (vertical, off)" />
+	<item fromid="2907" toid="2908" fromname="wall lamp (off)" toname="wall lamp (on)" />
+	<item fromid="2909" toid="2910" fromname="wall lamp (off)" toname="wall lamp (on)" />
+	<item fromid="2928" toid="2929" fromname="torch bearer" toname="lit torch bearer" />
+	<item fromid="2930" toid="2931" fromname="torch bearer" toname="lit torch bearer" />
+	<item fromid="2936" toid="2937" fromname="wall lamp" toname="lit wall lamp" />
+	<item fromid="2938" toid="2939" fromname="wall lamp" toname="lit wall lamp" />
+	<item fromid="2940" toid="2941" fromname="torch bearer" toname="lit torch bearer" />
+	<item fromid="2942" toid="2943" fromname="torch bearer" toname="lit torch bearer" />
+	<item fromid="2944" toid="2945" fromname="wall lamp" toname="lit wall lamp" />
+	<item fromid="2946" toid="2947" fromname="wall lamp" toname="lit wall lamp" />
+	<item fromid="6355" toid="6356" fromname="oven (horizontal, on)" toname="oven (horizontal, off)" />
+	<item fromid="6357" toid="6358" fromname="oven (vertical, on)" toname="oven (vertical, off)" />
+	<item fromid="6359" toid="6360" fromname="oven (horizontal, on)" toname="oven (horizontal, off)" />
+	<item fromid="6361" toid="6362" fromname="oven (vertical, on)" toname="oven (vertical, off)" />
+	<item fromid="7058" toid="7059" fromname="skull pillar" toname="glowing skull pillar" />
+	<item fromid="7856" toid="7857" fromname="chimney (horizontal, on)" toname="chimney (horizontal, off)" />
+	<item fromid="7858" toid="7859" fromname="chimney (vertical, on)" toname="chimney (vertical, off)" />
+	<item fromid="7860" toid="7861" fromname="chimney (horizontal, on)" toname="chimney (horizontal, off)" />
+	<item fromid="7862" toid="7863" fromname="chimney (vertical, on)" toname="chimney (vertical, off)" />
+	<item fromid="8659" toid="8660" fromname="street lamp (off)" toname="street lamp (on)" />
+	<item fromid="8661" toid="8662" fromname="street lamp (off)" toname="street lamp (on)" />
+	<item fromid="8663" toid="8664" fromname="street lamp (off)" toname="street lamp (on)" />
+	<item fromid="8665" toid="8666" fromname="street lamp (off)" toname="street lamp (on)" />
+	<item fromid="8833" toid="8832" fromname="wall lamp" toname="lit wall lamp" />
+	<item fromid="8835" toid="8834" fromname="wall lamp" toname="lit wall lamp" />
+	<item fromid="8924" toid="8925" fromname="wall lamp" toname="lit wall lamp" />
+	<item fromid="8926" toid="8927" fromname="wall lamp" toname="lit wall lamp" />
+	<item fromid="8928" toid="8929" fromname="wall lamp" toname="lit wall lamp" />
+	<item fromid="8930" toid="8931" fromname="wall lamp" toname="lit wall lamp" />
+	<item fromid="8970" toid="8971" fromname="strange apparatus (off)" toname="strange apparatus (on)" />
+	<item fromid="8973" toid="8974" fromname="strange apparatus (off)" toname="strange apparatus (on)" />
+	<item fromid="8975" toid="8976" fromname="strange apparatus (off)" toname="strange apparatus (on)" />
+	<item fromid="8978" toid="8979" fromname="strange apparatus (off)" toname="strange apparatus (on)" />
+	<item fromid="8981" toid="8982" fromname="strange machine (off)" toname="strange machine (on)" />
+	<item fromid="8984" toid="8985" fromname="strange machine (off)" toname="strange machine (on)" />
+	<item fromid="8987" toid="8988" fromname="strange machine (off)" toname="strange machine (on)" />
+	<item fromid="8990" toid="8991" fromname="strange machine (off)" toname="strange machine (on)" />
+	<item fromid="9059" toid="9060" fromname="small lamp" toname="lit small lamp" />
+	<item fromid="10054" toid="10055" fromname="wall lamp" toname="lit wall lamp" />
+	<item fromid="10056" toid="10057" fromname="wall lamp" toname="lit wall lamp" />
+	<item fromid="10083" toid="10082" fromname="dragon statue (off)" toname="dragon statue (on)" />
+	<item fromid="10085" toid="10084" fromname="dragon statue (off)" toname="dragon statue (on)" />
+	<item fromid="10959" toid="10960" fromname="dragon basin (off)" toname="dragon basin (on)" />
+	<item fromid="11039" toid="11040" fromname="jade lamp (off)" toname="jade lamp (on)" />
+	<item fromid="11042" toid="11041" fromname="jade lamp (off)" toname="jade lamp (on)" />
+	<item fromid="11044" toid="11043" fromname="jade dragon statue (off)" toname="jade dragon statue (on)" />
+	<item fromid="11046" toid="11045" fromname="jade dragon statue (off)" toname="jade dragon statue (on)" />
+	<item fromid="11050" toid="11048" fromname="jade basin (off)" toname="jade basin (on)" />
+	<item fromid="11052" toid="11051" fromname="jade floor lamp (off)" toname="jade floor lamp (on)" />
+	<item fromid="11060" toid="11058" fromname="mystic floor lamp (off)" toname="mystic floor lamp (on)" />
+	<item fromid="11061" toid="11059" fromname="mystic floor lamp (off)" toname="mystic floor lamp (on)" />
+	<item fromid="11235" toid="11236" fromname="dragon claw lamp (off)" toname="dragon claw lamp (on)" />
+	<item fromid="11244" toid="11245" fromname="dragon claw lamp (off)" toname="dragon claw lamp (on)" />
+	<item fromid="11252" toid="11253" fromname="wall lamp (off)" toname="wall lamp (on)" />
+	<item fromid="11254" toid="11255" fromname="wall lamp (off)" toname="wall lamp (on)" />
+	<item fromid="12432" toid="12431" fromname="torch" toname="lit torch" />
+	<item fromid="12433" toid="12434" fromname="torch" toname="lit torch" />
+	<item fromid="13338" toid="13337" fromname="glowing lamp" toname="lit glowing lamp" />
+	<item fromid="13340" toid="13339" fromname="glowing lamp" toname="lit glowing lamp" />
+	<item fromid="13651" toid="13654" fromname="lamp" toname="lit lamp" />
+	<item fromid="13652" toid="13653" fromname="lamp" toname="lit lamp" />
+	<item fromid="13655" toid="13656" fromname="strange lamp" toname="lit strange lamp" />
+	<item fromid="13657" toid="13658" fromname="strange lamp" toname="lit strange lamp" />
+	<item fromid="13659" toid="13660" fromname="lamp" toname="lit lamp" />
+	<item fromid="13661" toid="13662" fromname="lamp" toname="lit lamp" />
+	<item fromid="13663" toid="13664" fromname="lamp" toname="lit lamp" />
+	<item fromid="13665" toid="13666" fromname="lamp" toname="lit lamp" />
+	<item fromid="15528" toid="15529" fromname="lightsource (off)" toname="lightsource (on)" />
+	<item fromid="15530" toid="15531" fromname="lightsource (off)" toname="lightsource (on)" />
+	<item fromid="17410" toid="17409" fromname="street lamp" toname="lit street lamp" />
+	<item fromid="17412" toid="17411" fromname="street lamp" toname="lit street lamp" />
+	<item fromid="17413" toid="17414" fromname="candelabra" toname="lit candelabra" />
+	<item fromid="17416" toid="17415" fromname="candelabra" toname="lit candelabra" />
+	<item fromid="17417" toid="17418" fromname="candelabra" toname="lit candelabra" />
+	<item fromid="20497" toid="20498" fromname="street lamp" toname="lit street lamp" />
+	<item fromid="20499" toid="20500" fromname="street lamp" toname="lit street lamp" />
+	<item fromid="20501" toid="20502" fromname="candle" toname="lit candle" />
+	<item fromid="20503" toid="20504" fromname="candle" toname="lit candle" />
+</items>
