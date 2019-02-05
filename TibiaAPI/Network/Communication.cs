@@ -227,6 +227,7 @@ namespace OXGaming.TibiaAPI.Network
         public event ReceivedPacketEventHandler OnReceivedServerOutfitPacket;
         public event ReceivedPacketEventHandler OnReceivedServerExivaSuppressedPacket;
         public event ReceivedPacketEventHandler OnReceivedServerUpdateExivaOptionsPacket;
+        public event ReceivedPacketEventHandler OnReceivedServerTransactionDetailsPacket;
         public event ReceivedPacketEventHandler OnReceivedServerImpactTrackingPacket;
         public event ReceivedPacketEventHandler OnReceivedServerMarketStatisticsPacket;
         public event ReceivedPacketEventHandler OnReceivedServerItemWastedPacket;
@@ -3157,6 +3158,19 @@ namespace OXGaming.TibiaAPI.Network
                                 if (packet.ParseFromNetworkMessage(inMessage))
                                 {
                                     packet.Forward = OnReceivedServerUpdateExivaOptionsPacket?.Invoke(packet) ?? true;
+                                    if (packet.Forward)
+                                    {
+                                        packet.AppendToNetworkMessage(outMessage);
+                                    }
+                                }
+                            }
+                            break;
+                        case ServerPacketType.TransactionDetails:
+                            {
+                                var packet = new ServerPackets.TransactionDetails(client);
+                                if (packet.ParseFromNetworkMessage(inMessage))
+                                {
+                                    packet.Forward = OnReceivedServerTransactionDetailsPacket?.Invoke(packet) ?? true;
                                     if (packet.Forward)
                                     {
                                         packet.AppendToNetworkMessage(outMessage);

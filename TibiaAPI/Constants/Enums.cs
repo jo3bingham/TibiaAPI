@@ -499,6 +499,7 @@
         Outfit = 0xC8,
         ExivaSuppressed = 0xC9,
         UpdateExivaOptions = 0xCA,
+        TransactionDetails = 0xCB,
         ImpactTracking = 0xCC,
         MarketStatistics = 0xCD,
         ItemWasted = 0xCE,
