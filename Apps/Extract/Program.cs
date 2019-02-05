@@ -407,6 +407,10 @@ namespace Extract
                             }
 
                             var size = reader.ReadUInt32();
+                            if ((reader.BaseStream.Length - reader.BaseStream.Position) < size)
+                            {
+                                break;
+                            }
 
                             if (oxrFile != null)
                             {
@@ -435,18 +439,14 @@ namespace Extract
                                 Size = size
                             };
 
+                            reader.BaseStream.Position -= 8;
+
                             // Tibia10 recordings seem to contain login data (worlds, characters, etc.)
                             // in their first packet. We don't parse this, and we don't need to, so skip it.
                             if (_client.VersionNumber <= 11405409 && sequenceNumber == 0 && reader.PeekChar() == 0x28)
                             {
-                                reader.BaseStream.Position += size - 8;
+                                reader.BaseStream.Position += size;
                                 continue;
-                            }
-
-                            reader.BaseStream.Position -= 8;
-                            if ((reader.BaseStream.Length - reader.BaseStream.Position) < message.Size)
-                            {
-                                break;
                             }
 
                             Array.Copy(reader.ReadBytes((int)message.Size), message.GetBuffer(), message.Size);
