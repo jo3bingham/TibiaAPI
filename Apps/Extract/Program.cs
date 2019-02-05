@@ -57,7 +57,7 @@ namespace Extract
         private static bool _extractMonsterData = false;
         private static bool _extractNpcData = false;
 
-        static void ParseArgs(string[] args)
+        static bool ParseArgs(string[] args)
         {
             foreach (var arg in args)
             {
@@ -91,6 +91,30 @@ namespace Extract
                                 _extractNpcData = true;
                             }
                             break;
+                        case "-h":
+                        case "--help":
+                            {
+                                Console.WriteLine("[required] -r=<path>, --recording=<path>, or --recordings=<path>: " +
+                                    "<path> can either be a recording file or directory of recording files.\n");
+                                Console.WriteLine("[optional] -o=<path> or --outdirectory=<path>:" +
+                                    "<path> is the directory you want the OTBM file to be written to. " +
+                                    "If the directory does not exist, it will be created. " +
+                                    "If not supplied, the OTBM file will be written to the current directory.\n");
+                                Console.WriteLine("[optional] -t=<path> or --tibiadirectory=<path>: " +
+                                    "<path> is the package directory of the Tibia client to target. " +
+                                    "If this parameter is not specified, and an OXR file is being used, " +
+                                    "the Extract app will first try to find the equivalent client version in the ClientData folder. " +
+                                    "Otherwise, it will use the default path CipSoft uses upon installation.\n");
+
+                                Console.WriteLine("The following options can be combined to extract multiple data sets at once, or individually, " +
+                                    "but at least one option must be specified or the extraction process won't proceed.\n");
+                                Console.WriteLine("--convert: Used for converting an old recording (.dat) to the new format (.oxr).\n");
+                                Console.WriteLine("--items: Used for extracting item information to items.txt.\n");
+                                Console.WriteLine("--map: Used for extracting map data to the OTBM format.\n");
+                                Console.WriteLine("--monsters: Used for extracting monster information to monsters.txt.\n");
+                                Console.WriteLine("--npcs: Used for extracting npc information to npcs.txt.\n");
+                            }
+                            return false;
                         default:
                             break;
                     }
@@ -123,6 +147,7 @@ namespace Extract
                     }
                 }
             }
+            return true;
         }
 
         static void Main(string[] args)
@@ -135,31 +160,11 @@ namespace Extract
                     return;
                 }
 
-                if (args[0] == "--help" || args[0] == "-h")
+                if (!ParseArgs(args))
                 {
-                    Console.WriteLine("[required] -r=<path>, --recording=<path>, or --recordings=<path>: " +
-                        "<path> can either be a recording file or directory of recording files.\n");
-                    Console.WriteLine("[optional] -o=<path> or --outdirectory=<path>:" +
-                        "<path> is the directory you want the OTBM file to be written to. " +
-                        "If the directory does not exist, it will be created. " +
-                        "If not supplied, the OTBM file will be written to the current directory.\n");
-                    Console.WriteLine("[optional] -t=<path> or --tibiadirectory=<path>: " +
-                        "<path> is the package directory of the Tibia client to target. " +
-                        "If this parameter is not specified, and an OXR file is being used, " +
-                        "the Extract app will first try to find the equivalent client version in the ClientData folder. " +
-                        "Otherwise, it will use the default path CipSoft uses upon installation.\n");
-
-                    Console.WriteLine("The following options can be combined to extract multiple data sets at once, or individually, " +
-                        "but at least one option must be specified or the extraction process won't proceed.\n");
-                    Console.WriteLine("--convert: Used for converting an old recording (.dat) to the new format (.oxr).\n");
-                    Console.WriteLine("--items: Used for extracting item information to items.txt.\n");
-                    Console.WriteLine("--map: Used for extracting map data to the OTBM format.\n");
-                    Console.WriteLine("--monsters: Used for extracting monster information to monsters.txt.\n");
-                    Console.WriteLine("--npcs: Used for extracting npc information to npcs.txt.\n");
                     return;
                 }
 
-                ParseArgs(args);
                 if (string.IsNullOrEmpty(_recording))
                 {
                     Console.WriteLine("A recording, or directory of recordings, was not specified.");
@@ -405,12 +410,13 @@ namespace Extract
 
                             if (oxrFile != null)
                             {
+                                var currentPosition = reader.BaseStream.Position;
                                 oxrFile.Write((byte)PacketType.Server);
                                 // Unfortunately, we don't know the timestamp of each packet.
                                 oxrFile.Write(0L);
                                 oxrFile.Write(size);
                                 oxrFile.Write(reader.ReadBytes((int)size));
-                                reader.BaseStream.Position -= size;
+                                reader.BaseStream.Position = currentPosition;
                             }
 
                             // We don't care about client packets right now, so skip them.
@@ -438,18 +444,20 @@ namespace Extract
                             }
 
                             reader.BaseStream.Position -= 8;
-                            if ((reader.BaseStream.Length - reader.BaseStream.Position) >= message.Size)
+                            if ((reader.BaseStream.Length - reader.BaseStream.Position) < message.Size)
                             {
-                                Array.Copy(reader.ReadBytes((int)message.Size), message.GetBuffer(), message.Size);
+                                break;
+                            }
 
-                                if (packetType == PacketType.Server)
-                                {
-                                    _client.Connection.ParseServerMessage(_client, message, outMessage);
-                                }
-                                else
-                                {
-                                    _client.Connection.ParseClientMessage(_client, message, outMessage);
-                                }
+                            Array.Copy(reader.ReadBytes((int)message.Size), message.GetBuffer(), message.Size);
+
+                            if (packetType == PacketType.Server)
+                            {
+                                _client.Connection.ParseServerMessage(_client, message, outMessage);
+                            }
+                            else
+                            {
+                                _client.Connection.ParseClientMessage(_client, message, outMessage);
                             }
                         }
 
