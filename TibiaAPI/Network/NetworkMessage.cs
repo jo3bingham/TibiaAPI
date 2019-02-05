@@ -346,7 +346,7 @@ namespace OXGaming.TibiaAPI.Network
                 objectInstance.IsLootContainer = ReadBool();
                 if (objectInstance.IsLootContainer)
                 {
-                    objectInstance.LootContainerUnknown = ReadUInt32(); // TODO
+                    objectInstance.LootCategoryFlags = ReadUInt32();
                 }
             }
 
@@ -388,6 +388,12 @@ namespace OXGaming.TibiaAPI.Network
                             RemoveCreatureId = removeCreatureId
                         };
 
+                        creature = _client.CreatureStorage.ReplaceCreature(creature, creature.RemoveCreatureId);
+                        if (creature == null)
+                        {
+                            throw new Exception("[NetworkMessage.ReadCreatureInstance] Failed to append creature.");
+                        }
+
                         if (creature.IsSummon)
                         {
                             creature.SummonerCreatureId = ReadUInt32();
@@ -424,12 +430,14 @@ namespace OXGaming.TibiaAPI.Network
                 case (int)CreatureInstanceType.OutdatedCreature:
                     {
                         var creatureId = ReadUInt32();
-                        creature = new Creature(creatureId)
+                        creature = _client.CreatureStorage.GetCreature(creatureId);
+                        if (creature == null)
                         {
-                            HealthPercent = ReadByte(),
-                            Direction = (Direction)ReadByte()
-                        };
+                            throw new Exception("[NetworkMessage.ReadCreatureInstance] Outdated creature not found.");
+                        }
 
+                        creature.HealthPercent = ReadByte();
+                        creature.Direction = (Direction)ReadByte();
                         creature.Outfit = ReadCreatureOutfit();
                         creature.Mount = ReadMountOutfit();
                         creature.Brightness = ReadByte();
@@ -457,11 +465,14 @@ namespace OXGaming.TibiaAPI.Network
                 case (int)CreatureInstanceType.Creature:
                     {
                         var creatureId = ReadUInt32();
-                        creature = new Creature(creatureId)
+                        creature = _client.CreatureStorage.GetCreature(creatureId);
+                        if (creature == null)
                         {
-                            Direction = (Direction)ReadByte(),
-                            IsUnpassable = ReadBool()
-                        };
+                            throw new Exception("[NetworkMessage.ReadCreatureInstance] Known creature not found.");
+                        }
+
+                        creature.Direction = (Direction)ReadByte();
+                        creature.IsUnpassable = ReadBool();
                     }
                     break;
             }
@@ -617,7 +628,7 @@ namespace OXGaming.TibiaAPI.Network
                     thingId == (int)CreatureInstanceType.Creature)
                 {
                     var creature = ReadCreatureInstance(thingId, absolutePosition);
-                    var objectInstance = _client.AppearanceStorage.CreateObjectInstance(99, creature.Id);
+                    var objectInstance = _client.AppearanceStorage.CreateObjectInstance((uint)CreatureInstanceType.Creature, creature.Id);
 
                     if (thingsCount < MapSizeW)
                     {
@@ -930,7 +941,7 @@ namespace OXGaming.TibiaAPI.Network
                 Write(value.IsLootContainer);
                 if (value.IsLootContainer)
                 {
-                    Write(value.LootContainerUnknown);
+                    Write(value.LootCategoryFlags);
                 }
             }
 

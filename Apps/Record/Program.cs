@@ -76,20 +76,20 @@ namespace Record
                     _binaryWriter = new BinaryWriter(File.OpenWrite(Path.Combine(recordingDirectory, filename)));
                     _binaryWriter.Write(client.Version);
 
-                    client.Proxy.OnReceivedClientMessage += Proxy_OnReceivedClientMessage;
-                    client.Proxy.OnReceivedServerMessage += Proxy_OnReceivedServerMessage;
+                    client.Connection.OnReceivedClientMessage += Proxy_OnReceivedClientMessage;
+                    client.Connection.OnReceivedServerMessage += Proxy_OnReceivedServerMessage;
 
                     // Disable packet parsing as we only care about the raw, decrypted packets and speed.
-                    client.StartProxy(enablePacketParsing: false, httpPort: _httpPort);
+                    client.StartConnection(enablePacketParsing: false, httpPort: _httpPort);
 
                     while (Console.ReadLine() != "quit")
                     {
                     }
 
-                    client.StopProxy();
+                    client.StopConnection();
 
-                    client.Proxy.OnReceivedClientMessage -= Proxy_OnReceivedClientMessage;
-                    client.Proxy.OnReceivedServerMessage -= Proxy_OnReceivedServerMessage;
+                    client.Connection.OnReceivedClientMessage -= Proxy_OnReceivedClientMessage;
+                    client.Connection.OnReceivedServerMessage -= Proxy_OnReceivedServerMessage;
 
                     // Give the proxy time to quit, and any pending packets to be consumed.
                     System.Threading.Thread.Sleep(1000);

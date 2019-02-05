@@ -143,7 +143,6 @@
 	<item fromid="21849" toid="21848" fromname="glooth data machine (inactive)" toname="glooth data machine (active)" />
 	<item fromid="21854" toid="21851" fromname="dinky moss floret stalks (vertical)" toname="dinky moss floret (vertical)" />
 	<item fromid="21855" toid="21852" fromname="dinky moss floret stalks (horizontal)" toname="dinky moss floret (horizontal)" />
-	<item fromid="21855" toid="21852" fromname="dinky moss floret stalks" toname="dinky moss floret" />
 	<item fromid="21878" toid="21832" fromname="spider (no silk)" toname="spider (silk)" />
 	<item fromid="21934" toid="10797" fromname="black crystal shards" toname="large black crystal" />
 	<item fromid="21935" toid="21388" fromname="grass" toname="lion's mane flower" />

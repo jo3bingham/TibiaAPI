@@ -10,6 +10,7 @@ namespace OXGaming.TibiaAPI.Network
     {
         public delegate bool ReceivedPacketEventHandler(Packet packet);
 
+        public event ReceivedPacketEventHandler OnReceivedClientLoginPacket;
         public event ReceivedPacketEventHandler OnReceivedClientSecondaryLoginPacket;
         public event ReceivedPacketEventHandler OnReceivedClientEnterWorldPacket;
         public event ReceivedPacketEventHandler OnReceivedClientQuitGamePacket;
@@ -304,6 +305,19 @@ namespace OXGaming.TibiaAPI.Network
                     currentPacket = (ClientPacketType)inMessage.PeekByte();
                     switch (currentPacket)
                     {
+                        case ClientPacketType.Login:
+                            {
+                                var packet = new ClientPackets.Login(client);
+                                if (packet.ParseFromNetworkMessage(inMessage))
+                                {
+                                    packet.Forward = OnReceivedClientLoginPacket?.Invoke(packet) ?? true;
+                                    if (packet.Forward)
+                                    {
+                                        packet.AppendToNetworkMessage(outMessage);
+                                    }
+                                }
+                            }
+                            break;
                         case ClientPacketType.SecondaryLogin:
                             {
                                 var packet = new ClientPackets.SecondaryLogin(client);
@@ -1305,9 +1319,9 @@ namespace OXGaming.TibiaAPI.Network
                                 }
                             }
                             break;
-                        case ClientPacketType.TrackQuestFlags:
+                        case ClientPacketType.TrackQuestflags:
                             {
-                                var packet = new ClientPackets.TrackQuestFlags(client);
+                                var packet = new ClientPackets.TrackQuestflags(client);
                                 if (packet.ParseFromNetworkMessage(inMessage))
                                 {
                                     packet.Forward = OnReceivedClientTrackQuestFlagsPacket?.Invoke(packet) ?? true;
@@ -3202,9 +3216,9 @@ namespace OXGaming.TibiaAPI.Network
                                 }
                             }
                             break;
-                        case ServerPacketType.TrackQuestFlags:
+                        case ServerPacketType.TrackQuestflags:
                             {
-                                var packet = new ServerPackets.TrackQuestFlags(client);
+                                var packet = new ServerPackets.TrackQuestflags(client);
                                 if (packet.ParseFromNetworkMessage(inMessage))
                                 {
                                     packet.Forward = OnReceivedServerTrackQuestFlagsPacket?.Invoke(packet) ?? true;

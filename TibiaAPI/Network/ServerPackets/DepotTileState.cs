@@ -5,6 +5,7 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
     public class DepotTileState : ServerPacket
     {
         public byte State { get; set; }
+        public byte Unknown { get; set; }
 
         public DepotTileState(Client client)
         {
@@ -20,6 +21,10 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
             }
 
             State = message.ReadByte();
+            if (State == 1)
+            {
+                Unknown = message.ReadByte();
+            }
             return true;
         }
 
@@ -27,6 +32,10 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
         {
             message.Write((byte)ServerPacketType.DepotTileState);
             message.Write(State);
+            if (State == 1)
+            {
+                message.Write(Unknown);
+            }
         }
     }
 }

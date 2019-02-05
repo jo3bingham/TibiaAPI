@@ -39,7 +39,7 @@ namespace OXGaming.TibiaAPI.Appearances
 
         public Utilities.Appearance GetObjectType(uint id)
         {
-            if (id >= (uint)CreatureInstanceType.Creature && id <= lastObjectId)
+            if (id > (uint)CreatureInstanceType.Creature && id <= lastObjectId)
             {
                 return appearances.Object.FirstOrDefault(o => o.Id == id);
             }
@@ -48,7 +48,7 @@ namespace OXGaming.TibiaAPI.Appearances
 
         public Utilities.Appearance GetOutfitType(uint id)
         {
-            if (id >= 1 && id <= lastOutfitId)
+            if (id > 0 && id <= lastOutfitId)
             {
                 appearances.Outfit.FirstOrDefault(i => i.Id == id);
             }

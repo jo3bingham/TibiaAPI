@@ -11,7 +11,7 @@
 
   <ItemGroup>
     <None Include="$(SolutionDir)ClientData\**" CopyToOutputDirectory="PreserveNewest" LinkBase="ClientData\" />
-    <None Include="$(SolutionDir)ItemsReplace.xml" CopyToOutputDirectory="PreserveNewest" />
-    <None Include="$(SolutionDir)ItemsIgnore.xml" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="$(SolutionDir)Content\ItemsReplace.xml" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="$(SolutionDir)Content\ItemsIgnore.xml" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
 </Project>

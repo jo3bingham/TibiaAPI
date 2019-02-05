@@ -17,6 +17,14 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
                 return false;
             }
 
+            if (Client.Connection.ConnectionState == ConnectionState.Pending)
+            {
+                Client.CreatureStorage.Reset();
+                Client.WorldMapStorage.ResetMap();
+                Client.WorldMapStorage.SetPosition(0, 0, 0);
+            }
+
+            Client.Connection.ConnectionState = ConnectionState.Game;
             return true;
         }
 

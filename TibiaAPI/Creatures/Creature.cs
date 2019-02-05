@@ -35,6 +35,8 @@ namespace OXGaming.TibiaAPI.Creatures
         public byte PkFlag { get; set; }
         public byte SpeechCategory { get; set; }
 
+        public bool Visible { get; set; }
+
         public bool IsSummon
         {
             get

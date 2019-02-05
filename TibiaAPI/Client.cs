@@ -10,9 +10,11 @@ namespace OXGaming.TibiaAPI
 
         public Appearances.AppearanceStorage AppearanceStorage { get; } = new Appearances.AppearanceStorage();
 
+        public Creatures.CreatureStorage CreatureStorage { get; } = new Creatures.CreatureStorage();
+
         public WorldMap.WorldMapStorage WorldMapStorage { get; } = new WorldMap.WorldMapStorage();
 
-        public Network.Connection Proxy { get; }
+        public Network.Connection Connection { get; }
 
         public string Version { get; private set; }
 
@@ -35,17 +37,17 @@ namespace OXGaming.TibiaAPI
                 AppearanceStorage.LoadAppearances(datFileStream);
             }
 
-            Proxy = new Network.Connection(this);
+            Connection = new Network.Connection(this);
         }
 
-        public bool StartProxy(bool enablePacketParsing = true, int httpPort = 80)
+        public bool StartConnection(bool enablePacketParsing = true, int httpPort = 80)
         {
-            return Proxy.Start(enablePacketParsing, httpPort);
+            return Connection.Start(enablePacketParsing, httpPort);
         }
 
-        public void StopProxy()
+        public void StopConnection()
         {
-            Proxy.Stop();
+            Connection.Stop();
         }
 
         private bool Initialize(string tibiaDirectory = "")
@@ -161,7 +163,7 @@ namespace OXGaming.TibiaAPI
             {
                 if (disposing)
                 {
-                    Proxy.Dispose();
+                    Connection.Dispose();
                 }
 
                 disposedValue = true;

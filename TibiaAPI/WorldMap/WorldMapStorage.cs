@@ -268,7 +268,7 @@ namespace OXGaming.TibiaAPI.WorldMap
             position.X = x;
             position.Y = y;
             position.Z = z;
-            playerZPlane = z <= GroundLayer ? ((MapSizeZ - 1) - z) : UndergroundLayer;
+            playerZPlane = z <= GroundLayer ? (MapSizeZ - 1 - z) : UndergroundLayer;
         }
 
         public Position ToAbsolute(Position pos)

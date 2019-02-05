@@ -15,8 +15,6 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
         public ushort BeatDuration { get; set; }
         public ushort StoreCreditPackageSize { get; set; }
 
-        public byte Unknown { get; set; }
-
         public bool BugReportsAllowed { get; set; }
         public bool CanChangePvpFramingOption { get; set; }
         public bool EnableExivaOptionsButton { get; set; }
