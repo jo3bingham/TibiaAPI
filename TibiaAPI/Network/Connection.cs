@@ -737,7 +737,6 @@ namespace OXGaming.TibiaAPI.Network
                     if (_isPacketParsingEnabled)
                     {
                         _clientOutMessage.Reset();
-                        _clientInMessage.Seek(6, SeekOrigin.Begin);
                         ParseClientMessage(_client, _clientInMessage, _clientOutMessage);
                     }
 
