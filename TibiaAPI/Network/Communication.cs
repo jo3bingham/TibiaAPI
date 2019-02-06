@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 
 using OXGaming.TibiaAPI.Constants;
@@ -82,6 +83,7 @@ namespace OXGaming.TibiaAPI.Network
         public event ReceivedPacketEventHandler OnReceivedClientInviteToChannelPacket;
         public event ReceivedPacketEventHandler OnReceivedClientExcludeFromChannelPacket;
         public event ReceivedPacketEventHandler OnReceivedClientCancelPacket;
+        public event ReceivedPacketEventHandler OnReceivedClientGetTransactionDetailsPacket;
         public event ReceivedPacketEventHandler OnReceivedClientUpdateExivaOptionsPacket;
         public event ReceivedPacketEventHandler OnReceivedClientBrowseFieldPacket;
         public event ReceivedPacketEventHandler OnReceivedClientSeekInContainerPacket;
@@ -300,6 +302,17 @@ namespace OXGaming.TibiaAPI.Network
 
             try
             {
+                // This may possibly be a Login packet. In that case, we have to move to the correct position
+                // as the Login packet doesn't contain the 2 bytes for the payload size as other packets.
+                if (inMessage.SequenceNumber == 0)
+                {
+                    inMessage.Seek(6, SeekOrigin.Begin);
+                    if (inMessage.PeekByte() != (byte)ClientPacketType.Login)
+                    {
+                        inMessage.Seek(2, SeekOrigin.Current);
+                    }
+                }
+
                 while (inMessage.Position < inMessage.Size)
                 {
                     packetPosition = inMessage.Position;
@@ -1235,6 +1248,19 @@ namespace OXGaming.TibiaAPI.Network
                                 if (packet.ParseFromNetworkMessage(inMessage))
                                 {
                                     packet.Forward = OnReceivedClientCancelPacket?.Invoke(packet) ?? true;
+                                    if (packet.Forward)
+                                    {
+                                        packet.AppendToNetworkMessage(outMessage);
+                                    }
+                                }
+                            }
+                            break;
+                        case ClientPacketType.GetTransactionDetails:
+                            {
+                                var packet = new ClientPackets.GetTransactionDetails(client);
+                                if (packet.ParseFromNetworkMessage(inMessage))
+                                {
+                                    packet.Forward = OnReceivedClientGetTransactionDetailsPacket?.Invoke(packet) ?? true;
                                     if (packet.Forward)
                                     {
                                         packet.AppendToNetworkMessage(outMessage);

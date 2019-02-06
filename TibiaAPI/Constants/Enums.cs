@@ -350,6 +350,7 @@
         InviteToChannel = 0xAB,
         ExcludeFromChannel = 0xAC,
         Cancel = 0xBE,
+        GetTransactionDetails = 0xC9,
         UpdateExivaOptions = 0xCA,
         BrowseField = 0xCB,
         SeekInContainer = 0xCC,
