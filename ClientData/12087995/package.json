@@ -1,0 +1,1033 @@
+{
+  "files": [
+    {
+      "url": "3rdpartylicences/apache-v2.txt.lzma",
+      "unpackedhash": "f1db14746c8b94513787e07010d22dee5e370850cdd14bce705c273ff65786dd",
+      "unpackedsize": 9196,
+      "packedhash": "7a876ad6425ef61e6a3ce2463ca8781f3b9361b2716fd792981d13eb5966d871",
+      "packedsize": 3270,
+      "localfile": "3rdpartylicences/apache-v2.txt"
+    },
+    {
+      "url": "3rdpartylicences/battleye-eula.txt.lzma",
+      "unpackedhash": "b9c8d8826c3292043d51ec63163b5ee7b577f78fa52dddd99843534b2a737a6a",
+      "unpackedsize": 2807,
+      "packedhash": "0875c31438d943b92e550dde3f9d270a28847e95ee523725da4642acb8f3a95c",
+      "packedsize": 1287,
+      "localfile": "3rdpartylicences/battleye-eula.txt"
+    },
+    {
+      "url": "3rdpartylicences/easyloggingpp.txt.lzma",
+      "unpackedhash": "1739fb768b5bc5ce71440dd3ee42b18dcd583ddab1d9503690e41a6f6a1833f4",
+      "unpackedsize": 1249,
+      "packedhash": "a9deb7041b02a04de3023f58bac1c75d8427a57eb9e45c4927a03207fe32b2ed",
+      "packedsize": 788,
+      "localfile": "3rdpartylicences/easyloggingpp.txt"
+    },
+    {
+      "url": "3rdpartylicences/openssl.txt.lzma",
+      "unpackedhash": "67932d8f02f3a2ec11ed5b2337420bd8912207613086727aba9c01226552870b",
+      "unpackedsize": 6046,
+      "packedhash": "6dee48741c761d2f4609c213bd73432236a057814d6fb4bd0f029a22ebdccb2d",
+      "packedsize": 2069,
+      "localfile": "3rdpartylicences/openssl.txt"
+    },
+    {
+      "url": "3rdpartylicences/google-protobuf.txt.lzma",
+      "unpackedhash": "7d9604162d51e8acdafe73ecf75acc1c752b47abd026d8b0b3a4cb2d2f1919b1",
+      "unpackedsize": 2247,
+      "packedhash": "667262d17d753f3f3bcb7601275a6c017d8e450f803acd366453f1b8ae358079",
+      "packedsize": 1177,
+      "localfile": "3rdpartylicences/google-protobuf.txt"
+    },
+    {
+      "url": "3rdpartylicences/qt-3rdparty.txt.lzma",
+      "unpackedhash": "529e6be52de4163b001767aa027d243ea502190a6047347dcb27bf5dedde8246",
+      "unpackedsize": 86670,
+      "packedhash": "10ca38fce5d152121ca474c7414c50a85eb955c6dc2632e2717952ecb5bbb3b3",
+      "packedsize": 14858,
+      "localfile": "3rdpartylicences/qt-3rdparty.txt"
+    },
+    {
+      "executable": true,
+      "url": "bin/client_launcher.exe.lzma",
+      "unpackedhash": "597f82887ac120bd04ee9a1babfce32d8d5ee881a880588204e9ada02b2f1944",
+      "unpackedsize": 769032,
+      "packedhash": "98d9a117296966cae98733e714f1798cc7b31578edfb47dd238f363bbf341ba6",
+      "packedsize": 550217,
+      "localfile": "bin/client_launcher.exe"
+    },
+    {
+      "url": "bin/vcruntime140.dll.lzma",
+      "unpackedhash": "eea2df0c3d2bf84ee8bc811439a81578f6521c8b28b6cc815c93fb870ac7a0d7",
+      "unpackedsize": 87352,
+      "packedhash": "9017de6f32b444e50b2a952e07010ccf82869de198ea5c5c4d70943d4f1280a1",
+      "packedsize": 42882,
+      "localfile": "bin/vcruntime140.dll"
+    },
+    {
+      "url": "bin/Qt5Qml.dll.lzma",
+      "unpackedhash": "702e8f29d0a385b5d9e3823ad31544039c8a1ecacbb789d053d6ae505b1b3572",
+      "unpackedsize": 2792464,
+      "packedhash": "656df9ba21d73921aea786acfee1dcbfff814b51156a807b6ac4f057ba07ae45",
+      "packedsize": 824365,
+      "localfile": "bin/Qt5Qml.dll"
+    },
+    {
+      "url": "bin/libeay32.dll.lzma",
+      "unpackedhash": "9317b7f308f502edac4df4e2d64751e0f75c4e865161d0dce0516758e1598849",
+      "unpackedsize": 1386000,
+      "packedhash": "2b752b59ee7f9647f62d029bc4e783c222bbc33284cf9f0be99f231fae6356d1",
+      "packedsize": 545186,
+      "localfile": "bin/libeay32.dll"
+    },
+    {
+      "url": "bin/Qt5Network.dll.lzma",
+      "unpackedhash": "e51e8880ade7a05297f02dba26bde9817b240d607c7b0bf7a7a31684d6ac4088",
+      "unpackedsize": 937488,
+      "packedhash": "819345112d44cf840eb38ee466ddb89b5269b60d69946eb9cbad041a836336a5",
+      "packedsize": 293914,
+      "localfile": "bin/Qt5Network.dll"
+    },
+    {
+      "url": "bin/qt.conf.lzma",
+      "unpackedhash": "7a14fe122d0903f3bbfc1359241cffc456b0355b61036e7dc7a837942934203f",
+      "unpackedsize": 69,
+      "packedhash": "7a14fe122d0903f3bbfc1359241cffc456b0355b61036e7dc7a837942934203f",
+      "packedsize": 69,
+      "localfile": "bin/qt.conf"
+    },
+    {
+      "url": "bin/client.en.qm.lzma",
+      "unpackedhash": "2b0e487d7b2468411b77c0eb08817a281c03ee516440c7416803e6c9cf3d5c28",
+      "unpackedsize": 382524,
+      "packedhash": "10b0aefb1556162ec3a8edcfb1423d045047d27c99533beee2034ae03cccc4e9",
+      "packedsize": 72957,
+      "localfile": "bin/client.en.qm"
+    },
+    {
+      "url": "bin/D3Dcompiler_47.dll.lzma",
+      "unpackedhash": "94d1732a7898daba0012ee6cde5c158a12a5f06da8d83d2b677f353aca4c0922",
+      "unpackedsize": 3645952,
+      "packedhash": "e7c455cbb5e770ef469450462eb2107e1b738ea649cdee647875170aad2faab6",
+      "packedsize": 1255507,
+      "localfile": "bin/D3Dcompiler_47.dll"
+    },
+    {
+      "url": "bin/client.exe.lzma",
+      "unpackedhash": "92dace4458777a993e62ea47b92f33b7d586ecc9c4092be3457813bae58f7285",
+      "unpackedsize": 11823280,
+      "packedhash": "7780927dce79922678bdde09662da9c0bfa01bbeb089a0b6fac2778679450ddb",
+      "packedsize": 2557375,
+      "localfile": "bin/client.exe"
+    },
+    {
+      "url": "bin/d3dcompiler_43.dll.lzma",
+      "unpackedhash": "53a05e6c6b7f4f83ca4004003cc35cdc19bdf7e515a13afaf50835a314b248db",
+      "unpackedsize": 2115688,
+      "packedhash": "67628b029156c2a178b130cb62690737faa169499ddb64572bbb3fb30149b93c",
+      "packedsize": 745855,
+      "localfile": "bin/d3dcompiler_43.dll"
+    },
+    {
+      "url": "bin/msvcr120.dll.lzma",
+      "unpackedhash": "86e39b5995af0e042fcdaa85fe2aefd7c9ddc7ad65e6327bd5e7058bc3ab615f",
+      "unpackedsize": 970912,
+      "packedhash": "6651167762e65220d5f25efa64953cb75ebf166f7f2faa0ddd91679aeeaeb799",
+      "packedsize": 388759,
+      "localfile": "bin/msvcr120.dll"
+    },
+    {
+      "url": "bin/Qt5Gui.dll.lzma",
+      "unpackedhash": "daf66152b8975ac21af4253fb5cdff4c636e2165f2d224fa4daef83c1eb953f8",
+      "unpackedsize": 5024784,
+      "packedhash": "508926a07202487ec1edf795cfebd7a5c85ff8b16eb20973a00319fc029816d5",
+      "packedsize": 1326302,
+      "localfile": "bin/Qt5Gui.dll"
+    },
+    {
+      "url": "bin/Qt5Widgets.dll.lzma",
+      "unpackedhash": "1ba85841ca8839a4f5f147f693a886092c72fe2f180da99bc360fdfc436c5eda",
+      "unpackedsize": 4550672,
+      "packedhash": "aae14b0ebd2b736c05fdf0db63d319ec4760a0b2619ffb45650259036e080f8e",
+      "packedsize": 1638026,
+      "localfile": "bin/Qt5Widgets.dll"
+    },
+    {
+      "url": "bin/msvcp120.dll.lzma",
+      "unpackedhash": "87c42ca155473e4e71857d03497c8cbc28fa8ff7f2c8d72e8a1f39b71078f608",
+      "unpackedsize": 455328,
+      "packedhash": "6820254127e68581730e003295de872decbbda6594c1198174e6653033d49b0a",
+      "packedsize": 129039,
+      "localfile": "bin/msvcp120.dll"
+    },
+    {
+      "url": "bin/Qt5Core.dll.lzma",
+      "unpackedhash": "beecaee27a4cf1cfd648935a31cc06dda7ea89dd080a9eed73f2284ca7b11ce4",
+      "unpackedsize": 4680720,
+      "packedhash": "be616770e4d92693626ce04c18368639e4a0f81fa8718a1bfba93dbb1744033a",
+      "packedsize": 1715544,
+      "localfile": "bin/Qt5Core.dll"
+    },
+    {
+      "url": "bin/Qt5Quick.dll.lzma",
+      "unpackedhash": "6ce9ea2ab5e702f460f2d633f2d14f0ca8e703b3f48f1fda8e11c16b9be0a519",
+      "unpackedsize": 2542096,
+      "packedhash": "3bbb26df980b96c5234ae4e35432992c5108d76beb0db9a0e9f65ed888499a77",
+      "packedsize": 707135,
+      "localfile": "bin/Qt5Quick.dll"
+    },
+    {
+      "url": "bin/graphics_resources.rcc.lzma",
+      "unpackedhash": "fa6edea31166411e9ebfa9395789d56bd6b5fdff58af6cfd94ffbc9b7adb3238",
+      "unpackedsize": 3257311,
+      "packedhash": "68571214f0589a346b8377b1bd1bff5c62685d93045b50d6f17d744a177609a6",
+      "packedsize": 3100817,
+      "localfile": "bin/graphics_resources.rcc"
+    },
+    {
+      "url": "bin/ssleay32.dll.lzma",
+      "unpackedhash": "573999b51e26997c868a242b8171cd58f469a67b4ef16557b9a2782691f1dc7b",
+      "unpackedsize": 353296,
+      "packedhash": "414f4a4b21059aa12369fea82d5e7c43b2bb747832f09148f39484bd0505a771",
+      "packedsize": 151164,
+      "localfile": "bin/ssleay32.dll"
+    },
+    {
+      "url": "bin/msvcp140.dll.lzma",
+      "unpackedhash": "75ddc9778c23ee95b6c57db6b689f11c07d164d5a4c158d4c0acb87a520b8004",
+      "unpackedsize": 462120,
+      "packedhash": "466c224ed8faf1ee613df58f709b38223934a31f62f2f0045d076e624a0dbdfb",
+      "packedsize": 127031,
+      "localfile": "bin/msvcp140.dll"
+    },
+    {
+      "url": "bin/BattlEye/BEService.exe.lzma",
+      "unpackedhash": "eb590e76b0f8a287c71ebfc37b1cd48bd9ee95693656ae90bceb33317f9903d1",
+      "unpackedsize": 5519672,
+      "packedhash": "3a739ad2053a7500be349d8126eac8c049cf36cebbe1ed82ec923c18a79b8851",
+      "packedsize": 5321821,
+      "localfile": "bin/BattlEye/BEService.exe"
+    },
+    {
+      "url": "bin/BattlEye/BELauncher.ini.lzma",
+      "unpackedhash": "1bd08617a4a59c3e490e3b8caae021e4848d570538dae5181eae141d14b16c03",
+      "unpackedsize": 109,
+      "packedhash": "1bd08617a4a59c3e490e3b8caae021e4848d570538dae5181eae141d14b16c03",
+      "packedsize": 109,
+      "localfile": "bin/BattlEye/BELauncher.ini"
+    },
+    {
+      "url": "bin/BattlEye/Uninstall_BattlEye.bat.lzma",
+      "unpackedhash": "c8284d82640084ff818a9d1e3e1fea8855765cc99d03c6d6827667e98f6a92c8",
+      "unpackedsize": 68,
+      "packedhash": "c8284d82640084ff818a9d1e3e1fea8855765cc99d03c6d6827667e98f6a92c8",
+      "packedsize": 68,
+      "localfile": "bin/BattlEye/Uninstall_BattlEye.bat"
+    },
+    {
+      "url": "bin/BattlEye/BEService_x64.exe.lzma",
+      "unpackedhash": "5e16a6234db93215c1e419f1448664559a1d0b95ac05e88c9e204ccb14f48e5d",
+      "unpackedsize": 6877224,
+      "packedhash": "b7e27779ab316724b493a783db37eb8388e656a90ef5c8ab3285cee3e610f82d",
+      "packedsize": 6453202,
+      "localfile": "bin/BattlEye/BEService_x64.exe"
+    },
+    {
+      "url": "bin/BattlEye/Install_BattlEye.bat.lzma",
+      "unpackedhash": "461aeb03eb3149f9e01aed22315dc7e595b57b33488cf537af44314e30e7c8be",
+      "unpackedsize": 68,
+      "packedhash": "461aeb03eb3149f9e01aed22315dc7e595b57b33488cf537af44314e30e7c8be",
+      "packedsize": 68,
+      "localfile": "bin/BattlEye/Install_BattlEye.bat"
+    },
+    {
+      "url": "bin/BattlEye/Privacy.txt.lzma",
+      "unpackedhash": "816941ba566874f12d834491fb35f997251c1c3a6d2a79ea03f2ec887f757bc7",
+      "unpackedsize": 1435,
+      "packedhash": "78f0649c38c9c7991994b04d1755c21f05eb399e843af3e24fb818b0172ee20a",
+      "packedsize": 796,
+      "localfile": "bin/BattlEye/Privacy.txt"
+    },
+    {
+      "url": "bin/BattlEye/BEClient.dll.lzma",
+      "unpackedhash": "f473f065d0426793b0ebf4ba9e81fa1dc2f330dfdd78606983c474d877bf9840",
+      "unpackedsize": 780296,
+      "packedhash": "445c746072ed127e21da7beacfff4bc81a22e276955c4e6b6b17aecc46ca72c7",
+      "packedsize": 613614,
+      "localfile": "bin/BattlEye/BEClient.dll"
+    },
+    {
+      "url": "bin/angle_current/libEGL.dll.lzma",
+      "unpackedhash": "980a6aaed55dd9f422064564ad40c5e5269f91015d45e9a2f292d8b1a8b43e01",
+      "unpackedsize": 27664,
+      "packedhash": "811b6edd14adcee0cb987df7b7590a077be5037b0969c256c3950757a6c7887d",
+      "packedsize": 10694,
+      "localfile": "bin/angle_current/libEGL.dll"
+    },
+    {
+      "url": "bin/angle_current/libGLESv2.dll.lzma",
+      "unpackedhash": "bf3de04e67b9c21982ca9277c572742525aedcdb28f61ce373004f8247516e55",
+      "unpackedsize": 1764880,
+      "packedhash": "23e889757e68bb138c05101c39078b52e0095134310d602eb008a512a2da22b9",
+      "packedsize": 534040,
+      "localfile": "bin/angle_current/libGLESv2.dll"
+    },
+    {
+      "url": "bin/QtQml/Models.2/qmldir.lzma",
+      "unpackedhash": "62f50f9b9ae3b9e6628dd2660b18d326c41794586e0d76b2e40f6fa4b182e0a7",
+      "unpackedsize": 90,
+      "packedhash": "7c21618e55dc9c98a5cb1b85300cf6d4550637dfe826a2a6482e8f71146f585e",
+      "packedsize": 121,
+      "localfile": "bin/QtQml/Models.2/qmldir"
+    },
+    {
+      "url": "bin/QtQml/Models.2/plugins.qmltypes.lzma",
+      "unpackedhash": "a93f3cb755cdcd8682e2b88f3a6bdc3dc36fc81660e5a01bdb9dbea245bc3880",
+      "unpackedsize": 20385,
+      "packedhash": "725a3c5497e7b6c96a7888a2098f910bfd3a81e7a6fb5004142b04cf49ebf982",
+      "packedsize": 2069,
+      "localfile": "bin/QtQml/Models.2/plugins.qmltypes"
+    },
+    {
+      "url": "bin/QtQml/Models.2/modelsplugin.dll.lzma",
+      "unpackedhash": "c59fecc43a3a95fcc31e51851a3810418926a011afae506ff4e6babf76347546",
+      "unpackedsize": 30224,
+      "packedhash": "9b96710d6adbb886a7358295963cec4985274b5675fe6ff8338fd3411a289d9d",
+      "packedsize": 12292,
+      "localfile": "bin/QtQml/Models.2/modelsplugin.dll"
+    },
+    {
+      "url": "bin/QtQml/StateMachine/qmldir.lzma",
+      "unpackedhash": "5344415b19287c163b3031bb07a2fce8cc16f8d0715682bf803d497d0557f9de",
+      "unpackedsize": 115,
+      "packedhash": "1f7c1cd47b836f19d684e54b8e726a34aa256ff158e40511d879618e5e230649",
+      "packedsize": 135,
+      "localfile": "bin/QtQml/StateMachine/qmldir"
+    },
+    {
+      "url": "bin/QtQml/StateMachine/plugins.qmltypes.lzma",
+      "unpackedhash": "10d77eb992a68d931432923ff4029ca567b57bf5c15a5ebd83868034e2a1f4b0",
+      "unpackedsize": 5965,
+      "packedhash": "dda01ba4905bfdfc02476816053c97c6e5e390b0593c1c70d4e1a99c52dd74e8",
+      "packedsize": 1121,
+      "localfile": "bin/QtQml/StateMachine/plugins.qmltypes"
+    },
+    {
+      "url": "bin/QtQml/StateMachine/qtqmlstatemachine.dll.lzma",
+      "unpackedhash": "9ca28261a29d91caa846092c355f825e2c97581bb03b76096998c2c2c6dbff65",
+      "unpackedsize": 61968,
+      "packedhash": "d548294e68d4e28916a964c0dced050e61524937f973ba9e07534c1d3c25605b",
+      "packedsize": 21147,
+      "localfile": "bin/QtQml/StateMachine/qtqmlstatemachine.dll"
+    },
+    {
+      "url": "bin/platforms/qwindows.dll.lzma",
+      "unpackedhash": "0744b2995d0d036fbc4ba36be459a8cd13d99c7e28f5b4aac17416914c734eec",
+      "unpackedsize": 1019920,
+      "packedhash": "c936fb6fcead00be2b9fe41c0b28043184d8ab0608890fcdaef41cab34338318",
+      "packedsize": 400130,
+      "localfile": "bin/platforms/qwindows.dll"
+    },
+    {
+      "url": "bin/Qt/labs/settings/qmldir.lzma",
+      "unpackedhash": "49522af40488e52e8a1deda8b51f591df1acca1605336784eb7d4299e5af02ec",
+      "unpackedsize": 107,
+      "packedhash": "32f0bd5c8c1e536db754adb0e0141ba027ad10b04ce7bbd529dda03132866336",
+      "packedsize": 131,
+      "localfile": "bin/Qt/labs/settings/qmldir"
+    },
+    {
+      "url": "bin/Qt/labs/settings/plugins.qmltypes.lzma",
+      "unpackedhash": "176e0e1ce1d40bfd6840fdf9b58647b3ebc8c65a4a4dc6fae23e8f3f33332199",
+      "unpackedsize": 496,
+      "packedhash": "ebbc2306343f1047577cda67674a1f271395a8ebcd438dffb7ee19fa26f7d71d",
+      "packedsize": 365,
+      "localfile": "bin/Qt/labs/settings/plugins.qmltypes"
+    },
+    {
+      "url": "bin/Qt/labs/settings/qmlsettingsplugin.dll.lzma",
+      "unpackedhash": "4a4c402d48fae359a632884606bf1b0eb47452ecf933018dc46b42f723db0751",
+      "unpackedsize": 38416,
+      "packedhash": "d65eb326ac41093b5b284acec6c8b949cdc6fc130d1cedef578326076017deca",
+      "packedsize": 16010,
+      "localfile": "bin/Qt/labs/settings/qmlsettingsplugin.dll"
+    },
+    {
+      "url": "bin/QtQuick.2/qmldir.lzma",
+      "unpackedhash": "7e844000c1f61db37173ee953012981d533c950e7fb772c2672ca74dcfdb914b",
+      "unpackedsize": 111,
+      "packedhash": "30aac315d0c956ab6b5c2735c6f67b85e4fdabafcb15f0681802916a30aabad4",
+      "packedsize": 138,
+      "localfile": "bin/QtQuick.2/qmldir"
+    },
+    {
+      "url": "bin/QtQuick.2/plugins.qmltypes.lzma",
+      "unpackedhash": "8c45a748320014a0b0595a72de01437a0b8fe1ccd199694e89f00a20bacaaa13",
+      "unpackedsize": 226675,
+      "packedhash": "7949c6af74f7b951919b413e6e259cd3167e7485f2c43cc057f430bec5ca4d06",
+      "packedsize": 22092,
+      "localfile": "bin/QtQuick.2/plugins.qmltypes"
+    },
+    {
+      "url": "bin/QtQuick.2/qtquick2plugin.dll.lzma",
+      "unpackedhash": "1cc8f57c717b53eb17a96c013cb381d711a1e32e8f2bd5d12eb921e7dfcdc909",
+      "unpackedsize": 30224,
+      "packedhash": "38fd2818b7e641b2ebe726ad771f8f3b9fa861c29e7f48596950ac14a8fdfeb2",
+      "packedsize": 12346,
+      "localfile": "bin/QtQuick.2/qtquick2plugin.dll"
+    },
+    {
+      "url": "bin/QtGraphicalEffects/RadialBlur.qml.lzma",
+      "unpackedhash": "7d86b3852885d4986b975962216f6952e4bcefc946441f45b1f7c59e27d00f12",
+      "unpackedsize": 12055,
+      "packedhash": "abc9658c57999533544a466662ab343a23e3a7f17772463e2abc6082d54f9871",
+      "packedsize": 3483,
+      "localfile": "bin/QtGraphicalEffects/RadialBlur.qml"
+    },
+    {
+      "url": "bin/QtGraphicalEffects/InnerShadow.qml.lzma",
+      "unpackedhash": "544af03cba124d1d2b2089412d1e8bf3fb254c6d64f31a6027d8f68fd47fed7f",
+      "unpackedsize": 12815,
+      "packedhash": "16d6a257288b1130d42dbfe5270bd270a71b8767d90d1ca24b93eb1cc268c346",
+      "packedsize": 3049,
+      "localfile": "bin/QtGraphicalEffects/InnerShadow.qml"
+    },
+    {
+      "url": "bin/QtGraphicalEffects/qmldir.lzma",
+      "unpackedhash": "8e75866fdd8d7d42859ab13b9e145cb36d59c8de9e49011d8f3e3576408d8949",
+      "unpackedsize": 852,
+      "packedhash": "f4342dc8994c5b12b6460660b131dad7aabeeabb925150a7220232e2f8b8d463",
+      "packedsize": 359,
+      "localfile": "bin/QtGraphicalEffects/qmldir"
+    },
+    {
+      "url": "bin/QtGraphicalEffects/OpacityMask.qml.lzma",
+      "unpackedhash": "5a75dfd6c19b8a6c097a22e26f52f831f89b3420fdb1c141326e179be53c74c7",
+      "unpackedsize": 5253,
+      "packedhash": "adf65535a92e8bb27dc08e072e46b7c1536eb58291011f287551b5b7a2ed25ac",
+      "packedsize": 2012,
+      "localfile": "bin/QtGraphicalEffects/OpacityMask.qml"
+    },
+    {
+      "url": "bin/QtGraphicalEffects/DropShadow.qml.lzma",
+      "unpackedhash": "32d4b913cb6d633d16906d2b24ac7009193553666b300fb73dd7d013e711d1d1",
+      "unpackedsize": 13943,
+      "packedhash": "da6d3f1e0c0cb1be1e626f9c57b8b8f6ccc0761e0fbd4994e05059473a736205",
+      "packedsize": 3447,
+      "localfile": "bin/QtGraphicalEffects/DropShadow.qml"
+    },
+    {
+      "url": "bin/QtGraphicalEffects/ZoomBlur.qml.lzma",
+      "unpackedhash": "f199385c4c88564433ffa5b5d940802145ebe9b8689fdc8fea7903a8d5cb952c",
+      "unpackedsize": 11470,
+      "packedhash": "c6b2ab4768f5c2dbe94caa129602acdba23a934aa0381688ef1a27a2d8882382",
+      "packedsize": 3416,
+      "localfile": "bin/QtGraphicalEffects/ZoomBlur.qml"
+    },
+    {
+      "url": "bin/QtGraphicalEffects/HueSaturation.qml.lzma",
+      "unpackedhash": "7d3798441fd9504fe993cd09a23e234fd91c0f3f3f77bb8d1d695bac4c07b636",
+      "unpackedsize": 10245,
+      "packedhash": "7e44ae2d41a0d6c159eb5554dfb335e44fec3c38154d43798f482f9b4a71d19e",
+      "packedsize": 2855,
+      "localfile": "bin/QtGraphicalEffects/HueSaturation.qml"
+    },
+    {
+      "url": "bin/QtGraphicalEffects/Glow.qml.lzma",
+      "unpackedhash": "a474184081a579bd12fbfa706e340c944f77220fbdb5863defabbb74d112e051",
+      "unpackedsize": 10738,
+      "packedhash": "3253bfa957b3efbcc9338528c371323bd7b3c5ae593195e1307c8e0fb52fbfe7",
+      "packedsize": 3095,
+      "localfile": "bin/QtGraphicalEffects/Glow.qml"
+    },
+    {
+      "url": "bin/QtGraphicalEffects/GaussianBlur.qml.lzma",
+      "unpackedhash": "e2a40d65f0742054ab2d31abb05ad91fed34e42e5a187579e12a8664410770bd",
+      "unpackedsize": 10580,
+      "packedhash": "59034b109541ee2f54bd0ef476655bb9b29e66d263eb00f4525cf3086fe27960",
+      "packedsize": 3179,
+      "localfile": "bin/QtGraphicalEffects/GaussianBlur.qml"
+    },
+    {
+      "url": "bin/QtGraphicalEffects/Desaturate.qml.lzma",
+      "unpackedhash": "f7ce576e81b3daad3db3e299ea5f3ba2beb6c431414360701d2e814f4640e396",
+      "unpackedsize": 5379,
+      "packedhash": "3b2fe1527c9f9a702d51d309af754d91b57c217f78679b1b7fc344e5b4e740f7",
+      "packedsize": 2093,
+      "localfile": "bin/QtGraphicalEffects/Desaturate.qml"
+    },
+    {
+      "url": "bin/QtGraphicalEffects/Colorize.qml.lzma",
+      "unpackedhash": "1265f67a7b04b8e270643fd82aa5d44ccfff491eca91977df2b5fa1aacf2eec1",
+      "unpackedsize": 9936,
+      "packedhash": "92a432b7818580e90813787f15fbefae2dfee373e433c7cf434f372f78b22ff8",
+      "packedsize": 2898,
+      "localfile": "bin/QtGraphicalEffects/Colorize.qml"
+    },
+    {
+      "url": "bin/QtGraphicalEffects/LevelAdjust.qml.lzma",
+      "unpackedhash": "6186fc08786e57979e96899d4ccec91bde36830dc1245184996fd06f74c84ee2",
+      "unpackedsize": 17523,
+      "packedhash": "feba83269245793c65c1467f77508cf690359bfc07742d250c6d3b017ab6f651",
+      "packedsize": 3193,
+      "localfile": "bin/QtGraphicalEffects/LevelAdjust.qml"
+    },
+    {
+      "url": "bin/QtGraphicalEffects/DirectionalBlur.qml.lzma",
+      "unpackedhash": "37a906f6fd64d8fdf4ff54494a73aa1c9f246690d87d8ec920c0ff574df17118",
+      "unpackedsize": 10738,
+      "packedhash": "481eff2b94c3cd5f7b55a3055d5b1a30ed3c809f67be3a263b4ae9251ddc18f4",
+      "packedsize": 3303,
+      "localfile": "bin/QtGraphicalEffects/DirectionalBlur.qml"
+    },
+    {
+      "url": "bin/QtGraphicalEffects/GammaAdjust.qml.lzma",
+      "unpackedhash": "90ea11dcab842c2848cc8d4f2762273c8ce9075917c38ca2624ea74779e49d09",
+      "unpackedsize": 6586,
+      "packedhash": "120ed5152d6709c53f0483ed657bcde006dc79771a3df3c21261c7f376688ce3",
+      "packedsize": 2426,
+      "localfile": "bin/QtGraphicalEffects/GammaAdjust.qml"
+    },
+    {
+      "url": "bin/QtGraphicalEffects/ThresholdMask.qml.lzma",
+      "unpackedhash": "c85d7e1d05b65ec26618f6443b72c6a5b3cf78334f65d8f8536235e9a0eb67ff",
+      "unpackedsize": 7982,
+      "packedhash": "ce00d8fdcb8a865470f54d3da4aefe9379c370e9464351141b329c2c9ff073ee",
+      "packedsize": 2546,
+      "localfile": "bin/QtGraphicalEffects/ThresholdMask.qml"
+    },
+    {
+      "url": "bin/QtGraphicalEffects/RectangularGlow.qml.lzma",
+      "unpackedhash": "90f586222cd3e72b50ddb1a61b956f84b86850641fe83300273b4ee92680bcba",
+      "unpackedsize": 10066,
+      "packedhash": "221daae61395d00e065e3fee1a760555953ef77bc90deb7c3838cbf7f56aad5b",
+      "packedsize": 2805,
+      "localfile": "bin/QtGraphicalEffects/RectangularGlow.qml"
+    },
+    {
+      "url": "bin/QtGraphicalEffects/Displace.qml.lzma",
+      "unpackedhash": "23cae136a49432ab38652dd99c3ec85e27f4d9a239d1317ce54a368b7f4c3781",
+      "unpackedsize": 8398,
+      "packedhash": "2e215b85ce0bccdab52017449dc2bc918a2d620bc91697830e1594c2ad684eb4",
+      "packedsize": 2896,
+      "localfile": "bin/QtGraphicalEffects/Displace.qml"
+    },
+    {
+      "url": "bin/QtGraphicalEffects/ConicalGradient.qml.lzma",
+      "unpackedhash": "af09c1845ad0ab8d69872ac2ca9297a827fcd9fb7d800d0a3df253585842a1a0",
+      "unpackedsize": 11421,
+      "packedhash": "b61f4be89c561331a47fff556bc84043cfbff6125ad76acdb96647a1ffc200d3",
+      "packedsize": 3047,
+      "localfile": "bin/QtGraphicalEffects/ConicalGradient.qml"
+    },
+    {
+      "url": "bin/QtGraphicalEffects/FastBlur.qml.lzma",
+      "unpackedhash": "46371060cfecfe5f194b3ac5fa10a58969a8233014f4985cf9be2cc1511b80bd",
+      "unpackedsize": 16068,
+      "packedhash": "d0cb45afc304f90bb3a035dcb101ecafa2a041646d15494f12268972b45798f4",
+      "packedsize": 3525,
+      "localfile": "bin/QtGraphicalEffects/FastBlur.qml"
+    },
+    {
+      "url": "bin/QtGraphicalEffects/Blend.qml.lzma",
+      "unpackedhash": "e87baec2f166e07096db1e8645324e8966c8fa167c32b96afef652823d50e1ea",
+      "unpackedsize": 19401,
+      "packedhash": "610a4b6d763f74f26fef042e7d3606071510f1ccbdc0d1488353942c3cfaaa51",
+      "packedsize": 4216,
+      "localfile": "bin/QtGraphicalEffects/Blend.qml"
+    },
+    {
+      "url": "bin/QtGraphicalEffects/ColorOverlay.qml.lzma",
+      "unpackedhash": "5d523967a5cf29480ce915182f498f0d49e10944bfdb0de5d57fee551f2b281b",
+      "unpackedsize": 5340,
+      "packedhash": "b93a8796c6e528e153af2df38163e4820db9f191270a160933e52cc0f76e3b4f",
+      "packedsize": 2116,
+      "localfile": "bin/QtGraphicalEffects/ColorOverlay.qml"
+    },
+    {
+      "url": "bin/QtGraphicalEffects/BrightnessContrast.qml.lzma",
+      "unpackedhash": "9543255513aa656f5c1def592c3f0c03b6be4723c2e9b616a0577c10a3dfd473",
+      "unpackedsize": 7207,
+      "packedhash": "894be4cffc60a63fd65e20ae7a47160f6912eb1bc3394152f04c3fe82d9b3793",
+      "packedsize": 2384,
+      "localfile": "bin/QtGraphicalEffects/BrightnessContrast.qml"
+    },
+    {
+      "url": "bin/QtGraphicalEffects/MaskedBlur.qml.lzma",
+      "unpackedhash": "83f4694ebc323c28089e1b8456c82b04281a5a92b5fc10891bb91a34c20a9dff",
+      "unpackedsize": 10043,
+      "packedhash": "29cb069bbbd2b05836f28b5fcad71478f1c9b4609588280634f0b83c0781433f",
+      "packedsize": 3007,
+      "localfile": "bin/QtGraphicalEffects/MaskedBlur.qml"
+    },
+    {
+      "url": "bin/QtGraphicalEffects/RadialGradient.qml.lzma",
+      "unpackedhash": "61b2453fa759425923813fc058cc3fad4ca7237f121079ab9883b9b18fed9601",
+      "unpackedsize": 15392,
+      "packedhash": "3d7ab99be4f6029d1646f8e0982b637a9b1b1e763794d64bbe1c4dee3a8bbb40",
+      "packedsize": 3501,
+      "localfile": "bin/QtGraphicalEffects/RadialGradient.qml"
+    },
+    {
+      "url": "bin/QtGraphicalEffects/LinearGradient.qml.lzma",
+      "unpackedhash": "5fe80957bbabd5419061b71554022dc5f87507df0ac5a76a1775874c9915638a",
+      "unpackedsize": 12127,
+      "packedhash": "d1b887d5617b369481a2658c7a601806f586a35da696bd3be9164a1a035d3918",
+      "packedsize": 3149,
+      "localfile": "bin/QtGraphicalEffects/LinearGradient.qml"
+    },
+    {
+      "url": "bin/QtGraphicalEffects/RecursiveBlur.qml.lzma",
+      "unpackedhash": "2fd8f1a003a8185af846599cd32c4d309eec9fcabdba65693f19b0ad1033733d",
+      "unpackedsize": 12363,
+      "packedhash": "772c9428efb436430c31e2e75108fe7b045e2cc0dd8082c5880d73e251e36375",
+      "packedsize": 3609,
+      "localfile": "bin/QtGraphicalEffects/RecursiveBlur.qml"
+    },
+    {
+      "url": "bin/QtGraphicalEffects/private/SourceProxy.qml.lzma",
+      "unpackedhash": "113ff97a4aa47ae3c294a4b3c153fcfd0fbd7842c87ea3cd90f7b87fc66e6cf6",
+      "unpackedsize": 4897,
+      "packedhash": "d43d1a874a0145708d95d313f308609bc135af25a7a7872c9ef9b9c1355f80b7",
+      "packedsize": 1697,
+      "localfile": "bin/QtGraphicalEffects/private/SourceProxy.qml"
+    },
+    {
+      "url": "bin/QtGraphicalEffects/private/GaussianMaskedBlur.qml.lzma",
+      "unpackedhash": "952825783088f0cb86fa0b04ee30f15d9e8a4da8606878dfbe50359f9e6ce578",
+      "unpackedsize": 4041,
+      "packedhash": "0c65c6ff8d0736238f1c55dbee192e9f4c1958dea9fc3596736d3cb0ff5595c9",
+      "packedsize": 1465,
+      "localfile": "bin/QtGraphicalEffects/private/GaussianMaskedBlur.qml"
+    },
+    {
+      "url": "bin/QtGraphicalEffects/private/GaussianInnerShadow.qml.lzma",
+      "unpackedhash": "897b237c76e9e560146d13ec1b8af9133d4b1fa6ab68f715e9611619ebd89703",
+      "unpackedsize": 5727,
+      "packedhash": "c71b2902e3c3d9a482f7d8fa4a9f17cea2649a5034d1bd4d46de91885b6c627d",
+      "packedsize": 1866,
+      "localfile": "bin/QtGraphicalEffects/private/GaussianInnerShadow.qml"
+    },
+    {
+      "url": "bin/QtGraphicalEffects/private/GaussianDirectionalBlur.qml.lzma",
+      "unpackedhash": "1c0e69f93510f059cfc9eac5e9b2782c662b2c60555ad5bbe3a9a50930017574",
+      "unpackedsize": 12504,
+      "packedhash": "ff099156103f9cc75e08e2e4a5390df2fb8c4805145332e142aaab0d074ff1b6",
+      "packedsize": 2842,
+      "localfile": "bin/QtGraphicalEffects/private/GaussianDirectionalBlur.qml"
+    },
+    {
+      "url": "bin/QtGraphicalEffects/private/FastMaskedBlur.qml.lzma",
+      "unpackedhash": "45d4ff81504dce0eb0340c5aa27c0137ecb8fed1a89042ea91a01c4c8bcf08ec",
+      "unpackedsize": 11236,
+      "packedhash": "a8cf533c8b4a8ffa1d18e240e50393ca2194ad4a0cef79dfdeb2eb55b5b01a38",
+      "packedsize": 2225,
+      "localfile": "bin/QtGraphicalEffects/private/FastMaskedBlur.qml"
+    },
+    {
+      "url": "bin/QtGraphicalEffects/private/GaussianGlow.qml.lzma",
+      "unpackedhash": "754ff9c447b42e69b1ff920be792a4baaba7e0cd95f0f9a6f670c115f38db779",
+      "unpackedsize": 3823,
+      "packedhash": "0f04d1b76d0bcf3bedd61fcfee743fab71463976badea90a4a8f9dcaaec1ba3d",
+      "packedsize": 1477,
+      "localfile": "bin/QtGraphicalEffects/private/GaussianGlow.qml"
+    },
+    {
+      "url": "bin/QtGraphicalEffects/private/FastInnerShadow.qml.lzma",
+      "unpackedhash": "ce5a43b9587d2472232cc148b013d133c189430326a8cb7afae10ad372dd6a3e",
+      "unpackedsize": 13467,
+      "packedhash": "90f92b50f8ea8d8312b67e19a05040a2c2bb2e9a4c4cc71a39c77a32eb933080",
+      "packedsize": 2652,
+      "localfile": "bin/QtGraphicalEffects/private/FastInnerShadow.qml"
+    },
+    {
+      "url": "bin/QtGraphicalEffects/private/FastGlow.qml.lzma",
+      "unpackedhash": "66eb8ad06a10fa9ee9d40d5a0aa768969ba090be4211b921d16d013af8d05110",
+      "unpackedsize": 12535,
+      "packedhash": "3bb1defaa7b61bbb5806846bdae86774cbb75463565d5b978fc31c7c0504bc8e",
+      "packedsize": 2507,
+      "localfile": "bin/QtGraphicalEffects/private/FastGlow.qml"
+    },
+    {
+      "url": "bin/QtQuick/Controls/qmldir.lzma",
+      "unpackedhash": "0ed18792740787ecb235bbe73122e3155f970d046495bc6525987e80833cb72a",
+      "unpackedsize": 162,
+      "packedhash": "d4f8c1d4ab202622266038817bcb0ec9c28cf0281b727b1faef8b408a358d8e6",
+      "packedsize": 166,
+      "localfile": "bin/QtQuick/Controls/qmldir"
+    },
+    {
+      "url": "bin/QtQuick/Controls/plugins.qmltypes.lzma",
+      "unpackedhash": "58aba7eb65d07e8763035172c6c2bc6e53c22795828196d9bfd90e46cac40561",
+      "unpackedsize": 95705,
+      "packedhash": "ed68318f1bf3d443b7708759e9038647e3051df295221966e158f863434ecfaf",
+      "packedsize": 6909,
+      "localfile": "bin/QtQuick/Controls/plugins.qmltypes"
+    },
+    {
+      "url": "bin/QtQuick/Controls/qtquickcontrolsplugin.dll.lzma",
+      "unpackedhash": "46bf1341d5b4ce1d276882f20e5a5947abbe0ed8a2f427cf5ef2842537db174d",
+      "unpackedsize": 709648,
+      "packedhash": "32ab5d2b1f162bb6bbbb9394954f7f84a09ad260ac057a605311d65545ff4e6d",
+      "packedsize": 312452,
+      "localfile": "bin/QtQuick/Controls/qtquickcontrolsplugin.dll"
+    },
+    {
+      "url": "bin/QtQuick/Controls/Styles/qmldir.lzma",
+      "unpackedhash": "7bb94bcc9fa7d849c10ed84f476ad7951a61d48fe8f78ed5201956419d38d05c",
+      "unpackedsize": 1575,
+      "packedhash": "87fef2ffe2670c9550ddcc37cb5e3a707f37b727cf35f2191ce23283401c5a7c",
+      "packedsize": 470,
+      "localfile": "bin/QtQuick/Controls/Styles/qmldir"
+    },
+    {
+      "url": "bin/QtQuick/Controls/Styles/Flat/qmldir.lzma",
+      "unpackedhash": "f48e76737f69b29c4ff1198e82f6b0fd304c7e957d4784449a257a961cb7d22e",
+      "unpackedsize": 106,
+      "packedhash": "03024c783c3c388d7cce3e53e3e1c99fd8601903f3f519726adaa9604a8c78ae",
+      "packedsize": 133,
+      "localfile": "bin/QtQuick/Controls/Styles/Flat/qmldir"
+    },
+    {
+      "url": "bin/QtQuick/Controls/Styles/Flat/qtquickextrasflatplugin.dll.lzma",
+      "unpackedhash": "48c383edda3b519cf67cc4739877032a12a0cacb81e7e640e826b3a8ebe37016",
+      "unpackedsize": 824848,
+      "packedhash": "8fcd947d65a2ce46ad5c4ab71d6c17a28365bd827215b56461b6fbaf2853ef81",
+      "packedsize": 209821,
+      "localfile": "bin/QtQuick/Controls/Styles/Flat/qtquickextrasflatplugin.dll"
+    },
+    {
+      "url": "bin/QtQuick/Layouts/qmldir.lzma",
+      "unpackedhash": "cb585c2fc06edca4b95c9ee04017cd384cae70356e8dd468abd7c4fd1e640b59",
+      "unpackedsize": 130,
+      "packedhash": "6a78052c1eda15fa586fb454a3d39ba5d337ee9d472c4700edcc99dfda9c3f31",
+      "packedsize": 146,
+      "localfile": "bin/QtQuick/Layouts/qmldir"
+    },
+    {
+      "url": "bin/QtQuick/Layouts/plugins.qmltypes.lzma",
+      "unpackedhash": "c2013260744926b2277a0df368a408e7172a781f732485712bcb5ca9794fb71d",
+      "unpackedsize": 3267,
+      "packedhash": "6d17d6df5ab9ba38c93f8678b00147924428d220f99ef74792493e9bac4b7678",
+      "packedsize": 763,
+      "localfile": "bin/QtQuick/Layouts/plugins.qmltypes"
+    },
+    {
+      "url": "bin/QtQuick/Layouts/qquicklayoutsplugin.dll.lzma",
+      "unpackedhash": "8f390c960014df4410152eebbf0a2e3f8bce44472410e81a752f56153494c4c9",
+      "unpackedsize": 75792,
+      "packedhash": "7c4f098b5314d81c796339c4dd06f2086dcf38bc62bf9d0c348d7233e6143a43",
+      "packedsize": 27199,
+      "localfile": "bin/QtQuick/Layouts/qquicklayoutsplugin.dll"
+    },
+    {
+      "url": "bin/QtQuick/Window.2/windowplugin.dll.lzma",
+      "unpackedhash": "6654b7b442fd391f0fc374e3f4f2a45b1f0fc7500efe5c9395419fdfdfd27348",
+      "unpackedsize": 30224,
+      "packedhash": "fc28dee63b2af03b36e164ddc33102ac0fb504dd0c7bf48c69ffc676f04faa9a",
+      "packedsize": 12299,
+      "localfile": "bin/QtQuick/Window.2/windowplugin.dll"
+    },
+    {
+      "url": "bin/QtQuick/Window.2/qmldir.lzma",
+      "unpackedhash": "8d88b81547e1573f8c91df998ea82608e0a79770b014c82f760a67388b41945a",
+      "unpackedsize": 122,
+      "packedhash": "346489be729bbcbbc82f89838fe19cb9d5c1d61461313d6c7ab28b379d4bda8c",
+      "packedsize": 143,
+      "localfile": "bin/QtQuick/Window.2/qmldir"
+    },
+    {
+      "url": "bin/QtQuick/Window.2/plugins.qmltypes.lzma",
+      "unpackedhash": "ad48b127ab9523e35cf6a37b99bb39bbc41a377231722b3a4a7b5a86310e6b6c",
+      "unpackedsize": 10523,
+      "packedhash": "d5d1ed6f9f155b74d70b97a7dc6845a234acf720f095d3b4ee3dd6762447f651",
+      "packedsize": 1607,
+      "localfile": "bin/QtQuick/Window.2/plugins.qmltypes"
+    },
+    {
+      "url": "bin/QtQuick/Extras/qmldir.lzma",
+      "unpackedhash": "b8b578e27cd9def807d236cd1270ccee4800b662d4b8e3189d139d65ff8a5dd0",
+      "unpackedsize": 144,
+      "packedhash": "325176ac3a481768e87609083e005933b028c2f37d9758633c5493adbd482ca0",
+      "packedsize": 161,
+      "localfile": "bin/QtQuick/Extras/qmldir"
+    },
+    {
+      "url": "bin/QtQuick/Extras/qtquickextrasplugin.dll.lzma",
+      "unpackedhash": "8b89ac03a5b74e1ea81baf895b16a636d796a044252da475dc7cf6dadc6aa43b",
+      "unpackedsize": 137232,
+      "packedhash": "09187ae0a577164aa1223ceb8738a9cbdf7b5ca30e44505cb628c4ec1093a7bd",
+      "packedsize": 47994,
+      "localfile": "bin/QtQuick/Extras/qtquickextrasplugin.dll"
+    },
+    {
+      "url": "bin/QtQuick/Extras/plugins.qmltypes.lzma",
+      "unpackedhash": "9ad129f967beeedfcfe878367d2d7466767d7a6ef8c3b2915b8105d4f51e1bf3",
+      "unpackedsize": 27735,
+      "packedhash": "9ddf4394922b09e79ed5e33ca899a64dcc11319cc92a4c122c456a1940867d7d",
+      "packedsize": 2666,
+      "localfile": "bin/QtQuick/Extras/plugins.qmltypes"
+    },
+    {
+      "url": "bin/QtQuick/Extras/designer/GaugeSpecifics.qml.lzma",
+      "unpackedhash": "aa727d2a6684b0386057230ab442bbd3b33cfc35391130e559bd680585301318",
+      "unpackedsize": 4709,
+      "packedhash": "3ddf515f5b40bb7badd3459e31b40af5b8d27fc45a4629311b487755d81ed8d4",
+      "packedsize": 1169,
+      "localfile": "bin/QtQuick/Extras/designer/GaugeSpecifics.qml"
+    },
+    {
+      "url": "bin/QtQuick/Extras/designer/CircularGaugeSpecifics.qml.lzma",
+      "unpackedhash": "fd379b05526a4354d0fe9e718931160748587d2d37b91a1fc78e6c6d505d9b55",
+      "unpackedsize": 3973,
+      "packedhash": "ee7eacb153ebe96f88909f943c1bc8c8013c48acacb3f5d4f2396a4bb837412e",
+      "packedsize": 1003,
+      "localfile": "bin/QtQuick/Extras/designer/CircularGaugeSpecifics.qml"
+    },
+    {
+      "url": "bin/QtQuick/Extras/designer/DelayButtonSpecifics.qml.lzma",
+      "unpackedhash": "27e7c995af4c6583b697b2c33c54a156a5ed2cd997310fd8439942ba63c07530",
+      "unpackedsize": 3300,
+      "packedhash": "7b7993cbec54e47c9a633502d7f47adc40445c31112a16e062e4c707ac788cc5",
+      "packedsize": 1044,
+      "localfile": "bin/QtQuick/Extras/designer/DelayButtonSpecifics.qml"
+    },
+    {
+      "url": "bin/QtQuick/Extras/designer/PictureSpecifics.qml.lzma",
+      "unpackedhash": "fa6a195ddeea26ce2d3d3cbe78eff0549d141267bd656e679493e4710f9aeb9b",
+      "unpackedsize": 2861,
+      "packedhash": "71d8cbdf4397239133086afecf6cc4816336f231fd763b845245fc8d4998b030",
+      "packedsize": 1002,
+      "localfile": "bin/QtQuick/Extras/designer/PictureSpecifics.qml"
+    },
+    {
+      "url": "bin/QtQuick/Extras/designer/PieMenuSpecifics.qml.lzma",
+      "unpackedhash": "1ee6fbfc5585c00fc0472b34855cf47d4d8ad8019f701cd293556ef2bf6b72a0",
+      "unpackedsize": 3817,
+      "packedhash": "48c14076a2e88642942fbfc46cf3ee4fa6576fb8ee5b02f5ffd6cb9db328708d",
+      "packedsize": 1257,
+      "localfile": "bin/QtQuick/Extras/designer/PieMenuSpecifics.qml"
+    },
+    {
+      "url": "bin/QtQuick/Extras/designer/DialSpecifics.qml.lzma",
+      "unpackedhash": "cfde4904bd285741ebf0e9005f7100a132eb11cb9ca2198e967c23f78d55c8be",
+      "unpackedsize": 4507,
+      "packedhash": "dc4ca621e820921bc25964ebeeb9e18661f5efab1bf776b93e65aec5a8f0014b",
+      "packedsize": 1045,
+      "localfile": "bin/QtQuick/Extras/designer/DialSpecifics.qml"
+    },
+    {
+      "url": "bin/QtQuick/Extras/designer/StatusIndicatorSpecifics.qml.lzma",
+      "unpackedhash": "93eb849d4be10f8b1b70fe2ace54ff389bdf5d5c0d1ade749ee3e16afd339f19",
+      "unpackedsize": 2740,
+      "packedhash": "55f4f6e278cf1456f9a25a99b08c3846d992724eebd47052ee0b56022fcbcdb8",
+      "packedsize": 970,
+      "localfile": "bin/QtQuick/Extras/designer/StatusIndicatorSpecifics.qml"
+    },
+    {
+      "url": "bin/QtQuick/Extras/designer/ToggleButtonSpecifics.qml.lzma",
+      "unpackedhash": "be88cf5dd191f6a70b6d666a93aabd7a556612e4af31c16cf2e14a0cf76fe2f4",
+      "unpackedsize": 3270,
+      "packedhash": "b4d2ebf5ef470b843b58ff0511c97ed0449c69f7cdb72bdb08449d3eb23e567f",
+      "packedsize": 1022,
+      "localfile": "bin/QtQuick/Extras/designer/ToggleButtonSpecifics.qml"
+    },
+    {
+      "url": "bin/QtQuick/Extras/designer/images/togglebutton-icon.png.lzma",
+      "unpackedhash": "687fd6e0365c3fe52c92b18304d902306d7173f84bf5c53d825845d1aeb47afe",
+      "unpackedsize": 340,
+      "packedhash": "687fd6e0365c3fe52c92b18304d902306d7173f84bf5c53d825845d1aeb47afe",
+      "packedsize": 340,
+      "localfile": "bin/QtQuick/Extras/designer/images/togglebutton-icon.png"
+    },
+    {
+      "url": "bin/QtQuick/Extras/designer/images/circulargauge-icon.png.lzma",
+      "unpackedhash": "3ff56cb9a40e18ba5af022a048c70e83a02a8d42212f33cf7d4ef79372c0da41",
+      "unpackedsize": 373,
+      "packedhash": "3ff56cb9a40e18ba5af022a048c70e83a02a8d42212f33cf7d4ef79372c0da41",
+      "packedsize": 373,
+      "localfile": "bin/QtQuick/Extras/designer/images/circulargauge-icon.png"
+    },
+    {
+      "url": "bin/QtQuick/Extras/designer/images/statusindicator-icon16.png.lzma",
+      "unpackedhash": "e562720e00c1ee523dfca2f3860a67de5c65f964ed1dd997b30e28d431dea15d",
+      "unpackedsize": 212,
+      "packedhash": "e562720e00c1ee523dfca2f3860a67de5c65f964ed1dd997b30e28d431dea15d",
+      "packedsize": 212,
+      "localfile": "bin/QtQuick/Extras/designer/images/statusindicator-icon16.png"
+    },
+    {
+      "url": "bin/QtQuick/Extras/designer/images/piemenu-icon16.png.lzma",
+      "unpackedhash": "5693daef67a4212d1afe35aec01d30c6fcf6ca06902f6c45095c4ad7f8be8c5a",
+      "unpackedsize": 242,
+      "packedhash": "5693daef67a4212d1afe35aec01d30c6fcf6ca06902f6c45095c4ad7f8be8c5a",
+      "packedsize": 242,
+      "localfile": "bin/QtQuick/Extras/designer/images/piemenu-icon16.png"
+    },
+    {
+      "url": "bin/QtQuick/Extras/designer/images/statusindicator-icon.png.lzma",
+      "unpackedhash": "b4de7dbc8ecbab755007896a3578dd5435c105f5b4d890d292cb6049955a4e39",
+      "unpackedsize": 316,
+      "packedhash": "b4de7dbc8ecbab755007896a3578dd5435c105f5b4d890d292cb6049955a4e39",
+      "packedsize": 316,
+      "localfile": "bin/QtQuick/Extras/designer/images/statusindicator-icon.png"
+    },
+    {
+      "url": "bin/QtQuick/Extras/designer/images/delaybutton-icon16.png.lzma",
+      "unpackedhash": "d746a09c1773416909d53f097c485d939fff4d4db8aea7dccee69c7305e883e8",
+      "unpackedsize": 220,
+      "packedhash": "d746a09c1773416909d53f097c485d939fff4d4db8aea7dccee69c7305e883e8",
+      "packedsize": 220,
+      "localfile": "bin/QtQuick/Extras/designer/images/delaybutton-icon16.png"
+    },
+    {
+      "url": "bin/QtQuick/Extras/designer/images/picture-icon.png.lzma",
+      "unpackedhash": "fcaaed606dd9da5e431638fa688b279348de2dfc265bf861f62a04d15f11f74c",
+      "unpackedsize": 220,
+      "packedhash": "fcaaed606dd9da5e431638fa688b279348de2dfc265bf861f62a04d15f11f74c",
+      "packedsize": 220,
+      "localfile": "bin/QtQuick/Extras/designer/images/picture-icon.png"
+    },
+    {
+      "url": "bin/QtQuick/Extras/designer/images/gauge-icon16.png.lzma",
+      "unpackedhash": "1ae61f530ae16c1997180ce20ca7b01dd940269a894c74a719eaf7d5cd57e779",
+      "unpackedsize": 163,
+      "packedhash": "1ae61f530ae16c1997180ce20ca7b01dd940269a894c74a719eaf7d5cd57e779",
+      "packedsize": 163,
+      "localfile": "bin/QtQuick/Extras/designer/images/gauge-icon16.png"
+    },
+    {
+      "url": "bin/QtQuick/Extras/designer/images/tumbler-icon.png.lzma",
+      "unpackedhash": "9ccde38df6aaae8d67362efc41283e2bc218379f00d915d70c9b382b81215051",
+      "unpackedsize": 187,
+      "packedhash": "9ccde38df6aaae8d67362efc41283e2bc218379f00d915d70c9b382b81215051",
+      "packedsize": 187,
+      "localfile": "bin/QtQuick/Extras/designer/images/tumbler-icon.png"
+    },
+    {
+      "url": "bin/QtQuick/Extras/designer/images/picture-icon16.png.lzma",
+      "unpackedhash": "b3c6a8ac1a6e1897347d5cd3d011418d937b628a3e0df724fe5c284d95766594",
+      "unpackedsize": 177,
+      "packedhash": "b3c6a8ac1a6e1897347d5cd3d011418d937b628a3e0df724fe5c284d95766594",
+      "packedsize": 177,
+      "localfile": "bin/QtQuick/Extras/designer/images/picture-icon16.png"
+    },
+    {
+      "url": "bin/QtQuick/Extras/designer/images/piemenu-icon.png.lzma",
+      "unpackedhash": "4467c1a20829cb18d8007f7ae6faa4bbc7559990370b6c67c4ab693c5e07cf45",
+      "unpackedsize": 378,
+      "packedhash": "4467c1a20829cb18d8007f7ae6faa4bbc7559990370b6c67c4ab693c5e07cf45",
+      "packedsize": 378,
+      "localfile": "bin/QtQuick/Extras/designer/images/piemenu-icon.png"
+    },
+    {
+      "url": "bin/QtQuick/Extras/designer/images/tumbler-icon16.png.lzma",
+      "unpackedhash": "205b68c674f76b8e0ccb6330c5a6b4a27197241300326bd920a6f9df62ea0e79",
+      "unpackedsize": 1130,
+      "packedhash": "ebb35a13eafa5aa61f9551d7a0479738f1f9c5e371f07b9628b4dffa616a2f30",
+      "packedsize": 789,
+      "localfile": "bin/QtQuick/Extras/designer/images/tumbler-icon16.png"
+    },
+    {
+      "url": "bin/QtQuick/Extras/designer/images/dial-icon16.png.lzma",
+      "unpackedhash": "3279fbd13efa8ae3a032bb4e1c31f93e7f30d7f00eece3c891c4df6a3e3fa126",
+      "unpackedsize": 217,
+      "packedhash": "3279fbd13efa8ae3a032bb4e1c31f93e7f30d7f00eece3c891c4df6a3e3fa126",
+      "packedsize": 217,
+      "localfile": "bin/QtQuick/Extras/designer/images/dial-icon16.png"
+    },
+    {
+      "url": "bin/QtQuick/Extras/designer/images/delaybutton-icon.png.lzma",
+      "unpackedhash": "7c793c2741f4ad89feb911fa85fa71c2a03d504e4831b8291fdbb21beffd5b7f",
+      "unpackedsize": 343,
+      "packedhash": "7c793c2741f4ad89feb911fa85fa71c2a03d504e4831b8291fdbb21beffd5b7f",
+      "packedsize": 343,
+      "localfile": "bin/QtQuick/Extras/designer/images/delaybutton-icon.png"
+    },
+    {
+      "url": "bin/QtQuick/Extras/designer/images/dial-icon.png.lzma",
+      "unpackedhash": "4bdf6fe0ad9907c132730550d34d04567b8840707d189e76c4817d0e6a52b150",
+      "unpackedsize": 326,
+      "packedhash": "4bdf6fe0ad9907c132730550d34d04567b8840707d189e76c4817d0e6a52b150",
+      "packedsize": 326,
+      "localfile": "bin/QtQuick/Extras/designer/images/dial-icon.png"
+    },
+    {
+      "url": "bin/QtQuick/Extras/designer/images/togglebutton-icon16.png.lzma",
+      "unpackedhash": "8bdacf388610914fcc4b59a6dd9f33ca6ecc053c1ae05b72ba625202f45e74c8",
+      "unpackedsize": 223,
+      "packedhash": "8bdacf388610914fcc4b59a6dd9f33ca6ecc053c1ae05b72ba625202f45e74c8",
+      "packedsize": 223,
+      "localfile": "bin/QtQuick/Extras/designer/images/togglebutton-icon16.png"
+    },
+    {
+      "url": "bin/QtQuick/Extras/designer/images/circulargauge-icon16.png.lzma",
+      "unpackedhash": "7afe82ca13b50f469d8df8104ad4761ea44e8ccf6f487dc7dbafced49a0cca32",
+      "unpackedsize": 249,
+      "packedhash": "7afe82ca13b50f469d8df8104ad4761ea44e8ccf6f487dc7dbafced49a0cca32",
+      "packedsize": 249,
+      "localfile": "bin/QtQuick/Extras/designer/images/circulargauge-icon16.png"
+    },
+    {
+      "url": "bin/QtQuick/Extras/designer/images/gauge-icon.png.lzma",
+      "unpackedhash": "2defa9db91fed3346246259b11db7acd6920345a92397d47172047228af06c46",
+      "unpackedsize": 189,
+      "packedhash": "2defa9db91fed3346246259b11db7acd6920345a92397d47172047228af06c46",
+      "packedsize": 189,
+      "localfile": "bin/QtQuick/Extras/designer/images/gauge-icon.png"
+    },
+    {
+      "url": "bin/imageformats/qjpeg.dll.lzma",
+      "unpackedhash": "9d52e69c8bd4c6c6f3f12491891ffbe7133425120d780bcd237b6520006b954a",
+      "unpackedsize": 262672,
+      "packedhash": "548764a8f6a3ffba5630433410ea66d5738b3e826e611196a5366e02e44fb433",
+      "packedsize": 101928,
+      "localfile": "bin/imageformats/qjpeg.dll"
+    },
+    {
+      "url": "bin/imageformats/qgif.dll.lzma",
+      "unpackedhash": "8cc2ea2f6333ac25c6e1dcc7ca14680e79df7464770e37d1b3edc804f182a214",
+      "unpackedsize": 41488,
+      "packedhash": "615429ac07553b91d0cc5967618cbbe19c267635cfe280279ed75e6e0865a61b",
+      "packedsize": 18128,
+      "localfile": "bin/imageformats/qgif.dll"
+    },
+    {
+      "url": "bin/scenegraph/softwarecontext.dll.lzma",
+      "unpackedhash": "76aa5524e95e4c0d54c9d58736d83f77df3f2ffaca067a212f69f81fd389d61a",
+      "unpackedsize": 110256,
+      "packedhash": "cea716a80957989c0fbe9a9f91ca76cc23a7e4e3079dd3badfdb76aa2f4b11e3",
+      "packedsize": 44772,
+      "localfile": "bin/scenegraph/softwarecontext.dll"
+    },
+    {
+      "url": "bin/angle_v1/libEGL.dll.lzma",
+      "unpackedhash": "55110ff47faddd76f18aa973574984ba7ca6c57f62407ef21f3bea46d03da7ce",
+      "unpackedsize": 57960,
+      "packedhash": "d6e6b3bc8969cbf6e741ee1b1828d55a9025e497272744e798347aaa29245a91",
+      "packedsize": 22881,
+      "localfile": "bin/angle_v1/libEGL.dll"
+    },
+    {
+      "url": "bin/angle_v1/libGLESv2.dll.lzma",
+      "unpackedhash": "1a31fce497606b0819147e9356c72659858b8cf76a04fb5922d682fd7a7aabb6",
+      "unpackedsize": 738408,
+      "packedhash": "4d9da8ee6db2fd1643ba3c590a173ae354374224ed345618b140ed176a58b15c",
+      "packedsize": 245083,
+      "localfile": "bin/angle_v1/libGLESv2.dll"
+    },
+    {
+      "url": "conf/gpublacklist.json.lzma",
+      "unpackedhash": "053f1740344ae136e362c45ccdd1653c12c9397b149d97eacc7892c623565ead",
+      "unpackedsize": 4023,
+      "packedhash": "288969e732099ed465dd3321ead36769c40b77dcf364720b2f99a9bc2ee75961",
+      "packedsize": 915,
+      "localfile": "conf/gpublacklist.json"
+    }
+  ],
+  "generation": "second",
+  "executable": "bin/client_launcher.exe",
+  "version": "12.08.7995",
+  "variant": "regular"
+}
