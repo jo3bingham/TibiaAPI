@@ -17,20 +17,6 @@ namespace Extract
     {
         private const int MapSizeW = 10;
 
-        private static readonly byte[] _reverseFluidMap =
-        {
-            (byte)FluidColor.Transparent,
-            (byte)FluidType.Water,
-            (byte)FluidType.Mana,
-            (byte)FluidType.Beer,
-            (byte)FluidColor.Transparent,
-            (byte)FluidType.Blood,
-            (byte)FluidType.Slime,
-            (byte)FluidColor.Transparent,
-            (byte)FluidType.Lemonade,
-            (byte)FluidType.Milk
-        };
-
         private static readonly HashSet<ulong> _knownPositions = new HashSet<ulong>();
         private static readonly HashSet<uint> _knownMonsterIds = new HashSet<uint>();
         private static readonly HashSet<uint> _knownNpcIds = new HashSet<uint>();
@@ -721,9 +707,9 @@ namespace Extract
                 {
                     _otbmFile.WriteByte(15);
                     byte subType = 0;
-                    if (item.Data >= 0 && item.Data < _reverseFluidMap.Length)
+                    if (Enum.IsDefined(typeof(FluidType), (int)item.Data))
                     {
-                        subType = _reverseFluidMap[item.Data];
+                        subType = (byte)item.Data;
                     }
                     WriteData(_otbmFile, new byte[] { subType });
                 }
