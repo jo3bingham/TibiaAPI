@@ -130,6 +130,18 @@
         CharmPoints = 30
     }
 
+    public enum FluidColor
+    {
+        Transparent = 0,
+        Blue = 1,
+        Red = 2,
+        Brown = 3,
+        Green = 4,
+        Yellow = 5,
+        White = 6,
+        Purple = 7
+    }
+
     public enum StoreServiceType
     {
         Unknown = 0,
