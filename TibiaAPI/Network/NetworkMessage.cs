@@ -1300,6 +1300,7 @@ namespace OXGaming.TibiaAPI.Network
                 var ret = zStream.inflate(zlibConst.Z_SYNC_FLUSH);
                 if (ret != zlibConst.Z_OK)
                 {
+                    Console.WriteLine($"Data: {BitConverter.ToString(GetData()).Replace('-', ' ')}");
                     throw new Exception($"[NetworkMessage.PrepareToParse] zlib inflate failed: {ret}");
                 }
 
