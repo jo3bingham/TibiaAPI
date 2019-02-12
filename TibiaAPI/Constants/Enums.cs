@@ -204,26 +204,24 @@
 
     public enum FluidType
     {
-        None = FluidColor.Transparent,
-        Water = FluidColor.Blue,
-        Blood = FluidColor.Red,
-        Beer = FluidColor.Brown,
-        Slime = FluidColor.Green,
-        Lemonade = FluidColor.Yellow,
-        Milk = FluidColor.White,
-        Mana = FluidColor.Purple,
-        Life = FluidColor.Red + 8,
-        Oil = FluidColor.Brown + 8,
-        Urine = FluidColor.Yellow + 8,
-        CoconutMilk = FluidColor.White + 8,
-        Wine = FluidColor.Purple + 8,
-        Mud = FluidColor.Brown + 16,
-        FruitJuice = FluidColor.Yellow + 16,
-        Lava = FluidColor.Red + 24,
-        Rum = FluidColor.Brown + 24,
-        Swamp = FluidColor.Green + 24,
-        Tea = FluidColor.Brown + 32,
-        Mead = FluidColor.Brown + 40
+        None = 0,
+        Water = 1,
+        Wine = 2,
+        Beer = 3,
+        Mud = 4,
+        Blood = 5,
+        Slime = 6,
+        Oil = 7,
+        Urine = 8,
+        Milk = 9,
+        ManaFluid = 10,
+        LifeFluid = 11,
+        Lemonade = 12,
+        Rum = 13,
+        FruitJuice = 14,
+        CoconutMilk = 15,
+        Mead = 16,
+        Tea = 17
     }
 
     public enum MessageModeType
