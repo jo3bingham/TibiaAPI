@@ -9,8 +9,8 @@ namespace OXGaming.TibiaAPI.Network.ClientPackets
 
         public ushort ObjectId { get; set; }
 
+        public byte Data { get; set; }
         public byte InspectionType { get; set; }
-        public byte Unknown { get; set; }
 
         public InspectObject(Client client)
         {
@@ -29,8 +29,7 @@ namespace OXGaming.TibiaAPI.Network.ClientPackets
             if (InspectionType == 3) // Cyclopedia
             {
                 ObjectId = message.ReadUInt16();
-                // TODO: Figure out this unknown. Always 0 in my tests. Probably "data".
-                Unknown = message.ReadByte();
+                Data = message.ReadByte();
             }
             else
             {
@@ -46,7 +45,7 @@ namespace OXGaming.TibiaAPI.Network.ClientPackets
             if (InspectionType == 3)
             {
                 message.Write(ObjectId);
-                message.Write(Unknown);
+                message.Write(Data);
             }
             else
             {
