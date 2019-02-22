@@ -49,7 +49,6 @@ namespace OXGaming.TibiaAPI.Network
 
         private ZStream _zStream = new ZStream();
 
-
         private Socket _clientSocket;
         private Socket _serverSocket;
 
@@ -59,6 +58,8 @@ namespace OXGaming.TibiaAPI.Network
         private TcpListener _tcpListener;
 
         private dynamic _loginData;
+
+        private string _loginWebService;
 
         private uint _clientSequenceNumber = 1;
         private uint _serverSequenceNumber = 1;
@@ -88,6 +89,55 @@ namespace OXGaming.TibiaAPI.Network
             _serverOutMessage = new NetworkMessage(_client);
 
             _httpClient.DefaultRequestHeaders.Add("user-agent", "Mozilla/5.0");
+        }
+
+        /// <summary>
+        /// Starts the <see cref="HttpListener"/> and <see cref="TcpListener"/> objects that listen for incoming
+        /// connection requests from the Tibia client.
+        /// </summary>
+        /// <returns>Returns true on success, or if already started. Returns false if an exception is thrown.</returns>
+        internal bool Start(bool enablePacketParsing = true, int httpPort = 80, string loginWebService = "")
+        {
+            if (_isStarted)
+            {
+                return true;
+            }
+
+            try
+            {
+                if (_tcpListener == null)
+                {
+                    _tcpListener = new TcpListener(IPAddress.Loopback, 0);
+                }
+
+                var uriPrefix = $"http://127.0.0.1:{httpPort}/";
+                if (!_httpListener.Prefixes.Contains(uriPrefix))
+                {
+                    _httpListener.Prefixes.Add(uriPrefix);
+                }
+
+                //_zStream.deflateInit(zlibConst.Z_DEFAULT_COMPRESSION, -15);
+                _zStream.inflateInit(-15);
+
+                _httpListener.Start();
+                _httpListener.BeginGetContext(new AsyncCallback(BeginGetContextCallback), _httpListener);
+
+                _tcpListener.Start();
+                _tcpListener.BeginAcceptSocket(new AsyncCallback(BeginAcceptTcpClientCallback), _tcpListener);
+
+                _isStarted = true;
+                _loginWebService = loginWebService;
+                _isPacketParsingEnabled = enablePacketParsing;
+                ConnectionState = ConnectionState.ConnectingStage1;
+            }
+            catch (Exception ex)
+            {
+                _isStarted = false;
+                Console.WriteLine(ex.ToString());
+                // TODO: Log exception.
+            }
+
+            return _isStarted;
         }
 
         /// <summary>
@@ -262,54 +312,6 @@ namespace OXGaming.TibiaAPI.Network
                     }
                 }
             }
-        }
-
-        /// <summary>
-        /// Starts the <see cref="HttpListener"/> and <see cref="TcpListener"/> objects that listen for incoming
-        /// connection requests from the Tibia client.
-        /// </summary>
-        /// <returns>Returns true on success, or if already started. Returns false if an exception is thrown.</returns>
-        internal bool Start(bool enablePacketParsing = true, int httpPort = 80)
-        {
-            if (_isStarted)
-            {
-                return true;
-            }
-
-            try
-            {
-                if (_tcpListener == null)
-                {
-                    _tcpListener = new TcpListener(IPAddress.Loopback, 0);
-                }
-
-                var uriPrefix = $"http://127.0.0.1:{httpPort}/";
-                if (!_httpListener.Prefixes.Contains(uriPrefix))
-                {
-                    _httpListener.Prefixes.Add(uriPrefix);
-                }
-
-                //_zStream.deflateInit(zlibConst.Z_DEFAULT_COMPRESSION, -15);
-                _zStream.inflateInit(-15);
-
-                _httpListener.Start();
-                _httpListener.BeginGetContext(new AsyncCallback(BeginGetContextCallback), _httpListener);
-
-                _tcpListener.Start();
-                _tcpListener.BeginAcceptSocket(new AsyncCallback(BeginAcceptTcpClientCallback), _tcpListener);
-
-                _isPacketParsingEnabled = enablePacketParsing;
-                _isStarted = true;
-                ConnectionState = ConnectionState.ConnectingStage1;
-            }
-            catch (Exception ex)
-            {
-                _isStarted = false;
-                Console.WriteLine(ex.ToString());
-                // TODO: Log exception.
-            }
-
-            return _isStarted;
         }
 
         /// <summary>
@@ -581,7 +583,10 @@ namespace OXGaming.TibiaAPI.Network
                 var response = PostAsync(clientRequest).Result;
                 if (string.IsNullOrEmpty(response))
                 {
-                    throw new Exception("[Connection.BeginGetContextCallback]");
+                    // This can happen with Open-Tibia servers where their login service doesn't handle all
+                    // types of requests from the client. Best to keep listening for a proper response.
+                    _httpListener.BeginGetContext(new AsyncCallback(BeginGetContextCallback), _httpListener);
+                    return;
                 }
 
                 // Login data is the only thing we have to modify, everything else can be piped through.
@@ -783,7 +788,17 @@ namespace OXGaming.TibiaAPI.Network
                         }
                     }
 
-                    _rsa.TibiaEncrypt(_clientInMessage, 18);
+                    if (string.IsNullOrEmpty(_loginWebService))
+                    {
+                        _rsa.TibiaEncrypt(_clientInMessage, 18);
+                    }
+                    else
+                    {
+                        // If the user supplied a login web service address,
+                        // it's safe to assume it's an Open-Tibia server.
+                        _rsa.OpenTibiaEncrypt(_clientInMessage, 18);
+                    }
+
                     SendToServer(_clientInMessage.GetData());
                 }
                 else
@@ -926,6 +941,11 @@ namespace OXGaming.TibiaAPI.Network
 
         private string GetLoginWebService()
         {
+            if (!string.IsNullOrEmpty(_loginWebService))
+            {
+                return _loginWebService;
+            }
+
             if (_client.VersionNumber >= 11867253)
             {
                 return loginWebService1186;

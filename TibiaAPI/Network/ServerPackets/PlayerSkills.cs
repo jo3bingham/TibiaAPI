@@ -38,13 +38,13 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
 
             if (Client.VersionNumber < 12000000)
             {
-                FistFighting = (message.ReadUInt16(), message.ReadUInt16(), 0, message.ReadUInt16());
-                ClubFighting = (message.ReadUInt16(), message.ReadUInt16(), 0, message.ReadUInt16());
-                SwordFighting = (message.ReadUInt16(), message.ReadUInt16(), 0, message.ReadUInt16());
-                AxeFighting = (message.ReadUInt16(), message.ReadUInt16(), 0, message.ReadUInt16());
-                DistanceFighting = (message.ReadUInt16(), message.ReadUInt16(), 0, message.ReadUInt16());
-                Shielding = (message.ReadUInt16(), message.ReadUInt16(), 0, message.ReadUInt16());
-                Fishing = (message.ReadUInt16(), message.ReadUInt16(), 0, message.ReadUInt16());
+                FistFighting = (message.ReadUInt16(), message.ReadUInt16(), 0, message.ReadByte());
+                ClubFighting = (message.ReadUInt16(), message.ReadUInt16(), 0, message.ReadByte());
+                SwordFighting = (message.ReadUInt16(), message.ReadUInt16(), 0, message.ReadByte());
+                AxeFighting = (message.ReadUInt16(), message.ReadUInt16(), 0, message.ReadByte());
+                DistanceFighting = (message.ReadUInt16(), message.ReadUInt16(), 0, message.ReadByte());
+                Shielding = (message.ReadUInt16(), message.ReadUInt16(), 0, message.ReadByte());
+                Fishing = (message.ReadUInt16(), message.ReadUInt16(), 0, message.ReadByte());
             }
             else
             {
@@ -89,56 +89,84 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
             if (Client.VersionNumber >= 12000000)
             {
                 message.Write(FistFighting.Unknown);
+                message.Write(FistFighting.Progress);
             }
-            message.Write(FistFighting.Progress);
+            else
+            {
+                message.Write((byte)FistFighting.Progress);
+            }
 
             message.Write(ClubFighting.Level);
             message.Write(ClubFighting.Base);
             if (Client.VersionNumber >= 12000000)
             {
                 message.Write(ClubFighting.Unknown);
+                message.Write(ClubFighting.Progress);
             }
-            message.Write(ClubFighting.Progress);
+            else
+            {
+                message.Write((byte)ClubFighting.Progress);
+            }
 
             message.Write(SwordFighting.Level);
             message.Write(SwordFighting.Base);
             if (Client.VersionNumber >= 12000000)
             {
                 message.Write(SwordFighting.Unknown);
+                message.Write(SwordFighting.Progress);
             }
-            message.Write(SwordFighting.Progress);
+            else
+            {
+                message.Write((byte)SwordFighting.Progress);
+            }
 
             message.Write(AxeFighting.Level);
             message.Write(AxeFighting.Base);
             if (Client.VersionNumber >= 12000000)
             {
                 message.Write(AxeFighting.Unknown);
+                message.Write(AxeFighting.Progress);
             }
-            message.Write(AxeFighting.Progress);
+            else
+            {
+                message.Write((byte)AxeFighting.Progress);
+            }
 
             message.Write(DistanceFighting.Level);
             message.Write(DistanceFighting.Base);
             if (Client.VersionNumber >= 12000000)
             {
                 message.Write(DistanceFighting.Unknown);
+                message.Write(DistanceFighting.Progress);
             }
-            message.Write(DistanceFighting.Progress);
+            else
+            {
+                message.Write((byte)DistanceFighting.Progress);
+            }
 
             message.Write(Shielding.Level);
             message.Write(Shielding.Base);
             if (Client.VersionNumber >= 12000000)
             {
                 message.Write(Shielding.Unknown);
+                message.Write(Shielding.Progress);
             }
-            message.Write(Shielding.Progress);
+            else
+            {
+                message.Write((byte)Shielding.Progress);
+            }
 
             message.Write(Fishing.Level);
             message.Write(Fishing.Base);
             if (Client.VersionNumber >= 12000000)
             {
                 message.Write(Fishing.Unknown);
+                message.Write(Fishing.Progress);
             }
-            message.Write(Fishing.Progress);
+            else
+            {
+                message.Write((byte)Fishing.Progress);
+            }
 
             message.Write(CriticalHitChance.Level);
             message.Write(CriticalHitChance.Base);
