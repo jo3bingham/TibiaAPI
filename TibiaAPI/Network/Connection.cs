@@ -86,8 +86,16 @@ namespace OXGaming.TibiaAPI.Network
             _clientOutMessage = new NetworkMessage(_client);
             _serverInMessage = new NetworkMessage(_client);
             _serverOutMessage = new NetworkMessage(_client);
-    }
 
+            _httpClient.DefaultRequestHeaders.Add("user-agent", "Mozilla/5.0");
+        }
+
+        /// <summary>
+        /// Sends a packet to the Tibia client.
+        /// </summary>
+        /// <param name="message">
+        /// The <see cref="ServerPacket"/> object to be sent.
+        /// </param>
         public void SendToClient(ServerPacket packet)
         {
             if (packet == null)
@@ -100,6 +108,12 @@ namespace OXGaming.TibiaAPI.Network
             SendToClient(message);
         }
 
+        /// <summary>
+        /// Sends a packet to the Tibia client.
+        /// </summary>
+        /// <param name="message">
+        /// The <see cref="NetworkMessage"/> object containing the data to be sent.
+        /// </param>
         public void SendToClient(NetworkMessage message)
         {
             if (message == null)
@@ -127,13 +141,9 @@ namespace OXGaming.TibiaAPI.Network
         /// <summary>
         /// Sends a packet to the Tibia client.
         /// </summary>
-        /// <param name="message">
-        /// The <see cref="NetworkMessage"/> object containing the packet data to be sent.
+        /// <param name="data">
+        /// The raw byte-array containing the data to be sent.
         /// </param>
-        /// <remarks>
-        /// There are no sanity checks done on <paramref name="message"/>, so a malformed,
-        /// or invalid, packet will cause the connection to be terminated.
-        /// </remarks>
         public void SendToClient(byte[] data)
         {
             if (data == null)
@@ -167,6 +177,12 @@ namespace OXGaming.TibiaAPI.Network
             }
         }
 
+        /// <summary>
+        /// Sends a packet to the game server.
+        /// </summary>
+        /// <param name="packet">
+        /// The <see cref="ClientPacket"/> to be sent.
+        /// </param>
         public void SendToServer(ClientPacket packet)
         {
             if (packet == null)
@@ -179,6 +195,12 @@ namespace OXGaming.TibiaAPI.Network
             SendToServer(message);
         }
 
+        /// <summary>
+        /// Sends a packet to the game server.
+        /// </summary>
+        /// <param name="message">
+        /// The <see cref="NetworkMessage"/> object containing the data to be sent.
+        /// </param>
         public void SendToServer(NetworkMessage message)
         {
             if (message == null)
@@ -206,13 +228,9 @@ namespace OXGaming.TibiaAPI.Network
         /// <summary>
         /// Sends a packet to the game server.
         /// </summary>
-        /// <param name="packet">
-        /// The <see cref="ClientPacket"/> containing the data to be sent.
+        /// <param name="data">
+        /// Raw byte-array containing the data to be sent.
         /// </param>
-        /// <remarks>
-        /// There are no sanity checks done on <paramref name="packet"/>, except on it's Size.
-        /// So a malformed, or invalid, packet will cause the connection to be terminated.
-        /// </remarks>
         public void SendToServer(byte[] data)
         {
             if (data == null)
@@ -250,7 +268,7 @@ namespace OXGaming.TibiaAPI.Network
         /// Starts the <see cref="HttpListener"/> and <see cref="TcpListener"/> objects that listen for incoming
         /// connection requests from the Tibia client.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>Returns true on success, or if already started. Returns false if an exception is thrown.</returns>
         internal bool Start(bool enablePacketParsing = true, int httpPort = 80)
         {
             if (_isStarted)
@@ -286,11 +304,28 @@ namespace OXGaming.TibiaAPI.Network
             }
             catch (Exception ex)
             {
+                _isStarted = false;
                 Console.WriteLine(ex.ToString());
                 // TODO: Log exception.
             }
 
             return _isStarted;
+        }
+
+        /// <summary>
+        /// Sets the XTEA key used for encrypting/decrypting both server and client packets.
+        /// </summary>
+        /// <param name="key">List of unsigned integers to be used as the XTEA key.</param>
+        /// <returns>Returns false if the length of the list is anything other than 4.</returns>
+        internal bool SetXteaKey(List<uint> key)
+        {
+            if (key.Count != 4)
+            {
+                return false;
+            }
+
+            _xteaKey = key.ToArray();
+            return true;
         }
 
         /// <summary>
@@ -739,11 +774,13 @@ namespace OXGaming.TibiaAPI.Network
                         _clientOutMessage.Reset();
                         ParseClientMessage(_client, _clientInMessage, _clientOutMessage);
                     }
-
-                    _xteaKey = new uint[4];
-                    for (var i = 0; i < 4; ++i)
+                    else
                     {
-                        _xteaKey[i] = _clientInMessage.ReadUInt32();
+                        _xteaKey = new uint[4];
+                        for (var i = 0; i < 4; ++i)
+                        {
+                            _xteaKey[i] = _clientInMessage.ReadUInt32();
+                        }
                     }
 
                     _rsa.TibiaEncrypt(_clientInMessage, 18);

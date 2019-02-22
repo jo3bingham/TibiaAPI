@@ -55,6 +55,7 @@ namespace OXGaming.TibiaAPI.Network.ClientPackets
             {
                 XteaKey.Add(message.ReadUInt32());
             }
+            Client.Connection.SetXteaKey(XteaKey);
 
             IsGameMaster = message.ReadBool();
             SessionKey = message.ReadString();
