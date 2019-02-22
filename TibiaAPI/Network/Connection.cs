@@ -49,7 +49,6 @@ namespace OXGaming.TibiaAPI.Network
 
         private ZStream _zStream = new ZStream();
 
-
         private Socket _clientSocket;
         private Socket _serverSocket;
 
@@ -59,6 +58,8 @@ namespace OXGaming.TibiaAPI.Network
         private TcpListener _tcpListener;
 
         private dynamic _loginData;
+
+        private string _loginWebService;
 
         private uint _clientSequenceNumber = 1;
         private uint _serverSequenceNumber = 1;
@@ -86,8 +87,65 @@ namespace OXGaming.TibiaAPI.Network
             _clientOutMessage = new NetworkMessage(_client);
             _serverInMessage = new NetworkMessage(_client);
             _serverOutMessage = new NetworkMessage(_client);
-    }
 
+            _httpClient.DefaultRequestHeaders.Add("user-agent", "Mozilla/5.0");
+        }
+
+        /// <summary>
+        /// Starts the <see cref="HttpListener"/> and <see cref="TcpListener"/> objects that listen for incoming
+        /// connection requests from the Tibia client.
+        /// </summary>
+        /// <returns>Returns true on success, or if already started. Returns false if an exception is thrown.</returns>
+        internal bool Start(bool enablePacketParsing = true, int httpPort = 80, string loginWebService = "")
+        {
+            if (_isStarted)
+            {
+                return true;
+            }
+
+            try
+            {
+                if (_tcpListener == null)
+                {
+                    _tcpListener = new TcpListener(IPAddress.Loopback, 0);
+                }
+
+                var uriPrefix = $"http://127.0.0.1:{httpPort}/";
+                if (!_httpListener.Prefixes.Contains(uriPrefix))
+                {
+                    _httpListener.Prefixes.Add(uriPrefix);
+                }
+
+                //_zStream.deflateInit(zlibConst.Z_DEFAULT_COMPRESSION, -15);
+                _zStream.inflateInit(-15);
+
+                _httpListener.Start();
+                _httpListener.BeginGetContext(new AsyncCallback(BeginGetContextCallback), _httpListener);
+
+                _tcpListener.Start();
+                _tcpListener.BeginAcceptSocket(new AsyncCallback(BeginAcceptTcpClientCallback), _tcpListener);
+
+                _isStarted = true;
+                _loginWebService = loginWebService;
+                _isPacketParsingEnabled = enablePacketParsing;
+                ConnectionState = ConnectionState.ConnectingStage1;
+            }
+            catch (Exception ex)
+            {
+                _isStarted = false;
+                Console.WriteLine(ex.ToString());
+                // TODO: Log exception.
+            }
+
+            return _isStarted;
+        }
+
+        /// <summary>
+        /// Sends a packet to the Tibia client.
+        /// </summary>
+        /// <param name="message">
+        /// The <see cref="ServerPacket"/> object to be sent.
+        /// </param>
         public void SendToClient(ServerPacket packet)
         {
             if (packet == null)
@@ -100,6 +158,12 @@ namespace OXGaming.TibiaAPI.Network
             SendToClient(message);
         }
 
+        /// <summary>
+        /// Sends a packet to the Tibia client.
+        /// </summary>
+        /// <param name="message">
+        /// The <see cref="NetworkMessage"/> object containing the data to be sent.
+        /// </param>
         public void SendToClient(NetworkMessage message)
         {
             if (message == null)
@@ -127,13 +191,9 @@ namespace OXGaming.TibiaAPI.Network
         /// <summary>
         /// Sends a packet to the Tibia client.
         /// </summary>
-        /// <param name="message">
-        /// The <see cref="NetworkMessage"/> object containing the packet data to be sent.
+        /// <param name="data">
+        /// The raw byte-array containing the data to be sent.
         /// </param>
-        /// <remarks>
-        /// There are no sanity checks done on <paramref name="message"/>, so a malformed,
-        /// or invalid, packet will cause the connection to be terminated.
-        /// </remarks>
         public void SendToClient(byte[] data)
         {
             if (data == null)
@@ -167,6 +227,12 @@ namespace OXGaming.TibiaAPI.Network
             }
         }
 
+        /// <summary>
+        /// Sends a packet to the game server.
+        /// </summary>
+        /// <param name="packet">
+        /// The <see cref="ClientPacket"/> to be sent.
+        /// </param>
         public void SendToServer(ClientPacket packet)
         {
             if (packet == null)
@@ -179,6 +245,12 @@ namespace OXGaming.TibiaAPI.Network
             SendToServer(message);
         }
 
+        /// <summary>
+        /// Sends a packet to the game server.
+        /// </summary>
+        /// <param name="message">
+        /// The <see cref="NetworkMessage"/> object containing the data to be sent.
+        /// </param>
         public void SendToServer(NetworkMessage message)
         {
             if (message == null)
@@ -206,13 +278,9 @@ namespace OXGaming.TibiaAPI.Network
         /// <summary>
         /// Sends a packet to the game server.
         /// </summary>
-        /// <param name="packet">
-        /// The <see cref="ClientPacket"/> containing the data to be sent.
+        /// <param name="data">
+        /// Raw byte-array containing the data to be sent.
         /// </param>
-        /// <remarks>
-        /// There are no sanity checks done on <paramref name="packet"/>, except on it's Size.
-        /// So a malformed, or invalid, packet will cause the connection to be terminated.
-        /// </remarks>
         public void SendToServer(byte[] data)
         {
             if (data == null)
@@ -247,50 +315,19 @@ namespace OXGaming.TibiaAPI.Network
         }
 
         /// <summary>
-        /// Starts the <see cref="HttpListener"/> and <see cref="TcpListener"/> objects that listen for incoming
-        /// connection requests from the Tibia client.
+        /// Sets the XTEA key used for encrypting/decrypting both server and client packets.
         /// </summary>
-        /// <returns></returns>
-        internal bool Start(bool enablePacketParsing = true, int httpPort = 80)
+        /// <param name="key">List of unsigned integers to be used as the XTEA key.</param>
+        /// <returns>Returns false if the length of the list is anything other than 4.</returns>
+        internal bool SetXteaKey(List<uint> key)
         {
-            if (_isStarted)
+            if (key.Count != 4)
             {
-                return true;
+                return false;
             }
 
-            try
-            {
-                if (_tcpListener == null)
-                {
-                    _tcpListener = new TcpListener(IPAddress.Loopback, 0);
-                }
-
-                var uriPrefix = $"http://127.0.0.1:{httpPort}/";
-                if (!_httpListener.Prefixes.Contains(uriPrefix))
-                {
-                    _httpListener.Prefixes.Add(uriPrefix);
-                }
-
-                //_zStream.deflateInit(zlibConst.Z_DEFAULT_COMPRESSION, -15);
-                _zStream.inflateInit(-15);
-
-                _httpListener.Start();
-                _httpListener.BeginGetContext(new AsyncCallback(BeginGetContextCallback), _httpListener);
-
-                _tcpListener.Start();
-                _tcpListener.BeginAcceptSocket(new AsyncCallback(BeginAcceptTcpClientCallback), _tcpListener);
-
-                _isPacketParsingEnabled = enablePacketParsing;
-                _isStarted = true;
-                ConnectionState = ConnectionState.ConnectingStage1;
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.ToString());
-                // TODO: Log exception.
-            }
-
-            return _isStarted;
+            _xteaKey = key.ToArray();
+            return true;
         }
 
         /// <summary>
@@ -546,7 +583,10 @@ namespace OXGaming.TibiaAPI.Network
                 var response = PostAsync(clientRequest).Result;
                 if (string.IsNullOrEmpty(response))
                 {
-                    throw new Exception("[Connection.BeginGetContextCallback]");
+                    // This can happen with Open-Tibia servers where their login service doesn't handle all
+                    // types of requests from the client. Best to keep listening for a proper response.
+                    _httpListener.BeginGetContext(new AsyncCallback(BeginGetContextCallback), _httpListener);
+                    return;
                 }
 
                 // Login data is the only thing we have to modify, everything else can be piped through.
@@ -737,17 +777,28 @@ namespace OXGaming.TibiaAPI.Network
                     if (_isPacketParsingEnabled)
                     {
                         _clientOutMessage.Reset();
-                        _clientInMessage.Seek(6, SeekOrigin.Begin);
                         ParseClientMessage(_client, _clientInMessage, _clientOutMessage);
                     }
-
-                    _xteaKey = new uint[4];
-                    for (var i = 0; i < 4; ++i)
+                    else
                     {
-                        _xteaKey[i] = _clientInMessage.ReadUInt32();
+                        _xteaKey = new uint[4];
+                        for (var i = 0; i < 4; ++i)
+                        {
+                            _xteaKey[i] = _clientInMessage.ReadUInt32();
+                        }
                     }
 
-                    _rsa.TibiaEncrypt(_clientInMessage, 18);
+                    if (string.IsNullOrEmpty(_loginWebService))
+                    {
+                        _rsa.TibiaEncrypt(_clientInMessage, 18);
+                    }
+                    else
+                    {
+                        // If the user supplied a login web service address,
+                        // it's safe to assume it's an Open-Tibia server.
+                        _rsa.OpenTibiaEncrypt(_clientInMessage, 18);
+                    }
+
                     SendToServer(_clientInMessage.GetData());
                 }
                 else
@@ -890,6 +941,11 @@ namespace OXGaming.TibiaAPI.Network
 
         private string GetLoginWebService()
         {
+            if (!string.IsNullOrEmpty(_loginWebService))
+            {
+                return _loginWebService;
+            }
+
             if (_client.VersionNumber >= 11867253)
             {
                 return loginWebService1186;

@@ -21,7 +21,7 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
             }
 
             State = message.ReadByte();
-            if (State == 1)
+            if (Client.VersionNumber >= 12087995)
             {
                 Unknown = message.ReadByte();
             }
@@ -32,7 +32,7 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
         {
             message.Write((byte)ServerPacketType.DepotTileState);
             message.Write(State);
-            if (State == 1)
+            if (Client.VersionNumber >= 12087995)
             {
                 message.Write(Unknown);
             }

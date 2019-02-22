@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 
 using OXGaming.TibiaAPI.Constants;
 
@@ -42,7 +43,8 @@ namespace OXGaming.TibiaAPI.Network.ClientPackets
             ClientVersion = message.ReadUInt32();
             DatRevision = message.ReadUInt16();
             ClientPreviewState = message.ReadByte();
-            
+
+            var rsaStartPosition = message.Position;
             if (message.ReadByte() != 0)
             {
                 throw new Exception("[ClientPackets.Login.ParseFromNetworkMessage] RSA decryption failed.");
@@ -53,12 +55,17 @@ namespace OXGaming.TibiaAPI.Network.ClientPackets
             {
                 XteaKey.Add(message.ReadUInt32());
             }
+            Client.Connection.SetXteaKey(XteaKey);
 
             IsGameMaster = message.ReadBool();
             SessionKey = message.ReadString();
             CharacterName = message.ReadString();
             ChallengeTimeStamp = message.ReadUInt32();
             ChallengeRandom = message.ReadByte();
+
+            // Skip the RSA encryption junk data.
+            var rsaEndPosition = message.Position;
+            message.Seek((int)(128 - (rsaStartPosition - rsaEndPosition)), SeekOrigin.Current);
             return true;
         }
 

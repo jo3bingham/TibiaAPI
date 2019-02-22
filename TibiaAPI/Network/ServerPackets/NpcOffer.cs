@@ -7,10 +7,12 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
 {
     public class NpcOffer : ServerPacket
     {
-        public List<(ushort Id, byte Data, string Name, uint Price, uint Weight, uint Amount)> Offers { get; } =
-            new List<(ushort Id, byte Data, string Name, uint Price, uint Weight, uint Amount)>();
+        public List<(ushort Id, byte Data, string Name, uint Weight, uint BuyPrice, uint SellPrice)> Offers { get; } =
+            new List<(ushort Id, byte Data, string Name, uint Weight, uint BuyPrice, uint SellPrice)>();
 
         public string NpcName { get; set; }
+
+        public ushort CurrencyItemId { get; set; }
 
         public NpcOffer(Client client)
         {
@@ -26,16 +28,20 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
             }
 
             NpcName = message.ReadString();
+            if (Client.VersionNumber >= 12087995)
+            {
+                CurrencyItemId = message.ReadUInt16();
+            }
             Offers.Capacity = message.ReadUInt16();
             for (var i = 0; i < Offers.Capacity; ++i)
             {
                 var id = message.ReadUInt16();
                 var data = message.ReadByte();
                 var name = message.ReadString();
-                var price = message.ReadUInt32();
                 var weight = message.ReadUInt32();
-                var amount = message.ReadUInt32();
-                Offers.Add((id, data, name, price, weight, amount));
+                var buyPrice = message.ReadUInt32();
+                var sellPrice = message.ReadUInt32();
+                Offers.Add((id, data, name, weight, buyPrice, sellPrice));
             }
             return true;
         }
@@ -44,17 +50,21 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
         {
             message.Write((byte)ServerPacketType.NpcOffer);
             message.Write(NpcName);
+            if (Client.VersionNumber >= 12087995)
+            {
+                message.Write(CurrencyItemId);
+            }
             var count = Math.Min(Offers.Count, ushort.MaxValue);
             message.Write((ushort)count);
             for (var i = 0; i < count; ++i)
             {
-                var offer = Offers[i];
-                message.Write(offer.Id);
-                message.Write(offer.Data);
-                message.Write(offer.Name);
-                message.Write(offer.Price);
-                message.Write(offer.Weight);
-                message.Write(offer.Amount);
+                var (Id, Data, Name, Weight, BuyPrice, SellPrice) = Offers[i];
+                message.Write(Id);
+                message.Write(Data);
+                message.Write(Name);
+                message.Write(Weight);
+                message.Write(BuyPrice);
+                message.Write(SellPrice);
             }
         }
     }
