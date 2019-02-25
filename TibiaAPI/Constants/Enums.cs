@@ -111,6 +111,16 @@
         SummonOthers = 4
     }
 
+    public enum GraphicalEffectsType
+    {
+        None = 0,
+        Move = 1,
+        Delay = 2,
+        Effect = 3,
+        MissileXY = 4,
+        MissileYX = 5
+    }
+
     public enum PreyDataState
     {
         Locked = 0,

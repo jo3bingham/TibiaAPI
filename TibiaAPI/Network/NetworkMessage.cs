@@ -167,12 +167,20 @@ namespace OXGaming.TibiaAPI.Network
         }
 
         /// <summary>
-        /// Reads the next byte from the buffer and advances the position by one.
+        /// Reads the next unsigned byte from the buffer and advances the position by one.
         /// </summary>
         /// <returns>
-        /// The next byte read from the buffer.
+        /// The next unsigned byte read from the buffer.
         /// </returns>
         public byte ReadByte() => ReadBytes(1)[0];
+
+        /// <summary>
+        /// Reads the next signed byte from the buffer and advances the position by one.
+        /// </summary>
+        /// <returns>
+        /// The next signed byte read from the buffer.
+        /// </returns>
+        public sbyte ReadSByte() => unchecked((sbyte)ReadByte());
 
         /// <summary>
         /// Reads the next byte from the buffer and advances the position by one.
@@ -801,6 +809,14 @@ namespace OXGaming.TibiaAPI.Network
         /// The unsigned byte to write.
         /// </param>
         public void Write(byte value) => Write(new byte[] { value });
+
+        /// <summary>
+        /// Writes a signed byte to the buffer and advances the position by one.
+        /// </summary>
+        /// <param name="value">
+        /// The signed byte to write.
+        /// </param>
+        public void Write(sbyte value) => Write(new byte[] { unchecked((byte)value) });
 
         /// <summary>
         /// Writes a boolean value, as an unsigned byte, to the buffer and advances the position by one.
