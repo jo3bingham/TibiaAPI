@@ -8,6 +8,7 @@ using ComponentAce.Compression.Libs.zlib;
 using OXGaming.TibiaAPI.Appearances;
 using OXGaming.TibiaAPI.Constants;
 using OXGaming.TibiaAPI.Creatures;
+using OXGaming.TibiaAPI.DailyRewards;
 using OXGaming.TibiaAPI.Imbuing;
 using OXGaming.TibiaAPI.Market;
 using OXGaming.TibiaAPI.Utilities;
@@ -554,57 +555,69 @@ namespace OXGaming.TibiaAPI.Network
             return imbuementData;
         }
 
-        public void ReadDailyReward()
+        public DailyReward ReadDailyReward()
         {
-            // TODO: Work out switch case values, variable names, and
-            // which case corresponds to which reward.
-            var rewardType = ReadByte();
-            switch (rewardType)
+            var dailyReward = new DailyReward
             {
-                case 1:
+                Type = ReadByte()
+            };
+
+            switch (dailyReward.Type)
+            {
+                case 1: // Choice
                     {
-                        var maxReward = ReadByte();
-                        var numberOfRewardItems = ReadByte();
-                        for (var j = 0; j < numberOfRewardItems; ++j)
+                        dailyReward.TotalChoiceRewards = ReadByte();
+                        dailyReward.ChoiceRewards.Capacity = ReadByte();
+                        for (var i = 0; i < dailyReward.ChoiceRewards.Capacity; ++i)
                         {
                             var itemId = ReadUInt16();
-                            var itemName = ReadString();
-                            var itemWeight = ReadUInt32();
+                            var name = ReadString();
+                            var weight = ReadUInt32();
+                            dailyReward.ChoiceRewards.Add((itemId, name, weight));
                         }
                     }
                     break;
-                case 2:
+                case 2: // Set
                     {
-                        var numberOfRewardItems = ReadByte();
-                        for (var j = 0; j < numberOfRewardItems; ++j)
+                        dailyReward.SetRewards.Capacity = ReadByte();
+                        for (var i = 0; i < dailyReward.SetRewards.Capacity; ++i)
                         {
-                            var rewardId = ReadByte();
-                            switch (rewardId)
+                            var type = ReadByte();
+                            switch (type)
                             {
-                                case 1:
+                                case 1: // Item
                                     {
                                         var itemId = ReadUInt16();
-                                        var itemName = ReadString();
-                                        var itemCount = ReadByte();
+                                        var name = ReadString();
+                                        var count = ReadByte();
+                                        dailyReward.SetRewards.Add((type, itemId, name, count, 0));
                                     }
                                     break;
-                                case 2:
+                                case 2: // Prey Bonus Reroll
                                     {
-                                        var rewardCount = ReadByte();
+                                        var count = ReadByte();
+                                        dailyReward.SetRewards.Add((type, 0, "", count, 0));
                                     }
                                     break;
-                                case 3:
+                                case 3: // XP Boost
                                     {
                                         var duration = ReadUInt16();
+                                        dailyReward.SetRewards.Add((type, 0, "", 0, duration));
                                     }
+                                    break;
+                                default:
+                                    Console.WriteLine($"Unknown SetDailyReward type: {type}");
                                     break;
                             }
                         }
                     }
                     break;
-                case 3:
+                default:
+                    Console.WriteLine($"Unknown DailyReward type: {dailyReward.Type}");
                     break;
             }
+
+            return dailyReward;
         }
 
         public int ReadField(int x, int y, int z, List<(int, List<ObjectInstance>, Position)> fields)
@@ -1119,6 +1132,58 @@ namespace OXGaming.TibiaAPI.Network
             Write(value.GoldCost);
             Write(value.SuccessRatePercent);
             Write(value.ProtectionGoldCost);
+        }
+
+        public void Write(DailyReward dailyReward)
+        {
+            Write(dailyReward.Type);
+            switch (dailyReward.Type)
+            {
+                case 1: // Choice
+                    {
+                        Write(dailyReward.TotalChoiceRewards);
+
+                        var count = Math.Min(dailyReward.ChoiceRewards.Count, byte.MaxValue);
+                        Write((byte)count);
+                        for (var i = 0; i < count; ++i)
+                        {
+                            Write(dailyReward.ChoiceRewards[i].ItemId);
+                            Write(dailyReward.ChoiceRewards[i].Name);
+                            Write(dailyReward.ChoiceRewards[i].Weight);
+                        }
+                    }
+                    break;
+                case 2: // Set
+                    {
+                        var count = Math.Min(dailyReward.SetRewards.Count, byte.MaxValue);
+                        Write((byte)count);
+                        for (var i = 0; i < count; ++i)
+                        {
+                            Write(dailyReward.SetRewards[i].Type);
+                            switch (dailyReward.SetRewards[i].Type)
+                            {
+                                case 1: // Item
+                                    {
+                                        Write(dailyReward.SetRewards[i].ItemId);
+                                        Write(dailyReward.SetRewards[i].Name);
+                                        Write(dailyReward.SetRewards[i].Count);
+                                    }
+                                    break;
+                                case 2: // Prey Bonus Rerolls
+                                    {
+                                        Write(dailyReward.SetRewards[i].Count);
+                                    }
+                                    break;
+                                case 3: // XP Boost
+                                    {
+                                        Write(dailyReward.SetRewards[i].Duration);
+                                    }
+                                    break;
+                            }
+                        }
+                    }
+                    break;
+            }
         }
 
         /// <summary>

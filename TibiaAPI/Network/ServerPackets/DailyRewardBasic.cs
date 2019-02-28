@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 
 using OXGaming.TibiaAPI.Constants;
+using OXGaming.TibiaAPI.DailyRewards;
 
 namespace OXGaming.TibiaAPI.Network.ServerPackets
 {
@@ -9,6 +10,8 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
     {
         public List<(string Text, byte UnlockStreak)> Bonuses { get; } =
             new List<(string Text, byte UnlockStreak)>();
+        public List<(DailyReward FreeReward, DailyReward PremiumReward)> DailyRewards { get; } =
+            new List<(DailyReward FreeReward, DailyReward PremiumReward)>();
 
         public byte Unknown { get; set; }
 
@@ -25,11 +28,12 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
                 return false;
             }
 
-            var numberOfDailyRewards = message.ReadByte();
-            for (var i = 0; i < numberOfDailyRewards; ++i)
+            DailyRewards.Capacity = message.ReadByte();
+            for (var i = 0; i < DailyRewards.Capacity; ++i)
             {
-                message.ReadDailyReward();
-                message.ReadDailyReward();
+                var freeReward = message.ReadDailyReward();
+                var premiumReward = message.ReadDailyReward();
+                DailyRewards.Add((freeReward, premiumReward));
             }
 
             Bonuses.Capacity = message.ReadByte();
@@ -48,15 +52,24 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
         public override void AppendToNetworkMessage(NetworkMessage message)
         {
             message.Write((byte)ServerPacketType.DailyRewardBasic);
-            // TODO
-            var count = (byte)Math.Min(Bonuses.Count, byte.MaxValue);
-            message.Write(count);
+            var count = Math.Min(DailyRewards.Capacity, byte.MaxValue);
+            message.Write((byte)count);
+            for (var i = 0; i < count; ++i)
+            {
+                var (FreeReward, PremiumReward) = DailyRewards[i];
+                message.Write(FreeReward);
+                message.Write(PremiumReward);
+            }
+
+            count = Math.Min(Bonuses.Count, byte.MaxValue);
+            message.Write((byte)count);
             for (var i = 0; i < count; ++i)
             {
                 var (Text, UnlockStreak) = Bonuses[i];
                 message.Write(Text);
                 message.Write(UnlockStreak);
             }
+
             message.Write(Unknown);
         }
     }
