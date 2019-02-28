@@ -1,9 +1,12 @@
 ﻿using OXGaming.TibiaAPI.Constants;
+using OXGaming.TibiaAPI.Utilities;
 
 namespace OXGaming.TibiaAPI.Network.ServerPackets
 {
     public class FieldData : Map
     {
+        public Position Position { get; set; }
+
         public FieldData(Client client)
         {
             Client = client;
@@ -17,8 +20,8 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
                 return false;
             }
 
-            var position = message.ReadPosition();
-            var mapPosition = Client.WorldMapStorage.ToMap(position);
+            Position = message.ReadPosition();
+            var mapPosition = Client.WorldMapStorage.ToMap(Position);
             Client.WorldMapStorage.ResetField(mapPosition.X, mapPosition.Y, mapPosition.Z);
             message.ReadField(mapPosition.X, mapPosition.Y, mapPosition.Z, Fields);
             return true;
@@ -27,7 +30,8 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
         public override void AppendToNetworkMessage(NetworkMessage message)
         {
             message.Write((byte)ServerPacketType.FieldData);
-            // TODO
+            message.Write(Position);
+            base.AppendToNetworkMessage(message);
         }
     }
 }

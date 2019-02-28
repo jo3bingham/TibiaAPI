@@ -11,7 +11,6 @@ using OXGaming.TibiaAPI.Creatures;
 using OXGaming.TibiaAPI.Imbuing;
 using OXGaming.TibiaAPI.Market;
 using OXGaming.TibiaAPI.Utilities;
-using OXGaming.TibiaAPI.WorldMap;
 
 namespace OXGaming.TibiaAPI.Network
 {
@@ -393,7 +392,8 @@ namespace OXGaming.TibiaAPI.Network
                         creature = new Creature(creatureId)
                         {
                             Type = (CreatureType)ReadByte(),
-                            RemoveCreatureId = removeCreatureId
+                            RemoveCreatureId = removeCreatureId,
+                            InstanceType = (CreatureInstanceType)id
                         };
 
                         creature = _client.CreatureStorage.ReplaceCreature(creature, creature.RemoveCreatureId);
@@ -444,6 +444,7 @@ namespace OXGaming.TibiaAPI.Network
                             throw new Exception("[NetworkMessage.ReadCreatureInstance] Outdated creature not found.");
                         }
 
+                        creature.InstanceType = (CreatureInstanceType)id;
                         creature.HealthPercent = ReadByte();
                         creature.Direction = (Direction)ReadByte();
                         creature.Outfit = ReadCreatureOutfit();
@@ -479,6 +480,7 @@ namespace OXGaming.TibiaAPI.Network
                             throw new Exception("[NetworkMessage.ReadCreatureInstance] Known creature not found.");
                         }
 
+                        creature.InstanceType = (CreatureInstanceType)id;
                         creature.Direction = (Direction)ReadByte();
                         creature.IsUnpassable = ReadBool();
                     }
@@ -605,13 +607,14 @@ namespace OXGaming.TibiaAPI.Network
             }
         }
 
-        public int ReadField(int x, int y, int z, List<(Field, Position)> fields)
+        public int ReadField(int x, int y, int z, List<(int, List<ObjectInstance>, Position)> fields)
         {
             var hasSetEnvironmentalEffect = false;
             var thingsCount = 0;
             var numberOfTilesToSkip = 0;
             var mapPosition = new Position(x, y, z);
             var absolutePosition = _client.WorldMapStorage.ToAbsolute(mapPosition);
+            var objects = new List<ObjectInstance>();
 
             while (true)
             {
@@ -640,6 +643,7 @@ namespace OXGaming.TibiaAPI.Network
 
                     if (thingsCount < MapSizeW)
                     {
+                        objects.Add(objectInstance);
                         _client.WorldMapStorage.AppendObject(x, y, z, objectInstance);
                     }
                 }
@@ -649,6 +653,7 @@ namespace OXGaming.TibiaAPI.Network
 
                     if (thingsCount < MapSizeW)
                     {
+                        objects.Add(objectInstance);
                         _client.WorldMapStorage.AppendObject(x, y, z, objectInstance);
                     }
                     else
@@ -660,16 +665,12 @@ namespace OXGaming.TibiaAPI.Network
                 thingsCount++;
             }
 
-            var field = _client.WorldMapStorage.GetField(x, y, z);
-            if (field != null)
-            {
-                fields.Add((field, absolutePosition));
-            }
+            fields.Add((numberOfTilesToSkip, objects, absolutePosition));
 
             return numberOfTilesToSkip;
         }
 
-        public int ReadFloor(int floorNumber, int numberOfTilesToSkip, List<(Field, Position)> fields)
+        public int ReadFloor(int floorNumber, int numberOfTilesToSkip, List<(int, List<ObjectInstance>, Position)> fields)
         {
             if (floorNumber < 0 || floorNumber >= MapSizeZ)
             {
@@ -699,7 +700,7 @@ namespace OXGaming.TibiaAPI.Network
             return numberOfTilesToSkip;
         }
 
-        public int ReadArea(int startX, int startY, int endX, int endY, List<(Field, Position)> fields)
+        public int ReadArea(int startX, int startY, int endX, int endY, List<(int, List<ObjectInstance>, Position)> fields)
         {
             var endZ = 0;
             var stepZ = 0;
