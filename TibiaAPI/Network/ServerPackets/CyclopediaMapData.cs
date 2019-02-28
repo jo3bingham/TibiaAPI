@@ -131,7 +131,7 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
                     SubAreas.Add((areaId, monsters));
                 }
             }
-            else if (DataType == CyclopediaMapDataType.Unknown)
+            else if (DataType == CyclopediaMapDataType.MonsterBestiary)
             {
                 RaceId = message.ReadUInt16();
                 IsUnlocked = message.ReadBool();
@@ -140,7 +140,7 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
             {
                 MinimumGoldDonation = message.ReadUInt64();
                 Donations.Capacity = message.ReadByte();
-                for (var i = 0; i < Donations.Count; ++i)
+                for (var i = 0; i < Donations.Capacity; ++i)
                 {
                     var areaId = message.ReadUInt16();
                     var hasImprovedSpawnRate = message.ReadBool();
@@ -250,7 +250,7 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
                     }
                 }
             }
-            else if (DataType == CyclopediaMapDataType.Unknown)
+            else if (DataType == CyclopediaMapDataType.MonsterBestiary)
             {
                 message.Write(RaceId);
                 message.Write(IsUnlocked);

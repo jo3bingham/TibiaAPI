@@ -8,8 +8,8 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
     public class MonsterCyclopediaRace : ServerPacket
     {
         public List<string> Locations { get; } = new List<string>();
-        public List<(ushort ObjectId, byte Rarity, string Name, bool IsCumulative)> Loot { get; } =
-            new List<(ushort ObjectId, byte Rarity, string Name, bool IsCumulative)>();
+        public List<(ushort ObjectId, byte Rarity, bool IsFromSpecialEvent, string Name, bool IsCumulative)> Loot { get; } =
+            new List<(ushort ObjectId, byte Rarity, bool IsFromSpecialEvent, string Name, bool IsCumulative)>();
         public List<(byte Id, ushort Percentage)> Stats { get; } = new List<(byte Id, ushort Percentage)>();
 
         public string Name { get; set; }
@@ -28,7 +28,8 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
         public ushort UnknownUShort { get; set; }
 
         public byte CurrentKillStage { get; set; }
-        public byte UnknownByte { get; set; }
+        public byte Difficulty { get; set; }
+        public byte Occurence { get; set; }
 
         public MonsterCyclopediaRace(Client client)
         {
@@ -50,13 +51,22 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
             KillsToCompleteFirstStage = message.ReadUInt16();
             KillsToCompleteSecondStage = message.ReadUInt16();
             KillsToCompleteThirdStage = message.ReadUInt16();
-            UnknownByte = message.ReadByte();
+            Difficulty = message.ReadByte();
+            if (Client.VersionNumber >= 11807048)
+            {
+                Occurence = message.ReadByte();
+            }
 
             Loot.Capacity = message.ReadByte();
             for (var i = 0; i < Loot.Capacity; ++i)
             {
                 var objectId = message.ReadUInt16();
                 var rarity = message.ReadByte();
+                var isFromSpecialEvent = false;
+                if (Client.VersionNumber >= 11807048)
+                {
+                    isFromSpecialEvent = message.ReadBool();
+                }
                 var name = string.Empty;
                 var isCumulative = false;
                 if (objectId > 0)
@@ -64,37 +74,51 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
                     name = message.ReadString();
                     isCumulative = message.ReadBool();
                 }
-                Loot.Add((objectId, rarity, name, isCumulative));
+                Loot.Add((objectId, rarity, isFromSpecialEvent, name, isCumulative));
             }
 
-            if (UnknownByte == 3 || (UnknownByte == 2 && CurrentKillStage > 1))
+            if (Client.VersionNumber >= 11807048)
             {
-                CharmPoints = message.ReadUInt32();
-                Hitpoints = message.ReadUInt32();
-                Experience = message.ReadUInt32();
-                Speed = message.ReadUInt16();
-                Armor = message.ReadUInt16();
+                if (CurrentKillStage > 1)
+                {
+                    CharmPoints = message.ReadUInt32();
+                    Hitpoints = message.ReadUInt32();
+                    Experience = message.ReadUInt32();
+                    Speed = message.ReadUInt16();
+                    Armor = message.ReadUInt16();
+                }
             }
-
-            if ((UnknownByte == 3 && CurrentKillStage > 2) || (UnknownByte == 2 && CurrentKillStage > 2))
+            else
             {
-                Stats.Capacity = message.ReadByte();
-                for (var i = 0; i < Stats.Capacity; ++i)
+                if (Difficulty == 3 || (Difficulty == 2 && CurrentKillStage > 1))
                 {
-                    var statId = message.ReadByte();
-                    var percentage = message.ReadUInt16();
-                    Stats.Add((statId, percentage));
+                    CharmPoints = message.ReadUInt32();
+                    Hitpoints = message.ReadUInt32();
+                    Experience = message.ReadUInt32();
+                    Speed = message.ReadUInt16();
+                    Armor = message.ReadUInt16();
                 }
 
-                Locations.Capacity = message.ReadUInt16();
-                for (var i = 0; i < Locations.Capacity; ++i)
+                if ((Difficulty == 3 && CurrentKillStage > 2) || (Difficulty == 2 && CurrentKillStage > 2))
                 {
-                    Locations.Add(message.ReadString());
-                }
+                    Stats.Capacity = message.ReadByte();
+                    for (var i = 0; i < Stats.Capacity; ++i)
+                    {
+                        var statId = message.ReadByte();
+                        var percentage = message.ReadUInt16();
+                        Stats.Add((statId, percentage));
+                    }
 
-                if ((UnknownByte == 3 && CurrentKillStage != 3) || (UnknownByte == 2 && CurrentKillStage > 1))
-                {
-                    UnknownUShort = message.ReadUInt16();
+                    Locations.Capacity = message.ReadUInt16();
+                    for (var i = 0; i < Locations.Capacity; ++i)
+                    {
+                        Locations.Add(message.ReadString());
+                    }
+
+                    if ((Difficulty == 3 && CurrentKillStage != 3) || (Difficulty == 2 && CurrentKillStage > 1))
+                    {
+                        UnknownUShort = message.ReadUInt16();
+                    }
                 }
             }
             return true;
@@ -110,52 +134,74 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
             message.Write(KillsToCompleteFirstStage);
             message.Write(KillsToCompleteSecondStage);
             message.Write(KillsToCompleteThirdStage);
-            message.Write(UnknownByte);
+            message.Write(Difficulty);
+            if (Client.VersionNumber >= 11807048)
+            {
+                message.Write(Occurence);
+            }
 
             var count = Math.Min(Loot.Count, byte.MaxValue);
             message.Write((byte)count);
             for (var i = 0; i < count; ++i)
             {
-                var (objectId, rarity, name, isCumulative) = Loot[i];
-                message.Write(objectId);
-                message.Write(rarity);
-                if (objectId > 0)
+                var (ObjectId, Rarity, IsFromSpecialEvent, Name, IsCumulative) = Loot[i];
+                message.Write(ObjectId);
+                message.Write(Rarity);
+                if (Client.VersionNumber >= 11807048)
                 {
-                    message.Write(name);
-                    message.Write(isCumulative);
+                    message.Write(IsFromSpecialEvent);
+                }
+                if (ObjectId > 0)
+                {
+                    message.Write(Name);
+                    message.Write(IsCumulative);
                 }
             }
 
-            if (UnknownByte == 3 || (UnknownByte == 2 && CurrentKillStage > 1))
+            if (Client.VersionNumber >= 11807048)
             {
-                message.Write(CharmPoints);
-                message.Write(Hitpoints);
-                message.Write(Experience);
-                message.Write(Speed);
-                message.Write(Armor);
+                if (CurrentKillStage > 1)
+                {
+                    message.Write(CharmPoints);
+                    message.Write(Hitpoints);
+                    message.Write(Experience);
+                    message.Write(Speed);
+                    message.Write(Armor);
+                }
             }
-
-            if ((UnknownByte == 3 && CurrentKillStage > 2) || (UnknownByte == 2 && CurrentKillStage > 2))
+            else
             {
-                count = Math.Min(Stats.Count, byte.MaxValue);
-                message.Write((byte)count);
-                for (var i = 0; i < count; ++i)
+                if (Difficulty == 3 || (Difficulty == 2 && CurrentKillStage > 1))
                 {
-                    var (statId, percentage) = Stats[i];
-                    message.Write(statId);
-                    message.Write(percentage);
+                    message.Write(CharmPoints);
+                    message.Write(Hitpoints);
+                    message.Write(Experience);
+                    message.Write(Speed);
+                    message.Write(Armor);
                 }
 
-                count = Math.Min(Locations.Count, ushort.MaxValue);
-                message.Write((ushort)count);
-                for (var i = 0; i < count; ++i)
+                if ((Difficulty == 3 && CurrentKillStage > 2) || (Difficulty == 2 && CurrentKillStage > 2))
                 {
-                    message.Write(Locations[i]);
-                }
+                    count = Math.Min(Stats.Count, byte.MaxValue);
+                    message.Write((byte)count);
+                    for (var i = 0; i < count; ++i)
+                    {
+                        var (statId, percentage) = Stats[i];
+                        message.Write(statId);
+                        message.Write(percentage);
+                    }
 
-                if ((UnknownByte == 3 && CurrentKillStage != 3) || (UnknownByte == 2 && CurrentKillStage > 1))
-                {
-                    message.Write(UnknownUShort);
+                    count = Math.Min(Locations.Count, ushort.MaxValue);
+                    message.Write((ushort)count);
+                    for (var i = 0; i < count; ++i)
+                    {
+                        message.Write(Locations[i]);
+                    }
+
+                    if ((Difficulty == 3 && CurrentKillStage != 3) || (Difficulty == 2 && CurrentKillStage > 1))
+                    {
+                        message.Write(UnknownUShort);
+                    }
                 }
             }
         }
