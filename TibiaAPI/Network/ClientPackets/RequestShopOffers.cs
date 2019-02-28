@@ -7,10 +7,11 @@ namespace OXGaming.TibiaAPI.Network.ClientPackets
         public StoreServiceType ServiceType { get; set; }
 
         public string Category { get; set; }
+        public string SubCategory { get; set; }
 
         public uint OfferId { get; set; }
 
-        public uint Unknown { get; set; }
+        public ushort Unknown { get; set; }
 
         public RequestShopOffers(Client client)
         {
@@ -33,10 +34,14 @@ namespace OXGaming.TibiaAPI.Network.ClientPackets
             else if (ServiceType == StoreServiceType.Premium)
             {
                 Category = message.ReadString();
+                if (Client.VersionNumber >= 11900000)
+                {
+                    SubCategory = message.ReadString();
+                }
             }
 
             // TODO: Figure out this unknown.
-            Unknown = (Client.VersionNumber >= 11900000) ? message.ReadUInt32() : message.ReadUInt16();
+            Unknown = message.ReadUInt16();
             return true;
         }
 
@@ -44,6 +49,7 @@ namespace OXGaming.TibiaAPI.Network.ClientPackets
         {
             message.Write((byte)ClientPacketType.RequestShopOffers);
             message.Write((byte)ServiceType);
+
             if (ServiceType == StoreServiceType.Mounts)
             {
                 message.Write(OfferId);
@@ -51,15 +57,13 @@ namespace OXGaming.TibiaAPI.Network.ClientPackets
             else if (ServiceType == StoreServiceType.Premium)
             {
                 message.Write(Category);
+                if (Client.VersionNumber >= 11900000)
+                {
+                    message.Write(SubCategory);
+                }
             }
-            if (Client.VersionNumber >= 11900000)
-            {
-                message.Write(Unknown);
-            }
-            else
-            {
-                message.Write((ushort)Unknown);
-            }
+
+            message.Write(Unknown);
         }
     }
 }
