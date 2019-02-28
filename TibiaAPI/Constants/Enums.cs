@@ -128,7 +128,7 @@
         Active = 2,
         Selection = 3,
         SelectionChangeMonster = 4,
-        Unknown = 6
+        WildcardSelection = 6
     }
 
     public enum ResourceType

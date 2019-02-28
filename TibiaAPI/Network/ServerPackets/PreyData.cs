@@ -1,9 +1,33 @@
-﻿using OXGaming.TibiaAPI.Constants;
+﻿using System;
+using System.Collections.Generic;
+
+using OXGaming.TibiaAPI.Appearances;
+using OXGaming.TibiaAPI.Constants;
 
 namespace OXGaming.TibiaAPI.Network.ServerPackets
 {
     public class PreyData : ServerPacket
     {
+        public List<(string Name, AppearanceInstance Outfit)> Preys { get; } =
+            new List<(string Name, AppearanceInstance Outfit)>();
+        public List<ushort> RaceIds { get; } = new List<ushort>();
+
+        public AppearanceInstance Outfit { get; set; }
+
+        public PreyDataState State { get; set; }
+
+        public string Name { get; set; }
+
+        public ushort BonusPercentage { get; set; }
+        public ushort TimeLeft { get; set; }
+        public ushort TimeLeftUntilFreeListReroll { get; set; }
+
+        public byte BonusRarity { get; set; }
+        public byte BonusType { get; set; }
+        public byte Index { get; set; }
+        public byte Option { get; set; }
+        public byte UnlockOption { get; set; }
+
         public PreyData(Client client)
         {
             Client = client;
@@ -17,66 +41,71 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
                 return false;
             }
 
-            var preyArrayIndex = message.ReadByte();
+            Index = message.ReadByte();
 
-            var preyState = (PreyDataState)message.ReadByte();
-            switch (preyState)
+            State = (PreyDataState)message.ReadByte();
+            switch (State)
             {
                 case PreyDataState.Locked:
                     {
-                        var unlockOption = message.ReadByte(); // 0 = temporary and permanent, 1 = permanent
+                        UnlockOption = message.ReadByte(); // 0 = temporary and permanent, 1 = permanent
                     }
                     break;
                 case PreyDataState.Active:
                     {
-                        var preyName = message.ReadString();
-                        var preyOutfit = message.ReadCreatureOutfit();
-                        var bonusType = message.ReadByte(); // 0 = damage, 1 = defense, 2 = exp, 3 = loot
-                        var bonusPercentage = message.ReadUInt16();
-                        var bonusRarity = message.ReadByte();
-                        var timeLeftInSeconds = message.ReadUInt16();
+                        Name = message.ReadString();
+                        Outfit = message.ReadCreatureOutfit();
+                        BonusType = message.ReadByte(); // 0 = damage, 1 = defense, 2 = exp, 3 = loot
+                        BonusPercentage = message.ReadUInt16();
+                        BonusRarity = message.ReadByte();
+                        TimeLeft = message.ReadUInt16();
                     }
                     break;
                 case PreyDataState.Selection:
                     {
-                        var preyCount = message.ReadByte();
-                        for (var i = 0; i < preyCount; i++)
+                        Preys.Capacity = message.ReadByte();
+                        for (var i = 0; i < Preys.Capacity; i++)
                         {
-                            var preyName = message.ReadString();
-                            var preyOutfit = message.ReadCreatureOutfit();
+                            var name = message.ReadString();
+                            var outfit = message.ReadCreatureOutfit();
+                            Preys.Add((name, outfit));
                         }
                     }
                     break;
                 case PreyDataState.SelectionChangeMonster:
                     {
-                        var bonusType = message.ReadByte();
-                        var bonusPercentage = message.ReadUInt16();
-                        var bonusRarity = message.ReadByte();
+                        BonusType = message.ReadByte(); // 0 = damage, 1 = defense, 2 = exp, 3 = loot
+                        BonusPercentage = message.ReadUInt16();
+                        BonusRarity = message.ReadByte();
 
-                        var preyCount = message.ReadByte();
-                        for (var i = 0; i < preyCount; i++)
+                        Preys.Capacity = message.ReadByte();
+                        for (var i = 0; i < Preys.Capacity; i++)
                         {
-                            var preyName = message.ReadString();
-                            var preyOutfit = message.ReadCreatureOutfit();
+                            var name = message.ReadString();
+                            var outfit = message.ReadCreatureOutfit();
+                            Preys.Add((name, outfit));
                         }
                     }
                     break;
-                case PreyDataState.Unknown:
+                case PreyDataState.WildcardSelection:
                     {
-                        message.ReadBytes(4);
-                        var count = message.ReadUInt16();
-                        while (count-- > 0)
+                        BonusType = message.ReadByte(); // 0 = damage, 1 = defense, 2 = exp, 3 = loot
+                        BonusPercentage = message.ReadUInt16();
+                        BonusRarity = message.ReadByte();
+
+                        RaceIds.Capacity = message.ReadUInt16();
+                        for (var i = 0; i < RaceIds.Capacity; ++i)
                         {
-                            message.ReadBytes(2);
+                            RaceIds.Add(message.ReadUInt16());
                         }
                     }
                     break;
             }
 
-            var timeLeftUntilFreeListReroll = message.ReadUInt16();
+            TimeLeftUntilFreeListReroll = message.ReadUInt16();
             if (Client.VersionNumber > 11606457)
             {
-                var preyOption = message.ReadByte(); // 0 = none, 1 = automatic reroll, 2 = locked
+                Option = message.ReadByte(); // 0 = none, 1 = automatic reroll, 2 = locked
             }
             return true;
         }
@@ -84,7 +113,97 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
         public override void AppendToNetworkMessage(NetworkMessage message)
         {
             message.Write((byte)ServerPacketType.PreyData);
-            // TODO
+            message.Write(Index);
+            message.Write((byte)State);
+            switch (State)
+            {
+                case PreyDataState.Locked:
+                    {
+                        message.Write(UnlockOption);
+                    }
+                    break;
+                case PreyDataState.Active:
+                    {
+                        message.Write(Name);
+                        if (Outfit is OutfitInstance)
+                        {
+                            message.Write((OutfitInstance)Outfit);
+                        }
+                        else
+                        {
+                            message.Write((ushort)0);
+                            message.Write((ushort)Outfit.Id);
+                        }
+                        message.Write(BonusType);
+                        message.Write(BonusPercentage);
+                        message.Write(BonusRarity);
+                        message.Write(TimeLeft);
+                    }
+                    break;
+                case PreyDataState.Selection:
+                    {
+                        var count = Math.Min(Preys.Count, byte.MaxValue);
+                        message.Write((byte)count);
+                        for (var i = 0; i < count; ++i)
+                        {
+                            var prey = Preys[i];
+                            message.Write(prey.Name);
+                            if (prey.Outfit is OutfitInstance)
+                            {
+                                message.Write((OutfitInstance)prey.Outfit);
+                            }
+                            else
+                            {
+                                message.Write((ushort)0);
+                                message.Write((ushort)prey.Outfit.Id);
+                            }
+                        }
+                    }
+                    break;
+                case PreyDataState.SelectionChangeMonster:
+                    {
+                        message.Write(BonusType);
+                        message.Write(BonusPercentage);
+                        message.Write(BonusRarity);
+
+                        var count = Math.Min(Preys.Count, byte.MaxValue);
+                        message.Write((byte)count);
+                        for (var i = 0; i < count; ++i)
+                        {
+                            var prey = Preys[i];
+                            message.Write(prey.Name);
+                            if (prey.Outfit is OutfitInstance)
+                            {
+                                message.Write((OutfitInstance)prey.Outfit);
+                            }
+                            else
+                            {
+                                message.Write((ushort)0);
+                                message.Write((ushort)prey.Outfit.Id);
+                            }
+                        }
+                    }
+                    break;
+                case PreyDataState.WildcardSelection:
+                    {
+                        message.Write(BonusType);
+                        message.Write(BonusPercentage);
+                        message.Write(BonusRarity);
+
+                        var count = Math.Min(RaceIds.Count, ushort.MaxValue);
+                        message.Write((ushort)count);
+                        for (var i = 0; i < count; ++i)
+                        {
+                            message.Write(RaceIds[i]);
+                        }
+                    }
+                    break;
+            }
+            message.Write(TimeLeftUntilFreeListReroll);
+            if (Client.VersionNumber > 11606457)
+            {
+                message.Write(Option);
+            }
         }
     }
 }
