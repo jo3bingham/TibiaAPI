@@ -116,7 +116,7 @@ namespace OXGaming.TibiaAPI.Network
                     _httpListener.Prefixes.Add(uriPrefix);
                 }
 
-                //_zStream.deflateInit(zlibConst.Z_DEFAULT_COMPRESSION, -15);
+                _zStream.deflateInit(zlibConst.Z_DEFAULT_COMPRESSION, -15);
                 _zStream.inflateInit(-15);
 
                 _httpListener.Start();
@@ -184,7 +184,7 @@ namespace OXGaming.TibiaAPI.Network
                 }
             }
 
-            message.PrepareToSend(_xteaKey);
+            message.PrepareToSend(_xteaKey, _zStream);
             SendToClient(message.GetData());
         }
 
@@ -399,10 +399,10 @@ namespace OXGaming.TibiaAPI.Network
                 _serverSocket.Close();
             }
 
-            //_zStream.deflateEnd();
+            _zStream.deflateEnd();
             _zStream.inflateEnd();
             _zStream = new ZStream();
-            //_zStream.deflateInit(zlibConst.Z_DEFAULT_COMPRESSION, -15);
+            _zStream.deflateInit(zlibConst.Z_DEFAULT_COMPRESSION, -15);
             _zStream.inflateInit(-15);
 
             _clientSequenceNumber = 1;
@@ -889,7 +889,7 @@ namespace OXGaming.TibiaAPI.Network
                 }
                 else
                 {
-                    _serverInMessage.PrepareToSend(_xteaKey);
+                    _serverInMessage.PrepareToSend(_xteaKey, _zStream);
                     SendToClient(_serverInMessage.GetData());
                 }
 

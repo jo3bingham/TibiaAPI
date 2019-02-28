@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 
+using ComponentAce.Compression.Libs.zlib;
+
 using OXGaming.TibiaAPI.Appearances;
 using OXGaming.TibiaAPI.Constants;
 using OXGaming.TibiaAPI.Creatures;
@@ -10,8 +12,6 @@ using OXGaming.TibiaAPI.Imbuing;
 using OXGaming.TibiaAPI.Market;
 using OXGaming.TibiaAPI.Utilities;
 using OXGaming.TibiaAPI.WorldMap;
-
-using ComponentAce.Compression.Libs.zlib;
 
 namespace OXGaming.TibiaAPI.Network
 {
@@ -1298,7 +1298,7 @@ namespace OXGaming.TibiaAPI.Network
                 Xtea.Decrypt(_buffer, Size, xteaKey);
             }
 
-            if (zStream != null && IsCompressed)
+            if (IsCompressed && zStream != null)
             {
                 var compressedSize = BitConverter.ToUInt16(_buffer, 6);
                 var inBuffer = new byte[compressedSize];
@@ -1320,8 +1320,7 @@ namespace OXGaming.TibiaAPI.Network
                     throw new Exception($"[NetworkMessage.PrepareToParse] zlib inflate failed: {ret}");
                 }
 
-                Position = 2;
-                Write(SequenceNumber ^ CompressedFlag);
+                Position = 6;
                 Write((ushort)zStream.next_out_index);
                 Write(outBuffer, 0, (uint)zStream.next_out_index);
             }
@@ -1330,8 +1329,39 @@ namespace OXGaming.TibiaAPI.Network
             Size = ReadUInt16() + PayloadDataPosition;
         }
 
-        public void PrepareToSend(uint[] xteaKey)
+        public void PrepareToSend(uint[] xteaKey, ZStream zStream = null)
         {
+            if (IsCompressed && zStream != null)
+            {
+                var uncompressedSize = _size - 8;
+                var inBuffer = new byte[uncompressedSize];
+                var outBuffer = new byte[MaxMessageSize];
+
+                Array.Copy(_buffer, 8, inBuffer, 0, uncompressedSize);
+
+                zStream.next_in = inBuffer;
+                zStream.next_in_index = 0;
+                zStream.avail_in = inBuffer.Length;
+                zStream.next_out = outBuffer;
+                zStream.next_out_index = 0;
+                zStream.avail_out = outBuffer.Length;
+
+                var ret = zStream.deflate(zlibConst.Z_SYNC_FLUSH);
+                if (ret != zlibConst.Z_OK)
+                {
+                    throw new Exception($"[NetworkMessage.PrepareToSend] zlib deflate failed: {ret}");
+                }
+
+                // deflate appends a footer (0x00 0x00 0xFF 0xFF) to the end of the data,
+                // but we don't need it so ignore it when copying the data.
+                var data = new byte[zStream.next_out_index - 4];
+                Array.Copy(outBuffer, data, data.Length);
+
+                Position = 8;
+                Size = 8;
+                Write(outBuffer, 0, (uint)(zStream.next_out_index - 4));
+            }
+
             Position = 6;
             Write((ushort)(Size - PayloadDataPosition));
 
