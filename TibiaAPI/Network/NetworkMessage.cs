@@ -297,8 +297,8 @@ namespace OXGaming.TibiaAPI.Network
                 var colorLegs = ReadByte();
                 var colorDetail = ReadByte();
                 var addons = ReadByte();
-                return 
-                    _client.AppearanceStorage.CreateOutfitInstance(outfitId, colorHead, colorTorso, colorLegs, colorDetail, addons);
+                return  _client.AppearanceStorage.CreateOutfitInstance(outfitId, colorHead, colorTorso,
+                                                                       colorLegs, colorDetail, addons);
             }
 
             var itemId = ReadUInt16();
@@ -992,7 +992,8 @@ namespace OXGaming.TibiaAPI.Network
                         }
                         else
                         {
-                            Write((ObjectInstance)value.Outfit);
+                            Write((ushort)0);
+                            Write((ushort)value.Outfit.Id);
                         }
 
                         Write((ushort)value.Mount.Id);
@@ -1031,7 +1032,8 @@ namespace OXGaming.TibiaAPI.Network
                         }
                         else
                         {
-                            Write((ObjectInstance)value.Outfit);
+                            Write((ushort)0);
+                            Write((ushort)value.Outfit.Id);
                         }
 
                         Write(value.Mount.Id);
