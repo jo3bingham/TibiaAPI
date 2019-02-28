@@ -122,6 +122,8 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
                         message.Write(UnlockOption);
                     }
                     break;
+                case PreyDataState.Inactive:
+                    break;
                 case PreyDataState.Active:
                     {
                         message.Write(Name);
@@ -198,6 +200,10 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
                         }
                     }
                     break;
+                default:
+                    {
+                        throw new Exception($"[PreyData.ParseFromNetworkMessage] Unknown state: {State}");
+                    }
             }
             message.Write(TimeLeftUntilFreeListReroll);
             if (Client.VersionNumber > 11606457)
