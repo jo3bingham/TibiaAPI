@@ -28,8 +28,9 @@
     public enum OutfitWindowType
     {
         SelectOutfit = 0,
-        TryOutfit = 1,
-        TryMount = 2
+        TryOutfitMount = 1,
+        TryMountOld = 2,
+        TryHirelingDress = 3
     }
 
     public enum PreyActionType

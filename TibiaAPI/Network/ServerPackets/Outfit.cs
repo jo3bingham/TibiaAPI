@@ -6,15 +6,16 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
 {
     public class Outfit : ServerPacket
     {
+        public List<(ushort FemaleLooktype, ushort MaleLooktype)> HirelingDresses { get; } =
+            new List<(ushort FemaleLooktype, ushort MaleLooktype)>();
         public List<(ushort Id, string Name, byte Addons, bool EnableStoreLink, uint StoreOfferId)> Outfits { get; } =
             new List<(ushort Id, string Name, byte Addons, bool EnableStoreLink, uint StoreOfferId)>();
         public List<(ushort Id, string Name, bool EnableStoreLink, uint StoreOfferId)> Mounts { get; } =
             new List<(ushort Id, string Name, bool EnableStoreLink, uint StoreOfferId)>();
 
-        public OutfitWindowType WindowType { get; set; }
-
         public ushort MountId { get; set; }
         public ushort OutfitId { get; set; }
+        public ushort Type { get; set; }
 
         public byte Addons { get; set; }
         public byte DetailColor { get; set; }
@@ -72,7 +73,17 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
                 Mounts.Add((id, name, enableStoreLink, storeOfferId));
             }
 
-            WindowType = Client.VersionNumber >= 11750000 ? (OutfitWindowType)message.ReadUInt16() : OutfitWindowType.SelectOutfit;
+            Type = message.ReadUInt16();
+            if (Type == 4) // Hireling Dresses
+            {
+                HirelingDresses.Capacity = message.ReadUInt16();
+                for (var i = 0; i < HirelingDresses.Capacity; ++i)
+                {
+                    var femaleLooktype = message.ReadUInt16();
+                    var maleLooktype = message.ReadUInt16();
+                    HirelingDresses.Add((femaleLooktype, maleLooktype));
+                }
+            }
             return true;
         }
 
@@ -143,7 +154,18 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
 
             if (Client.VersionNumber >= 11750000)
             {
-                message.Write((ushort)WindowType);
+                message.Write(Type);
+                if (Type == 4) // Hireling Dresses
+                {
+                    count = Math.Min(HirelingDresses.Count, ushort.MaxValue);
+                    message.Write((ushort)count);
+                    for (var i = 0; i < count; ++i)
+                    {
+                        var (FemaleLooktype, MaleLooktype) = HirelingDresses[i];
+                        message.Write(FemaleLooktype);
+                        message.Write(MaleLooktype);
+                    }
+                }
             }
         }
     }

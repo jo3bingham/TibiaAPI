@@ -4,9 +4,9 @@ namespace OXGaming.TibiaAPI.Network.ClientPackets
 {
     public class GetOutfit : ClientPacket
     {
-        public ushort LookType { get; set; }
+        public OutfitWindowType WindowType { get; set; }
 
-        public bool IsTrying { get; set; }
+        public ushort LookType { get; set; }
 
         public GetOutfit(Client client)
         {
@@ -23,8 +23,8 @@ namespace OXGaming.TibiaAPI.Network.ClientPackets
 
             if (Client.VersionNumber >= 12000000)
             {
-                IsTrying = message.ReadBool();
-                if (IsTrying)
+                WindowType = (OutfitWindowType)message.ReadByte();
+                if (WindowType != OutfitWindowType.SelectOutfit)
                 {
                     LookType = message.ReadUInt16();
                 }
@@ -41,8 +41,8 @@ namespace OXGaming.TibiaAPI.Network.ClientPackets
             message.Write((byte)ClientPacketType.GetOutfit);
             if (Client.VersionNumber >= 12000000)
             {
-                message.Write(IsTrying);
-                if (IsTrying)
+                message.Write((byte)WindowType);
+                if (WindowType != OutfitWindowType.SelectOutfit)
                 {
                     message.Write(LookType);
                 }
