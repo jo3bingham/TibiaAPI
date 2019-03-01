@@ -68,6 +68,7 @@ namespace OXGaming.TibiaAPI.Network
         private bool _isSendingToClient = false;
         private bool _isSendingToServer = false;
         private bool _isStarted;
+        private bool _recompressPackets;
 
         public delegate void ReceivedMessageEventHandler(byte[] data);
 
@@ -96,7 +97,7 @@ namespace OXGaming.TibiaAPI.Network
         /// connection requests from the Tibia client.
         /// </summary>
         /// <returns>Returns true on success, or if already started. Returns false if an exception is thrown.</returns>
-        internal bool Start(bool enablePacketParsing = true, int httpPort = 80, string loginWebService = "")
+        internal bool Start(bool enablePacketParsing = true, int httpPort = 80, string loginWebService = "", bool recompressPackets = false)
         {
             if (_isStarted)
             {
@@ -128,6 +129,7 @@ namespace OXGaming.TibiaAPI.Network
                 _isStarted = true;
                 _loginWebService = loginWebService;
                 _isPacketParsingEnabled = enablePacketParsing;
+                _recompressPackets = recompressPackets;
                 ConnectionState = ConnectionState.ConnectingStage1;
             }
             catch (Exception ex)
@@ -184,7 +186,7 @@ namespace OXGaming.TibiaAPI.Network
                 }
             }
 
-            message.PrepareToSend(_xteaKey, _zStream);
+            message.PrepareToSend(_xteaKey, (_recompressPackets ? _zStream : null));
             SendToClient(message.GetData());
         }
 
@@ -889,7 +891,7 @@ namespace OXGaming.TibiaAPI.Network
                 }
                 else
                 {
-                    _serverInMessage.PrepareToSend(_xteaKey, _zStream);
+                    _serverInMessage.PrepareToSend(_xteaKey, (_recompressPackets ? _zStream : null));
                     SendToClient(_serverInMessage.GetData());
                 }
 
