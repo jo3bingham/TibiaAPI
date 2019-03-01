@@ -915,7 +915,10 @@ namespace OXGaming.TibiaAPI.Network
             }
 
             Write((ushort)value.Length);
-            Write(Encoding.ASCII.GetBytes(value));
+            if (value.Length > 0)
+            {
+                Write(Encoding.ASCII.GetBytes(value));
+            }
         }
 
         public void Write(Position value)

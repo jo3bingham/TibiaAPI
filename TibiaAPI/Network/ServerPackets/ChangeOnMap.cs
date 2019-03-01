@@ -103,15 +103,15 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
         public override void AppendToNetworkMessage(NetworkMessage message)
         {
             message.Write((byte)ServerPacketType.ChangeOnMap);
-            if (Position != null)
+            if (Position.X != ushort.MaxValue)
             {
                 message.Write(Position);
                 message.Write(StackPosition);
-                message.Write(Id);
                 if (Id == (int)CreatureInstanceType.UnknownCreature ||
                     Id == (int)CreatureInstanceType.OutdatedCreature ||
                     Id == (int)CreatureInstanceType.Creature)
                 {
+                    message.Write(Id);
                     message.Write(Creature, (CreatureInstanceType)Id);
                 }
                 else
@@ -121,15 +121,17 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
             }
             else
             {
+                if (Id != (int)CreatureInstanceType.UnknownCreature &&
+                    Id != (int)CreatureInstanceType.OutdatedCreature &&
+                    Id != (int)CreatureInstanceType.Creature)
+                {
+                    throw new Exception($"[ChangeOnMap.AppendToNetworkMessage] {Id} is not a valid CreatureInstanceType.");
+                }
+
                 message.Write(ushort.MaxValue);
                 message.Write(Creature.Id);
                 message.Write(Id);
-                if (Id == (int)CreatureInstanceType.UnknownCreature ||
-                    Id == (int)CreatureInstanceType.OutdatedCreature ||
-                    Id == (int)CreatureInstanceType.Creature)
-                {
-                    message.Write(Creature, (CreatureInstanceType)Id);
-                }
+                message.Write(Creature, (CreatureInstanceType)Id);
             }
         }
     }
