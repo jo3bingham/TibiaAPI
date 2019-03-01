@@ -48,6 +48,8 @@ namespace OXGaming.TibiaAPI.Network
 
         private uint _size = PayloadDataPosition;
 
+        private bool _wasCompressed = false;
+
         /// <value>
         /// Gets the current position in the buffer.
         /// </value>
@@ -1391,7 +1393,9 @@ namespace OXGaming.TibiaAPI.Network
                     throw new Exception($"[NetworkMessage.PrepareToParse] zlib inflate failed: {ret}");
                 }
 
-                Position = 6;
+                Position = 2;
+                _wasCompressed = true;
+                Write(SequenceNumber ^ CompressedFlag);
                 Write((ushort)zStream.next_out_index);
                 Write(outBuffer, 0, (uint)zStream.next_out_index);
             }
@@ -1431,6 +1435,12 @@ namespace OXGaming.TibiaAPI.Network
                 Position = 8;
                 Size = 8;
                 Write(outBuffer, 0, (uint)(zStream.next_out_index - 4));
+            }
+
+            if (_wasCompressed && !IsCompressed)
+            {
+                Position = 2;
+                Write(SequenceNumber | CompressedFlag);
             }
 
             Position = 6;
