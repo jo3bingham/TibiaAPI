@@ -262,10 +262,29 @@ namespace Extract
                             oxrFile.Write(_client.Version);
                         }
 
+                        _client.Connection.OnReceivedServerCreatureDataPacket += (packet) =>
+                        {
+                            var p = (CreatureData)packet;
+                            if (p.Creature != null)
+                            {
+                                if (_extractMonsterData && p.Creature.Type == OXGaming.TibiaAPI.Constants.CreatureType.Monster && !_knownMonsterIds.Contains(p.Creature.Id))
+                                {
+                                    _monsterFile.WriteLine($"{p.Creature.Name} {p.Creature.Position}");
+                                    _knownMonsterIds.Add(p.Creature.Id);
+                                }
+                                else if (_extractNpcData && p.Creature.Type == OXGaming.TibiaAPI.Constants.CreatureType.Npc && !_knownNpcIds.Contains(p.Creature.Id))
+                                {
+                                    _npcFile.WriteLine($"{p.Creature.Name} {p.Creature.Position}");
+                                    _knownNpcIds.Add(p.Creature.Id);
+                                }
+                            }
+                            return true;
+                        };
+
                         _client.Connection.OnReceivedServerChangeOnMapPacket += (packet) =>
                         {
                             var p = (ChangeOnMap)packet;
-                            if (_extractItemData && p.ObjectInstance != null)
+                            if (_extractItemData && p.ObjectInstance != null && p.Id > (int)CreatureInstanceType.Creature)
                             {
                                 _itemFile.WriteLine($"{p.ObjectInstance.Id} {p.Position.ToString()}");
                             }
@@ -288,7 +307,7 @@ namespace Extract
                         _client.Connection.OnReceivedServerCreateOnMapPacket += (packet) =>
                         {
                             var p = (CreateOnMap)packet;
-                            if (_extractItemData && p.ObjectInstance != null)
+                            if (_extractItemData && p.ObjectInstance != null && p.Id > (int)CreatureInstanceType.Creature)
                             {
                                 _itemFile.WriteLine($"{p.ObjectInstance.Id} {p.Position.ToString()}");
                             }
@@ -347,7 +366,8 @@ namespace Extract
                                     ParseField(position);
                                 }
 
-                                var field = _client.WorldMapStorage.GetField(position.X, position.Y, position.Z);
+                                var mapPosition = _client.WorldMapStorage.ToMap(position);
+                                var field = _client.WorldMapStorage.GetField(mapPosition.X, mapPosition.Y, mapPosition.Z);
                                 if (field != null)
                                 {
                                     for (var i = 0; i < MapSizeW; ++i)
@@ -360,7 +380,7 @@ namespace Extract
 
                                         if (_extractItemData && obj.Id > (int)CreatureInstanceType.Creature)
                                         {
-                                            _itemFile.WriteLine($"{obj.Id} {field.ToString()}");
+                                            _itemFile.WriteLine($"{obj.Id} {position.ToString()}");
                                         }
                                         else if (obj.Id <= (int)CreatureInstanceType.Creature)
                                         {
@@ -529,7 +549,7 @@ namespace Extract
 
                         if (_extractItemData && obj.Id > (int)CreatureInstanceType.Creature)
                         {
-                            _itemFile.WriteLine($"{obj.Id} {field.ToString()}");
+                            _itemFile.WriteLine($"{obj.Id} {position.ToString()}");
                         }
                         else if (obj.Id <= (int)CreatureInstanceType.Creature)
                         {
@@ -682,7 +702,8 @@ namespace Extract
             WriteData(_otbmFile, new byte[] { (byte)(position.X & 0xFF) });
             WriteData(_otbmFile, new byte[] { (byte)(position.Y & 0xFF) });
 
-            var field = _client.WorldMapStorage.GetField(position.X, position.Y, position.Z);
+            var mapPosition = _client.WorldMapStorage.ToMap(position);
+            var field = _client.WorldMapStorage.GetField(mapPosition.X, mapPosition.Y, mapPosition.Z);
             if (field != null)
             {
                 for (int i = 0; i < MapSizeW; ++i)
