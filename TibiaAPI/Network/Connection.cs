@@ -887,8 +887,6 @@ namespace OXGaming.TibiaAPI.Network
                     _serverOutMessage.SequenceNumber = _serverInMessage.SequenceNumber;
 
                     ParseServerMessage(_client, _serverInMessage, _serverOutMessage);
-                    // TODO: Until AppendToNetworkMessage() is complete for all server
-                    // packets, the original packet must be forwarded.
                     SendToClient(AllowPacketModification ? _serverOutMessage : _serverInMessage);
                 }
                 else
