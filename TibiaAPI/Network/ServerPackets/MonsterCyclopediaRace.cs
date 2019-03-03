@@ -17,6 +17,7 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
         public uint CharmPoints { get; set; }
         public uint Experience { get; set; }
         public uint Hitpoints { get; set; }
+        public uint CharmRemovalCost { get; set; }
         public uint TotalKillCount { get; set; }
 
         public ushort Armor { get; set; }
@@ -27,9 +28,13 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
         public ushort Speed { get; set; }
         public ushort UnknownUShort { get; set; }
 
+        public byte CharmId { get; set; }
         public byte CurrentKillStage { get; set; }
         public byte Difficulty { get; set; }
-        public byte Occurence { get; set; }
+        public byte Occurrence { get; set; }
+        public byte Unknown { get; set; }
+
+        public bool HasCharmAssigned { get; set; }
 
         public MonsterCyclopediaRace(Client client)
         {
@@ -54,7 +59,7 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
             Difficulty = message.ReadByte();
             if (Client.VersionNumber >= 11807048)
             {
-                Occurence = message.ReadByte();
+                Occurrence = message.ReadByte();
             }
 
             Loot.Capacity = message.ReadByte();
@@ -86,6 +91,37 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
                     Experience = message.ReadUInt32();
                     Speed = message.ReadUInt16();
                     Armor = message.ReadUInt16();
+
+                    if (CurrentKillStage > 2)
+                    {
+                        Stats.Capacity = message.ReadByte();
+                        for (var i = 0; i < Stats.Capacity; ++i)
+                        {
+                            var statId = message.ReadByte();
+                            var percentage = message.ReadUInt16();
+                            Stats.Add((statId, percentage));
+                        }
+
+                        Locations.Capacity = message.ReadUInt16();
+                        for (var i = 0; i < Locations.Capacity; ++i)
+                        {
+                            Locations.Add(message.ReadString());
+                        }
+
+                        if (CurrentKillStage > 3)
+                        {
+                            HasCharmAssigned = message.ReadBool();
+                            if (HasCharmAssigned)
+                            {
+                                CharmId = message.ReadByte();
+                                CharmRemovalCost = message.ReadUInt32();
+                            }
+                            else
+                            {
+                                Unknown = message.ReadByte(); // always 1?
+                            }
+                        }
+                    }
                 }
             }
             else
@@ -137,7 +173,7 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
             message.Write(Difficulty);
             if (Client.VersionNumber >= 11807048)
             {
-                message.Write(Occurence);
+                message.Write(Occurrence);
             }
 
             var count = Math.Min(Loot.Count, byte.MaxValue);
@@ -167,6 +203,39 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
                     message.Write(Experience);
                     message.Write(Speed);
                     message.Write(Armor);
+
+                    if (CurrentKillStage > 2)
+                    {
+                        count = Math.Min(Stats.Count, byte.MaxValue);
+                        message.Write((byte)count);
+                        for (var i = 0; i < count; ++i)
+                        {
+                            var (StatId, Percentage) = Stats[i];
+                            message.Write(StatId);
+                            message.Write(Percentage);
+                        }
+
+                        count = Math.Min(Locations.Count, ushort.MaxValue);
+                        message.Write((ushort)count);
+                        for (var i = 0; i < count; ++i)
+                        {
+                            message.Write(Locations[i]);
+                        }
+
+                        if (CurrentKillStage > 3)
+                        {
+                            message.Write(HasCharmAssigned);
+                            if (HasCharmAssigned)
+                            {
+                                message.Write(CharmId);
+                                message.Write(CharmRemovalCost);
+                            }
+                            else
+                            {
+                                message.Write(Unknown);
+                            }
+                        }
+                    }
                 }
             }
             else
