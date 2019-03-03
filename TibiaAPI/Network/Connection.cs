@@ -77,6 +77,8 @@ namespace OXGaming.TibiaAPI.Network
 
         public ConnectionState ConnectionState { get; set; } = ConnectionState.Disconnected;
 
+        public bool AllowPacketModification { get; set; } = false;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="Connection"/> class that acts as a proxy
         /// between the Tibia client and the game server.
@@ -814,7 +816,7 @@ namespace OXGaming.TibiaAPI.Network
                         _clientOutMessage.SequenceNumber = _clientInMessage.SequenceNumber;
 
                         ParseClientMessage(_client, _clientInMessage, _clientOutMessage);
-                        SendToServer(_clientOutMessage);
+                        SendToServer(AllowPacketModification ? _clientOutMessage : _clientInMessage);
                     }
                     else
                     {
@@ -887,7 +889,7 @@ namespace OXGaming.TibiaAPI.Network
                     ParseServerMessage(_client, _serverInMessage, _serverOutMessage);
                     // TODO: Until AppendToNetworkMessage() is complete for all server
                     // packets, the original packet must be forwarded.
-                    SendToClient(_serverInMessage);
+                    SendToClient(AllowPacketModification ? _serverOutMessage : _serverInMessage);
                 }
                 else
                 {

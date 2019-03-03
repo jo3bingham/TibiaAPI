@@ -1406,7 +1406,7 @@ namespace OXGaming.TibiaAPI.Network
 
         public void PrepareToSend(uint[] xteaKey, ZStream zStream = null)
         {
-            if (IsCompressed && zStream != null)
+            if (_wasCompressed && zStream != null)
             {
                 var uncompressedSize = _size - 8;
                 var inBuffer = new byte[uncompressedSize];
@@ -1435,12 +1435,12 @@ namespace OXGaming.TibiaAPI.Network
                 Position = 8;
                 Size = 8;
                 Write(outBuffer, 0, (uint)(zStream.next_out_index - 4));
-            }
 
-            if (_wasCompressed && !IsCompressed)
-            {
-                Position = 2;
-                Write(SequenceNumber | CompressedFlag);
+                if (!IsCompressed)
+                {
+                    Position = 2;
+                    Write(SequenceNumber + CompressedFlag);
+                }
             }
 
             Position = 6;
