@@ -13,7 +13,7 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
         public List<(DailyReward FreeReward, DailyReward PremiumReward)> DailyRewards { get; } =
             new List<(DailyReward FreeReward, DailyReward PremiumReward)>();
 
-        public byte Unknown { get; set; }
+        public byte UnlockableRewards { get; set; }
 
         public DailyRewardBasic(Client client)
         {
@@ -44,8 +44,7 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
                 Bonuses.Add((text, unlockStreak));
             }
 
-            // TODO: Figure out this unknown.
-            Unknown = message.ReadByte();
+            UnlockableRewards = message.ReadByte();
             return true;
         }
 
@@ -70,7 +69,7 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
                 message.Write(UnlockStreak);
             }
 
-            message.Write(Unknown);
+            message.Write(UnlockableRewards);
         }
     }
 }

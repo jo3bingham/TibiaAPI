@@ -20,6 +20,8 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
         public byte BannerSwitchDelay { get; set; }
         public byte WindowType { get; set; }
 
+        public bool TooManySearchResults { get; set; }
+
         public StoreOffers(Client client)
         {
             Client = client;
@@ -178,6 +180,11 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
                 Offers.Add(offer);
             }
 
+            if (CategoryName.Equals("Search", StringComparison.CurrentCultureIgnoreCase))
+            {
+                TooManySearchResults = message.ReadBool();
+            }
+
             if (WindowType == 3) // Home
             {
                 Banners.Capacity = message.ReadByte();
@@ -334,6 +341,11 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
                         message.Write(subOffer.DisplayColorDetail);
                     }
                 }
+            }
+
+            if (CategoryName.Equals("Search", StringComparison.CurrentCultureIgnoreCase))
+            {
+                message.Write(TooManySearchResults);
             }
 
             if (WindowType == 3) // Home

@@ -6,8 +6,7 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
     {
         public string Text { get; set; }
 
-        public byte Unknown { get; set; }
-
+        public bool HasAnActiveBonus { get; set; }
         public bool IsInRestingArea { get; set; }
 
         public RestingAreaState(Client client)
@@ -24,8 +23,7 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
             }
 
             IsInRestingArea = message.ReadBool();
-            // TODO: Figure out this unknown.
-            Unknown = message.ReadByte();
+            HasAnActiveBonus = message.ReadBool();
             Text = message.ReadString();
             return true;
         }
@@ -34,7 +32,7 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
         {
             message.Write((byte)ServerPacketType.RestingAreaState);
             message.Write(IsInRestingArea);
-            message.Write(Unknown);
+            message.Write(HasAnActiveBonus);
             message.Write(Text);
         }
     }

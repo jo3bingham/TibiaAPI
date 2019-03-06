@@ -4,14 +4,15 @@ namespace OXGaming.TibiaAPI.Network.ClientPackets
 {
     public class RequestShopOffers : ClientPacket
     {
-        public StoreServiceType ServiceType { get; set; }
-
         public string Category { get; set; }
+        public string SearchText { get; set; }
         public string SubCategory { get; set; }
 
         public uint OfferId { get; set; }
 
         public ushort Unknown { get; set; }
+
+        public byte ServiceType { get; set; }
 
         public RequestShopOffers(Client client)
         {
@@ -26,17 +27,32 @@ namespace OXGaming.TibiaAPI.Network.ClientPackets
                 return false;
             }
 
-            ServiceType = (StoreServiceType)message.ReadByte();
-            if (ServiceType == StoreServiceType.Mounts)
+            ServiceType = message.ReadByte();
+            if (Client.VersionNumber >= 11900000)
             {
-                OfferId = message.ReadUInt32();
-            }
-            else if (ServiceType == StoreServiceType.Premium)
-            {
-                Category = message.ReadString();
-                if (Client.VersionNumber >= 11900000)
+                if (ServiceType == 2)
                 {
+                    Category = message.ReadString();
                     SubCategory = message.ReadString();
+                }
+                else if (ServiceType == 4)
+                {
+                    OfferId = message.ReadUInt32();
+                }
+                else if (ServiceType == 5)
+                {
+                    SearchText = message.ReadString();
+                }
+            }
+            else
+            {
+                if (ServiceType == (byte)StoreServiceType.Mounts)
+                {
+                    OfferId = message.ReadUInt32();
+                }
+                else if (ServiceType == (byte)StoreServiceType.Premium)
+                {
+                    Category = message.ReadString();
                 }
             }
 
@@ -48,21 +64,34 @@ namespace OXGaming.TibiaAPI.Network.ClientPackets
         public override void AppendToNetworkMessage(NetworkMessage message)
         {
             message.Write((byte)ClientPacketType.RequestShopOffers);
-            message.Write((byte)ServiceType);
-
-            if (ServiceType == StoreServiceType.Mounts)
+            message.Write(ServiceType);
+            if (Client.VersionNumber >= 11900000)
             {
-                message.Write(OfferId);
-            }
-            else if (ServiceType == StoreServiceType.Premium)
-            {
-                message.Write(Category);
-                if (Client.VersionNumber >= 11900000)
+                if (ServiceType == 2)
                 {
+                    message.Write(Category);
                     message.Write(SubCategory);
                 }
+                else if (ServiceType == 4)
+                {
+                    message.Write(OfferId);
+                }
+                else if (ServiceType == 5)
+                {
+                    message.Write(SearchText);
+                }
             }
-
+            else
+            {
+                if (ServiceType == (byte)StoreServiceType.Mounts)
+                {
+                    message.Write(OfferId);
+                }
+                else if (ServiceType == (byte)StoreServiceType.Premium)
+                {
+                    message.Write(Category);
+                }
+            }
             message.Write(Unknown);
         }
     }
