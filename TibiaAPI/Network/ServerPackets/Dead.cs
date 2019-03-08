@@ -8,7 +8,7 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
 
         public byte FairFightFactor { get; set; }
 
-        public bool Unknown { get; set; }
+        public bool IsSubsequentBlessingApplicable { get; set; }
 
         public Dead(Client client)
         {
@@ -28,7 +28,7 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
             {
                 FairFightFactor = message.ReadByte();
             }
-            Unknown = message.ReadBool();
+            IsSubsequentBlessingApplicable = message.ReadBool();
             return true;
         }
 
@@ -40,7 +40,7 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
             {
                 message.Write(FairFightFactor);
             }
-            message.Write(Unknown);
+            message.Write(IsSubsequentBlessingApplicable);
         }
     }
 }

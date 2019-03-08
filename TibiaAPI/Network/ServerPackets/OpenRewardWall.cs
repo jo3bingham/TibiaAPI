@@ -9,8 +9,8 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
         public uint TimeLeftToClaimCurrentReward { get; set; }
         public uint TimeRemainingUntilCanClaimNextReward { get; set; }
 
+        public ushort EffectiveRewardsStreak { get; set; }
         public ushort RewardStreak { get; set; }
-        public ushort Unknown { get; set; }
 
         public byte IndexOfNextReward { get; set; }
 
@@ -40,7 +40,7 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
             }
             TimeLeftToClaimCurrentReward = message.ReadUInt32();
             RewardStreak = message.ReadUInt16();
-            Unknown = message.ReadUInt16();
+            EffectiveRewardsStreak = message.ReadUInt16();
             return true;
         }
 
@@ -57,7 +57,7 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
             }
             message.Write(TimeLeftToClaimCurrentReward);
             message.Write(RewardStreak);
-            message.Write(Unknown);
+            message.Write(EffectiveRewardsStreak);
         }
     }
 }

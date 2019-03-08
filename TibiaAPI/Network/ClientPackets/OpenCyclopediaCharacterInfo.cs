@@ -4,7 +4,8 @@ namespace OXGaming.TibiaAPI.Network.ClientPackets
 {
     public class OpenCyclopediaCharacterInfo : ClientPacket
     {
-        public uint Unknown { get; set; }
+        public ushort RequestedPage { get; set; }
+        public ushort ItemsPerPage { get; set; }
 
         public byte State { get; set; }
 
@@ -22,9 +23,10 @@ namespace OXGaming.TibiaAPI.Network.ClientPackets
             }
 
             State = message.ReadByte();
-            if (State == 3 || State == 4)
+            if (State == 3 || State == 4) // Recent Deaths / Recent PvP Kills
             {
-                Unknown = message.ReadUInt32();
+                ItemsPerPage = message.ReadUInt16();
+                RequestedPage = message.ReadUInt16();
             }
             return true;
         }
@@ -33,9 +35,10 @@ namespace OXGaming.TibiaAPI.Network.ClientPackets
         {
             message.Write((byte)ClientPacketType.OpenCyclopediaCharacterInfo);
             message.Write(State);
-            if (State == 3 || State == 4)
+            if (State == 3 || State == 4) // Recent Deaths / Recent PvP Kills
             {
-                message.Write(Unknown);
+                message.Write(ItemsPerPage);
+                message.Write(RequestedPage);
             }
         }
     }

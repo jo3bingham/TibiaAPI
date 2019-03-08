@@ -12,8 +12,8 @@ namespace OXGaming.TibiaAPI.Store
         public ushort Amount { get; set; }
 
         public byte HighlightState { get; set; }
-        public byte Unknown { get; set; }
 
+        public bool IsConfirmedPrice { get; set; }
         public bool IsDisabled { get; set; }
     }
 }

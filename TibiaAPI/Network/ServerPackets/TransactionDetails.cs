@@ -14,7 +14,7 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
         public int PurchasedTibiaCoins { get; set; }
         public int SpentGold { get; set; }
 
-        public byte Unknown { get; set; }
+        public byte Type { get; set; }
 
         public TransactionDetails(Client client)
         {
@@ -30,7 +30,7 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
             }
 
             Id = message.ReadUInt32();
-            Unknown = message.ReadByte();
+            Type = message.ReadByte();
             Timestamp = message.ReadUInt32();
             Description = message.ReadString();
             Character = message.ReadString();
@@ -44,7 +44,7 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
         {
             message.Write((byte)ServerPacketType.TransactionDetails);
             message.Write(Id);
-            message.Write(Unknown);
+            message.Write(Type);
             message.Write(Timestamp);
             message.Write(Description);
             message.Write(Character);

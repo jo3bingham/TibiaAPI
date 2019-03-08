@@ -70,7 +70,7 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
 
                     if (Client.VersionNumber >= 11900000)
                     {
-                        details.Unknown = message.ReadByte();
+                        details.IsConfirmedPrice = message.ReadBool();
                     }
 
                     details.IsDisabled = message.ReadBool();
@@ -119,7 +119,7 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
                 }
                 else if (offer.DisplayType == 4) // male/female outfit
                 {
-                    offer.DisplayUnknown = message.ReadByte();
+                    offer.GenderToShow = message.ReadByte();
                     offer.DisplayFemaleLooktype = message.ReadUInt16();
                     offer.DisplayMaleLooktype = message.ReadUInt16();
                     offer.DisplayColorHead = message.ReadByte();
@@ -130,11 +130,9 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
 
                 offer.TryType = message.ReadByte(); // 0 = disabled, 1 = mounts/outfits, 2 = hireling dresses
                 offer.ParentCategory = message.ReadString();
-
-                for (var j = 0; j < 7; ++j)
-                {
-                    offer.Unknown.Add(message.ReadByte());
-                }
+                offer.PopularityScore = message.ReadUInt16();
+                offer.NewUntilTimestamp = message.ReadUInt32();
+                offer.NeedsUserConfigurationBeforeBuying = message.ReadBool();
 
                 offer.Products.Capacity = message.ReadUInt16();
                 for (var j = 0; j < offer.Products.Capacity; ++j)
@@ -167,7 +165,7 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
                     }
                     else if (subOffer.DisplayType == 4) // male/female outfit
                     {
-                        subOffer.DisplayUnknown = message.ReadByte();
+                        subOffer.GenderToShow = message.ReadByte();
                         subOffer.DisplayFemaleLooktype = message.ReadUInt16();
                         subOffer.DisplayMaleLooktype = message.ReadUInt16();
                         subOffer.DisplayColorHead = message.ReadByte();
@@ -250,7 +248,7 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
                     message.Write(details.Price);
                     if (Client.VersionNumber >= 11900000)
                     {
-                        message.Write(details.Unknown);
+                        message.Write(details.IsConfirmedPrice);
                     }
                     message.Write(details.IsDisabled);
                     if (details.IsDisabled)
@@ -289,7 +287,7 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
                 }
                 else if (offer.DisplayType == 4) // male/female outfit
                 {
-                    message.Write(offer.DisplayUnknown);
+                    message.Write(offer.GenderToShow);
                     message.Write(offer.DisplayFemaleLooktype);
                     message.Write(offer.DisplayMaleLooktype);
                     message.Write(offer.DisplayColorHead);
@@ -300,7 +298,9 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
 
                 message.Write(offer.TryType);
                 message.Write(offer.ParentCategory);
-                message.Write(offer.Unknown.ToArray());
+                message.Write(offer.PopularityScore);
+                message.Write(offer.NewUntilTimestamp);
+                message.Write(offer.NeedsUserConfigurationBeforeBuying);
 
                 var productCount = Math.Min(offer.Products.Count, ushort.MaxValue);
                 message.Write((ushort)productCount);
@@ -332,7 +332,7 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
                     }
                     else if (subOffer.DisplayType == 4) // male/female outfit
                     {
-                        message.Write(subOffer.DisplayUnknown);
+                        message.Write(subOffer.GenderToShow);
                         message.Write(subOffer.DisplayFemaleLooktype);
                         message.Write(subOffer.DisplayMaleLooktype);
                         message.Write(subOffer.DisplayColorHead);
