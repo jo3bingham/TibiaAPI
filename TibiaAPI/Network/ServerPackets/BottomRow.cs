@@ -31,7 +31,7 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
         public override void AppendToNetworkMessage(NetworkMessage message)
         {
             message.Write((byte)ServerPacketType.BottomRow);
-            // TODO
+            base.AppendToNetworkMessage(message);
         }
     }
 }

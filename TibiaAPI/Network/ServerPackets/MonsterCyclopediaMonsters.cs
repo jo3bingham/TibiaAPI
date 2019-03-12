@@ -7,8 +7,8 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
 {
     public class MonsterCyclopediaMonsters : ServerPacket
     {
-        public List<(ushort Id, byte CurrentStage)> Monsters { get; } =
-            new List<(ushort Id, byte CurrentStage)>();
+        public List<(ushort Id, byte CurrentStage, byte Occurrence)> Monsters { get; } =
+            new List<(ushort Id, byte CurrentStage, byte Occurrence)>();
 
         public string Name { get; set; }
 
@@ -31,7 +31,12 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
             {
                 var id = message.ReadUInt16();
                 var currentStage = message.ReadByte();
-                Monsters.Add((id, currentStage));
+                var occurrence = byte.MinValue;
+                if (currentStage > 0 && Client.VersionNumber >= 11807048)
+                {
+                    occurrence = message.ReadByte();
+                }
+                Monsters.Add((id, currentStage, occurrence));
             }
             return true;
         }
@@ -44,9 +49,13 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
             message.Write((ushort)count);
             for (var i = 0; i < count; ++i)
             {
-                var (Id, CurrentStage) = Monsters[i];
+                var (Id, CurrentStage, Occurrence) = Monsters[i];
                 message.Write(Id);
                 message.Write(CurrentStage);
+                if (CurrentStage > 0 && Client.VersionNumber >= 11807048)
+                {
+                    message.Write(Occurrence);
+                }
             }
         }
     }

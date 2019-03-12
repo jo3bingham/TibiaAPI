@@ -4,9 +4,9 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
 {
     public class SetStoreDeepLink : ServerPacket
     {
-        public StoreServiceType StoreServiceType { get; set; }
-
         public ushort Unknown { get; set; }
+
+        public byte StoreServiceType { get; set; }
 
         public SetStoreDeepLink(Client client)
         {
@@ -26,7 +26,7 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
                 // TODO: Figure out this unknown.
                 Unknown = message.ReadUInt16();
             }
-            StoreServiceType = (StoreServiceType)message.ReadByte();
+            StoreServiceType = message.ReadByte();
             return true;
         }
 
@@ -37,7 +37,7 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
             {
                 message.Write(Unknown);
             }
-            message.Write((byte)StoreServiceType);
+            message.Write(StoreServiceType);
         }
     }
 }

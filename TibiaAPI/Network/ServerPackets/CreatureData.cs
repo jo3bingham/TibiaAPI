@@ -1,9 +1,12 @@
 ﻿using OXGaming.TibiaAPI.Constants;
+using OXGaming.TibiaAPI.Creatures;
 
 namespace OXGaming.TibiaAPI.Network.ServerPackets
 {
     public class CreatureData : ServerPacket
     {
+        public Creature Creature { get; set; }
+
         public CreatureData(Client client)
         {
             Client = client;
@@ -17,14 +20,14 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
                 return false;
             }
 
-            // This packet type appears in the Tibia 11 client, but not the Tibia 10, or Flash, client.
-            // Structure is currently unknown (assuming it actually exists/is used).
+            Creature = message.ReadCreatureInstance((int)CreatureInstanceType.UnknownCreature);
             return true;
         }
 
         public override void AppendToNetworkMessage(NetworkMessage message)
         {
             message.Write((byte)ServerPacketType.CreatureData);
+            message.Write(Creature, CreatureInstanceType.UnknownCreature);
         }
     }
 }

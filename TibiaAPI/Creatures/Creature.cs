@@ -11,6 +11,8 @@ namespace OXGaming.TibiaAPI.Creatures
 
         public Position Position { get; set; }
 
+        public CreatureInstanceType InstanceType { get; set; }
+
         public CreatureType Type { get; set; }
 
         public Direction Direction { get; set; }

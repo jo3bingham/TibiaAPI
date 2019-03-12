@@ -18,5 +18,10 @@ namespace OXGaming.TibiaAPI.Appearances
             ColorDetail = colorDetail;
             Addons = addons;
         }
+
+        public override string ToString()
+        {
+            return $"Outfit Looktype: {Id}, Head: {ColorHead}, Torso: {ColorTorso}, Legs: {ColorLegs}, Detail: {ColorDetail}, Addons: {Addons}";
+        }
     }
 }

@@ -9,7 +9,7 @@ namespace OXGaming.TibiaAPI.Network.ClientPackets
     {
         public List<(ushort ObjectId, byte Amount)> Rewards { get; } = new List<(ushort ObjectId, byte Amount)>();
 
-        public byte Unknown { get; set; }
+        public bool UseToken { get; set; }
 
         public CollectDailyReward(Client client)
         {
@@ -24,8 +24,7 @@ namespace OXGaming.TibiaAPI.Network.ClientPackets
                 return false;
             }
 
-            // TODO: Figure out this unknown.
-            Unknown = message.ReadByte();
+            UseToken = message.ReadBool();
             Rewards.Capacity = message.ReadByte();
             for (var i = 0; i < Rewards.Capacity; ++i)
             {
@@ -39,7 +38,7 @@ namespace OXGaming.TibiaAPI.Network.ClientPackets
         public override void AppendToNetworkMessage(NetworkMessage message)
         {
             message.Write((byte)ClientPacketType.CollectDailyReward);
-            message.Write(Unknown);
+            message.Write(UseToken);
             var count = Math.Min(Rewards.Count, byte.MaxValue);
             message.Write((byte)count);
             for (var i = 0; i < count; ++i)

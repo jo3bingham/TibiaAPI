@@ -28,8 +28,9 @@
     public enum OutfitWindowType
     {
         SelectOutfit = 0,
-        TryOutfit = 1,
-        TryMount = 2
+        TryOutfitMount = 1,
+        TryMountOld = 2,
+        TryHirelingDress = 3
     }
 
     public enum PreyActionType
@@ -111,6 +112,16 @@
         SummonOthers = 4
     }
 
+    public enum GraphicalEffectsType
+    {
+        None = 0,
+        Move = 1,
+        Delay = 2,
+        Effect = 3,
+        MissileXY = 4,
+        MissileYX = 5
+    }
+
     public enum PreyDataState
     {
         Locked = 0,
@@ -118,7 +129,7 @@
         Active = 2,
         Selection = 3,
         SelectionChangeMonster = 4,
-        Unknown = 6
+        WildcardSelection = 6
     }
 
     public enum ResourceType
@@ -177,7 +188,7 @@
         SetDiscoveryArea = 5,
         Passage = 6,
         SubAreaMonsters = 7,
-        Unknown = 8,
+        MonsterBestiary = 8,
         Donations = 9,
         SetCurrentArea = 10
     }
@@ -409,10 +420,10 @@
         PendingStateEntered = 0x0A,
         ReadyForSecondaryConnection = 0x0B,
         WorldEntered = 0x0F,
-        LoginError = 0x014,
-        LoginAdvice = 0x015,
-        LoginWait = 0x016,
-        LoginSuccess = 0x017,
+        LoginError = 0x14,
+        LoginAdvice = 0x15,
+        LoginWait = 0x16,
+        LoginSuccess = 0x17,
         StoreButtonIndicators = 0x19,
         Ping = 0x1D,
         PingBack = 0x1E,

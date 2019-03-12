@@ -34,7 +34,7 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
         {
             message.Write((byte)ServerPacketType.MonsterCyclopediaNewDetails);
             message.Write(RaceId);
-            if (Client.VersionNumber < 11900000)
+            if (Client.VersionNumber < 11900000 && Client.VersionNumber > 11596424)
             {
                 message.Write(_unknown);
             }

@@ -4,14 +4,14 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
 {
     public class PlayerSkills : ServerPacket
     {
-        public (ushort Level, ushort Base, ushort Unknown, ushort Progress) AxeFighting { get; set; }
-        public (ushort Level, ushort Base, ushort Unknown, ushort Progress) ClubFighting { get; set; }
-        public (ushort Level, ushort Base, ushort Unknown, ushort Progress) DistanceFighting { get; set; }
-        public (ushort Level, ushort Base, ushort Unknown, ushort Progress) Fishing { get; set; }
-        public (ushort Level, ushort Base, ushort Unknown, ushort Progress) FistFighting { get; set; }
-        public (ushort Level, ushort Base, ushort Unknown, ushort Progress) Magic { get; set; }
-        public (ushort Level, ushort Base, ushort Unknown, ushort Progress) Shielding { get; set; }
-        public (ushort Level, ushort Base, ushort Unknown, ushort Progress) SwordFighting { get; set; }
+        public (ushort Level, ushort Base, ushort Loyalty, ushort Progress) AxeFighting { get; set; }
+        public (ushort Level, ushort Base, ushort Loyalty, ushort Progress) ClubFighting { get; set; }
+        public (ushort Level, ushort Base, ushort Loyalty, ushort Progress) DistanceFighting { get; set; }
+        public (ushort Level, ushort Base, ushort Loyalty, ushort Progress) Fishing { get; set; }
+        public (ushort Level, ushort Base, ushort Loyalty, ushort Progress) FistFighting { get; set; }
+        public (ushort Level, ushort Base, ushort Loyalty, ushort Progress) Magic { get; set; }
+        public (ushort Level, ushort Base, ushort Loyalty, ushort Progress) Shielding { get; set; }
+        public (ushort Level, ushort Base, ushort Loyalty, ushort Progress) SwordFighting { get; set; }
 
         public (ushort Level, ushort Base) CriticalHitChance { get; set; }
         public (ushort Level, ushort Base) CriticalHitDamage { get; set; }
@@ -80,7 +80,7 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
             {
                 message.Write(Magic.Level);
                 message.Write(Magic.Base);
-                message.Write(Magic.Unknown);
+                message.Write(Magic.Loyalty);
                 message.Write(Magic.Progress);
             }
 
@@ -88,7 +88,7 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
             message.Write(FistFighting.Base);
             if (Client.VersionNumber >= 12000000)
             {
-                message.Write(FistFighting.Unknown);
+                message.Write(FistFighting.Loyalty);
                 message.Write(FistFighting.Progress);
             }
             else
@@ -100,7 +100,7 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
             message.Write(ClubFighting.Base);
             if (Client.VersionNumber >= 12000000)
             {
-                message.Write(ClubFighting.Unknown);
+                message.Write(ClubFighting.Loyalty);
                 message.Write(ClubFighting.Progress);
             }
             else
@@ -112,7 +112,7 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
             message.Write(SwordFighting.Base);
             if (Client.VersionNumber >= 12000000)
             {
-                message.Write(SwordFighting.Unknown);
+                message.Write(SwordFighting.Loyalty);
                 message.Write(SwordFighting.Progress);
             }
             else
@@ -124,7 +124,7 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
             message.Write(AxeFighting.Base);
             if (Client.VersionNumber >= 12000000)
             {
-                message.Write(AxeFighting.Unknown);
+                message.Write(AxeFighting.Loyalty);
                 message.Write(AxeFighting.Progress);
             }
             else
@@ -136,7 +136,7 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
             message.Write(DistanceFighting.Base);
             if (Client.VersionNumber >= 12000000)
             {
-                message.Write(DistanceFighting.Unknown);
+                message.Write(DistanceFighting.Loyalty);
                 message.Write(DistanceFighting.Progress);
             }
             else
@@ -148,7 +148,7 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
             message.Write(Shielding.Base);
             if (Client.VersionNumber >= 12000000)
             {
-                message.Write(Shielding.Unknown);
+                message.Write(Shielding.Loyalty);
                 message.Write(Shielding.Progress);
             }
             else
@@ -160,7 +160,7 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
             message.Write(Fishing.Base);
             if (Client.VersionNumber >= 12000000)
             {
-                message.Write(Fishing.Unknown);
+                message.Write(Fishing.Loyalty);
                 message.Write(Fishing.Progress);
             }
             else

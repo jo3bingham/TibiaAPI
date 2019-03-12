@@ -75,11 +75,11 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
             message.Write((byte)ServerPacketType.CreateOnMap);
             message.Write(Position);
             message.Write(StackPosition);
-            message.Write(Id);
             if (Id == (int)CreatureInstanceType.UnknownCreature ||
                 Id == (int)CreatureInstanceType.OutdatedCreature ||
                 Id == (int)CreatureInstanceType.Creature)
             {
+                message.Write(Id);
                 message.Write(Creature, (CreatureInstanceType)Id);
             }
             else

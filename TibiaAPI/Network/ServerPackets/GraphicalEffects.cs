@@ -1,10 +1,15 @@
-﻿using OXGaming.TibiaAPI.Constants;
+﻿using System.Collections.Generic;
+
+using OXGaming.TibiaAPI.Constants;
 using OXGaming.TibiaAPI.Utilities;
 
 namespace OXGaming.TibiaAPI.Network.ServerPackets
 {
     public class GraphicalEffects : ServerPacket
     {
+        public List<(GraphicalEffectsType Type, byte TilesToMove, ushort Delay, byte Id, sbyte DistanceX, sbyte DistanceY)> Effects { get; } =
+            new List<(GraphicalEffectsType Type, byte TilesToMove, ushort Delay, byte Id, sbyte DistanceX, sbyte DistanceY)>();
+
         public Position Position { get; set; }
 
         public byte Effect { get; set; }
@@ -23,37 +28,48 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
             }
 
             Position = message.ReadPosition();
-
             if (Client.VersionNumber < 12000000)
             {
                 Effect = message.ReadByte();
             }
             else
             {
-                // TODO: Store new structure in a sensible manner
-                // that is easy to append to a networkmessage.
+                var type = GraphicalEffectsType.None;
                 while (true)
                 {
-                    var type = message.ReadByte();
-                    if (type == 0)
+                    type = (GraphicalEffectsType)message.ReadByte();
+                    if (type == GraphicalEffectsType.None)
                     {
                         break;
                     }
-                    else if (type == 1)
+                    else if (type == GraphicalEffectsType.Move)
                     {
                         var tilesToMove = message.ReadByte();
+                        Effects.Add((type, tilesToMove, 0, 0, 0, 0));
                     }
-                    else if (type == 2)
+                    else if (type == GraphicalEffectsType.Delay)
                     {
-                        message.ReadUInt16();
+                        var delay = message.ReadUInt16();
+                        Effects.Add((type, 0, delay, 0, 0, 0));
                     }
-                    else if (type == 3)
+                    else if (type == GraphicalEffectsType.Effect)
                     {
                         var effectId = message.ReadByte();
+                        Effects.Add((type, 0, 0, effectId, 0, 0));
                     }
-                    else if (type == 4 || type == 5)
+                    else if (type == GraphicalEffectsType.MissileXY)
                     {
-                        message.ReadBytes(3);
+                        var missileId = message.ReadByte();
+                        var distanceAxisX = message.ReadSByte();
+                        var distanceAxisY = message.ReadSByte();
+                        Effects.Add((type, 0, 0, missileId, distanceAxisX, distanceAxisY));
+                    }
+                    else if (type == GraphicalEffectsType.MissileYX)
+                    {
+                        var missileId = message.ReadByte();
+                        var distanceAxisY = message.ReadSByte();
+                        var distanceAxisX = message.ReadSByte();
+                        Effects.Add((type, 0, 0, missileId, distanceAxisX, distanceAxisY));
                     }
                     else
                     {
@@ -74,7 +90,35 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
             }
             else
             {
-                // TODO: Write new structure to message.
+                foreach (var (Type, TilesToMove, Delay, Id, DistanceX, DistanceY) in Effects)
+                {
+                    message.Write((byte)Type);
+                    if (Type == GraphicalEffectsType.Move)
+                    {
+                        message.Write(TilesToMove);
+                    }
+                    else if (Type == GraphicalEffectsType.Delay)
+                    {
+                        message.Write(Delay);
+                    }
+                    else if (Type == GraphicalEffectsType.Effect)
+                    {
+                        message.Write(Id);
+                    }
+                    else if (Type == GraphicalEffectsType.MissileXY)
+                    {
+                        message.Write(Id);
+                        message.Write(DistanceX);
+                        message.Write(DistanceY);
+                    }
+                    else if (Type == GraphicalEffectsType.MissileYX)
+                    {
+                        message.Write(Id);
+                        message.Write(DistanceY);
+                        message.Write(DistanceX);
+                    }
+                }
+                message.Write((byte)GraphicalEffectsType.None);
             }
         }
     }

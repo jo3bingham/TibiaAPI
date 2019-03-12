@@ -4,7 +4,9 @@ namespace OXGaming.TibiaAPI.Network.ClientPackets
 {
     public class GetOutfit : ClientPacket
     {
-        public ushort OutfitId { get; set; }
+        public OutfitWindowType WindowType { get; set; }
+
+        public ushort LookType { get; set; }
 
         public GetOutfit(Client client)
         {
@@ -19,14 +21,36 @@ namespace OXGaming.TibiaAPI.Network.ClientPackets
                 return false;
             }
 
-            OutfitId = message.ReadUInt16();
+            if (Client.VersionNumber >= 12000000)
+            {
+                WindowType = (OutfitWindowType)message.ReadByte();
+                if (WindowType != OutfitWindowType.SelectOutfit)
+                {
+                    LookType = message.ReadUInt16();
+                }
+            }
+            else if (Client.VersionNumber >= 11706521)
+            {
+                LookType = message.ReadUInt16();
+            }
             return true;
         }
 
         public override void AppendToNetworkMessage(NetworkMessage message)
         {
             message.Write((byte)ClientPacketType.GetOutfit);
-            message.Write(OutfitId);
+            if (Client.VersionNumber >= 12000000)
+            {
+                message.Write((byte)WindowType);
+                if (WindowType != OutfitWindowType.SelectOutfit)
+                {
+                    message.Write(LookType);
+                }
+            }
+            else if (Client.VersionNumber >= 11706521)
+            {
+                message.Write(LookType);
+            }
         }
     }
 }

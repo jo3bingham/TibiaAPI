@@ -3,15 +3,15 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 
+using ComponentAce.Compression.Libs.zlib;
+
 using OXGaming.TibiaAPI.Appearances;
 using OXGaming.TibiaAPI.Constants;
 using OXGaming.TibiaAPI.Creatures;
+using OXGaming.TibiaAPI.DailyRewards;
 using OXGaming.TibiaAPI.Imbuing;
 using OXGaming.TibiaAPI.Market;
 using OXGaming.TibiaAPI.Utilities;
-using OXGaming.TibiaAPI.WorldMap;
-
-using ComponentAce.Compression.Libs.zlib;
 
 namespace OXGaming.TibiaAPI.Network
 {
@@ -47,6 +47,8 @@ namespace OXGaming.TibiaAPI.Network
         private Client _client;
 
         private uint _size = PayloadDataPosition;
+
+        private bool _wasCompressed = false;
 
         /// <value>
         /// Gets the current position in the buffer.
@@ -167,12 +169,20 @@ namespace OXGaming.TibiaAPI.Network
         }
 
         /// <summary>
-        /// Reads the next byte from the buffer and advances the position by one.
+        /// Reads the next unsigned byte from the buffer and advances the position by one.
         /// </summary>
         /// <returns>
-        /// The next byte read from the buffer.
+        /// The next unsigned byte read from the buffer.
         /// </returns>
         public byte ReadByte() => ReadBytes(1)[0];
+
+        /// <summary>
+        /// Reads the next signed byte from the buffer and advances the position by one.
+        /// </summary>
+        /// <returns>
+        /// The next signed byte read from the buffer.
+        /// </returns>
+        public sbyte ReadSByte() => unchecked((sbyte)ReadByte());
 
         /// <summary>
         /// Reads the next byte from the buffer and advances the position by one.
@@ -290,8 +300,8 @@ namespace OXGaming.TibiaAPI.Network
                 var colorLegs = ReadByte();
                 var colorDetail = ReadByte();
                 var addons = ReadByte();
-                return 
-                    _client.AppearanceStorage.CreateOutfitInstance(outfitId, colorHead, colorTorso, colorLegs, colorDetail, addons);
+                return  _client.AppearanceStorage.CreateOutfitInstance(outfitId, colorHead, colorTorso,
+                                                                       colorLegs, colorDetail, addons);
             }
 
             var itemId = ReadUInt16();
@@ -385,7 +395,8 @@ namespace OXGaming.TibiaAPI.Network
                         creature = new Creature(creatureId)
                         {
                             Type = (CreatureType)ReadByte(),
-                            RemoveCreatureId = removeCreatureId
+                            RemoveCreatureId = removeCreatureId,
+                            InstanceType = (CreatureInstanceType)id
                         };
 
                         creature = _client.CreatureStorage.ReplaceCreature(creature, creature.RemoveCreatureId);
@@ -436,6 +447,7 @@ namespace OXGaming.TibiaAPI.Network
                             throw new Exception("[NetworkMessage.ReadCreatureInstance] Outdated creature not found.");
                         }
 
+                        creature.InstanceType = (CreatureInstanceType)id;
                         creature.HealthPercent = ReadByte();
                         creature.Direction = (Direction)ReadByte();
                         creature.Outfit = ReadCreatureOutfit();
@@ -471,6 +483,7 @@ namespace OXGaming.TibiaAPI.Network
                             throw new Exception("[NetworkMessage.ReadCreatureInstance] Known creature not found.");
                         }
 
+                        creature.InstanceType = (CreatureInstanceType)id;
                         creature.Direction = (Direction)ReadByte();
                         creature.IsUnpassable = ReadBool();
                     }
@@ -544,66 +557,79 @@ namespace OXGaming.TibiaAPI.Network
             return imbuementData;
         }
 
-        public void ReadDailyReward()
+        public DailyReward ReadDailyReward()
         {
-            // TODO: Work out switch case values, variable names, and
-            // which case corresponds to which reward.
-            var rewardType = ReadByte();
-            switch (rewardType)
+            var dailyReward = new DailyReward
             {
-                case 1:
+                Type = ReadByte()
+            };
+
+            switch (dailyReward.Type)
+            {
+                case 1: // Choice
                     {
-                        var maxReward = ReadByte();
-                        var numberOfRewardItems = ReadByte();
-                        for (var j = 0; j < numberOfRewardItems; ++j)
+                        dailyReward.TotalChoiceRewards = ReadByte();
+                        dailyReward.ChoiceRewards.Capacity = ReadByte();
+                        for (var i = 0; i < dailyReward.ChoiceRewards.Capacity; ++i)
                         {
                             var itemId = ReadUInt16();
-                            var itemName = ReadString();
-                            var itemWeight = ReadUInt32();
+                            var name = ReadString();
+                            var weight = ReadUInt32();
+                            dailyReward.ChoiceRewards.Add((itemId, name, weight));
                         }
                     }
                     break;
-                case 2:
+                case 2: // Set
                     {
-                        var numberOfRewardItems = ReadByte();
-                        for (var j = 0; j < numberOfRewardItems; ++j)
+                        dailyReward.SetRewards.Capacity = ReadByte();
+                        for (var i = 0; i < dailyReward.SetRewards.Capacity; ++i)
                         {
-                            var rewardId = ReadByte();
-                            switch (rewardId)
+                            var type = ReadByte();
+                            switch (type)
                             {
-                                case 1:
+                                case 1: // Item
                                     {
                                         var itemId = ReadUInt16();
-                                        var itemName = ReadString();
-                                        var itemCount = ReadByte();
+                                        var name = ReadString();
+                                        var count = ReadByte();
+                                        dailyReward.SetRewards.Add((type, itemId, name, count, 0));
                                     }
                                     break;
-                                case 2:
+                                case 2: // Prey Bonus Reroll
                                     {
-                                        var rewardCount = ReadByte();
+                                        var count = ReadByte();
+                                        dailyReward.SetRewards.Add((type, 0, "", count, 0));
                                     }
                                     break;
-                                case 3:
+                                case 3: // XP Boost
                                     {
                                         var duration = ReadUInt16();
+                                        dailyReward.SetRewards.Add((type, 0, "", 0, duration));
                                     }
+                                    break;
+                                default:
+                                    Console.WriteLine($"Unknown SetDailyReward type: {type}");
                                     break;
                             }
                         }
                     }
                     break;
-                case 3:
+                default:
+                    Console.WriteLine($"Unknown DailyReward type: {dailyReward.Type}");
                     break;
             }
+
+            return dailyReward;
         }
 
-        public int ReadField(int x, int y, int z, List<(Field, Position)> fields)
+        public int ReadField(int x, int y, int z, List<(int, List<ObjectInstance>, Position)> fields)
         {
             var hasSetEnvironmentalEffect = false;
             var thingsCount = 0;
             var numberOfTilesToSkip = 0;
             var mapPosition = new Position(x, y, z);
             var absolutePosition = _client.WorldMapStorage.ToAbsolute(mapPosition);
+            var objects = new List<ObjectInstance>();
 
             while (true)
             {
@@ -632,6 +658,7 @@ namespace OXGaming.TibiaAPI.Network
 
                     if (thingsCount < MapSizeW)
                     {
+                        objects.Add(objectInstance);
                         _client.WorldMapStorage.AppendObject(x, y, z, objectInstance);
                     }
                 }
@@ -641,6 +668,7 @@ namespace OXGaming.TibiaAPI.Network
 
                     if (thingsCount < MapSizeW)
                     {
+                        objects.Add(objectInstance);
                         _client.WorldMapStorage.AppendObject(x, y, z, objectInstance);
                     }
                     else
@@ -652,16 +680,12 @@ namespace OXGaming.TibiaAPI.Network
                 thingsCount++;
             }
 
-            var field = _client.WorldMapStorage.GetField(x, y, z);
-            if (field != null)
-            {
-                fields.Add((field, absolutePosition));
-            }
+            fields.Add((numberOfTilesToSkip, objects, absolutePosition));
 
             return numberOfTilesToSkip;
         }
 
-        public int ReadFloor(int floorNumber, int numberOfTilesToSkip, List<(Field, Position)> fields)
+        public int ReadFloor(int floorNumber, int numberOfTilesToSkip, List<(int, List<ObjectInstance>, Position)> fields)
         {
             if (floorNumber < 0 || floorNumber >= MapSizeZ)
             {
@@ -691,7 +715,7 @@ namespace OXGaming.TibiaAPI.Network
             return numberOfTilesToSkip;
         }
 
-        public int ReadArea(int startX, int startY, int endX, int endY, List<(Field, Position)> fields)
+        public int ReadArea(int startX, int startY, int endX, int endY, List<(int, List<ObjectInstance>, Position)> fields)
         {
             var endZ = 0;
             var stepZ = 0;
@@ -803,6 +827,14 @@ namespace OXGaming.TibiaAPI.Network
         public void Write(byte value) => Write(new byte[] { value });
 
         /// <summary>
+        /// Writes a signed byte to the buffer and advances the position by one.
+        /// </summary>
+        /// <param name="value">
+        /// The signed byte to write.
+        /// </param>
+        public void Write(sbyte value) => Write(new byte[] { unchecked((byte)value) });
+
+        /// <summary>
         /// Writes a boolean value, as an unsigned byte, to the buffer and advances the position by one.
         /// </summary>
         /// <param name="value">
@@ -885,7 +917,10 @@ namespace OXGaming.TibiaAPI.Network
             }
 
             Write((ushort)value.Length);
-            Write(Encoding.ASCII.GetBytes(value));
+            if (value.Length > 0)
+            {
+                Write(Encoding.ASCII.GetBytes(value));
+            }
         }
 
         public void Write(Position value)
@@ -975,7 +1010,8 @@ namespace OXGaming.TibiaAPI.Network
                         }
                         else
                         {
-                            Write((ObjectInstance)value.Outfit);
+                            Write((ushort)0);
+                            Write((ushort)value.Outfit.Id);
                         }
 
                         Write((ushort)value.Mount.Id);
@@ -1014,7 +1050,8 @@ namespace OXGaming.TibiaAPI.Network
                         }
                         else
                         {
-                            Write((ObjectInstance)value.Outfit);
+                            Write((ushort)0);
+                            Write((ushort)value.Outfit.Id);
                         }
 
                         Write(value.Mount.Id);
@@ -1100,6 +1137,58 @@ namespace OXGaming.TibiaAPI.Network
             Write(value.GoldCost);
             Write(value.SuccessRatePercent);
             Write(value.ProtectionGoldCost);
+        }
+
+        public void Write(DailyReward dailyReward)
+        {
+            Write(dailyReward.Type);
+            switch (dailyReward.Type)
+            {
+                case 1: // Choice
+                    {
+                        Write(dailyReward.TotalChoiceRewards);
+
+                        var count = Math.Min(dailyReward.ChoiceRewards.Count, byte.MaxValue);
+                        Write((byte)count);
+                        for (var i = 0; i < count; ++i)
+                        {
+                            Write(dailyReward.ChoiceRewards[i].ItemId);
+                            Write(dailyReward.ChoiceRewards[i].Name);
+                            Write(dailyReward.ChoiceRewards[i].Weight);
+                        }
+                    }
+                    break;
+                case 2: // Set
+                    {
+                        var count = Math.Min(dailyReward.SetRewards.Count, byte.MaxValue);
+                        Write((byte)count);
+                        for (var i = 0; i < count; ++i)
+                        {
+                            Write(dailyReward.SetRewards[i].Type);
+                            switch (dailyReward.SetRewards[i].Type)
+                            {
+                                case 1: // Item
+                                    {
+                                        Write(dailyReward.SetRewards[i].ItemId);
+                                        Write(dailyReward.SetRewards[i].Name);
+                                        Write(dailyReward.SetRewards[i].Count);
+                                    }
+                                    break;
+                                case 2: // Prey Bonus Rerolls
+                                    {
+                                        Write(dailyReward.SetRewards[i].Count);
+                                    }
+                                    break;
+                                case 3: // XP Boost
+                                    {
+                                        Write(dailyReward.SetRewards[i].Duration);
+                                    }
+                                    break;
+                            }
+                        }
+                    }
+                    break;
+            }
         }
 
         /// <summary>
@@ -1282,7 +1371,7 @@ namespace OXGaming.TibiaAPI.Network
                 Xtea.Decrypt(_buffer, Size, xteaKey);
             }
 
-            if (zStream != null && IsCompressed)
+            if (IsCompressed && zStream != null)
             {
                 var compressedSize = BitConverter.ToUInt16(_buffer, 6);
                 var inBuffer = new byte[compressedSize];
@@ -1305,6 +1394,7 @@ namespace OXGaming.TibiaAPI.Network
                 }
 
                 Position = 2;
+                _wasCompressed = true;
                 Write(SequenceNumber ^ CompressedFlag);
                 Write((ushort)zStream.next_out_index);
                 Write(outBuffer, 0, (uint)zStream.next_out_index);
@@ -1314,8 +1404,45 @@ namespace OXGaming.TibiaAPI.Network
             Size = ReadUInt16() + PayloadDataPosition;
         }
 
-        public void PrepareToSend(uint[] xteaKey)
+        public void PrepareToSend(uint[] xteaKey, ZStream zStream = null)
         {
+            if (_wasCompressed && zStream != null)
+            {
+                var uncompressedSize = _size - 8;
+                var inBuffer = new byte[uncompressedSize];
+                var outBuffer = new byte[MaxMessageSize];
+
+                Array.Copy(_buffer, 8, inBuffer, 0, uncompressedSize);
+
+                zStream.next_in = inBuffer;
+                zStream.next_in_index = 0;
+                zStream.avail_in = inBuffer.Length;
+                zStream.next_out = outBuffer;
+                zStream.next_out_index = 0;
+                zStream.avail_out = outBuffer.Length;
+
+                var ret = zStream.deflate(zlibConst.Z_SYNC_FLUSH);
+                if (ret != zlibConst.Z_OK)
+                {
+                    throw new Exception($"[NetworkMessage.PrepareToSend] zlib deflate failed: {ret}");
+                }
+
+                // deflate appends a footer (0x00 0x00 0xFF 0xFF) to the end of the data,
+                // but we don't need it so ignore it when copying the data.
+                var data = new byte[zStream.next_out_index - 4];
+                Array.Copy(outBuffer, data, data.Length);
+
+                Position = 8;
+                Size = 8;
+                Write(outBuffer, 0, (uint)(zStream.next_out_index - 4));
+
+                if (!IsCompressed)
+                {
+                    Position = 2;
+                    Write(SequenceNumber + CompressedFlag);
+                }
+            }
+
             Position = 6;
             Write((ushort)(Size - PayloadDataPosition));
 

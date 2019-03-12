@@ -68,6 +68,7 @@ namespace OXGaming.TibiaAPI.Network
         private bool _isSendingToClient = false;
         private bool _isSendingToServer = false;
         private bool _isStarted;
+        private bool _recompressPackets;
 
         public delegate void ReceivedMessageEventHandler(byte[] data);
 
@@ -75,6 +76,8 @@ namespace OXGaming.TibiaAPI.Network
         public event ReceivedMessageEventHandler OnReceivedServerMessage;
 
         public ConnectionState ConnectionState { get; set; } = ConnectionState.Disconnected;
+
+        public bool AllowPacketModification { get; set; } = false;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Connection"/> class that acts as a proxy
@@ -96,7 +99,7 @@ namespace OXGaming.TibiaAPI.Network
         /// connection requests from the Tibia client.
         /// </summary>
         /// <returns>Returns true on success, or if already started. Returns false if an exception is thrown.</returns>
-        internal bool Start(bool enablePacketParsing = true, int httpPort = 80, string loginWebService = "")
+        internal bool Start(bool enablePacketParsing = true, int httpPort = 80, string loginWebService = "", bool recompressPackets = false)
         {
             if (_isStarted)
             {
@@ -116,7 +119,7 @@ namespace OXGaming.TibiaAPI.Network
                     _httpListener.Prefixes.Add(uriPrefix);
                 }
 
-                //_zStream.deflateInit(zlibConst.Z_DEFAULT_COMPRESSION, -15);
+                _zStream.deflateInit(zlibConst.Z_DEFAULT_COMPRESSION, -15);
                 _zStream.inflateInit(-15);
 
                 _httpListener.Start();
@@ -128,6 +131,7 @@ namespace OXGaming.TibiaAPI.Network
                 _isStarted = true;
                 _loginWebService = loginWebService;
                 _isPacketParsingEnabled = enablePacketParsing;
+                _recompressPackets = recompressPackets;
                 ConnectionState = ConnectionState.ConnectingStage1;
             }
             catch (Exception ex)
@@ -184,7 +188,7 @@ namespace OXGaming.TibiaAPI.Network
                 }
             }
 
-            message.PrepareToSend(_xteaKey);
+            message.PrepareToSend(_xteaKey, (_recompressPackets ? _zStream : null));
             SendToClient(message.GetData());
         }
 
@@ -399,10 +403,10 @@ namespace OXGaming.TibiaAPI.Network
                 _serverSocket.Close();
             }
 
-            //_zStream.deflateEnd();
+            _zStream.deflateEnd();
             _zStream.inflateEnd();
             _zStream = new ZStream();
-            //_zStream.deflateInit(zlibConst.Z_DEFAULT_COMPRESSION, -15);
+            _zStream.deflateInit(zlibConst.Z_DEFAULT_COMPRESSION, -15);
             _zStream.inflateInit(-15);
 
             _clientSequenceNumber = 1;
@@ -812,7 +816,7 @@ namespace OXGaming.TibiaAPI.Network
                         _clientOutMessage.SequenceNumber = _clientInMessage.SequenceNumber;
 
                         ParseClientMessage(_client, _clientInMessage, _clientOutMessage);
-                        SendToServer(_clientOutMessage);
+                        SendToServer(AllowPacketModification ? _clientOutMessage : _clientInMessage);
                     }
                     else
                     {
@@ -883,13 +887,11 @@ namespace OXGaming.TibiaAPI.Network
                     _serverOutMessage.SequenceNumber = _serverInMessage.SequenceNumber;
 
                     ParseServerMessage(_client, _serverInMessage, _serverOutMessage);
-                    // TODO: Until AppendToNetworkMessage() is complete for all server
-                    // packets, the original packet must be forwarded.
-                    SendToClient(_serverInMessage);
+                    SendToClient(AllowPacketModification ? _serverOutMessage : _serverInMessage);
                 }
                 else
                 {
-                    _serverInMessage.PrepareToSend(_xteaKey);
+                    _serverInMessage.PrepareToSend(_xteaKey, (_recompressPackets ? _zStream : null));
                     SendToClient(_serverInMessage.GetData());
                 }
 

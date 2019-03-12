@@ -7,15 +7,15 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
 {
     public class MonsterCyclopedia : ServerPacket
     {
-        public List<(string Name, string Description, byte UnknownByte, ushort CharmPoints, ushort UnknownShort, byte Id)> Charms { get; } =
-            new List<(string Name, string Description, byte UnknownByte, ushort CharmPoints, ushort UnknownShort, byte Id)>();
+        public List<(byte Id, string Name, string Description, byte Type, ushort CharmPoints, bool IsPurchased, bool IsAssigned, ushort RaceId, uint RemovalCost)> Charms { get; } =
+            new List<(byte Id, string Name, string Description, byte Type, ushort CharmPoints, bool IsPurchased, bool IsAssigned, ushort RaceId, uint RemovalCost)>();
         public List<ushort> CompletedMonsterIds { get; } = new List<ushort>();
         public List<(string Name, ushort Total, ushort Known)> MonsterRaces { get; } =
             new List<(string Name, ushort Total, ushort Known)>();
 
         public uint CharmPoints { get; set; }
 
-        public byte Unknown1 { get; set; }
+        public byte Unknown { get; set; }
 
         public MonsterCyclopedia(Client client)
         {
@@ -40,19 +40,27 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
             }
 
             // Todo: Figure out this unknown.
-            Unknown1 = message.ReadByte(); // Always 216?
+            Unknown = message.ReadByte(); // Always 216?
             CharmPoints = message.ReadUInt32();
 
-            Charms.Capacity = message.ReadUInt16();
+            Charms.Capacity = message.ReadByte();
             for (var i = 0; i < Charms.Capacity; ++i)
             {
+                var id = message.ReadByte();
                 var name = message.ReadString();
                 var description = message.ReadString();
-                var unknownByte = message.ReadByte();
+                var type = message.ReadByte();
                 var charmPoints = message.ReadUInt16();
-                var unknownShort = message.ReadUInt16();
-                var id = message.ReadByte();
-                Charms.Add((name, description, unknownByte, charmPoints, unknownShort, id));
+                var isPurchased = message.ReadBool();
+                var isAssigned = message.ReadBool();
+                var raceId = ushort.MinValue;
+                var removalCost = uint.MinValue;
+                if (isAssigned)
+                {
+                    raceId = message.ReadUInt16();
+                    removalCost = message.ReadUInt32();
+                }
+                Charms.Add((id, name, description, type, charmPoints, isPurchased, isAssigned, raceId, removalCost));
             }
 
             CompletedMonsterIds.Capacity = message.ReadUInt16();
@@ -67,8 +75,8 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
         {
             message.Write((byte)ServerPacketType.MonsterCyclopedia);
 
-            var count = (ushort)Math.Min(MonsterRaces.Count, ushort.MaxValue);
-            message.Write(count);
+            var count = Math.Min(MonsterRaces.Count, ushort.MaxValue);
+            message.Write((ushort)count);
             for (var i = 0; i < count; ++i)
             {
                 var (Name, Total, Known) = MonsterRaces[i];
@@ -77,20 +85,26 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
                 message.Write(Known);
             }
 
-            message.Write(Unknown1);
+            message.Write(Unknown);
             message.Write(CharmPoints);
 
-            count = (ushort)Math.Min(Charms.Count, ushort.MaxValue);
-            message.Write(count);
+            count = Math.Min(Charms.Count, byte.MaxValue);
+            message.Write((byte)count);
             for (var i = 0; i < count; ++i)
             {
                 var charm = Charms[i];
+                message.Write(charm.Id);
                 message.Write(charm.Name);
                 message.Write(charm.Description);
-                message.Write(charm.UnknownByte);
+                message.Write(charm.Type);
                 message.Write(charm.CharmPoints);
-                message.Write(charm.UnknownShort);
-                message.Write(charm.Id);
+                message.Write(charm.IsPurchased);
+                message.Write(charm.IsAssigned);
+                if (charm.IsAssigned)
+                {
+                    message.Write(charm.RaceId);
+                    message.Write(charm.RemovalCost);
+                }
             }
 
             count = (ushort)Math.Min(CompletedMonsterIds.Count, ushort.MaxValue);
