@@ -10,9 +10,11 @@ namespace OXGaming.TibiaAPI.Network.ClientPackets
 
         public uint OfferId { get; set; }
 
-        public ushort Unknown { get; set; }
-
+        public byte CategoryDeepLink { get; set; }
+        public byte DeeplinkSource { get; set; }
+        public byte OfferDeeplink { get; set; }
         public byte ServiceType { get; set; }
+        public byte SortOrder { get; set; }
 
         public RequestShopOffers(Client client)
         {
@@ -30,10 +32,18 @@ namespace OXGaming.TibiaAPI.Network.ClientPackets
             ServiceType = message.ReadByte();
             if (Client.VersionNumber >= 11900000)
             {
-                if (ServiceType == 2)
+                if (ServiceType == 1)
+                {
+                    CategoryDeepLink = message.ReadByte();
+                }
+                else if (ServiceType == 2)
                 {
                     Category = message.ReadString();
                     SubCategory = message.ReadString();
+                }
+                else if (ServiceType == 3)
+                {
+                    OfferDeeplink = message.ReadByte();
                 }
                 else if (ServiceType == 4)
                 {
@@ -56,8 +66,8 @@ namespace OXGaming.TibiaAPI.Network.ClientPackets
                 }
             }
 
-            // TODO: Figure out this unknown.
-            Unknown = message.ReadUInt16();
+            SortOrder = message.ReadByte();
+            DeeplinkSource = message.ReadByte();
             return true;
         }
 
@@ -67,10 +77,18 @@ namespace OXGaming.TibiaAPI.Network.ClientPackets
             message.Write(ServiceType);
             if (Client.VersionNumber >= 11900000)
             {
-                if (ServiceType == 2)
+                if (ServiceType == 1)
+                {
+                    message.Write(CategoryDeepLink);
+                }
+                else if (ServiceType == 2)
                 {
                     message.Write(Category);
                     message.Write(SubCategory);
+                }
+                else if (ServiceType == 3)
+                {
+                    message.Write(OfferDeeplink);
                 }
                 else if (ServiceType == 4)
                 {
@@ -92,7 +110,8 @@ namespace OXGaming.TibiaAPI.Network.ClientPackets
                     message.Write(Category);
                 }
             }
-            message.Write(Unknown);
+            message.Write(SortOrder);
+            message.Write(DeeplinkSource);
         }
     }
 }
