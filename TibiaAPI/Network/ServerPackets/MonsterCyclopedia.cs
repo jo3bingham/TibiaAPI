@@ -9,12 +9,13 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
     {
         public List<(byte Id, string Name, string Description, byte Type, ushort CharmPoints, bool IsPurchased, bool IsAssigned, ushort RaceId, uint RemovalCost)> Charms { get; } =
             new List<(byte Id, string Name, string Description, byte Type, ushort CharmPoints, bool IsPurchased, bool IsAssigned, ushort RaceId, uint RemovalCost)>();
-        public List<ushort> CompletedMonsterIds { get; } = new List<ushort>();
-        public List<(string Name, ushort Total, ushort Known)> MonsterRaces { get; } =
+        public List<ushort> CharmAssignableRaceIds { get; } = new List<ushort>();
+        public List<(string Name, ushort Total, ushort Known)> RaceCollections { get; } =
             new List<(string Name, ushort Total, ushort Known)>();
 
         public uint CharmPoints { get; set; }
 
+        public byte UnassignedCharms { get; set; }
         public byte Unknown { get; set; }
 
         public MonsterCyclopedia(Client client)
@@ -30,13 +31,13 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
                 return false;
             }
 
-            MonsterRaces.Capacity = message.ReadUInt16();
-            for (var i = 0; i < MonsterRaces.Capacity; ++i)
+            RaceCollections.Capacity = message.ReadUInt16();
+            for (var i = 0; i < RaceCollections.Capacity; ++i)
             {
                 var name = message.ReadString();
                 var total = message.ReadUInt16();
                 var known = message.ReadUInt16();
-                MonsterRaces.Add((name, total, known));
+                RaceCollections.Add((name, total, known));
             }
 
             // Todo: Figure out this unknown.
@@ -63,10 +64,12 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
                 Charms.Add((id, name, description, type, charmPoints, isPurchased, isAssigned, raceId, removalCost));
             }
 
-            CompletedMonsterIds.Capacity = message.ReadUInt16();
-            for (var i = 0; i < CompletedMonsterIds.Capacity; ++i)
+            UnassignedCharms = message.ReadByte();
+
+            CharmAssignableRaceIds.Capacity = message.ReadUInt16();
+            for (var i = 0; i < CharmAssignableRaceIds.Capacity; ++i)
             {
-                CompletedMonsterIds.Add(message.ReadUInt16());
+                CharmAssignableRaceIds.Add(message.ReadUInt16());
             }
             return true;
         }
@@ -75,11 +78,11 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
         {
             message.Write((byte)ServerPacketType.MonsterCyclopedia);
 
-            var count = Math.Min(MonsterRaces.Count, ushort.MaxValue);
+            var count = Math.Min(RaceCollections.Count, ushort.MaxValue);
             message.Write((ushort)count);
             for (var i = 0; i < count; ++i)
             {
-                var (Name, Total, Known) = MonsterRaces[i];
+                var (Name, Total, Known) = RaceCollections[i];
                 message.Write(Name);
                 message.Write(Total);
                 message.Write(Known);
@@ -107,11 +110,13 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
                 }
             }
 
-            count = (ushort)Math.Min(CompletedMonsterIds.Count, ushort.MaxValue);
-            message.Write(count);
+            message.Write(UnassignedCharms);
+
+            count = Math.Min(CharmAssignableRaceIds.Count, ushort.MaxValue);
+            message.Write((ushort)count);
             for (var i = 0; i < count; ++i)
             {
-                message.Write(CompletedMonsterIds[i]);
+                message.Write(CharmAssignableRaceIds[i]);
             }
         }
     }

@@ -7,9 +7,9 @@ namespace OXGaming.TibiaAPI.Store
         public List<OfferDetails> Details { get; } = new List<OfferDetails>();
         public List<Offer> Products { get; } = new List<Offer>();
 
+        public string Collection { get; set; }
         public string DisplayImage { get; set; }
         public string Name { get; set; }
-        public string ParentCategory { get; set; }
 
         public uint NewUntilTimestamp { get; set; }
 
@@ -29,5 +29,6 @@ namespace OXGaming.TibiaAPI.Store
         public byte TryType { get; set; }
 
         public bool NeedsUserConfigurationBeforeBuying { get; set; }
+        public bool IsFeatured { get; set; }
     }
 }

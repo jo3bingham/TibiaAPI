@@ -3,8 +3,8 @@
     public class Banner
     {
         public string Category { get; set; }
+        public string Collection { get; set; }
         public string Image { get; set; }
-        public string SubCategory { get; set; }
 
         public uint OfferId { get; set; }
 

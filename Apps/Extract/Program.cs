@@ -9,7 +9,6 @@ using OXGaming.TibiaAPI.Constants;
 using OXGaming.TibiaAPI.Network;
 using OXGaming.TibiaAPI.Network.ServerPackets;
 using OXGaming.TibiaAPI.Utilities;
-using OXGaming.TibiaAPI.WorldMap;
 
 namespace Extract
 {
