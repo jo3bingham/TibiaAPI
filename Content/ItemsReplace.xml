@@ -146,7 +146,6 @@
 	<item fromid="21878" toid="21832" fromname="spider (no silk)" toname="spider (silk)" />
 	<item fromid="21934" toid="10797" fromname="black crystal shards" toname="large black crystal" />
 	<item fromid="21935" toid="21388" fromname="grass" toname="lion's mane flower" />
-	<item fromid="21946" toid="21945" fromname="remains of an old amphora" toname="large amphora" />
 	<item fromid="21971" toid="21972" fromname="hole (ice)" toname="pitfall (transparent)" />
 	<item fromid="22539" toid="22538" fromname="stone tile (minimap red)" toname="stone tile (minimap white)" />
 	<item fromid="22540" toid="22538" fromname="stone tile (minimap green)" toname="stone tile (minimap white)" />
