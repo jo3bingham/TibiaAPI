@@ -4,6 +4,7 @@ using System.IO;
 
 using OXGaming.TibiaAPI;
 using OXGaming.TibiaAPI.Constants;
+using OXGaming.TibiaAPI.Utilities;
 
 namespace Record
 {
@@ -14,6 +15,10 @@ namespace Record
         static readonly Stopwatch _stopWatch = new Stopwatch();
 
         static BinaryWriter _binaryWriter;
+
+        private static Logger.LogLevel _logLevel = Logger.LogLevel.Error;
+
+        private static Logger.LogOutput _logOutput = Logger.LogOutput.Console;
 
         static string _loginWebService = string.Empty;
         static string _tibiaDirectory = string.Empty;
@@ -58,6 +63,16 @@ namespace Record
                             _loginWebService = splitArg[1];
                         }
                         break;
+                    case "--loglevel":
+                        {
+                            _logLevel = Logger.ConvertToLogLevel(splitArg[1]);
+                        }
+                        break;
+                    case "--logoutput":
+                        {
+                            _logOutput = Logger.ConvertToLogOutput(splitArg[1]);
+                        }
+                        break;
                     default:
                         break;
                 }
@@ -82,6 +97,9 @@ namespace Record
 
                     _binaryWriter = new BinaryWriter(File.OpenWrite(Path.Combine(recordingDirectory, filename)));
                     _binaryWriter.Write(client.Version);
+
+                    client.Logger.Level = _logLevel;
+                    client.Logger.Output = _logOutput;
 
                     client.Connection.OnReceivedClientMessage += Proxy_OnReceivedClientMessage;
                     client.Connection.OnReceivedServerMessage += Proxy_OnReceivedServerMessage;

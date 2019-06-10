@@ -16,6 +16,8 @@ namespace OXGaming.TibiaAPI
 
         public Network.Connection Connection { get; }
 
+        public Utilities.Logger Logger { get; } = new Utilities.Logger();
+
         public string Version { get; private set; }
 
         public uint VersionNumber { get; private set; } = 0;
@@ -76,14 +78,14 @@ namespace OXGaming.TibiaAPI
 
             if (string.IsNullOrEmpty(tibiaDirectory) || !Directory.Exists(tibiaDirectory))
             {
-                Console.WriteLine($"Directory does not exist: {tibiaDirectory}");
+                Logger.Error($"Directory does not exist: {tibiaDirectory}");
                 return false;
             }
 
             var packageJsonFile = Path.Combine(tibiaDirectory, "package.json");
             if (!File.Exists(packageJsonFile))
             {
-                Console.WriteLine($"package.json file does not exist: {packageJsonFile}");
+                Logger.Error($"package.json file does not exist: {packageJsonFile}");
                 return false;
             }
 
@@ -93,7 +95,7 @@ namespace OXGaming.TibiaAPI
                 packageJson = reader.ReadToEnd();
                 if (string.IsNullOrEmpty(packageJson))
                 {
-                    Console.WriteLine($"Failed to read package.json file.");
+                    Logger.Error($"Failed to read package.json file.");
                     return false;
                 }
             }
@@ -101,14 +103,14 @@ namespace OXGaming.TibiaAPI
             dynamic packageData = Newtonsoft.Json.JsonConvert.DeserializeObject(packageJson);
             if (packageData == null || packageData.version == null)
             {
-                Console.WriteLine("Failed to deserialize package.json file.");
+                Logger.Error("Failed to deserialize package.json file.");
                 return false;
             }
 
             Version = packageData.version;
             if (string.IsNullOrEmpty(Version))
             {
-                Console.WriteLine($"Failed to get client version.");
+                Logger.Error($"Failed to get client version.");
                 return false;
             }
             if (uint.TryParse(Version.Replace(".", ""), out var versionNumber))
@@ -117,7 +119,7 @@ namespace OXGaming.TibiaAPI
             }
             else
             {
-                Console.WriteLine($"Failed to convert the client version to a numerical value: {Version}");
+                Logger.Warning($"Failed to convert the client version to a numerical value: {Version}");
             }
 
             var assetsDirectory = string.Empty;
@@ -132,14 +134,14 @@ namespace OXGaming.TibiaAPI
 
             if (!Directory.Exists(assetsDirectory))
             {
-                Console.WriteLine($"Assets directory does not exist: {assetsDirectory}");
+                Logger.Error($"Assets directory does not exist: {assetsDirectory}");
                 return false;
             }
 
             var appearanceDatFiles = Directory.GetFiles(assetsDirectory, "*appearances-*.dat");
             if (appearanceDatFiles.Length != 1)
             {
-                Console.WriteLine($"Invalid number of appearances dat files: {appearanceDatFiles.Length}");
+                Logger.Error($"Invalid number of appearances dat files: {appearanceDatFiles.Length}");
                 return false;
             }
 
@@ -147,7 +149,7 @@ namespace OXGaming.TibiaAPI
 
             if (string.IsNullOrEmpty(_appearanceDatFile) || !File.Exists(_appearanceDatFile))
             {
-                Console.WriteLine($"Appearances .dat file does not exist: {_appearanceDatFile}");
+                Logger.Error($"Appearances .dat file does not exist: {_appearanceDatFile}");
                 return false;
             }
 
@@ -164,6 +166,7 @@ namespace OXGaming.TibiaAPI
                 if (disposing)
                 {
                     Connection.Dispose();
+                    Logger.Dispose();
                 }
 
                 disposedValue = true;

@@ -32,6 +32,10 @@ namespace Extract
         private static StreamWriter _monsterFile;
         private static StreamWriter _npcFile;
 
+        private static Logger.LogLevel _logLevel = Logger.LogLevel.Error;
+
+        private static Logger.LogOutput _logOutput = Logger.LogOutput.Console;
+
         private static string _outDirectory;
         private static string _recording;
         private static string _tibiaDirectory = string.Empty;
@@ -91,6 +95,12 @@ namespace Extract
                                     "the Extract app will first try to find the equivalent client version in the ClientData folder. " +
                                     "Otherwise, it will use the default path CipSoft uses upon installation.\n");
 
+                                Console.WriteLine("[optional] --loglevel=[debug,info,warning,error,disabled]: " +
+                                    "Sets the log level within the API. Default: error");
+                                Console.WriteLine("[optional] --logoutput=[console,file]: " +
+                                    "Sets the preferred output for logging from the API. " +
+                                    "file log is in the format: day_month_year__hour_minute_second.log. Default: console");
+
                                 Console.WriteLine("The following options can be combined to extract multiple data sets at once, or individually, " +
                                     "but at least one option must be specified or the extraction process won't proceed.\n");
                                 Console.WriteLine("--convert: Used for converting an old recording (.dat) to the new format (.oxr).\n");
@@ -125,6 +135,16 @@ namespace Extract
                         case "--tibiadirectory":
                             {
                                 _tibiaDirectory = splitArg[1].Replace("\"", "");
+                            }
+                            break;
+                        case "--loglevel":
+                            {
+                                _logLevel = Logger.ConvertToLogLevel(splitArg[1]);
+                            }
+                            break;
+                        case "--logoutput":
+                            {
+                                _logOutput = Logger.ConvertToLogOutput(splitArg[1]);
                             }
                             break;
                         default:
@@ -260,6 +280,9 @@ namespace Extract
                             Console.WriteLine("Converting to .oxr format...");
                             oxrFile.Write(_client.Version);
                         }
+
+                        _client.Logger.Level = _logLevel;
+                        _client.Logger.Output = _logOutput;
 
                         _client.Connection.OnReceivedServerCreatureDataPacket += (packet) =>
                         {
