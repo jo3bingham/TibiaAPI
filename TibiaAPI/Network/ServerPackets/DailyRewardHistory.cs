@@ -16,13 +16,8 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
             PacketType = ServerPacketType.DailyRewardHistory;
         }
 
-        public override bool ParseFromNetworkMessage(NetworkMessage message)
+        public override void ParseFromNetworkMessage(NetworkMessage message)
         {
-            if (message.ReadByte() != (byte)ServerPacketType.DailyRewardHistory)
-            {
-                return false;
-            }
-
             History.Capacity = message.ReadByte();
             for (var i = 0; i < History.Capacity; ++i)
             {
@@ -32,7 +27,6 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
                 var streakCount = message.ReadUInt16();
                 History.Add((timestamp, wasAdjustedByCustomerSupport, text, streakCount));
             }
-            return true;
         }
 
         public override void AppendToNetworkMessage(NetworkMessage message)

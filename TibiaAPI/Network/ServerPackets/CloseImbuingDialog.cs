@@ -10,14 +10,8 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
             PacketType = ServerPacketType.CloseImbuingDialog;
         }
 
-        public override bool ParseFromNetworkMessage(NetworkMessage message)
+        public override void ParseFromNetworkMessage(NetworkMessage message)
         {
-            if (message.ReadByte() != (byte)ServerPacketType.CloseImbuingDialog)
-            {
-                return false;
-            }
-
-            return true;
         }
 
         public override void AppendToNetworkMessage(NetworkMessage message)

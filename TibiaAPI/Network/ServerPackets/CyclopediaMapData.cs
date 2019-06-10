@@ -44,13 +44,8 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
             PacketType = ServerPacketType.CyclopediaMapData;
         }
 
-        public override bool ParseFromNetworkMessage(NetworkMessage message)
+        public override void ParseFromNetworkMessage(NetworkMessage message)
         {
-            if (message.ReadByte() != (byte)ServerPacketType.CyclopediaMapData)
-            {
-                return false;
-            }
-
             DataType = (CyclopediaMapDataType)message.ReadByte();
             if (DataType == CyclopediaMapDataType.MinimapMarker)
             {
@@ -156,7 +151,6 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
             {
                 throw new Exception($"[CyclopediaMapData.ParseFromNetworkMessage] Unknown type: {DataType}");
             }
-            return true;
         }
 
         public override void AppendToNetworkMessage(NetworkMessage message)

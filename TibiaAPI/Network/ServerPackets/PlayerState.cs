@@ -12,13 +12,8 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
             PacketType = ServerPacketType.PlayerState;
         }
 
-        public override bool ParseFromNetworkMessage(NetworkMessage message)
+        public override void ParseFromNetworkMessage(NetworkMessage message)
         {
-            if (message.ReadByte() != (byte)ServerPacketType.PlayerState)
-            {
-                return false;
-            }
-
             if (Client.VersionNumber >= 11400000)
             {
                 State = message.ReadUInt32();
@@ -27,7 +22,6 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
             {
                 State = message.ReadUInt16();
             }
-            return true;
         }
 
         public override void AppendToNetworkMessage(NetworkMessage message)

@@ -17,18 +17,12 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
             PacketType = ServerPacketType.StoreSuccess;
         }
 
-        public override bool ParseFromNetworkMessage(NetworkMessage message)
+        public override void ParseFromNetworkMessage(NetworkMessage message)
         {
-            if (message.ReadByte() != (byte)ServerPacketType.StoreSuccess)
-            {
-                return false;
-            }
-
             ReasonType = message.ReadByte();
             Text = message.ReadString();
             CurrentCreditBalance = message.ReadInt32();
             ConfirmedCreditBalance = message.ReadInt32();
-            return true;
         }
 
         public override void AppendToNetworkMessage(NetworkMessage message)

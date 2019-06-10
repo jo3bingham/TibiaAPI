@@ -20,13 +20,8 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
             PacketType = ServerPacketType.OpenChannel;
         }
 
-        public override bool ParseFromNetworkMessage(NetworkMessage message)
+        public override void ParseFromNetworkMessage(NetworkMessage message)
         {
-            if (message.ReadByte() != (byte)ServerPacketType.OpenChannel)
-            {
-                return false;
-            }
-
             ChannelId = message.ReadUInt16();
             ChannelName = message.ReadString();
 
@@ -41,7 +36,6 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
             {
                 InvitedPlayers.Add(message.ReadString());
             }
-            return true;
         }
 
         public override void AppendToNetworkMessage(NetworkMessage message)

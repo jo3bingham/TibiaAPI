@@ -25,13 +25,8 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
             PacketType = ServerPacketType.Talk;
         }
 
-        public override bool ParseFromNetworkMessage(NetworkMessage message)
+        public override void ParseFromNetworkMessage(NetworkMessage message)
         {
-            if (message.ReadByte() != (byte)ServerPacketType.Talk)
-            {
-                return false;
-            }
-
             StatementId = message.ReadUInt32();
             SpeakerName = message.ReadString();
             SpeakerLevel = message.ReadUInt16();
@@ -84,7 +79,6 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
                     throw new Exception("[ServerPackets.Talk.ParseFromNetworkMessage] Invalid MessageMode: " + MessageMode.ToString());
             }
             Text = message.ReadString();
-            return true;
         }
 
         public override void AppendToNetworkMessage(NetworkMessage message)

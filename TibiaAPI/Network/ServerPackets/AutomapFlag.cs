@@ -17,17 +17,11 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
             PacketType = ServerPacketType.CyclopediaMapData;
         }
 
-        public override bool ParseFromNetworkMessage(NetworkMessage message)
+        public override void ParseFromNetworkMessage(NetworkMessage message)
         {
-            if (message.ReadByte() != (byte)ServerPacketType.CyclopediaMapData)
-            {
-                return false;
-            }
-
             Position = message.ReadPosition();
             IconId = message.ReadByte();
             Description = message.ReadString();
-            return true;
         }
 
         public override void AppendToNetworkMessage(NetworkMessage message)

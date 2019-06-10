@@ -14,17 +14,11 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
             PacketType = ServerPacketType.LoginChallenge;
         }
 
-        public override bool ParseFromNetworkMessage(NetworkMessage message)
+        public override void ParseFromNetworkMessage(NetworkMessage message)
         {
-            if (message.ReadByte() != (byte)ServerPacketType.LoginChallenge)
-            {
-                return false;
-            }
-
             Timestamp = message.ReadUInt32();
             Random = message.ReadByte();
             Client.Connection.ConnectionState = ConnectionState.ConnectingStage2;
-            return true;
         }
 
         public override void AppendToNetworkMessage(NetworkMessage message)

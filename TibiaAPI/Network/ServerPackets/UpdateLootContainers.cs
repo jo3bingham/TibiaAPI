@@ -17,13 +17,8 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
             PacketType = ServerPacketType.UpdateLootContainers;
         }
 
-        public override bool ParseFromNetworkMessage(NetworkMessage message)
+        public override void ParseFromNetworkMessage(NetworkMessage message)
         {
-            if (message.ReadByte() != (byte)ServerPacketType.UpdateLootContainers)
-            {
-                return false;
-            }
-
             UseMainContainerAsFallback = message.ReadBool();
 
             LootContainers.Capacity = message.ReadByte();
@@ -33,7 +28,6 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
                 var objectId = message.ReadUInt16();
                 LootContainers.Add((id, objectId));
             }
-            return true;
         }
 
         public override void AppendToNetworkMessage(NetworkMessage message)

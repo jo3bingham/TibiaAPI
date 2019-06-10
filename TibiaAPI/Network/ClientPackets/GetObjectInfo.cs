@@ -15,13 +15,8 @@ namespace OXGaming.TibiaAPI.Network.ClientPackets
             PacketType = ClientPacketType.GetObjectInfo;
         }
 
-        public override bool ParseFromNetworkMessage(NetworkMessage message)
+        public override void ParseFromNetworkMessage(NetworkMessage message)
         {
-            if (message.ReadByte() != (byte)ClientPacketType.GetObjectInfo)
-            {
-                return false;
-            }
-
             Objects.Capacity = message.ReadByte();
             for (var i = 0; i < Objects.Capacity; ++i)
             {
@@ -29,7 +24,6 @@ namespace OXGaming.TibiaAPI.Network.ClientPackets
                 var data = message.ReadByte();
                 Objects.Add((objectId, data));
             }
-            return true;
         }
 
         public override void AppendToNetworkMessage(NetworkMessage message)

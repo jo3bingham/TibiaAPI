@@ -38,13 +38,8 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
             PacketType = ServerPacketType.PlayerDataCurrent;
         }
 
-        public override bool ParseFromNetworkMessage(NetworkMessage message)
+        public override void ParseFromNetworkMessage(NetworkMessage message)
         {
-            if (message.ReadByte() != (byte)ServerPacketType.PlayerDataCurrent)
-            {
-                return false;
-            }
-
             CurrentHealth = message.ReadUInt16();
             MaxHealth = message.ReadUInt16();
             FreeCapacity = message.ReadUInt32();
@@ -78,7 +73,6 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
             OfflineTrainingTime = message.ReadUInt16();
             RemainingStoreXpBoostSeconds = message.ReadUInt16();
             CanBuyMoreStoreXpBoosts = message.ReadBool();
-            return true;
         }
 
         public override void AppendToNetworkMessage(NetworkMessage message)

@@ -25,13 +25,8 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
             PacketType = ServerPacketType.BuddyData;
         }
 
-        public override bool ParseFromNetworkMessage(NetworkMessage message)
+        public override void ParseFromNetworkMessage(NetworkMessage message)
         {
-            if (message.ReadByte() != (byte)ServerPacketType.BuddyData)
-            {
-                return false;
-            }
-
             PlayerId = message.ReadUInt32();
             PlayerName = message.ReadString();
             Description = message.ReadString();
@@ -44,7 +39,6 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
             {
                 GroupsIds.Add(message.ReadByte());
             }
-            return true;
         }
 
         public override void AppendToNetworkMessage(NetworkMessage message)

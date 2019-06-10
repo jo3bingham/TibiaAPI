@@ -20,13 +20,8 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
             PacketType = ServerPacketType.MarketEnter;
         }
 
-        public override bool ParseFromNetworkMessage(NetworkMessage message)
+        public override void ParseFromNetworkMessage(NetworkMessage message)
         {
-            if (message.ReadByte() != (byte)ServerPacketType.MarketEnter)
-            {
-                return false;
-            }
-
             AccountBalance = message.ReadInt64();
             ActiveOffers = message.ReadByte();
 
@@ -37,7 +32,6 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
                 var count = message.ReadUInt16();
                 DepotObjects.Add((objectId, count));
             }
-            return true;
         }
 
         public override void AppendToNetworkMessage(NetworkMessage message)

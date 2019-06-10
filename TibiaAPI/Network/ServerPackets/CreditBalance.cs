@@ -4,6 +4,8 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
 {
     public class CreditBalance : ServerPacket
     {
+        public uint Unknown { get; set; }
+
         public int ConfirmedCreditBalance { get; set; }
         public int CurrentCreditBalance { get; set; }
 
@@ -15,20 +17,18 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
             PacketType = ServerPacketType.CreditBalance;
         }
 
-        public override bool ParseFromNetworkMessage(NetworkMessage message)
+        public override void ParseFromNetworkMessage(NetworkMessage message)
         {
-            if (message.ReadByte() != (byte)ServerPacketType.CreditBalance)
-            {
-                return false;
-            }
-
             UpdateCreditBalance = message.ReadBool();
             if (UpdateCreditBalance)
             {
                 CurrentCreditBalance = message.ReadInt32();
                 ConfirmedCreditBalance = message.ReadInt32();
+                if (Client.VersionNumber >= 12158493)
+                {
+                    Unknown = message.ReadUInt32();
+                }
             }
-            return true;
         }
 
         public override void AppendToNetworkMessage(NetworkMessage message)
@@ -39,6 +39,10 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
             {
                 message.Write(CurrentCreditBalance);
                 message.Write(ConfirmedCreditBalance);
+                if (Client.VersionNumber >= 12158493)
+                {
+                    message.Write(Unknown);
+                }
             }
         }
     }

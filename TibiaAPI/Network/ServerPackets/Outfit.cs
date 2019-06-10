@@ -29,13 +29,8 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
             PacketType = ServerPacketType.Outfit;
         }
 
-        public override bool ParseFromNetworkMessage(NetworkMessage message)
+        public override void ParseFromNetworkMessage(NetworkMessage message)
         {
-            if (message.ReadByte() != (byte)ServerPacketType.Outfit)
-            {
-                return false;
-            }
-
             OutfitId = message.ReadUInt16();
             HeadColor = message.ReadByte();
             TorsoColor = message.ReadByte();
@@ -84,7 +79,6 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
                     HirelingDresses.Add((femaleLooktype, maleLooktype));
                 }
             }
-            return true;
         }
 
         public override void AppendToNetworkMessage(NetworkMessage message)

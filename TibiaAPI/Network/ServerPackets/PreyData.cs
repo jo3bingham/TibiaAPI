@@ -34,13 +34,8 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
             PacketType = ServerPacketType.PreyData;
         }
 
-        public override bool ParseFromNetworkMessage(NetworkMessage message)
+        public override void ParseFromNetworkMessage(NetworkMessage message)
         {
-            if (message.ReadByte() != (byte)ServerPacketType.PreyData)
-            {
-                return false;
-            }
-
             Index = message.ReadByte();
 
             State = (PreyDataState)message.ReadByte();
@@ -107,7 +102,6 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
             {
                 Option = message.ReadByte(); // 0 = none, 1 = automatic reroll, 2 = locked
             }
-            return true;
         }
 
         public override void AppendToNetworkMessage(NetworkMessage message)

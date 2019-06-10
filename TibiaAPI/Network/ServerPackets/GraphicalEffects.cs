@@ -20,13 +20,8 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
             PacketType = ServerPacketType.GraphicalEffects;
         }
 
-        public override bool ParseFromNetworkMessage(NetworkMessage message)
+        public override void ParseFromNetworkMessage(NetworkMessage message)
         {
-            if (message.ReadByte() != (byte)ServerPacketType.GraphicalEffects)
-            {
-                return false;
-            }
-
             Position = message.ReadPosition();
             if (Client.VersionNumber < 12000000)
             {
@@ -77,7 +72,6 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
                     }
                 }
             }
-            return true;
         }
 
         public override void AppendToNetworkMessage(NetworkMessage message)

@@ -16,17 +16,11 @@ namespace OXGaming.TibiaAPI.Network.ClientPackets
             PacketType = ClientPacketType.ApplyImbuement;
         }
 
-        public override bool ParseFromNetworkMessage(NetworkMessage message)
+        public override void ParseFromNetworkMessage(NetworkMessage message)
         {
-            if (message.ReadByte() != (byte)ClientPacketType.ApplyImbuement)
-            {
-                return false;
-            }
-
             Slot = message.ReadByte();
             ImbuementId = message.ReadUInt32();
             UseProtectionCharm = message.ReadBool();
-            return true;
         }
 
         public override void AppendToNetworkMessage(NetworkMessage message)

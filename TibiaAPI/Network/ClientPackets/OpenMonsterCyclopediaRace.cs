@@ -12,15 +12,9 @@ namespace OXGaming.TibiaAPI.Network.ClientPackets
             PacketType = ClientPacketType.OpenMonsterCyclopediaRace;
         }
 
-        public override bool ParseFromNetworkMessage(NetworkMessage message)
+        public override void ParseFromNetworkMessage(NetworkMessage message)
         {
-            if (message.ReadByte() != (byte)ClientPacketType.OpenMonsterCyclopediaRace)
-            {
-                return false;
-            }
-
             Id = message.ReadUInt16();
-            return true;
         }
 
         public override void AppendToNetworkMessage(NetworkMessage message)

@@ -17,13 +17,8 @@ namespace OXGaming.TibiaAPI.Network.ClientPackets
             PacketType = ClientPacketType.CollectDailyReward;
         }
 
-        public override bool ParseFromNetworkMessage(NetworkMessage message)
+        public override void ParseFromNetworkMessage(NetworkMessage message)
         {
-            if (message.ReadByte() != (byte)ClientPacketType.CollectDailyReward)
-            {
-                return false;
-            }
-
             UseToken = message.ReadBool();
             Rewards.Capacity = message.ReadByte();
             for (var i = 0; i < Rewards.Capacity; ++i)
@@ -32,7 +27,6 @@ namespace OXGaming.TibiaAPI.Network.ClientPackets
                 var amount = message.ReadByte();
                 Rewards.Add((itemId, amount));
             }
-            return true;
         }
 
         public override void AppendToNetworkMessage(NetworkMessage message)

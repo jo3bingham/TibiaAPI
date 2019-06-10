@@ -14,20 +14,14 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
             PacketType = ServerPacketType.SetStoreDeepLink;
         }
 
-        public override bool ParseFromNetworkMessage(NetworkMessage message)
+        public override void ParseFromNetworkMessage(NetworkMessage message)
         {
-            if (message.ReadByte() != (byte)ServerPacketType.SetStoreDeepLink)
-            {
-                return false;
-            }
-
             if (Client.VersionNumber >= 11887288)
             {
                 // TODO: Figure out this unknown.
                 Unknown = message.ReadUInt16();
             }
             StoreServiceType = message.ReadByte();
-            return true;
         }
 
         public override void AppendToNetworkMessage(NetworkMessage message)

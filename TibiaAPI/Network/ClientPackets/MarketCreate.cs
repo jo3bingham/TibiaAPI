@@ -19,19 +19,13 @@ namespace OXGaming.TibiaAPI.Network.ClientPackets
             PacketType = ClientPacketType.MarketCreate;
         }
 
-        public override bool ParseFromNetworkMessage(NetworkMessage message)
+        public override void ParseFromNetworkMessage(NetworkMessage message)
         {
-            if (message.ReadByte() != (byte)ClientPacketType.MarketCreate)
-            {
-                return false;
-            }
-
             OfferType = (MarketOfferType)message.ReadByte();
             ObjectId = message.ReadUInt16();
             Amount = message.ReadUInt16();
             PiecePrice = message.ReadUInt32();
             IsAnonymous = message.ReadBool();
-            return true;
         }
 
         public override void AppendToNetworkMessage(NetworkMessage message)

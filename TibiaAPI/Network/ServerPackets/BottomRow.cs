@@ -13,19 +13,13 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
             PacketType = ServerPacketType.BottomRow;
         }
 
-        public override bool ParseFromNetworkMessage(NetworkMessage message)
+        public override void ParseFromNetworkMessage(NetworkMessage message)
         {
-            if (message.ReadByte() != (byte)ServerPacketType.BottomRow)
-            {
-                return false;
-            }
-
             var position = Client.WorldMapStorage.GetPosition();
             position.Y++;
             Client.WorldMapStorage.SetPosition(position.X, position.Y, position.Z);
             Client.WorldMapStorage.ScrollMap(0, -1);
             message.ReadArea(0, (MapSizeY - 1), (MapSizeX - 1), (MapSizeY - 1), Fields);
-            return true;
         }
 
         public override void AppendToNetworkMessage(NetworkMessage message)

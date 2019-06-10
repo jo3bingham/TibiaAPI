@@ -18,13 +18,8 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
             PacketType = ServerPacketType.MonsterCyclopediaMonsters;
         }
 
-        public override bool ParseFromNetworkMessage(NetworkMessage message)
+        public override void ParseFromNetworkMessage(NetworkMessage message)
         {
-            if (message.ReadByte() != (byte)ServerPacketType.MonsterCyclopediaMonsters)
-            {
-                return false;
-            }
-
             Name = message.ReadString();
             Monsters.Capacity = message.ReadUInt16();
             for (var i = 0; i < Monsters.Capacity; ++i)
@@ -38,7 +33,6 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
                 }
                 Monsters.Add((id, currentStage, occurrence));
             }
-            return true;
         }
 
         public override void AppendToNetworkMessage(NetworkMessage message)

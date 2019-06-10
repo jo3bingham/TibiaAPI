@@ -14,13 +14,8 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
             PacketType = ServerPacketType.BottomFloor;
         }
 
-        public override bool ParseFromNetworkMessage(NetworkMessage message)
+        public override void ParseFromNetworkMessage(NetworkMessage message)
         {
-            if (message.ReadByte() != (byte)ServerPacketType.BottomFloor)
-            {
-                return false;
-            }
-
             var position = Client.WorldMapStorage.GetPosition();
             position.X--;
             position.Y--;
@@ -49,7 +44,6 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
                    floorNumber--;
                }
             }
-            return true;
         }
 
         public override void AppendToNetworkMessage(NetworkMessage message)

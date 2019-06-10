@@ -12,15 +12,9 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
             PacketType = ServerPacketType.CloseChannel;
         }
 
-        public override bool ParseFromNetworkMessage(NetworkMessage message)
+        public override void ParseFromNetworkMessage(NetworkMessage message)
         {
-            if (message.ReadByte() != (byte)ServerPacketType.CloseChannel)
-            {
-                return false;
-            }
-
             ChannelId = message.ReadUInt16();
-            return true;
         }
 
         public override void AppendToNetworkMessage(NetworkMessage message)

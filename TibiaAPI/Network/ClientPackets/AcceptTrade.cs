@@ -10,14 +10,8 @@ namespace OXGaming.TibiaAPI.Network.ClientPackets
             PacketType = ClientPacketType.AcceptTrade;
         }
 
-        public override bool ParseFromNetworkMessage(NetworkMessage message)
+        public override void ParseFromNetworkMessage(NetworkMessage message)
         {
-            if (message.ReadByte() != (byte)ClientPacketType.AcceptTrade)
-            {
-                return false;
-            }
-
-            return true;
         }
 
         public override void AppendToNetworkMessage(NetworkMessage message)

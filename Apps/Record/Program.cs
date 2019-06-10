@@ -105,7 +105,8 @@ namespace Record
                     client.Connection.OnReceivedServerMessage += Proxy_OnReceivedServerMessage;
 
                     // Disable packet parsing as we only care about the raw, decrypted packets and speed.
-                    client.StartConnection(enablePacketParsing: false, httpPort: _httpPort, loginWebService: _loginWebService);
+                    client.Connection.AllowPacketModification = true;
+                    client.StartConnection(enablePacketParsing: true, httpPort: _httpPort, loginWebService: _loginWebService);
 
                     while (Console.ReadLine() != "quit")
                     {

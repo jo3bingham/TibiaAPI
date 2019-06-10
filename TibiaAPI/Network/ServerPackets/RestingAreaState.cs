@@ -15,17 +15,11 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
             PacketType = ServerPacketType.RestingAreaState;
         }
 
-        public override bool ParseFromNetworkMessage(NetworkMessage message)
+        public override void ParseFromNetworkMessage(NetworkMessage message)
         {
-            if (message.ReadByte() != (byte)ServerPacketType.RestingAreaState)
-            {
-                return false;
-            }
-
             IsInRestingArea = message.ReadBool();
             HasAnActiveBonus = message.ReadBool();
             Text = message.ReadString();
-            return true;
         }
 
         public override void AppendToNetworkMessage(NetworkMessage message)

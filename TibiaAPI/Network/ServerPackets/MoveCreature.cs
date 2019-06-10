@@ -22,13 +22,8 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
             PacketType = ServerPacketType.MoveCreature;
         }
 
-        public override bool ParseFromNetworkMessage(NetworkMessage message)
+        public override void ParseFromNetworkMessage(NetworkMessage message)
         {
-            if (message.ReadByte() != (byte)ServerPacketType.MoveCreature)
-            {
-                return false;
-            }
-
             Creature creature;
             ObjectInstance objectInstance;
             Position fromMapPosition;
@@ -92,7 +87,6 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
 
             Client.WorldMapStorage.PutObject(toMapPosition.X, toMapPosition.Y, toMapPosition.Z, objectInstance);
             creature.Position = ToPosition;
-            return true;
         }
 
         public override void AppendToNetworkMessage(NetworkMessage message)

@@ -18,13 +18,8 @@ namespace OXGaming.TibiaAPI.Network.ClientPackets
             PacketType = ClientPacketType.InspectObject;
         }
 
-        public override bool ParseFromNetworkMessage(NetworkMessage message)
+        public override void ParseFromNetworkMessage(NetworkMessage message)
         {
-            if (message.ReadByte() != (byte)ClientPacketType.InspectObject)
-            {
-                return false;
-            }
-
             InspectionType = message.ReadByte();
             if (InspectionType == 3) // Cyclopedia
             {
@@ -35,7 +30,6 @@ namespace OXGaming.TibiaAPI.Network.ClientPackets
             {
                 Position = message.ReadPosition();
             }
-            return true;
         }
 
         public override void AppendToNetworkMessage(NetworkMessage message)

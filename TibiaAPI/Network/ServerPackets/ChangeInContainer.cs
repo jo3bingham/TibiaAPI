@@ -17,17 +17,11 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
             PacketType = ServerPacketType.ChangeInContainer;
         }
 
-        public override bool ParseFromNetworkMessage(NetworkMessage message)
+        public override void ParseFromNetworkMessage(NetworkMessage message)
         {
-            if (message.ReadByte() != (byte)ServerPacketType.ChangeInContainer)
-            {
-                return false;
-            }
-
             ContainerId = message.ReadByte();
             Index = message.ReadUInt16();
             Item = message.ReadObjectInstance();
-            return true;
         }
 
         public override void AppendToNetworkMessage(NetworkMessage message)

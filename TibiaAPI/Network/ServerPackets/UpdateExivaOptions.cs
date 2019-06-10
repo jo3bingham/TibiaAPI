@@ -26,13 +26,8 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
             PacketType = ServerPacketType.UpdateExivaOptions;
         }
 
-        public override bool ParseFromNetworkMessage(NetworkMessage message)
+        public override void ParseFromNetworkMessage(NetworkMessage message)
         {
-            if (message.ReadByte() != (byte)ServerPacketType.UpdateExivaOptions)
-            {
-                return false;
-            }
-
             AllowAllCharacters = message.ReadBool();
             AllowMyGuildMembers = message.ReadBool();
             AllowMyPartyMembers = message.ReadBool();
@@ -55,7 +50,6 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
             }
 
             UnknownUShort2 = message.ReadUInt16();
-            return true;
         }
 
         public override void AppendToNetworkMessage(NetworkMessage message)

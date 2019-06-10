@@ -27,13 +27,8 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
             PacketType = ServerPacketType.CreateOnMap;
         }
 
-        public override bool ParseFromNetworkMessage(NetworkMessage message)
+        public override void ParseFromNetworkMessage(NetworkMessage message)
         {
-            if (message.ReadByte() != (byte)ServerPacketType.CreateOnMap)
-            {
-                return false;
-            }
-
             Position = message.ReadPosition();
             if (!Client.WorldMapStorage.IsVisible(Position.X, Position.Y, Position.Z, true))
             {
@@ -67,7 +62,6 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
                 }
                 Client.WorldMapStorage.InsertObject(mapPosition.X, mapPosition.Y, mapPosition.Z, StackPosition, ObjectInstance);
             }
-            return true;
         }
 
         public override void AppendToNetworkMessage(NetworkMessage message)

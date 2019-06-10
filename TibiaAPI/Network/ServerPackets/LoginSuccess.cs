@@ -16,6 +16,7 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
 
         public byte ReactivateAccountsCampaignId { get; set; }
         public byte StoreCreditPackageSize { get; set; }
+        public byte TournamentType { get; set; }
         public byte WorldType { get; set; }
 
         public bool BugReportsAllowed { get; set; }
@@ -28,13 +29,8 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
             PacketType = ServerPacketType.LoginSuccess;
         }
 
-        public override bool ParseFromNetworkMessage(NetworkMessage message)
+        public override void ParseFromNetworkMessage(NetworkMessage message)
         {
-            if (message.ReadByte() != (byte)ServerPacketType.LoginSuccess)
-            {
-                return false;
-            }
-
             PlayerId = message.ReadInt32();
             BeatDuration = message.ReadUInt16();
             SpeedA = message.ReadDouble();
@@ -47,7 +43,10 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
             StoreCreditPackageSize = message.ReadByte();
             ReactivateAccountsCampaignId = message.ReadByte();
             WorldType = message.ReadByte();
-            return true;
+            if (Client.VersionNumber >= 12158493)
+            {
+                TournamentType = message.ReadByte();
+            }
         }
 
         public override void AppendToNetworkMessage(NetworkMessage message)
@@ -65,6 +64,10 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
             message.Write(StoreCreditPackageSize);
             message.Write(ReactivateAccountsCampaignId);
             message.Write(WorldType);
+            if (Client.VersionNumber >= 12158493)
+            {
+                message.Write(TournamentType);
+            }
         }
     }
 }

@@ -15,19 +15,13 @@ namespace OXGaming.TibiaAPI.Network.ClientPackets
             PacketType = ClientPacketType.TrackQuestflags;
         }
 
-        public override bool ParseFromNetworkMessage(NetworkMessage message)
+        public override void ParseFromNetworkMessage(NetworkMessage message)
         {
-            if (message.ReadByte() != (byte)ClientPacketType.TrackQuestflags)
-            {
-                return false;
-            }
-
             Ids.Capacity = message.ReadByte();
             for (var i = 0; i < Ids.Capacity; ++i)
             {
                 Ids.Add(message.ReadUInt16());
             }
-            return true;
         }
 
         public override void AppendToNetworkMessage(NetworkMessage message)

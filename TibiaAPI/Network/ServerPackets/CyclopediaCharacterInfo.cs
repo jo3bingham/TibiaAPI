@@ -8,16 +8,18 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
 {
     public class CyclopediaCharacterInfo : ServerPacket
     {
-        public List<(ushort Id, uint Timestamp, bool IsSecret, string Name, string Description, byte Grade)> UnlockedAchievements { get; } =
-            new List<(ushort Id, uint Timestamp, bool IsSecret, string Name, string Description, byte Grade)>();
         public List<(byte Type, byte Amount)> DamageReductions { get; } =
             new List<(byte Type, byte Amount)>();
+        public List<(ushort Id, uint Amount)> Items { get; } =
+            new List<(ushort Id, uint Amount)>();
         public List<(uint Timestamp, string Cause)> RecentDeaths { get; } =
             new List<(uint Timestamp, string Cause)>();
         public List<(uint Timestamp, string Description, byte Status)> RecentPvpKills { get; } =
             new List<(uint Timestamp, string Description, byte Status)>();
         public List<(byte Type, ushort Level, ushort Base, ushort Loyalty, ushort Progress)> Skills { get; } =
             new List<(byte Type, ushort Level, ushort Base, ushort Loyalty, ushort Progress)>();
+        public List<(ushort Id, uint Timestamp, bool IsSecret, string Name, string Description, byte Grade)> UnlockedAchievements { get; } =
+            new List<(ushort Id, uint Timestamp, bool IsSecret, string Name, string Description, byte Grade)>();
 
         public AppearanceInstance Outfit { get; set; }
 
@@ -25,11 +27,13 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
         public string Vocation { get; set; }
 
         public ulong Experience { get; set; }
+        public ulong Unknown4 { get; set; }
 
         public uint CapacityBonus { get; set; }
         public uint CapacityCurrent { get; set; }
         public uint CapacityMax { get; set; }
         public uint Stamina { get; set; }
+        public uint Unknown3 { get; set; }
 
         public ushort AchievementPoints { get; set; }
         public ushort Armor { get; set; }
@@ -76,6 +80,8 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
         public byte LevelPercent { get; set; }
         public byte Soul { get; set; }
         public byte Type { get; set; }
+        public byte Unknown1 { get; set; }
+        public byte Unknown2 { get; set; }
 
         public bool ShowStoreXpBoostButton { get; set; }
 
@@ -85,15 +91,26 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
             PacketType = ServerPacketType.CyclopediaCharacterInfo;
         }
 
-        public override bool ParseFromNetworkMessage(NetworkMessage message)
+        public override void ParseFromNetworkMessage(NetworkMessage message)
         {
-            if (message.ReadByte() != (byte)ServerPacketType.CyclopediaCharacterInfo)
-            {
-                return false;
-            }
-
             Type = message.ReadByte();
-            if (Type == 1) // Character Stats
+            if (Client.VersionNumber >= 12158493)
+            {
+                Unknown1 = message.ReadByte();
+                if (Unknown1 == 1)
+                {
+                    return;
+                }
+            }
+            if (Type == 0)
+            {
+                PlayerName = message.ReadString();
+                Vocation = message.ReadString();
+                LevelDisplay = message.ReadUInt16();
+                Outfit = message.ReadCreatureOutfit();
+                Unknown2 = message.ReadByte();
+            }
+            else if (Type == 1) // Character Stats
             {
                 Experience = message.ReadUInt64();
                 Level = message.ReadUInt16();
@@ -103,6 +120,7 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
                 StoreXpBoost = message.ReadUInt16();
                 HuntingBoostFactor = message.ReadUInt16();
                 Food = message.ReadUInt16();
+                Unknown3 = message.ReadUInt32();
                 ShowStoreXpBoostButton = message.ReadBool();
                 HealthCurrent = message.ReadUInt16();
                 HealthMax = message.ReadUInt16();
@@ -123,11 +141,14 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
                     Skills.Add((message.ReadByte(), message.ReadUInt16(), message.ReadUInt16(), message.ReadUInt16(), message.ReadUInt16()));
                 }
 
-                Unknown = message.ReadUInt16(); // Always 218?
-                PlayerName = message.ReadString();
-                Vocation = message.ReadString();
-                LevelDisplay = message.ReadUInt16();
-                Outfit = message.ReadCreatureOutfit();
+                if (Client.VersionNumber < 12158493)
+                {
+                    Unknown = message.ReadUInt16(); // Always 218?
+                    PlayerName = message.ReadString();
+                    Vocation = message.ReadString();
+                    LevelDisplay = message.ReadUInt16();
+                    Outfit = message.ReadCreatureOutfit();
+                }
             }
             else if (Type == 2) // Combat Stats
             {
@@ -203,14 +224,52 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
                     UnlockedAchievements.Add((id, timestamp, isSecret, name, description, grade));
                 }
             }
-            return true;
+            else if (Type == 6) // Item Summary
+            {
+                Items.Capacity = message.ReadUInt16();
+                for (var i = 0; i < Items.Capacity; ++i)
+                {
+                    var id = message.ReadUInt16();
+                    var amount = message.ReadUInt32();
+                    Items.Add((id, amount));
+                }
+                Unknown4 = message.ReadUInt64();
+            }
+            else if (Type == 7) // Outfits and Mounts
+            {
+
+            }
         }
 
         public override void AppendToNetworkMessage(NetworkMessage message)
         {
             message.Write((byte)ServerPacketType.CyclopediaCharacterInfo);
             message.Write(Type);
-            if (Type == 1)
+            if (Client.VersionNumber >= 12158493)
+            {
+                message.Write(Unknown1);
+                if (Unknown1 == 1)
+                {
+                    return;
+                }
+            }
+            if (Type == 0)
+            {
+                message.Write(PlayerName);
+                message.Write(Vocation);
+                message.Write(LevelDisplay);
+                if (Outfit is OutfitInstance)
+                {
+                    message.Write((OutfitInstance)Outfit);
+                }
+                else
+                {
+                    message.Write((ushort)0);
+                    message.Write((ushort)Outfit.Id);
+                }
+                message.Write(Unknown2);
+            }
+            else if (Type == 1)
             {
                 message.Write(Experience);
                 message.Write(Level);
@@ -220,6 +279,7 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
                 message.Write(StoreXpBoost);
                 message.Write(HuntingBoostFactor);
                 message.Write(Food);
+                message.Write(Unknown3);
                 message.Write(ShowStoreXpBoostButton);
                 message.Write(HealthCurrent);
                 message.Write(HealthMax);
@@ -245,19 +305,22 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
                     message.Write(Skills[i].Progress);
                 }
 
-                message.Write(Unknown);
-                message.Write(PlayerName);
-                message.Write(Vocation);
-                message.Write(LevelDisplay);
+                if (Client.VersionNumber < 12158493)
+                {
+                    message.Write(Unknown);
+                    message.Write(PlayerName);
+                    message.Write(Vocation);
+                    message.Write(LevelDisplay);
 
-                if (Outfit is OutfitInstance)
-                {
-                    message.Write((OutfitInstance)Outfit);
-                }
-                else
-                {
-                    message.Write((ushort)0);
-                    message.Write((ushort)Outfit.Id);
+                    if (Outfit is OutfitInstance)
+                    {
+                        message.Write((OutfitInstance)Outfit);
+                    }
+                    else
+                    {
+                        message.Write((ushort)0);
+                        message.Write((ushort)Outfit.Id);
+                    }
                 }
             }
             else if (Type == 2)
@@ -279,7 +342,7 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
                 message.Write(Attack);
                 message.Write(AttackType);
                 message.Write(ConvertedDamagePercent);
-                message.Write((byte)1);
+                message.Write(ConvertedDamageType);
                 message.Write(Armor);
                 message.Write(Defense);
 
@@ -338,6 +401,18 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
                         message.Write(Grade);
                     }
                 }
+            }
+            else if (Type == 6)
+            {
+                var count = Math.Min(Items.Count, ushort.MaxValue);
+                message.Write((ushort)count);
+                for (var i = 0; i < count; ++i)
+                {
+                    var (Id, Amount) = Items[i];
+                    message.Write(Id);
+                    message.Write(Amount);
+                }
+                message.Write(Unknown4);
             }
         }
     }

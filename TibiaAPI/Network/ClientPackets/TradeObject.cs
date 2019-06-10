@@ -19,18 +19,12 @@ namespace OXGaming.TibiaAPI.Network.ClientPackets
             PacketType = ClientPacketType.TradeObject;
         }
 
-        public override bool ParseFromNetworkMessage(NetworkMessage message)
+        public override void ParseFromNetworkMessage(NetworkMessage message)
         {
-            if (message.ReadByte() != (byte)ClientPacketType.TradeObject)
-            {
-                return false;
-            }
-
             Position = message.ReadPosition();
             ObjectId = message.ReadUInt16();
             StackPosition = message.ReadByte();
             TradePartnerId = message.ReadUInt32();
-            return true;
         }
 
         public override void AppendToNetworkMessage(NetworkMessage message)

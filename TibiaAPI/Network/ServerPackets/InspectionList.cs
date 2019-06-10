@@ -24,13 +24,8 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
             PacketType = ServerPacketType.InspectionList;
         }
 
-        public override bool ParseFromNetworkMessage(NetworkMessage message)
+        public override void ParseFromNetworkMessage(NetworkMessage message)
         {
-            if (message.ReadByte() != (byte)ServerPacketType.InspectionList)
-            {
-                return false;
-            }
-
             IsPlayer = message.ReadBool();
 
             Items.Capacity = message.ReadByte();
@@ -70,7 +65,6 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
                     PlayerDetails.Add((name, description));
                 }
             }
-            return true;
         }
 
         public override void AppendToNetworkMessage(NetworkMessage message)

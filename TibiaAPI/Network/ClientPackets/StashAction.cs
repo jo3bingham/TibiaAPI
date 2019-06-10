@@ -16,13 +16,8 @@ namespace OXGaming.TibiaAPI.Network.ClientPackets
             PacketType = ClientPacketType.StashAction;
         }
 
-        public override bool ParseFromNetworkMessage(NetworkMessage message)
+        public override void ParseFromNetworkMessage(NetworkMessage message)
         {
-            if (message.ReadByte() != (byte)ClientPacketType.StashAction)
-            {
-                return false;
-            }
-
             StashType = message.ReadByte();
             // TODO: Are there more stash types? 3 = retrieve?
             if (StashType == 3)
@@ -30,7 +25,6 @@ namespace OXGaming.TibiaAPI.Network.ClientPackets
                 ItemId = message.ReadUInt16();
                 ItemCount = message.ReadUInt32();
             }
-            return true;
         }
 
         public override void AppendToNetworkMessage(NetworkMessage message)

@@ -15,19 +15,13 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
             PacketType = ServerPacketType.Trappers;
         }
 
-        public override bool ParseFromNetworkMessage(NetworkMessage message)
+        public override void ParseFromNetworkMessage(NetworkMessage message)
         {
-            if (message.ReadByte() != (byte)ServerPacketType.Trappers)
-            {
-                return false;
-            }
-
             CreatureIds.Capacity = message.ReadByte();
             for (var i = 0; i < CreatureIds.Capacity; ++i)
             {
                 CreatureIds.Add(message.ReadUInt32());
             }
-            return true;
         }
 
         public override void AppendToNetworkMessage(NetworkMessage message)

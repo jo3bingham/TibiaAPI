@@ -17,20 +17,14 @@ namespace OXGaming.TibiaAPI.Network.ClientPackets
             PacketType = ClientPacketType.QuickLootBlackWhitelist;
         }
 
-        public override bool ParseFromNetworkMessage(NetworkMessage message)
+        public override void ParseFromNetworkMessage(NetworkMessage message)
         {
-            if (message.ReadByte() != (byte)ClientPacketType.QuickLootBlackWhitelist)
-            {
-                return false;
-            }
-
             LootListType = message.ReadByte();
             Items.Capacity = message.ReadUInt16();
             for (var i = 0; i < Items.Capacity; ++i)
             {
                 Items.Add(message.ReadUInt16());
             }
-            return true;
         }
 
         public override void AppendToNetworkMessage(NetworkMessage message)

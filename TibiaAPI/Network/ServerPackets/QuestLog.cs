@@ -16,13 +16,8 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
             PacketType = ServerPacketType.QuestLog;
         }
 
-        public override bool ParseFromNetworkMessage(NetworkMessage message)
+        public override void ParseFromNetworkMessage(NetworkMessage message)
         {
-            if (message.ReadByte() != (byte)ServerPacketType.QuestLog)
-            {
-                return false;
-            }
-
             Quests.Capacity = message.ReadUInt16();
             for (var i = 0; i < Quests.Capacity; ++i)
             {
@@ -31,7 +26,6 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
                 var isCompleted = message.ReadBool();
                 Quests.Add((id, name, isCompleted));
             }
-            return true;
         }
 
         public override void AppendToNetworkMessage(NetworkMessage message)

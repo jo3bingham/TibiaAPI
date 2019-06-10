@@ -18,13 +18,8 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
             PacketType = ServerPacketType.UnjustifiedPoints;
         }
 
-        public override bool ParseFromNetworkMessage(NetworkMessage message)
+        public override void ParseFromNetworkMessage(NetworkMessage message)
         {
-            if (message.ReadByte() != (byte)ServerPacketType.UnjustifiedPoints)
-            {
-                return false;
-            }
-
             ProgressDay = message.ReadByte();
             KillsRemainingDay = message.ReadByte();
             ProgressWeek = message.ReadByte();
@@ -32,7 +27,6 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
             ProgressMonth = message.ReadByte();
             KillsRemainingMonth = message.ReadByte();
             SkullDuration = message.ReadByte();
-            return true;
         }
 
         public override void AppendToNetworkMessage(NetworkMessage message)

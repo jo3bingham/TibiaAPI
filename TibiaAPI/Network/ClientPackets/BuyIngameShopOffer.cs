@@ -16,20 +16,14 @@ namespace OXGaming.TibiaAPI.Network.ClientPackets
             PacketType = ClientPacketType.BuyIngameShopOffer;
         }
 
-        public override bool ParseFromNetworkMessage(NetworkMessage message)
+        public override void ParseFromNetworkMessage(NetworkMessage message)
         {
-            if (message.ReadByte() != (byte)ClientPacketType.BuyIngameShopOffer)
-            {
-                return false;
-            }
-
             OfferId = message.ReadUInt32();
             ServiceType = (StoreServiceType)message.ReadByte();
             if (ServiceType == StoreServiceType.CharacterNameChange)
             {
                 DesiredCharacterName = message.ReadString();
             }
-            return true;
         }
 
         public override void AppendToNetworkMessage(NetworkMessage message)

@@ -10,13 +10,8 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
             PacketType = ServerPacketType.WorldEntered;
         }
 
-        public override bool ParseFromNetworkMessage(NetworkMessage message)
+        public override void ParseFromNetworkMessage(NetworkMessage message)
         {
-            if (message.ReadByte() != (byte)ServerPacketType.WorldEntered)
-            {
-                return false;
-            }
-
             if (Client.Connection.ConnectionState == ConnectionState.Pending)
             {
                 Client.CreatureStorage.Reset();
@@ -25,7 +20,6 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
             }
 
             Client.Connection.ConnectionState = ConnectionState.Game;
-            return true;
         }
 
         public override void AppendToNetworkMessage(NetworkMessage message)

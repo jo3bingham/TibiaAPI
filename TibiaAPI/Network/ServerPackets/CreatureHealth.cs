@@ -13,16 +13,10 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
             Client = client;
             PacketType = ServerPacketType.CreatureHealth;
         }
-        public override bool ParseFromNetworkMessage(NetworkMessage message)
+        public override void ParseFromNetworkMessage(NetworkMessage message)
         {
-            if (message.ReadByte() != (byte)ServerPacketType.CreatureHealth)
-            {
-                return false;
-            }
-
             CreatureId = message.ReadUInt32();
             HealthPercent = message.ReadByte();
-            return true;
         }
 
         public override void AppendToNetworkMessage(NetworkMessage message)

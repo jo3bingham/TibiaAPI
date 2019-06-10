@@ -14,13 +14,8 @@ namespace OXGaming.TibiaAPI.Network.ClientPackets
             PacketType = ClientPacketType.GetOutfit;
         }
 
-        public override bool ParseFromNetworkMessage(NetworkMessage message)
+        public override void ParseFromNetworkMessage(NetworkMessage message)
         {
-            if (message.ReadByte() != (byte)ClientPacketType.GetOutfit)
-            {
-                return false;
-            }
-
             if (Client.VersionNumber >= 12000000)
             {
                 WindowType = (OutfitWindowType)message.ReadByte();
@@ -33,7 +28,6 @@ namespace OXGaming.TibiaAPI.Network.ClientPackets
             {
                 LookType = message.ReadUInt16();
             }
-            return true;
         }
 
         public override void AppendToNetworkMessage(NetworkMessage message)

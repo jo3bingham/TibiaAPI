@@ -21,13 +21,8 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
             PacketType = ServerPacketType.MonsterCyclopediaBonusEffects;
         }
 
-        public override bool ParseFromNetworkMessage(NetworkMessage message)
+        public override void ParseFromNetworkMessage(NetworkMessage message)
         {
-            if (message.ReadByte() != (byte)ServerPacketType.MonsterCyclopediaBonusEffects)
-            {
-                return false;
-            }
-
             CharmPoints = message.ReadUInt32();
 
             Charms.Capacity = message.ReadByte();
@@ -57,7 +52,6 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
             {
                 AssignableRaceIds.Add(message.ReadUInt16());
             }
-            return true;
         }
 
         public override void AppendToNetworkMessage(NetworkMessage message)

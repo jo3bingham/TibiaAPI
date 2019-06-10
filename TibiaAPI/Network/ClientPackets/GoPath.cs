@@ -15,19 +15,13 @@ namespace OXGaming.TibiaAPI.Network.ClientPackets
             PacketType = ClientPacketType.GoPath;
         }
 
-        public override bool ParseFromNetworkMessage(NetworkMessage message)
+        public override void ParseFromNetworkMessage(NetworkMessage message)
         {
-            if (message.ReadByte() != (byte)ClientPacketType.GoPath)
-            {
-                return false;
-            }
-
             Directions.Capacity = message.ReadByte();
             for (var i = 0; i < Directions.Capacity; ++i)
             {
                 Directions.Add((Direction)message.ReadByte());
             }
-            return true;
         }
 
         public override void AppendToNetworkMessage(NetworkMessage message)

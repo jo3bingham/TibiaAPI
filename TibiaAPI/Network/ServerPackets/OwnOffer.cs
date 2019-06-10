@@ -18,20 +18,14 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
             PacketType = ServerPacketType.OwnOffer;
         }
 
-        public override bool ParseFromNetworkMessage(NetworkMessage message)
+        public override void ParseFromNetworkMessage(NetworkMessage message)
         {
-            if (message.ReadByte() != (byte)ServerPacketType.OwnOffer)
-            {
-                return false;
-            }
-
             PlayerName = message.ReadString();
             Items.Capacity = message.ReadByte();
             for (var i = 0; i < Items.Capacity; ++i)
             {
                 Items.Add(message.ReadObjectInstance());
             }
-            return true;
         }
 
         public override void AppendToNetworkMessage(NetworkMessage message)

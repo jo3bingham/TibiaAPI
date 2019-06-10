@@ -22,13 +22,8 @@ namespace OXGaming.TibiaAPI.Network.ClientPackets
             PacketType = ClientPacketType.LootContainer;
         }
 
-        public override bool ParseFromNetworkMessage(NetworkMessage message)
+        public override void ParseFromNetworkMessage(NetworkMessage message)
         {
-            if (message.ReadByte() != (byte)ClientPacketType.LootContainer)
-            {
-                return false;
-            }
-
             Type = (LootContainerType)message.ReadByte();
             if (Type == LootContainerType.Add)
             {
@@ -49,7 +44,6 @@ namespace OXGaming.TibiaAPI.Network.ClientPackets
             {
                 throw new System.Exception($"[LootContainer.ParseFromNetworkMessage] Invalid type: {Type}");
             }
-            return true;
         }
 
         public override void AppendToNetworkMessage(NetworkMessage message)

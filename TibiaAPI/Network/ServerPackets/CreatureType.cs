@@ -15,20 +15,14 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
             PacketType = ServerPacketType.CreatureType;
         }
 
-        public override bool ParseFromNetworkMessage(NetworkMessage message)
+        public override void ParseFromNetworkMessage(NetworkMessage message)
         {
-            if (message.ReadByte() != (byte)ServerPacketType.CreatureType)
-            {
-                return false;
-            }
-
             CreatureId = message.ReadUInt32();
             Type = (Constants.CreatureType)message.ReadByte();
             if (Type == Constants.CreatureType.PlayerSummon)
             {
                 SummonerId = message.ReadUInt32();
             }
-            return true;
         }
 
         public override void AppendToNetworkMessage(NetworkMessage message)

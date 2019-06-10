@@ -25,13 +25,8 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
             PacketType = ServerPacketType.TrackQuestflags;
         }
 
-        public override bool ParseFromNetworkMessage(NetworkMessage message)
+        public override void ParseFromNetworkMessage(NetworkMessage message)
         {
-            if (message.ReadByte() != (byte)ServerPacketType.TrackQuestflags)
-            {
-                return false;
-            }
-
             IsQuestflags = message.ReadBool();
             if (IsQuestflags)
             {
@@ -52,7 +47,6 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
                 Name = message.ReadString();
                 Description = message.ReadString();
             }
-            return true;
         }
 
         public override void AppendToNetworkMessage(NetworkMessage message)

@@ -19,13 +19,8 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
             PacketType = ServerPacketType.DeleteOnMap;
         }
 
-        public override bool ParseFromNetworkMessage(NetworkMessage message)
+        public override void ParseFromNetworkMessage(NetworkMessage message)
         {
-            if (message.ReadByte() != (byte)ServerPacketType.DeleteOnMap)
-            {
-                return false;
-            }
-
             var x = message.ReadUInt16();
             if (x != ushort.MaxValue)
             {
@@ -66,7 +61,6 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
                     throw new Exception($"[DeleteOnMap.ParseFromNetworkMessage] Co-ordinate {creaturePosition} is out of range.");
                 }
             }
-            return true;
         }
 
         public override void AppendToNetworkMessage(NetworkMessage message)

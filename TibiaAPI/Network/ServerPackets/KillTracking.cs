@@ -20,13 +20,8 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
             PacketType = ServerPacketType.KillTracking;
         }
 
-        public override bool ParseFromNetworkMessage(NetworkMessage message)
+        public override void ParseFromNetworkMessage(NetworkMessage message)
         {
-            if (message.ReadByte() != (byte)ServerPacketType.KillTracking)
-            {
-                return false;
-            }
-
             CreatureName = message.ReadString();
             CreatureOutfit = message.ReadCreatureOutfit();
             Loot.Capacity = message.ReadByte();
@@ -34,7 +29,6 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
             {
                 Loot.Add(message.ReadObjectInstance());
             }
-            return true;
         }
 
         public override void AppendToNetworkMessage(NetworkMessage message)

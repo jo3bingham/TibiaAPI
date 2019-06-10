@@ -14,56 +14,26 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
             PacketType = ServerPacketType.RequestResourceBalance;
         }
 
-        public override bool ParseFromNetworkMessage(NetworkMessage message)
+        public override void ParseFromNetworkMessage(NetworkMessage message)
         {
-            if (message.ReadByte() != (byte)ServerPacketType.RequestResourceBalance)
-            {
-                return false;
-            }
-
             ResourceType = (ResourceType)message.ReadByte();
-            switch (ResourceType)
+            if (ResourceType == ResourceType.CharmPoints && Client.VersionNumber > 11586239)
             {
-                case ResourceType.BankGold:
-                case ResourceType.InventoryGold:
-                case ResourceType.PreyBonusRerolls:
-                case ResourceType.CollectionTokens:
-                    {
-                        Balance = message.ReadInt64();
-                    }
-                    break;
-                case ResourceType.CharmPoints:
-                    {
-                        if (Client.VersionNumber > 11586239)
-                        {
-                            Balance = message.ReadUInt32();
-                        }
-                        else
-                        {
-                            Balance = message.ReadInt64();
-                        }
-                    }
-                    break;
-                default:
-                    break;
+                Balance = message.ReadUInt32();
             }
-            return true;
+            else
+            {
+                Balance = message.ReadInt64();
+            }
         }
 
         public override void AppendToNetworkMessage(NetworkMessage message)
         {
             message.Write((byte)ServerPacketType.RequestResourceBalance);
             message.Write((byte)ResourceType);
-            if (ResourceType == ResourceType.CharmPoints)
+            if (ResourceType == ResourceType.CharmPoints && Client.VersionNumber > 11586239)
             {
-                if (Client.VersionNumber > 11586239)
-                {
-                    message.Write((uint)Balance);
-                }
-                else
-                {
-                    message.Write(Balance);
-                }
+                message.Write((uint)Balance);
             }
             else
             {
