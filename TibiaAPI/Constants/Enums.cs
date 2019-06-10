@@ -138,7 +138,8 @@
         InventoryGold = 1,
         PreyBonusRerolls = 10,
         CollectionTokens = 20,
-        CharmPoints = 30
+        CharmPoints = 30,
+        TournamentCoins = 40
     }
 
     public enum FluidColor
@@ -359,6 +360,8 @@
         InviteToChannel = 0xAB,
         ExcludeFromChannel = 0xAC,
         Cancel = 0xBE,
+        TournamentInformation = 0xC4,
+        TournamentLeaderboard = 0xC7,
         GetTransactionDetails = 0xC9,
         UpdateExivaOptions = 0xCA,
         BrowseField = 0xCB,
@@ -431,6 +434,7 @@
         Dead = 0x28,
         Stash = 0x29,
         DepotTileState = 0x2A,
+        SpecialContainersAvailable = 0x2C,
         ClientCheck = 0x63,
         FullMap = 0x64,
         TopRow = 0x65,
@@ -506,6 +510,9 @@
         TopFloor = 0xBE,
         BottomFloor = 0xBF,
         UpdateLootContainers = 0xC0,
+        PlayerDataTournament = 0xC1,
+        TournamentInformation = 0xC4,
+        TournamentLeaderboard = 0xC5,
         Outfit = 0xC8,
         ExivaSuppressed = 0xC9,
         UpdateExivaOptions = 0xCA,
