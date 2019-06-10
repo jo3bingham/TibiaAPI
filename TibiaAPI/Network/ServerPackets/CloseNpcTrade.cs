@@ -10,10 +10,6 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
             PacketType = ServerPacketType.CloseNpcTrade;
         }
 
-        public override void ParseFromNetworkMessage(NetworkMessage message)
-        {
-        }
-
         public override void AppendToNetworkMessage(NetworkMessage message)
         {
             message.Write((byte)ServerPacketType.CloseNpcTrade);

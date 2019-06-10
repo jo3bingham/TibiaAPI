@@ -10,7 +10,6 @@ namespace OXGaming.TibiaAPI.Network
 
         public virtual void ParseFromNetworkMessage(NetworkMessage message)
         {
-            throw new NotImplementedException();
         }
 
         public virtual void AppendToNetworkMessage(NetworkMessage message)

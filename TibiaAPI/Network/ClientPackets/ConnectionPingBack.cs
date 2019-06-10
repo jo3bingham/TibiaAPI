@@ -10,10 +10,6 @@ namespace OXGaming.TibiaAPI.Network.ClientPackets
             PacketType = ClientPacketType.ConnectionPingBack;
         }
 
-        public override void ParseFromNetworkMessage(NetworkMessage message)
-        {
-        }
-
         public override void AppendToNetworkMessage(NetworkMessage message)
         {
             message.Write((byte)ClientPacketType.ConnectionPingBack);

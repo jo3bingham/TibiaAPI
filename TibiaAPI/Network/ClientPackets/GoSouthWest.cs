@@ -10,10 +10,6 @@ namespace OXGaming.TibiaAPI.Network.ClientPackets
             PacketType = ClientPacketType.GoSouthWest;
         }
 
-        public override void ParseFromNetworkMessage(NetworkMessage message)
-        {
-        }
-
         public override void AppendToNetworkMessage(NetworkMessage message)
         {
             message.Write((byte)ClientPacketType.GoSouthWest);
