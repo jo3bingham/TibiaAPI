@@ -1,10 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
 
+using OXGaming.TibiaAPI.Appearances;
 using OXGaming.TibiaAPI.Constants;
 
 namespace OXGaming.TibiaAPI.Network.ServerPackets
 {
+    public class TournamentRank
+    {
+        public string WorldName { get; set; }
+
+        public uint Place { get; set; }
+        public uint Timestamp { get; set; }
+    }
+
     public class TournamentInformation : ServerPacket
     {
         public List<(byte Type, uint Cost)> Worlds { get; } = new List<(byte Type, uint Cost)>();
@@ -14,6 +23,12 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
         public List<string> StartingTowns { get; } = new List<string>();
 
         public List<byte> StartingVocations { get; } = new List<byte>();
+
+        public OutfitInstance RegularOutfit { get; set; }
+        public OutfitInstance RestrictedOutfit { get; set; }
+
+        public TournamentRank RegularHighestRank { get; set; } = new TournamentRank();
+        public TournamentRank RestrictedHighestRank { get; set; } = new TournamentRank();
 
         public string RegularCharacterName { get; set; }
         public string RestrictedCharacterName { get; set; }
@@ -25,12 +40,18 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
         public uint DailyTournamentPlaytime { get; set; }
         public uint Duration { get; set; }
         public uint RegularCharacterId { get; set; }
+        public uint RegularDeaths { get; set; }
+        public uint RegularPlaytime { get; set; }
         public uint RestrictedCharacterId { get; set; }
+        public uint RestrictedDeaths { get; set; }
+        public uint RestrictedPlaytime { get; set; }
         public uint TimeRemaining { get; set; }
         public uint TimestampFinished { get; set; }
         public uint TimestampRunning { get; set; }
         public uint TimestampSignUp { get; set; }
 
+        public ushort CompletedRegularTournaments { get; set; }
+        public ushort CompletedRestrictedTournaments { get; set; }
         public ushort DeathPenaltyModifier { get; set; }
         public ushort LootProbability { get; set; }
         public ushort SkillMultiplier { get; set; }
@@ -134,16 +155,46 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
                 {
                     RegularCharacterId = message.ReadUInt32();
                     RegularCharacterName = message.ReadString();
-                    unknown6 = message.ReadBytes(34);
+                    Client.Logger.Debug(RegularCharacterName);
+                    CompletedRegularTournaments = message.ReadUInt16();
+                    RegularHighestRank.Place = message.ReadUInt32();
+                    RegularHighestRank.Timestamp = message.ReadUInt32();
+                    RegularHighestRank.WorldName = message.ReadString();
+                    Client.Logger.Debug(RegularHighestRank.WorldName);
+                    unknown6 = message.ReadBytes(7);
                     Client.Logger.Debug($"Regular character unknown data: {BitConverter.ToString(unknown6).Replace('-', ' ')}");
+                    var outfitId = message.ReadUInt16();
+                    var headColor = message.ReadByte();
+                    var torsoColor = message.ReadByte();
+                    var legsColor = message.ReadByte();
+                    var detailColor = message.ReadByte();
+                    var addons = message.ReadByte();
+                    RegularOutfit = Client.AppearanceStorage.CreateOutfitInstance(outfitId, headColor, torsoColor, legsColor, detailColor, addons);
+                    RegularPlaytime = message.ReadUInt32();
+                    RegularDeaths = message.ReadUInt32();
                 }
                 HasRestrictedCharacter = message.ReadBool();
                 if (HasRestrictedCharacter)
                 {
                     RestrictedCharacterId = message.ReadUInt32();
                     RestrictedCharacterName = message.ReadString();
-                    unknown7 = message.ReadBytes(34);
+                    Client.Logger.Debug(RestrictedCharacterName);
+                    CompletedRestrictedTournaments = message.ReadUInt16();
+                    RestrictedHighestRank.Place = message.ReadUInt32();
+                    RestrictedHighestRank.Timestamp = message.ReadUInt32();
+                    RestrictedHighestRank.WorldName = message.ReadString();
+                    Client.Logger.Debug(RestrictedHighestRank.WorldName);
+                    unknown7 = message.ReadBytes(10);
                     Client.Logger.Debug($"Restricted character unknown data: {BitConverter.ToString(unknown7).Replace('-', ' ')}");
+                    var outfitId = message.ReadUInt16();
+                    var headColor = message.ReadByte();
+                    var torsoColor = message.ReadByte();
+                    var legsColor = message.ReadByte();
+                    var detailColor = message.ReadByte();
+                    var addons = message.ReadByte();
+                    RestrictedOutfit = Client.AppearanceStorage.CreateOutfitInstance(outfitId, headColor, torsoColor, legsColor, detailColor, addons);
+                    RestrictedPlaytime = message.ReadUInt32();
+                    RestrictedDeaths = message.ReadUInt32();
                 }
             }
         }
@@ -227,14 +278,38 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
                 {
                     message.Write(RegularCharacterId);
                     message.Write(RegularCharacterName);
+                    message.Write(CompletedRegularTournaments);
+                    message.Write(RegularHighestRank.Place);
+                    message.Write(RegularHighestRank.Timestamp);
+                    message.Write(RegularHighestRank.WorldName);
                     message.Write(unknown6);
+                    message.Write(RegularOutfit.Id);
+                    message.Write(RegularOutfit.ColorHead);
+                    message.Write(RegularOutfit.ColorTorso);
+                    message.Write(RegularOutfit.ColorLegs);
+                    message.Write(RegularOutfit.ColorDetail);
+                    message.Write(RegularOutfit.Addons);
+                    message.Write(RegularPlaytime);
+                    message.Write(RegularDeaths);
                 }
                 message.Write(HasRestrictedCharacter);
                 if (HasRestrictedCharacter)
                 {
                     message.Write(RestrictedCharacterId);
                     message.Write(RestrictedCharacterName);
+                    message.Write(CompletedRestrictedTournaments);
+                    message.Write(RestrictedHighestRank.Place);
+                    message.Write(RestrictedHighestRank.Timestamp);
+                    message.Write(RestrictedHighestRank.WorldName);
                     message.Write(unknown7);
+                    message.Write(RestrictedOutfit.Id);
+                    message.Write(RestrictedOutfit.ColorHead);
+                    message.Write(RestrictedOutfit.ColorTorso);
+                    message.Write(RestrictedOutfit.ColorLegs);
+                    message.Write(RestrictedOutfit.ColorDetail);
+                    message.Write(RestrictedOutfit.Addons);
+                    message.Write(RestrictedPlaytime);
+                    message.Write(RestrictedDeaths);
                 }
             }
         }

@@ -8,16 +8,41 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
 {
     public class CyclopediaCharacterInfo : ServerPacket
     {
+        public List<byte> HirelingJobIds { get; } = new List<byte>();
+        // NOTE: I'm assuming these are byte IDs like Jobs above; need to confirm.
+        public List<byte> HirelingOutfitIds { get; } = new List<byte>();
+
+        public List<(string Name, byte Amount)> Blessings { get; } =
+            new List<(string Name, byte Amount)>();
+
         public List<(byte Type, byte Amount)> DamageReductions { get; } =
             new List<(byte Type, byte Amount)>();
-        public List<(ushort Id, uint Amount)> Items { get; } =
+
+        public List<(ushort Id, uint Amount)> DepotItems { get; } =
             new List<(ushort Id, uint Amount)>();
+        public List<(ushort Id, uint Amount)> InboxItems { get; } =
+            new List<(ushort Id, uint Amount)>();
+        public List<(ushort Id, uint Amount)> InventoryItems { get; } =
+            new List<(ushort Id, uint Amount)>();
+        public List<(ushort Id, uint Amount)> StashItems { get; } =
+            new List<(ushort Id, uint Amount)>();
+        public List<(ushort Id, uint Amount)> StoreInboxItems { get; } =
+            new List<(ushort Id, uint Amount)>();
+
+
         public List<(uint Timestamp, string Cause)> RecentDeaths { get; } =
             new List<(uint Timestamp, string Cause)>();
         public List<(uint Timestamp, string Description, byte Status)> RecentPvpKills { get; } =
             new List<(uint Timestamp, string Description, byte Status)>();
+
+        public List<(ushort Id, string Name, bool IsPremium, uint Unknown)> Mounts { get; } =
+            new List<(ushort Id, string Name, bool IsPremium, uint Unknown)>();
+        public List<(ushort Id, string Name, byte Addons, bool IsPremium, uint Unknown)> Outfits { get; } =
+            new List<(ushort Id, string Name, byte Addons, bool IsPremium, uint Unknown)>();
+
         public List<(byte Type, ushort Level, ushort Base, ushort Loyalty, ushort Progress)> Skills { get; } =
             new List<(byte Type, ushort Level, ushort Base, ushort Loyalty, ushort Progress)>();
+
         public List<(ushort Id, uint Timestamp, bool IsSecret, string Name, string Description, byte Grade)> UnlockedAchievements { get; } =
             new List<(ushort Id, uint Timestamp, bool IsSecret, string Name, string Description, byte Grade)>();
 
@@ -32,6 +57,8 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
         public uint CapacityBonus { get; set; }
         public uint CapacityCurrent { get; set; }
         public uint CapacityMax { get; set; }
+        public uint RemainingDailyRewardXpBoostTime { get; set; }
+        public uint RemainingStoreXpBoostTime { get; set; }
         public uint Stamina { get; set; }
         public uint Unknown3 { get; set; }
 
@@ -62,6 +89,7 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
         public ushort ManaLeechChancePercentBase { get; set; }
         public ushort ManaLeechChancePercentBonus { get; set; }
         public ushort OfflineTrainingTime { get; set; }
+        public ushort PurchasedHouseItems { get; set; }
         public ushort RecentDeathsPageCurrent { get; set; }
         public ushort RecentDeathsPageMax { get; set; }
         public ushort RecentPvpKillsPageCurrent { get; set; }
@@ -75,14 +103,23 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
         public byte AttackType { get; set; }
         public byte BlessingsCurrent { get; set; }
         public byte BlessingsMax { get; set; }
+        public byte CharmExpansion { get; set; }
         public byte ConvertedDamagePercent { get; set; }
         public byte ConvertedDamageType { get; set; }
+        public byte DetailColor { get; set; }
+        public byte HeadColor { get; set; }
+        public byte InstantRewardAccess { get; set; }
+        public byte LegsColor { get; set; }
         public byte LevelPercent { get; set; }
+        public byte PermanentPreySlots { get; set; }
+        public byte PreyWildcards { get; set; }
+        public byte PurchasedHirelings { get; set; }
         public byte Soul { get; set; }
+        public byte TorsoColor { get; set; }
         public byte Type { get; set; }
-        public byte Unknown1 { get; set; }
         public byte Unknown2 { get; set; }
 
+        public bool IsUpToDate { get; set; }
         public bool ShowStoreXpBoostButton { get; set; }
 
         public CyclopediaCharacterInfo(Client client)
@@ -96,8 +133,8 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
             Type = message.ReadByte();
             if (Client.VersionNumber >= 12158493)
             {
-                Unknown1 = message.ReadByte();
-                if (Unknown1 == 1)
+                IsUpToDate = message.ReadBool();
+                if (IsUpToDate)
                 {
                     return;
                 }
@@ -105,6 +142,7 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
             if (Type == 0)
             {
                 PlayerName = message.ReadString();
+                Client.Logger.Error(PlayerName);
                 Vocation = message.ReadString();
                 LevelDisplay = message.ReadUInt16();
                 Outfit = message.ReadCreatureOutfit();
@@ -145,6 +183,7 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
                 {
                     Unknown = message.ReadUInt16(); // Always 218?
                     PlayerName = message.ReadString();
+                    Client.Logger.Error(PlayerName);
                     Vocation = message.ReadString();
                     LevelDisplay = message.ReadUInt16();
                     Outfit = message.ReadCreatureOutfit();
@@ -226,18 +265,84 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
             }
             else if (Type == 6) // Item Summary
             {
-                Items.Capacity = message.ReadUInt16();
-                for (var i = 0; i < Items.Capacity; ++i)
+                void ParseItems(List<(ushort, uint)> items)
                 {
-                    var id = message.ReadUInt16();
-                    var amount = message.ReadUInt32();
-                    Items.Add((id, amount));
+                    items.Clear();
+                    items.Capacity = message.ReadUInt16();
+                    for (var i = 0; i < items.Capacity; ++i)
+                    {
+                        var id = message.ReadUInt16();
+                        var amount = message.ReadUInt32();
+                        items.Add((id, amount));
+                    }
                 }
-                Unknown4 = message.ReadUInt64();
+
+                ParseItems(InventoryItems);
+                ParseItems(StoreInboxItems);
+                ParseItems(StashItems);
+                ParseItems(DepotItems);
+                ParseItems(InboxItems);
             }
             else if (Type == 7) // Outfits and Mounts
             {
-
+                Outfits.Clear();
+                Outfits.Capacity = message.ReadUInt16();
+                for (var i = 0; i < Outfits.Capacity; ++i)
+                {
+                    var id = message.ReadUInt16();
+                    var name = message.ReadString();
+                    var addons = message.ReadByte();
+                    var isPremium = message.ReadBool();
+                    var unknown = message.ReadUInt32();
+                    Outfits.Add((id, name, addons, isPremium, unknown));
+                }
+                HeadColor = message.ReadByte();
+                TorsoColor = message.ReadByte();
+                LegsColor = message.ReadByte();
+                DetailColor = message.ReadByte();
+                Mounts.Clear();
+                Mounts.Capacity = message.ReadUInt16();
+                for (var i = 0; i < Mounts.Capacity; ++i)
+                {
+                    var id = message.ReadUInt16();
+                    var name = message.ReadString();
+                    var isPremium = message.ReadBool();
+                    var unknown = message.ReadUInt32();
+                    Mounts.Add((id, name, isPremium, unknown));
+                }
+            }
+            else if (Type == 8) // Store Summary
+            {
+                RemainingStoreXpBoostTime = message.ReadUInt32();
+                RemainingDailyRewardXpBoostTime = message.ReadUInt32();
+                Blessings.Clear();
+                Blessings.Capacity = message.ReadByte();
+                for (var i = 0; i < Blessings.Capacity; ++i)
+                {
+                    var name = message.ReadString();
+                    var amount = message.ReadByte();
+                    Blessings.Add((name, amount));
+                }
+                PermanentPreySlots = message.ReadByte();
+                PreyWildcards = message.ReadByte();
+                InstantRewardAccess = message.ReadByte();
+                CharmExpansion = message.ReadByte();
+                PurchasedHirelings = message.ReadByte();
+                HirelingJobIds.Clear();
+                HirelingJobIds.Capacity = message.ReadByte();
+                for (var i = 0; i < HirelingJobIds.Capacity; ++i)
+                {
+                    HirelingJobIds.Add(message.ReadByte());
+                }
+                HirelingOutfitIds.Clear();
+                HirelingOutfitIds.Capacity = message.ReadByte();
+                for (var i = 0; i < HirelingJobIds.Capacity; ++i)
+                {
+                    HirelingOutfitIds.Add(message.ReadByte());
+                }
+                // This most certainly has information after it (Store IDs,
+                // item IDs, names; something to identify them).
+                PurchasedHouseItems = message.ReadUInt16();
             }
         }
 
@@ -247,8 +352,8 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
             message.Write(Type);
             if (Client.VersionNumber >= 12158493)
             {
-                message.Write(Unknown1);
-                if (Unknown1 == 1)
+                message.Write(IsUpToDate);
+                if (IsUpToDate)
                 {
                     return;
                 }
@@ -404,15 +509,82 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
             }
             else if (Type == 6)
             {
-                var count = Math.Min(Items.Count, ushort.MaxValue);
+                void AppendItems(List<(ushort id, uint amount)> items)
+                {
+                    var count = Math.Min(items.Count, ushort.MaxValue);
+                    message.Write((ushort)count);
+                    for (var i = 0; i < count; ++i)
+                    {
+                        var (Id, Amount) = items[i];
+                        message.Write(Id);
+                        message.Write(Amount);
+                    }
+                }
+
+                AppendItems(InventoryItems);
+                AppendItems(StoreInboxItems);
+                AppendItems(StashItems);
+                AppendItems(DepotItems);
+                AppendItems(InboxItems);
+            }
+            else if (Type == 7)
+            {
+                var count = Math.Min(Outfits.Count, ushort.MaxValue);
                 message.Write((ushort)count);
                 for (var i = 0; i < count; ++i)
                 {
-                    var (Id, Amount) = Items[i];
+                    var (Id, Name, Addons, IsPremium, Unknown) = Outfits[i];
                     message.Write(Id);
+                    message.Write(Name);
+                    message.Write(Addons);
+                    message.Write(IsPremium);
+                    message.Write(Unknown);
+                }
+                message.Write(HeadColor);
+                message.Write(TorsoColor);
+                message.Write(LegsColor);
+                message.Write(DetailColor);
+                count = Math.Min(Mounts.Count, ushort.MaxValue);
+                message.Write((ushort)count);
+                for (var i = 0; i < count; ++i)
+                {
+                    var (Id, Name, IsPremium, Unknown) = Mounts[i];
+                    message.Write(Id);
+                    message.Write(Name);
+                    message.Write(IsPremium);
+                    message.Write(Unknown);
+                }
+            }
+            else if (Type == 8)
+            {
+                message.Write(RemainingStoreXpBoostTime);
+                message.Write(RemainingDailyRewardXpBoostTime);
+                var count = Math.Min(Blessings.Count, byte.MaxValue);
+                message.Write((byte)count);
+                for (var i = 0; i < count; ++i)
+                {
+                    var (Name, Amount) = Blessings[i];
+                    message.Write(Name);
                     message.Write(Amount);
                 }
-                message.Write(Unknown4);
+                message.Write(PermanentPreySlots);
+                message.Write(PreyWildcards);
+                message.Write(InstantRewardAccess);
+                message.Write(CharmExpansion);
+                message.Write(PurchasedHirelings);
+                count = Math.Min(HirelingJobIds.Count, byte.MaxValue);
+                message.Write((byte)count);
+                for (var i = 0; i < count; ++i)
+                {
+                    message.Write(HirelingJobIds[i]);
+                }
+                count = Math.Min(HirelingOutfitIds.Count, byte.MaxValue);
+                message.Write((byte)count);
+                for (var i = 0; i < count; ++i)
+                {
+                    message.Write(HirelingOutfitIds[i]);
+                }
+                message.Write(PurchasedHouseItems);
             }
         }
     }
