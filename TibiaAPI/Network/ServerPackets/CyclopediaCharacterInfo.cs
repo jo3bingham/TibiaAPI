@@ -142,7 +142,6 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
             if (Type == 0)
             {
                 PlayerName = message.ReadString();
-                Client.Logger.Error(PlayerName);
                 Vocation = message.ReadString();
                 LevelDisplay = message.ReadUInt16();
                 Outfit = message.ReadCreatureOutfit();

@@ -84,7 +84,9 @@ namespace OXGaming.TibiaAPI.Network
         public event ReceivedPacketEventHandler OnReceivedClientExcludeFromChannelPacket;
         public event ReceivedPacketEventHandler OnReceivedClientCancelPacket;
         public event ReceivedPacketEventHandler OnReceivedClientTournamentInformationPacket;
+        public event ReceivedPacketEventHandler OnReceivedClientSubscribeToUpdatesPacket;
         public event ReceivedPacketEventHandler OnReceivedClientTournamentLeaderboardPacket;
+        public event ReceivedPacketEventHandler OnReceivedClientTournamentTicketActionPacket;
         public event ReceivedPacketEventHandler OnReceivedClientGetTransactionDetailsPacket;
         public event ReceivedPacketEventHandler OnReceivedClientUpdateExivaOptionsPacket;
         public event ReceivedPacketEventHandler OnReceivedClientBrowseFieldPacket;
@@ -120,7 +122,9 @@ namespace OXGaming.TibiaAPI.Network
         public event ReceivedPacketEventHandler OnReceivedClientStoreEventPacket;
         public event ReceivedPacketEventHandler OnReceivedClientFeatureEventPacket;
         public event ReceivedPacketEventHandler OnReceivedClientPreyActionPacket;
+        public event ReceivedPacketEventHandler OnReceivedClientSetHirelingNamePacket;
         public event ReceivedPacketEventHandler OnReceivedClientRequestResourceBalancePacket;
+        public event ReceivedPacketEventHandler OnReceivedClientGreetPacket;
         public event ReceivedPacketEventHandler OnReceivedClientTransferCurrencyPacket;
         public event ReceivedPacketEventHandler OnReceivedClientGetQuestLogPacket;
         public event ReceivedPacketEventHandler OnReceivedClientGetQuestLinePacket;
@@ -251,6 +255,7 @@ namespace OXGaming.TibiaAPI.Network
         public event ReceivedPacketEventHandler OnReceivedServerMonsterCyclopediaBonusEffectsPacket;
         public event ReceivedPacketEventHandler OnReceivedServerMonsterCyclopediaNewDetailsPacket;
         public event ReceivedPacketEventHandler OnReceivedServerCyclopediaCharacterInfoPacket;
+        public event ReceivedPacketEventHandler OnReceivedServerHirelingNameChangePacket;
         public event ReceivedPacketEventHandler OnReceivedServerTutorialHintPacket;
         public event ReceivedPacketEventHandler OnReceivedServerCyclopediaMapDataPacket;
         public event ReceivedPacketEventHandler OnReceivedServerAutomapFlagPacket;
@@ -550,8 +555,14 @@ namespace OXGaming.TibiaAPI.Network
                         case ClientPacketType.TournamentInformation:
                             packet.Forward = OnReceivedClientTournamentInformationPacket?.Invoke(packet) ?? true;
                             break;
+                        case ClientPacketType.SubscribeToUpdates:
+                            packet.Forward = OnReceivedClientSubscribeToUpdatesPacket?.Invoke(packet) ?? true;
+                            break;
                         case ClientPacketType.TournamentLeaderboard:
                             packet.Forward = OnReceivedClientTournamentLeaderboardPacket?.Invoke(packet) ?? true;
+                            break;
+                        case ClientPacketType.TournamentTicketAction:
+                            packet.Forward = OnReceivedClientTournamentTicketActionPacket?.Invoke(packet) ?? true;
                             break;
                         case ClientPacketType.GetTransactionDetails:
                             packet.Forward = OnReceivedClientGetTransactionDetailsPacket?.Invoke(packet) ?? true;
@@ -658,8 +669,14 @@ namespace OXGaming.TibiaAPI.Network
                         case ClientPacketType.PreyAction:
                             packet.Forward = OnReceivedClientPreyActionPacket?.Invoke(packet) ?? true;
                             break;
+                        case ClientPacketType.SetHirelingName:
+                            packet.Forward = OnReceivedClientSetHirelingNamePacket?.Invoke(packet) ?? true;
+                            break;
                         case ClientPacketType.RequestResourceBalance:
                             packet.Forward = OnReceivedClientRequestResourceBalancePacket?.Invoke(packet) ?? true;
+                            break;
+                        case ClientPacketType.Greet:
+                            packet.Forward = OnReceivedClientGreetPacket?.Invoke(packet) ?? true;
                             break;
                         case ClientPacketType.TransferCurrency:
                             packet.Forward = OnReceivedClientTransferCurrencyPacket?.Invoke(packet) ?? true;
@@ -1107,6 +1124,9 @@ namespace OXGaming.TibiaAPI.Network
                             break;
                         case ServerPacketType.CyclopediaCharacterInfo:
                             packet.Forward = OnReceivedServerCyclopediaCharacterInfoPacket?.Invoke(packet) ?? true;
+                            break;
+                        case ServerPacketType.HirelingNameChange:
+                            packet.Forward = OnReceivedServerHirelingNameChangePacket?.Invoke(packet) ?? true;
                             break;
                         case ServerPacketType.TutorialHint:
                             packet.Forward = OnReceivedServerTutorialHintPacket?.Invoke(packet) ?? true;

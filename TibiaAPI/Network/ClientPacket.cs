@@ -160,8 +160,12 @@ namespace OXGaming.TibiaAPI.Network
                     return new ClientPackets.Cancel(client);
                 case ClientPacketType.TournamentInformation:
                     return new ClientPackets.TournamentInformation(client);
+                case ClientPacketType.SubscribeToUpdates:
+                    return new ClientPackets.SubscribeToUpdates(client);
                 case ClientPacketType.TournamentLeaderboard:
                     return new ClientPackets.TournamentLeaderboard(client);
+                case ClientPacketType.TournamentTicketAction:
+                    return new ClientPackets.TournamentTicketAction(client);
                 case ClientPacketType.GetTransactionDetails:
                     return new ClientPackets.GetTransactionDetails(client);
                 case ClientPacketType.UpdateExivaOptions:
@@ -232,8 +236,12 @@ namespace OXGaming.TibiaAPI.Network
                     return new ClientPackets.FeatureEvent(client);
                 case ClientPacketType.PreyAction:
                     return new ClientPackets.PreyAction(client);
+                case ClientPacketType.SetHirelingName:
+                    return new ClientPackets.SetHirelingName(client);
                 case ClientPacketType.RequestResourceBalance:
                     return new ClientPackets.RequestResourceBalance(client);
+                case ClientPacketType.Greet:
+                    return new ClientPackets.Greet(client);
                 case ClientPacketType.TransferCurrency:
                     return new ClientPackets.TransferCurrency(client);
                 case ClientPacketType.GetQuestLog:

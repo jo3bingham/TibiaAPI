@@ -240,6 +240,8 @@ namespace OXGaming.TibiaAPI.Network
                     return new ServerPackets.MonsterCyclopediaNewDetails(client);
                 case ServerPacketType.CyclopediaCharacterInfo:
                     return new ServerPackets.CyclopediaCharacterInfo(client);
+                case ServerPacketType.HirelingNameChange:
+                    return new ServerPackets.HirelingNameChange(client);
                 case ServerPacketType.TutorialHint:
                     return new ServerPackets.TutorialHint(client);
                 case ServerPacketType.CyclopediaMapData:
