@@ -34,7 +34,7 @@ namespace OXGaming.TibiaAPI.Utilities
 
         private LogOutput _output = LogOutput.Console;
 
-        public LogLevel Level { get; set; } = LogLevel.Error;
+        public LogLevel Level { get; set; } = LogLevel.Disabled;
 
         public LogOutput Output
         {

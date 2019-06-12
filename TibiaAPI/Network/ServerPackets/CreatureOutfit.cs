@@ -31,7 +31,7 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
             {
                 message.Write((OutfitInstance)Outfit);
             }
-            else if (Outfit is ObjectInstance)
+            else
             {
                 message.Write((ushort)0);
                 message.Write((ushort)Outfit.Id);

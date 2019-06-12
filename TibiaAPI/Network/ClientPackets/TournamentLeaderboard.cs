@@ -15,6 +15,7 @@ namespace OXGaming.TibiaAPI.Network.ClientPackets
         public override void ParseFromNetworkMessage(NetworkMessage message)
         {
             unknown = message.ReadBytes(6);
+            Client.Logger.Debug($"TournamentLeaderboard unknown data: {System.BitConverter.ToString(unknown).Replace('-', ' ')}");
         }
 
         public override void AppendToNetworkMessage(NetworkMessage message)

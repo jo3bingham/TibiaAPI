@@ -24,8 +24,8 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
 
         public List<byte> StartingVocations { get; } = new List<byte>();
 
-        public OutfitInstance RegularOutfit { get; set; }
-        public OutfitInstance RestrictedOutfit { get; set; }
+        public AppearanceInstance RegularOutfit { get; set; }
+        public AppearanceInstance RestrictedOutfit { get; set; }
 
         public TournamentRank RegularHighestRank { get; set; } = new TournamentRank();
         public TournamentRank RestrictedHighestRank { get; set; } = new TournamentRank();
@@ -42,9 +42,13 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
         public uint RegularCharacterId { get; set; }
         public uint RegularDeaths { get; set; }
         public uint RegularPlaytime { get; set; }
+        public uint RegularTibiaCoinRewards { get; set; }
+        public uint RegularTournamentCoinRewards { get; set; }
         public uint RestrictedCharacterId { get; set; }
         public uint RestrictedDeaths { get; set; }
         public uint RestrictedPlaytime { get; set; }
+        public uint RestrictedTibiaCoinRewards { get; set; }
+        public uint RestrictedTournamentCoinRewards { get; set; }
         public uint TimeRemaining { get; set; }
         public uint TimestampFinished { get; set; }
         public uint TimestampRunning { get; set; }
@@ -54,25 +58,26 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
         public ushort CompletedRestrictedTournaments { get; set; }
         public ushort DeathPenaltyModifier { get; set; }
         public ushort LootProbability { get; set; }
+        public ushort MinimumRequiredLevel { get; set; }
+        public ushort RegularTournamentVoucherRewards { get; set; }
+        public ushort RestrictedTournamentVoucherRewards { get; set; }
         public ushort SkillMultiplier { get; set; }
         public ushort SpawnRateMultiplier { get; set; }
         public ushort XpMultiplier { get; set; }
 
         public byte HouseAuctionDurations { get; set; }
+        public byte OptionSelection { get; set; }
         public byte PvpType { get; set; }
         public byte RentPercentage { get; set; }
         public byte SelectedVocation { get; set; }
         public byte Type { get; set; }
-        public byte Unknown1 { get; set; }
-        public byte Unknown5 { get; set; }
+        public byte Unknown8 { get; set; }
 
         public bool HasClaimedVoucher { get; set; }
         public bool HasRegularCharacter { get; set; }
         public bool HasRestrictedCharacter { get; set; }
         public bool HasStarted { get; set; }
-        
-        private byte[] unknown6;
-        private byte[] unknown7;
+        public bool ShowOptionSelection { get; set; }
 
         public TournamentInformation(Client client)
         {
@@ -83,13 +88,18 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
         public override void ParseFromNetworkMessage(NetworkMessage message)
         {
             Type = message.ReadByte();
-            Client.Logger.Debug($"Type: {Type}");
             if (Type == 0)
             {
                 Worlds.Add((message.ReadByte(), message.ReadUInt32()));
                 Worlds.Add((message.ReadByte(), message.ReadUInt32()));
-                Unknown1 = message.ReadByte();
-                Client.Logger.Debug($"Worlds: {Worlds[0].Type}:{Worlds[0].Cost}, {Worlds[1].Type}:{Worlds[1].Cost}, Unknown: {Unknown1}");
+                ShowOptionSelection = message.ReadBool();
+                if (ShowOptionSelection)
+                {
+                    OptionSelection = message.ReadByte(); // 0 = Create Character Link, 1 = Buy Button
+                    Unknown8 = message.ReadByte();
+                    MinimumRequiredLevel = message.ReadUInt16();
+                    Client.Logger.Debug($"Option: {OptionSelection}, Unknown: {Unknown8}, Level: {MinimumRequiredLevel}");
+                }
             }
             else if (Type == 1)
             {
@@ -97,16 +107,12 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
                 TimestampRunning = message.ReadUInt32();
                 TimestampFinished = message.ReadUInt32();
                 HasStarted = message.ReadBool();
-                if (HasStarted)
-                {
-                    Duration = message.ReadUInt32();
-                    TimeRemaining = message.ReadUInt32();
-                }
+                Duration = message.ReadUInt32();
+                TimeRemaining = message.ReadUInt32();
             }
             else if (Type == 2)
             {
-                Unknown5 = message.ReadByte();
-                Client.Logger.Debug($"Unknown: {Unknown5}");
+                PvpType = message.ReadByte();
                 DailyTournamentPlaytime = message.ReadUInt32();
                 DeathPenaltyModifier = message.ReadUInt16();
                 XpMultiplier = message.ReadUInt16();
@@ -155,21 +161,14 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
                 {
                     RegularCharacterId = message.ReadUInt32();
                     RegularCharacterName = message.ReadString();
-                    Client.Logger.Debug(RegularCharacterName);
                     CompletedRegularTournaments = message.ReadUInt16();
                     RegularHighestRank.Place = message.ReadUInt32();
                     RegularHighestRank.Timestamp = message.ReadUInt32();
                     RegularHighestRank.WorldName = message.ReadString();
-                    Client.Logger.Debug(RegularHighestRank.WorldName);
-                    unknown6 = message.ReadBytes(7);
-                    Client.Logger.Debug($"Regular character unknown data: {BitConverter.ToString(unknown6).Replace('-', ' ')}");
-                    var outfitId = message.ReadUInt16();
-                    var headColor = message.ReadByte();
-                    var torsoColor = message.ReadByte();
-                    var legsColor = message.ReadByte();
-                    var detailColor = message.ReadByte();
-                    var addons = message.ReadByte();
-                    RegularOutfit = Client.AppearanceStorage.CreateOutfitInstance(outfitId, headColor, torsoColor, legsColor, detailColor, addons);
+                    RegularTibiaCoinRewards = message.ReadUInt32();
+                    RegularTournamentCoinRewards = message.ReadUInt32();
+                    RegularTournamentVoucherRewards = message.ReadUInt16();
+                    RegularOutfit = message.ReadCreatureOutfit();
                     RegularPlaytime = message.ReadUInt32();
                     RegularDeaths = message.ReadUInt32();
                 }
@@ -178,21 +177,14 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
                 {
                     RestrictedCharacterId = message.ReadUInt32();
                     RestrictedCharacterName = message.ReadString();
-                    Client.Logger.Debug(RestrictedCharacterName);
                     CompletedRestrictedTournaments = message.ReadUInt16();
                     RestrictedHighestRank.Place = message.ReadUInt32();
                     RestrictedHighestRank.Timestamp = message.ReadUInt32();
                     RestrictedHighestRank.WorldName = message.ReadString();
-                    Client.Logger.Debug(RestrictedHighestRank.WorldName);
-                    unknown7 = message.ReadBytes(10);
-                    Client.Logger.Debug($"Restricted character unknown data: {BitConverter.ToString(unknown7).Replace('-', ' ')}");
-                    var outfitId = message.ReadUInt16();
-                    var headColor = message.ReadByte();
-                    var torsoColor = message.ReadByte();
-                    var legsColor = message.ReadByte();
-                    var detailColor = message.ReadByte();
-                    var addons = message.ReadByte();
-                    RestrictedOutfit = Client.AppearanceStorage.CreateOutfitInstance(outfitId, headColor, torsoColor, legsColor, detailColor, addons);
+                    RestrictedTibiaCoinRewards = message.ReadUInt32();
+                    RestrictedTournamentCoinRewards = message.ReadUInt32();
+                    RestrictedTournamentVoucherRewards = message.ReadUInt16();
+                    RestrictedOutfit = message.ReadCreatureOutfit();
                     RestrictedPlaytime = message.ReadUInt32();
                     RestrictedDeaths = message.ReadUInt32();
                 }
@@ -209,7 +201,13 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
                 message.Write(Worlds[0].Cost);
                 message.Write(Worlds[1].Type);
                 message.Write(Worlds[1].Cost);
-                message.Write(Unknown1);
+                message.Write(ShowOptionSelection);
+                if (ShowOptionSelection)
+                {
+                    message.Write(OptionSelection);
+                    message.Write(Unknown8);
+                    message.Write(MinimumRequiredLevel);
+                }
             }
             else if (Type == 1)
             {
@@ -217,15 +215,12 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
                 message.Write(TimestampRunning);
                 message.Write(TimestampFinished);
                 message.Write(HasStarted);
-                if (HasStarted)
-                {
-                    message.Write(Duration);
-                    message.Write(TimeRemaining);
-                }
+                message.Write(Duration);
+                message.Write(TimeRemaining);
             }
             else if (Type == 2)
             {
-                message.Write(Unknown5);
+                message.Write(PvpType);
                 message.Write(DailyTournamentPlaytime);
                 message.Write(DeathPenaltyModifier);
                 message.Write(XpMultiplier);
@@ -282,13 +277,18 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
                     message.Write(RegularHighestRank.Place);
                     message.Write(RegularHighestRank.Timestamp);
                     message.Write(RegularHighestRank.WorldName);
-                    message.Write(unknown6);
-                    message.Write(RegularOutfit.Id);
-                    message.Write(RegularOutfit.ColorHead);
-                    message.Write(RegularOutfit.ColorTorso);
-                    message.Write(RegularOutfit.ColorLegs);
-                    message.Write(RegularOutfit.ColorDetail);
-                    message.Write(RegularOutfit.Addons);
+                    message.Write(RegularTibiaCoinRewards);
+                    message.Write(RegularTournamentCoinRewards);
+                    message.Write(RegularTournamentVoucherRewards);
+                    if (RegularOutfit is OutfitInstance)
+                    {
+                        message.Write((OutfitInstance)RegularOutfit);
+                    }
+                    else
+                    {
+                        message.Write((ushort)0);
+                        message.Write((ushort)RegularOutfit.Id);
+                    }
                     message.Write(RegularPlaytime);
                     message.Write(RegularDeaths);
                 }
@@ -301,13 +301,18 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
                     message.Write(RestrictedHighestRank.Place);
                     message.Write(RestrictedHighestRank.Timestamp);
                     message.Write(RestrictedHighestRank.WorldName);
-                    message.Write(unknown7);
-                    message.Write(RestrictedOutfit.Id);
-                    message.Write(RestrictedOutfit.ColorHead);
-                    message.Write(RestrictedOutfit.ColorTorso);
-                    message.Write(RestrictedOutfit.ColorLegs);
-                    message.Write(RestrictedOutfit.ColorDetail);
-                    message.Write(RestrictedOutfit.Addons);
+                    message.Write(RestrictedTibiaCoinRewards);
+                    message.Write(RestrictedTournamentCoinRewards);
+                    message.Write(RestrictedTournamentVoucherRewards);
+                    if (RestrictedOutfit is OutfitInstance)
+                    {
+                        message.Write((OutfitInstance)RestrictedOutfit);
+                    }
+                    else
+                    {
+                        message.Write((ushort)0);
+                        message.Write((ushort)RestrictedOutfit.Id);
+                    }
                     message.Write(RestrictedPlaytime);
                     message.Write(RestrictedDeaths);
                 }
