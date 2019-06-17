@@ -21,8 +21,11 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
         {
             ReasonType = message.ReadByte();
             Text = message.ReadString();
-            CurrentCreditBalance = message.ReadInt32();
-            ConfirmedCreditBalance = message.ReadInt32();
+            if (Client.VersionNumber < 12158493)
+            {
+                CurrentCreditBalance = message.ReadInt32();
+                ConfirmedCreditBalance = message.ReadInt32();
+            }
         }
 
         public override void AppendToNetworkMessage(NetworkMessage message)
@@ -30,8 +33,11 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
             message.Write((byte)ServerPacketType.StoreSuccess);
             message.Write(ReasonType);
             message.Write(Text);
-            message.Write(CurrentCreditBalance);
-            message.Write(ConfirmedCreditBalance);
+            if (Client.VersionNumber < 12158493)
+            {
+                message.Write(CurrentCreditBalance);
+                message.Write(ConfirmedCreditBalance);
+            }
         }
     }
 }

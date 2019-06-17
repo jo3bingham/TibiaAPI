@@ -71,7 +71,7 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
         public byte RentPercentage { get; set; }
         public byte SelectedVocation { get; set; }
         public byte Type { get; set; }
-        public byte Unknown8 { get; set; }
+        public byte Tickets { get; set; }
 
         public bool HasClaimedVoucher { get; set; }
         public bool HasRegularCharacter { get; set; }
@@ -96,9 +96,8 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
                 if (ShowOptionSelection)
                 {
                     OptionSelection = message.ReadByte(); // 0 = Create Character Link, 1 = Buy Button
-                    Unknown8 = message.ReadByte();
+                    Tickets = message.ReadByte();
                     MinimumRequiredLevel = message.ReadUInt16();
-                    Client.Logger.Debug($"Option: {OptionSelection}, Unknown: {Unknown8}, Level: {MinimumRequiredLevel}");
                 }
             }
             else if (Type == 1)
@@ -205,7 +204,7 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
                 if (ShowOptionSelection)
                 {
                     message.Write(OptionSelection);
-                    message.Write(Unknown8);
+                    message.Write(Tickets);
                     message.Write(MinimumRequiredLevel);
                 }
             }
