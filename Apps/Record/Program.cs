@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Threading;
 
 using OXGaming.TibiaAPI;
 using OXGaming.TibiaAPI.Constants;
@@ -8,13 +10,28 @@ using OXGaming.TibiaAPI.Utilities;
 
 namespace Record
 {
+    class Message
+    {
+        public byte[] Data { get; set; }
+
+        public long Timestamp { get; set; }
+
+        public PacketType Type { get; set; }
+    }
+
     class Program
     {
-        static readonly object _writerLock = new object();
+        static readonly Queue<Message> _fileWriteQueue = new Queue<Message>();
+
+        static readonly object _queueLock = new object();
 
         static readonly Stopwatch _stopWatch = new Stopwatch();
 
         static BinaryWriter _binaryWriter;
+
+        static FileStream _fileStream;
+
+        static Thread _fileWriteThread;
 
         private static Logger.LogLevel _logLevel = Logger.LogLevel.Error;
 
@@ -24,6 +41,8 @@ namespace Record
         static string _tibiaDirectory = string.Empty;
 
         static int _httpPort = 80;
+
+        static bool _isWritingToFile = false;
 
         static void ParseArgs(string[] args)
         {
@@ -95,7 +114,9 @@ namespace Record
                         Directory.CreateDirectory(recordingDirectory);
                     }
 
-                    _binaryWriter = new BinaryWriter(File.OpenWrite(Path.Combine(recordingDirectory, filename)));
+                    _fileStream = new FileStream(Path.Combine(recordingDirectory, filename), FileMode.Append);
+                    _binaryWriter = new BinaryWriter(_fileStream);
+
                     _binaryWriter.Write(client.Version);
 
                     client.Logger.Level = _logLevel;
@@ -105,8 +126,7 @@ namespace Record
                     client.Connection.OnReceivedServerMessage += Proxy_OnReceivedServerMessage;
 
                     // Disable packet parsing as we only care about the raw, decrypted packets and speed.
-                    client.Connection.AllowPacketModification = true;
-                    client.StartConnection(enablePacketParsing: true, httpPort: _httpPort, loginWebService: _loginWebService);
+                    client.StartConnection(enablePacketParsing: false, httpPort: _httpPort, loginWebService: _loginWebService);
 
                     while (Console.ReadLine() != "quit")
                     {
@@ -116,9 +136,6 @@ namespace Record
 
                     client.Connection.OnReceivedClientMessage -= Proxy_OnReceivedClientMessage;
                     client.Connection.OnReceivedServerMessage -= Proxy_OnReceivedServerMessage;
-
-                    // Give the proxy time to quit, and any pending packets to be consumed.
-                    System.Threading.Thread.Sleep(1000);
                 }
             }
             catch (Exception ex)
@@ -127,9 +144,22 @@ namespace Record
             }
             finally
             {
+                if (_fileWriteThread != null)
+                {
+                    // Block the application from shutting down until the file-write thread
+                    // finishes writing all incoming packets to disk. This is safe to do as
+                    // the proxy connection will have been stopped, no matter what, by now.
+                    _fileWriteThread.Join();
+                }
+
                 if (_binaryWriter != null)
                 {
                     _binaryWriter.Close();
+                }
+
+                if (_fileStream != null)
+                {
+                    _fileStream.Close();
                 }
 
                 if (_stopWatch.IsRunning)
@@ -141,36 +171,78 @@ namespace Record
 
         private static void Proxy_OnReceivedClientMessage(byte[] data)
         {
-            WriteMessage(PacketType.Client, data);
+            QueueMessage(PacketType.Client, data);
         }
 
         private static void Proxy_OnReceivedServerMessage(byte[] data)
         {
-            WriteMessage(PacketType.Server, data);
+            QueueMessage(PacketType.Server, data);
         }
 
-        private static void WriteMessage(PacketType packetType, byte[] data)
+        private static void QueueMessage(PacketType packetType, byte[] data)
         {
             if (!_stopWatch.IsRunning)
             {
                 _stopWatch.Start();
             }
 
-            var timestamp = _stopWatch.ElapsedMilliseconds;
+            var packetData = new Message
+            {
+                Data = data,
+                Timestamp = _stopWatch.ElapsedMilliseconds,
+                Type = packetType
+            };
 
-            lock (_writerLock)
+            lock (_queueLock)
+            {
+                _fileWriteQueue.Enqueue(packetData);
+            }
+
+            if (!_isWritingToFile)
             {
                 try
                 {
-                    _binaryWriter.Write((byte)packetType);
-                    _binaryWriter.Write(timestamp);
-                    _binaryWriter.Write(data.Length);
-                    _binaryWriter.Write(data);
+                    _isWritingToFile = true;
+                    _fileWriteThread = new Thread(new ThreadStart(WriteData));
+                    _fileWriteThread.Start();
                 }
                 catch (Exception ex)
                 {
                     Console.WriteLine(ex);
                 }
+            }
+        }
+
+        private static void WriteData()
+        {
+            try
+            {
+                Message packet = null;
+
+                lock (_queueLock)
+                {
+                    if (_fileWriteQueue.Count > 0)
+                    {
+                        packet = _fileWriteQueue.Dequeue();
+                    }
+                }
+
+                if (packet == null)
+                {
+                    _isWritingToFile = false;
+                    return;
+                }
+
+                _binaryWriter.Write((byte)packet.Type);
+                _binaryWriter.Write(packet.Timestamp);
+                _binaryWriter.Write(packet.Data.Length);
+                _binaryWriter.Write(packet.Data);
+
+                WriteData();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
             }
         }
     }
