@@ -163,7 +163,8 @@
         Mounts = 4,
         Blessings = 5,
         XpBoost = 6,
-        Prey = 7
+        Prey = 7,
+        TournamentTicket = 11
     }
 
     public enum Direction

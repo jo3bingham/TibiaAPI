@@ -7,8 +7,12 @@ namespace OXGaming.TibiaAPI.Network.ClientPackets
         public StoreServiceType ServiceType { get; set; }
 
         public string DesiredCharacterName { get; set; }
+        public string TournamentContinent { get; set; }
+        public string TournamentTown { get; set; }
 
         public uint OfferId { get; set; }
+
+        public byte TournamentVocation { get; set; }
 
         public BuyIngameShopOffer(Client client)
         {
@@ -24,6 +28,12 @@ namespace OXGaming.TibiaAPI.Network.ClientPackets
             {
                 DesiredCharacterName = message.ReadString();
             }
+            else if (ServiceType == StoreServiceType.TournamentTicket)
+            {
+                TournamentContinent = message.ReadString();
+                TournamentVocation = message.ReadByte();
+                TournamentTown = message.ReadString();
+            }
         }
 
         public override void AppendToNetworkMessage(NetworkMessage message)
@@ -34,6 +44,12 @@ namespace OXGaming.TibiaAPI.Network.ClientPackets
             if (ServiceType == StoreServiceType.CharacterNameChange)
             {
                 message.Write(DesiredCharacterName);
+            }
+            else if (ServiceType == StoreServiceType.TournamentTicket)
+            {
+                message.Write(TournamentContinent);
+                message.Write(TournamentVocation);
+                message.Write(TournamentTown);
             }
         }
     }
