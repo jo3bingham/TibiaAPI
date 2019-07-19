@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Threading;
 
 namespace OXGaming.TibiaAPI.Utilities
 {
@@ -30,9 +31,18 @@ namespace OXGaming.TibiaAPI.Utilities
             { LogLevel.Disabled, "DISABLED" }
         };
 
+        private readonly Queue<(LogLevel, string)> _logQueue = new Queue<(LogLevel, string)>();
+
+        private readonly object _logLock = new object();
+        private readonly object _queueLock = new object();
+
         private StreamWriter _outputFile = null;
 
+        private Thread _loggingThread;
+
         private LogOutput _output = LogOutput.Console;
+
+        private bool _isLogging = false;
 
         public LogLevel Level { get; set; } = LogLevel.Disabled;
 
@@ -44,13 +54,16 @@ namespace OXGaming.TibiaAPI.Utilities
             }
             set
             {
-                if (value == LogOutput.File && _outputFile == null)
+                lock (_logLock)
                 {
-                    var utcNow = DateTime.UtcNow;
-                    var filename = $"{utcNow.Day}_{utcNow.Month}_{utcNow.Year}__{utcNow.Hour}_{utcNow.Minute}_{utcNow.Second}.log";
-                    _outputFile = new StreamWriter(File.OpenWrite(filename));
+                    if (value == LogOutput.File && _outputFile == null)
+                    {
+                        var utcNow = DateTime.UtcNow;
+                        var filename = $"{utcNow.Day}_{utcNow.Month}_{utcNow.Year}__{utcNow.Hour}_{utcNow.Minute}_{utcNow.Second}.log";
+                        _outputFile = new StreamWriter(File.OpenWrite(filename));
+                    }
+                    _output = value;
                 }
-                _output = value;
             }
         }
 
@@ -105,23 +118,74 @@ namespace OXGaming.TibiaAPI.Utilities
                 return;
             }
 
-            text = $"{_logLevelMap[level]} {text}";
-
-            if (level == LogLevel.Error)
+            lock (_queueLock)
             {
-                Console.WriteLine(text);
-                if (_outputFile != null)
+                _logQueue.Enqueue((level, text));
+            }
+
+            if (!_isLogging)
+            {
+                try
                 {
-                    _outputFile.WriteLine(text);
+                    _isLogging = true;
+                    _loggingThread = new Thread(new ThreadStart(LogQueue));
+                    _loggingThread.Start();
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex);
                 }
             }
-            else if (_output == LogOutput.Console)
+        }
+
+        private void LogQueue()
+        {
+            try
             {
-                Console.WriteLine(text);
+                var data = (LogLevel.Disabled, "");
+
+                lock (_queueLock)
+                {
+                    if (_logQueue.Count > 0)
+                    {
+                        data = _logQueue.Dequeue();
+                    }
+                }
+
+                var (level, text) = data;
+                if (level == LogLevel.Disabled || string.IsNullOrEmpty(text))
+                {
+                    _isLogging = false;
+                    return;
+                }
+
+                text = $"{_logLevelMap[level]} {text}";
+
+                lock (_logLock)
+                {
+                    if (level == LogLevel.Error)
+                    {
+                        Console.WriteLine(text);
+                        if (_output == LogOutput.File && _outputFile != null)
+                        {
+                            _outputFile.WriteLine(text);
+                        }
+                    }
+                    else if (_output == LogOutput.Console)
+                    {
+                        Console.WriteLine(text);
+                    }
+                    else if (_output == LogOutput.File)
+                    {
+                        _outputFile.WriteLine(text);
+                    }
+                }
+
+                LogQueue();
             }
-            else if (_output == LogOutput.File)
+            catch (Exception ex)
             {
-                _outputFile.WriteLine(text);
+                Console.WriteLine(ex);
             }
         }
 
@@ -154,6 +218,11 @@ namespace OXGaming.TibiaAPI.Utilities
             {
                 if (disposing)
                 {
+                    if (_loggingThread != null)
+                    {
+                        _loggingThread.Join();
+                    }
+
                     if (_outputFile != null)
                     {
                         _outputFile.Close();
