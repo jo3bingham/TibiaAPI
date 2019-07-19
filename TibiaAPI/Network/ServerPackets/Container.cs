@@ -30,13 +30,8 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
             PacketType = ServerPacketType.Container;
         }
 
-        public override bool ParseFromNetworkMessage(NetworkMessage message)
+        public override void ParseFromNetworkMessage(NetworkMessage message)
         {
-            if (message.ReadByte() != (byte)ServerPacketType.Container)
-            {
-                return false;
-            }
-
             ContainerId = message.ReadByte();
             ContainerObject = message.ReadObjectInstance();
             ContainerName = message.ReadString();
@@ -52,7 +47,6 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
             {
                 ContainerObjects.Add(message.ReadObjectInstance());
             }
-            return true;
         }
 
         public override void AppendToNetworkMessage(NetworkMessage message)

@@ -26,13 +26,8 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
             PacketType = ServerPacketType.ShowModalDialog;
         }
 
-        public override bool ParseFromNetworkMessage(NetworkMessage message)
+        public override void ParseFromNetworkMessage(NetworkMessage message)
         {
-            if (message.ReadByte() != (byte)ServerPacketType.ShowModalDialog)
-            {
-                return false;
-            }
-
             Id = message.ReadUInt32();
             Title = message.ReadString();
             Text = message.ReadString();
@@ -56,7 +51,6 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
             DefaultEscapeButtonId = message.ReadByte();
             DefaultEnterButtonId = message.ReadByte();
             HasPriority = message.ReadBool();
-            return true;
         }
 
         public override void AppendToNetworkMessage(NetworkMessage message)

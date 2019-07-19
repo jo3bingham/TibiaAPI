@@ -14,16 +14,10 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
             PacketType = ServerPacketType.Blessings;
         }
 
-        public override bool ParseFromNetworkMessage(NetworkMessage message)
+        public override void ParseFromNetworkMessage(NetworkMessage message)
         {
-            if (message.ReadByte() != (byte)ServerPacketType.Blessings)
-            {
-                return false;
-            }
-
             BlessingId = message.ReadUInt16();
             Amount = message.ReadByte();
-            return true;
         }
 
         public override void AppendToNetworkMessage(NetworkMessage message)

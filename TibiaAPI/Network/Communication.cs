@@ -83,6 +83,10 @@ namespace OXGaming.TibiaAPI.Network
         public event ReceivedPacketEventHandler OnReceivedClientInviteToChannelPacket;
         public event ReceivedPacketEventHandler OnReceivedClientExcludeFromChannelPacket;
         public event ReceivedPacketEventHandler OnReceivedClientCancelPacket;
+        public event ReceivedPacketEventHandler OnReceivedClientTournamentInformationPacket;
+        public event ReceivedPacketEventHandler OnReceivedClientSubscribeToUpdatesPacket;
+        public event ReceivedPacketEventHandler OnReceivedClientTournamentLeaderboardPacket;
+        public event ReceivedPacketEventHandler OnReceivedClientTournamentTicketActionPacket;
         public event ReceivedPacketEventHandler OnReceivedClientGetTransactionDetailsPacket;
         public event ReceivedPacketEventHandler OnReceivedClientUpdateExivaOptionsPacket;
         public event ReceivedPacketEventHandler OnReceivedClientBrowseFieldPacket;
@@ -118,7 +122,9 @@ namespace OXGaming.TibiaAPI.Network
         public event ReceivedPacketEventHandler OnReceivedClientStoreEventPacket;
         public event ReceivedPacketEventHandler OnReceivedClientFeatureEventPacket;
         public event ReceivedPacketEventHandler OnReceivedClientPreyActionPacket;
+        public event ReceivedPacketEventHandler OnReceivedClientSetHirelingNamePacket;
         public event ReceivedPacketEventHandler OnReceivedClientRequestResourceBalancePacket;
+        public event ReceivedPacketEventHandler OnReceivedClientGreetPacket;
         public event ReceivedPacketEventHandler OnReceivedClientTransferCurrencyPacket;
         public event ReceivedPacketEventHandler OnReceivedClientGetQuestLogPacket;
         public event ReceivedPacketEventHandler OnReceivedClientGetQuestLinePacket;
@@ -151,6 +157,7 @@ namespace OXGaming.TibiaAPI.Network
         public event ReceivedPacketEventHandler OnReceivedServerDeadPacket;
         public event ReceivedPacketEventHandler OnReceivedServerStashPacket;
         public event ReceivedPacketEventHandler OnReceivedServerDepotTileStatePacket;
+        public event ReceivedPacketEventHandler OnReceivedServerSpecialContainersAvailablePacket;
         public event ReceivedPacketEventHandler OnReceivedServerClientCheckPacket;
         public event ReceivedPacketEventHandler OnReceivedServerFullMapPacket;
         public event ReceivedPacketEventHandler OnReceivedServerTopRowPacket;
@@ -226,6 +233,9 @@ namespace OXGaming.TibiaAPI.Network
         public event ReceivedPacketEventHandler OnReceivedServerTopFloorPacket;
         public event ReceivedPacketEventHandler OnReceivedServerBottomFloorPacket;
         public event ReceivedPacketEventHandler OnReceivedServerUpdateLootContainersPacket;
+        public event ReceivedPacketEventHandler OnReceivedServerPlayerDataTournamentPacket;
+        public event ReceivedPacketEventHandler OnReceivedServerTournamentLeaderboardPacket;
+        public event ReceivedPacketEventHandler OnReceivedServerTournamentInformationPacket;
         public event ReceivedPacketEventHandler OnReceivedServerOutfitPacket;
         public event ReceivedPacketEventHandler OnReceivedServerExivaSuppressedPacket;
         public event ReceivedPacketEventHandler OnReceivedServerUpdateExivaOptionsPacket;
@@ -245,6 +255,7 @@ namespace OXGaming.TibiaAPI.Network
         public event ReceivedPacketEventHandler OnReceivedServerMonsterCyclopediaBonusEffectsPacket;
         public event ReceivedPacketEventHandler OnReceivedServerMonsterCyclopediaNewDetailsPacket;
         public event ReceivedPacketEventHandler OnReceivedServerCyclopediaCharacterInfoPacket;
+        public event ReceivedPacketEventHandler OnReceivedServerHirelingNameChangePacket;
         public event ReceivedPacketEventHandler OnReceivedServerTutorialHintPacket;
         public event ReceivedPacketEventHandler OnReceivedServerCyclopediaMapDataPacket;
         public event ReceivedPacketEventHandler OnReceivedServerAutomapFlagPacket;
@@ -316,1627 +327,415 @@ namespace OXGaming.TibiaAPI.Network
                 while (inMessage.Position < inMessage.Size)
                 {
                     packetPosition = inMessage.Position;
-                    currentPacket = (ClientPacketType)inMessage.PeekByte();
-                    switch (currentPacket)
+                    currentPacket = (ClientPacketType)inMessage.ReadByte();
+
+                    client.Logger.Debug($"[CLIENT:{inMessage.SequenceNumber}] {currentPacket}");
+
+                    var packet = ClientPacket.CreateInstance(client, currentPacket);
+                    packet.ParseFromNetworkMessage(inMessage);
+
+                    switch (packet.PacketType)
                     {
                         case ClientPacketType.Login:
-                            {
-                                var packet = new ClientPackets.Login(client);
-                                if (packet.ParseFromNetworkMessage(inMessage))
-                                {
-                                    packet.Forward = OnReceivedClientLoginPacket?.Invoke(packet) ?? true;
-                                    if (packet.Forward)
-                                    {
-                                        packet.AppendToNetworkMessage(outMessage);
-                                    }
-                                }
-                            }
+                            packet.Forward = OnReceivedClientLoginPacket?.Invoke(packet) ?? true;
                             break;
                         case ClientPacketType.SecondaryLogin:
-                            {
-                                var packet = new ClientPackets.SecondaryLogin(client);
-                                if (packet.ParseFromNetworkMessage(inMessage))
-                                {
-                                    packet.Forward = OnReceivedClientSecondaryLoginPacket?.Invoke(packet) ?? true;
-                                    if (packet.Forward)
-                                    {
-                                        packet.AppendToNetworkMessage(outMessage);
-                                    }
-                                }
-                            }
+                            packet.Forward = OnReceivedClientSecondaryLoginPacket?.Invoke(packet) ?? true;
                             break;
                         case ClientPacketType.EnterWorld:
-                            {
-                                var packet = new ClientPackets.EnterWorld(client);
-                                if (packet.ParseFromNetworkMessage(inMessage))
-                                {
-                                    packet.Forward = OnReceivedClientEnterWorldPacket?.Invoke(packet) ?? true;
-                                    if (packet.Forward)
-                                    {
-                                        packet.AppendToNetworkMessage(outMessage);
-                                    }
-                                }
-                            }
+                            packet.Forward = OnReceivedClientEnterWorldPacket?.Invoke(packet) ?? true;
                             break;
                         case ClientPacketType.QuitGame:
-                            {
-                                var packet = new ClientPackets.QuitGame(client);
-                                if (packet.ParseFromNetworkMessage(inMessage))
-                                {
-                                    packet.Forward = OnReceivedClientQuitGamePacket?.Invoke(packet) ?? true;
-                                    if (packet.Forward)
-                                    {
-                                        packet.AppendToNetworkMessage(outMessage);
-                                    }
-                                }
-                            }
+                            packet.Forward = OnReceivedClientQuitGamePacket?.Invoke(packet) ?? true;
                             break;
                         case ClientPacketType.ConnectionPingBack:
-                            {
-                                var packet = new ClientPackets.ConnectionPingBack(client);
-                                if (packet.ParseFromNetworkMessage(inMessage))
-                                {
-                                    packet.Forward = OnReceivedClientConnectionPingBack?.Invoke(packet) ?? true;
-                                    if (packet.Forward)
-                                    {
-                                        packet.AppendToNetworkMessage(outMessage);
-                                    }
-                                }
-                            }
+                            packet.Forward = OnReceivedClientConnectionPingBack?.Invoke(packet) ?? true;
                             break;
                         case ClientPacketType.Ping:
-                            {
-                                var packet = new ClientPackets.Ping(client);
-                                if (packet.ParseFromNetworkMessage(inMessage))
-                                {
-                                    packet.Forward = OnReceivedClientPingPacket?.Invoke(packet) ?? true;
-                                    if (packet.Forward)
-                                    {
-                                        packet.AppendToNetworkMessage(outMessage);
-                                    }
-                                }
-                            }
+                            packet.Forward = OnReceivedClientPingPacket?.Invoke(packet) ?? true;
                             break;
                         case ClientPacketType.PingBack:
-                            {
-                                var packet = new ClientPackets.PingBack(client);
-                                if (packet.ParseFromNetworkMessage(inMessage))
-                                {
-                                    packet.Forward = OnReceivedClientPingBackPacket?.Invoke(packet) ?? true;
-                                    if (packet.Forward)
-                                    {
-                                        packet.AppendToNetworkMessage(outMessage);
-                                    }
-                                }
-                            }
+                            packet.Forward = OnReceivedClientPingBackPacket?.Invoke(packet) ?? true;
                             break;
                         case ClientPacketType.PerformanceMetrics:
-                            {
-                                var packet = new ClientPackets.PerformanceMetrics(client);
-                                if (packet.ParseFromNetworkMessage(inMessage))
-                                {
-                                    packet.Forward = OnReceivedClientPerformanceMetricsPacket?.Invoke(packet) ?? true;
-                                    if (packet.Forward)
-                                    {
-                                        packet.AppendToNetworkMessage(outMessage);
-                                    }
-                                }
-                            }
+                            packet.Forward = OnReceivedClientPerformanceMetricsPacket?.Invoke(packet) ?? true;
                             break;
                         case ClientPacketType.StashAction:
-                            {
-                                var packet = new ClientPackets.StashAction(client);
-                                if (packet.ParseFromNetworkMessage(inMessage))
-                                {
-                                    packet.Forward = OnReceivedClientStashActionPacket?.Invoke(packet) ?? true;
-                                    if (packet.Forward)
-                                    {
-                                        packet.AppendToNetworkMessage(outMessage);
-                                    }
-                                }
-                            }
+                            packet.Forward = OnReceivedClientStashActionPacket?.Invoke(packet) ?? true;
                             break;
                         case ClientPacketType.ClientCheck:
-                            {
-                                var packet = new ClientPackets.ClientCheck(client);
-                                if (packet.ParseFromNetworkMessage(inMessage))
-                                {
-                                    packet.Forward = OnReceivedClientClientCheckPacket?.Invoke(packet) ?? true;
-                                    if (packet.Forward)
-                                    {
-                                        packet.AppendToNetworkMessage(outMessage);
-                                    }
-                                }
-                            }
+                            packet.Forward = OnReceivedClientClientCheckPacket?.Invoke(packet) ?? true;
                             break;
                         case ClientPacketType.GoPath:
-                            {
-                                var packet = new ClientPackets.GoPath(client);
-                                if (packet.ParseFromNetworkMessage(inMessage))
-                                {
-                                    packet.Forward = OnReceivedClientGoPathPacket?.Invoke(packet) ?? true;
-                                    if (packet.Forward)
-                                    {
-                                        packet.AppendToNetworkMessage(outMessage);
-                                    }
-                                }
-                            }
+                            packet.Forward = OnReceivedClientGoPathPacket?.Invoke(packet) ?? true;
                             break;
                         case ClientPacketType.GoNorth:
-                            {
-                                var packet = new ClientPackets.GoNorth(client);
-                                if (packet.ParseFromNetworkMessage(inMessage))
-                                {
-                                    packet.Forward = OnReceivedClientGoNorthPacket?.Invoke(packet) ?? true;
-                                    if (packet.Forward)
-                                    {
-                                        packet.AppendToNetworkMessage(outMessage);
-                                    }
-                                }
-                            }
+                            packet.Forward = OnReceivedClientGoNorthPacket?.Invoke(packet) ?? true;
                             break;
                         case ClientPacketType.GoEast:
-                            {
-                                var packet = new ClientPackets.GoEast(client);
-                                if (packet.ParseFromNetworkMessage(inMessage))
-                                {
-                                    packet.Forward = OnReceivedClientGoEastPacket?.Invoke(packet) ?? true;
-                                    if (packet.Forward)
-                                    {
-                                        packet.AppendToNetworkMessage(outMessage);
-                                    }
-                                }
-                            }
+                            packet.Forward = OnReceivedClientGoEastPacket?.Invoke(packet) ?? true;
                             break;
                         case ClientPacketType.GoSouth:
-                            {
-                                var packet = new ClientPackets.GoSouth(client);
-                                if (packet.ParseFromNetworkMessage(inMessage))
-                                {
-                                    packet.Forward = OnReceivedClientGoSouthPacket?.Invoke(packet) ?? true;
-                                    if (packet.Forward)
-                                    {
-                                        packet.AppendToNetworkMessage(outMessage);
-                                    }
-                                }
-                            }
+                            packet.Forward = OnReceivedClientGoSouthPacket?.Invoke(packet) ?? true;
                             break;
                         case ClientPacketType.GoWest:
-                            {
-                                var packet = new ClientPackets.GoWest(client);
-                                if (packet.ParseFromNetworkMessage(inMessage))
-                                {
-                                    packet.Forward = OnReceivedClientGoWestPacket?.Invoke(packet) ?? true;
-                                    if (packet.Forward)
-                                    {
-                                        packet.AppendToNetworkMessage(outMessage);
-                                    }
-                                }
-                            }
+                            packet.Forward = OnReceivedClientGoWestPacket?.Invoke(packet) ?? true;
                             break;
                         case ClientPacketType.Stop:
-                            {
-                                var packet = new ClientPackets.Stop(client);
-                                if (packet.ParseFromNetworkMessage(inMessage))
-                                {
-                                    packet.Forward = OnReceivedClientStopPacket?.Invoke(packet) ?? true;
-                                    if (packet.Forward)
-                                    {
-                                        packet.AppendToNetworkMessage(outMessage);
-                                    }
-                                }
-                            }
+                            packet.Forward = OnReceivedClientStopPacket?.Invoke(packet) ?? true;
                             break;
                         case ClientPacketType.GoNorthEast:
-                            {
-                                var packet = new ClientPackets.GoNorthEast(client);
-                                if (packet.ParseFromNetworkMessage(inMessage))
-                                {
-                                    packet.Forward = OnReceivedClientGoNorthEastPacket?.Invoke(packet) ?? true;
-                                    if (packet.Forward)
-                                    {
-                                        packet.AppendToNetworkMessage(outMessage);
-                                    }
-                                }
-                            }
+                            packet.Forward = OnReceivedClientGoNorthEastPacket?.Invoke(packet) ?? true;
                             break;
                         case ClientPacketType.GoSouthEast:
-                            {
-                                var packet = new ClientPackets.GoSouthEast(client);
-                                if (packet.ParseFromNetworkMessage(inMessage))
-                                {
-                                    packet.Forward = OnReceivedClientGoSouthEastPacket?.Invoke(packet) ?? true;
-                                    if (packet.Forward)
-                                    {
-                                        packet.AppendToNetworkMessage(outMessage);
-                                    }
-                                }
-                            }
+                            packet.Forward = OnReceivedClientGoSouthEastPacket?.Invoke(packet) ?? true;
                             break;
                         case ClientPacketType.GoSouthWest:
-                            {
-                                var packet = new ClientPackets.GoSouthWest(client);
-                                if (packet.ParseFromNetworkMessage(inMessage))
-                                {
-                                    packet.Forward = OnReceivedClientGoSouthWestPacket?.Invoke(packet) ?? true;
-                                    if (packet.Forward)
-                                    {
-                                        packet.AppendToNetworkMessage(outMessage);
-                                    }
-                                }
-                            }
+                            packet.Forward = OnReceivedClientGoSouthWestPacket?.Invoke(packet) ?? true;
                             break;
                         case ClientPacketType.GoNorthWest:
-                            {
-                                var packet = new ClientPackets.GoNorthWest(client);
-                                if (packet.ParseFromNetworkMessage(inMessage))
-                                {
-                                    packet.Forward = OnReceivedClientGoNorthWestPacket?.Invoke(packet) ?? true;
-                                    if (packet.Forward)
-                                    {
-                                        packet.AppendToNetworkMessage(outMessage);
-                                    }
-                                }
-                            }
+                            packet.Forward = OnReceivedClientGoNorthWestPacket?.Invoke(packet) ?? true;
                             break;
                         case ClientPacketType.RotateNorth:
-                            {
-                                var packet = new ClientPackets.RotateNorth(client);
-                                if (packet.ParseFromNetworkMessage(inMessage))
-                                {
-                                    packet.Forward = OnReceivedClientRotateNorthPacket?.Invoke(packet) ?? true;
-                                    if (packet.Forward)
-                                    {
-                                        packet.AppendToNetworkMessage(outMessage);
-                                    }
-                                }
-                            }
+                            packet.Forward = OnReceivedClientRotateNorthPacket?.Invoke(packet) ?? true;
                             break;
                         case ClientPacketType.RotateEast:
-                            {
-                                var packet = new ClientPackets.RotateEast(client);
-                                if (packet.ParseFromNetworkMessage(inMessage))
-                                {
-                                    packet.Forward = OnReceivedClientRotateEastPacket?.Invoke(packet) ?? true;
-                                    if (packet.Forward)
-                                    {
-                                        packet.AppendToNetworkMessage(outMessage);
-                                    }
-                                }
-                            }
+                            packet.Forward = OnReceivedClientRotateEastPacket?.Invoke(packet) ?? true;
                             break;
                         case ClientPacketType.RotateSouth:
-                            {
-                                var packet = new ClientPackets.RotateSouth(client);
-                                if (packet.ParseFromNetworkMessage(inMessage))
-                                {
-                                    packet.Forward = OnReceivedClientRotateSouthPacket?.Invoke(packet) ?? true;
-                                    if (packet.Forward)
-                                    {
-                                        packet.AppendToNetworkMessage(outMessage);
-                                    }
-                                }
-                            }
+                            packet.Forward = OnReceivedClientRotateSouthPacket?.Invoke(packet) ?? true;
                             break;
                         case ClientPacketType.RotateWest:
-                            {
-                                var packet = new ClientPackets.RotateWest(client);
-                                if (packet.ParseFromNetworkMessage(inMessage))
-                                {
-                                    packet.Forward = OnReceivedClientRotateWestPacket?.Invoke(packet) ?? true;
-                                    if (packet.Forward)
-                                    {
-                                        packet.AppendToNetworkMessage(outMessage);
-                                    }
-                                }
-                            }
+                            packet.Forward = OnReceivedClientRotateWestPacket?.Invoke(packet) ?? true;
                             break;
                         case ClientPacketType.Teleport:
-                            {
-                                var packet = new ClientPackets.Teleport(client);
-                                if (packet.ParseFromNetworkMessage(inMessage))
-                                {
-                                    packet.Forward = OnReceivedClientTeleportPacket?.Invoke(packet) ?? true;
-                                    if (packet.Forward)
-                                    {
-                                        packet.AppendToNetworkMessage(outMessage);
-                                    }
-                                }
-                            }
+                            packet.Forward = OnReceivedClientTeleportPacket?.Invoke(packet) ?? true;
                             break;
                         case ClientPacketType.EquipObject:
-                            {
-                                var packet = new ClientPackets.EquipObject(client);
-                                if (packet.ParseFromNetworkMessage(inMessage))
-                                {
-                                    packet.Forward = OnReceivedClientEquipObjectPacket?.Invoke(packet) ?? true;
-                                    if (packet.Forward)
-                                    {
-                                        packet.AppendToNetworkMessage(outMessage);
-                                    }
-                                }
-                            }
+                            packet.Forward = OnReceivedClientEquipObjectPacket?.Invoke(packet) ?? true;
                             break;
                         case ClientPacketType.MoveObject:
-                            {
-                                var packet = new ClientPackets.MoveObject(client);
-                                if (packet.ParseFromNetworkMessage(inMessage))
-                                {
-                                    packet.Forward = OnReceivedClientMoveObjectPacket?.Invoke(packet) ?? true;
-                                    if (packet.Forward)
-                                    {
-                                        packet.AppendToNetworkMessage(outMessage);
-                                    }
-                                }
-                            }
+                            packet.Forward = OnReceivedClientMoveObjectPacket?.Invoke(packet) ?? true;
                             break;
                         case ClientPacketType.LookNpcTrade:
-                            {
-                                var packet = new ClientPackets.LookNpcTrade(client);
-                                if (packet.ParseFromNetworkMessage(inMessage))
-                                {
-                                    packet.Forward = OnReceivedClientLookNpcTradePacket?.Invoke(packet) ?? true;
-                                    if (packet.Forward)
-                                    {
-                                        packet.AppendToNetworkMessage(outMessage);
-                                    }
-                                }
-                            }
+                            packet.Forward = OnReceivedClientLookNpcTradePacket?.Invoke(packet) ?? true;
                             break;
                         case ClientPacketType.BuyObject:
-                            {
-                                var packet = new ClientPackets.BuyObject(client);
-                                if (packet.ParseFromNetworkMessage(inMessage))
-                                {
-                                    packet.Forward = OnReceivedClientBuyObjectPacket?.Invoke(packet) ?? true;
-                                    if (packet.Forward)
-                                    {
-                                        packet.AppendToNetworkMessage(outMessage);
-                                    }
-                                }
-                            }
+                            packet.Forward = OnReceivedClientBuyObjectPacket?.Invoke(packet) ?? true;
                             break;
                         case ClientPacketType.SellObject:
-                            {
-                                var packet = new ClientPackets.SellObject(client);
-                                if (packet.ParseFromNetworkMessage(inMessage))
-                                {
-                                    packet.Forward = OnReceivedClientSellObjectPacket?.Invoke(packet) ?? true;
-                                    if (packet.Forward)
-                                    {
-                                        packet.AppendToNetworkMessage(outMessage);
-                                    }
-                                }
-                            }
+                            packet.Forward = OnReceivedClientSellObjectPacket?.Invoke(packet) ?? true;
                             break;
                         case ClientPacketType.CloseNpcTrade:
-                            {
-                                var packet = new ClientPackets.CloseNpcTrade(client);
-                                if (packet.ParseFromNetworkMessage(inMessage))
-                                {
-                                    packet.Forward = OnReceivedClientCloseNpcTradePacket?.Invoke(packet) ?? true;
-                                    if (packet.Forward)
-                                    {
-                                        packet.AppendToNetworkMessage(outMessage);
-                                    }
-                                }
-                            }
+                            packet.Forward = OnReceivedClientCloseNpcTradePacket?.Invoke(packet) ?? true;
                             break;
                         case ClientPacketType.TradeObject:
-                            {
-                                var packet = new ClientPackets.TradeObject(client);
-                                if (packet.ParseFromNetworkMessage(inMessage))
-                                {
-                                    packet.Forward = OnReceivedClientTradeObjectPacket?.Invoke(packet) ?? true;
-                                    if (packet.Forward)
-                                    {
-                                        packet.AppendToNetworkMessage(outMessage);
-                                    }
-                                }
-                            }
+                            packet.Forward = OnReceivedClientTradeObjectPacket?.Invoke(packet) ?? true;
                             break;
                         case ClientPacketType.LookTrade:
-                            {
-                                var packet = new ClientPackets.LookTrade(client);
-                                if (packet.ParseFromNetworkMessage(inMessage))
-                                {
-                                    packet.Forward = OnReceivedClientLookTradePacket?.Invoke(packet) ?? true;
-                                    if (packet.Forward)
-                                    {
-                                        packet.AppendToNetworkMessage(outMessage);
-                                    }
-                                }
-                            }
+                            packet.Forward = OnReceivedClientLookTradePacket?.Invoke(packet) ?? true;
                             break;
                         case ClientPacketType.AcceptTrade:
-                            {
-                                var packet = new ClientPackets.AcceptTrade(client);
-                                if (packet.ParseFromNetworkMessage(inMessage))
-                                {
-                                    packet.Forward = OnReceivedClientAcceptTradePacket?.Invoke(packet) ?? true;
-                                    if (packet.Forward)
-                                    {
-                                        packet.AppendToNetworkMessage(outMessage);
-                                    }
-                                }
-                            }
+                            packet.Forward = OnReceivedClientAcceptTradePacket?.Invoke(packet) ?? true;
                             break;
                         case ClientPacketType.RejectTrade:
-                            {
-                                var packet = new ClientPackets.RejectTrade(client);
-                                if (packet.ParseFromNetworkMessage(inMessage))
-                                {
-                                    packet.Forward = OnReceivedClientRejectTradePacket?.Invoke(packet) ?? true;
-                                    if (packet.Forward)
-                                    {
-                                        packet.AppendToNetworkMessage(outMessage);
-                                    }
-                                }
-                            }
+                            packet.Forward = OnReceivedClientRejectTradePacket?.Invoke(packet) ?? true;
                             break;
                         case ClientPacketType.UseObject:
-                            {
-                                var packet = new ClientPackets.UseObject(client);
-                                if (packet.ParseFromNetworkMessage(inMessage))
-                                {
-                                    packet.Forward = OnReceivedClientUseObjectPacket?.Invoke(packet) ?? true;
-                                    if (packet.Forward)
-                                    {
-                                        packet.AppendToNetworkMessage(outMessage);
-                                    }
-                                }
-                            }
+                            packet.Forward = OnReceivedClientUseObjectPacket?.Invoke(packet) ?? true;
                             break;
                         case ClientPacketType.UseTwoObjects:
-                            {
-                                var packet = new ClientPackets.UseTwoObjects(client);
-                                if (packet.ParseFromNetworkMessage(inMessage))
-                                {
-                                    packet.Forward = OnReceivedClientUseTwoObjectsPacket?.Invoke(packet) ?? true;
-                                    if (packet.Forward)
-                                    {
-                                        packet.AppendToNetworkMessage(outMessage);
-                                    }
-                                }
-                            }
+                            packet.Forward = OnReceivedClientUseTwoObjectsPacket?.Invoke(packet) ?? true;
                             break;
                         case ClientPacketType.UseOnCreature:
-                            {
-                                var packet = new ClientPackets.UseOnCreature(client);
-                                if (packet.ParseFromNetworkMessage(inMessage))
-                                {
-                                    packet.Forward = OnReceivedClientUseOnCreaturePacket?.Invoke(packet) ?? true;
-                                    if (packet.Forward)
-                                    {
-                                        packet.AppendToNetworkMessage(outMessage);
-                                    }
-                                }
-                            }
+                            packet.Forward = OnReceivedClientUseOnCreaturePacket?.Invoke(packet) ?? true;
                             break;
                         case ClientPacketType.TurnObject:
-                            {
-                                var packet = new ClientPackets.TurnObject(client);
-                                if (packet.ParseFromNetworkMessage(inMessage))
-                                {
-                                    packet.Forward = OnReceivedClientTurnObjectPacket?.Invoke(packet) ?? true;
-                                    if (packet.Forward)
-                                    {
-                                        packet.AppendToNetworkMessage(outMessage);
-                                    }
-                                }
-                            }
+                            packet.Forward = OnReceivedClientTurnObjectPacket?.Invoke(packet) ?? true;
                             break;
                         case ClientPacketType.CloseContainer:
-                            {
-                                var packet = new ClientPackets.CloseContainer(client);
-                                if (packet.ParseFromNetworkMessage(inMessage))
-                                {
-                                    packet.Forward = OnReceivedClientCloseContainerPacket?.Invoke(packet) ?? true;
-                                    if (packet.Forward)
-                                    {
-                                        packet.AppendToNetworkMessage(outMessage);
-                                    }
-                                }
-                            }
+                            packet.Forward = OnReceivedClientCloseContainerPacket?.Invoke(packet) ?? true;
                             break;
                         case ClientPacketType.UpContainer:
-                            {
-                                var packet = new ClientPackets.UpContainer(client);
-                                if (packet.ParseFromNetworkMessage(inMessage))
-                                {
-                                    packet.Forward = OnReceivedClientUpContainerPacket?.Invoke(packet) ?? true;
-                                    if (packet.Forward)
-                                    {
-                                        packet.AppendToNetworkMessage(outMessage);
-                                    }
-                                }
-                            }
+                            packet.Forward = OnReceivedClientUpContainerPacket?.Invoke(packet) ?? true;
                             break;
                         case ClientPacketType.EditText:
-                            {
-                                var packet = new ClientPackets.EditText(client);
-                                if (packet.ParseFromNetworkMessage(inMessage))
-                                {
-                                    packet.Forward = OnReceivedClientEditTextPacket?.Invoke(packet) ?? true;
-                                    if (packet.Forward)
-                                    {
-                                        packet.AppendToNetworkMessage(outMessage);
-                                    }
-                                }
-                            }
+                            packet.Forward = OnReceivedClientEditTextPacket?.Invoke(packet) ?? true;
                             break;
                         case ClientPacketType.EditList:
-                            {
-                                var packet = new ClientPackets.EditList(client);
-                                if (packet.ParseFromNetworkMessage(inMessage))
-                                {
-                                    packet.Forward = OnReceivedClientEditListPacket?.Invoke(packet) ?? true;
-                                    if (packet.Forward)
-                                    {
-                                        packet.AppendToNetworkMessage(outMessage);
-                                    }
-                                }
-                            }
+                            packet.Forward = OnReceivedClientEditListPacket?.Invoke(packet) ?? true;
                             break;
                         case ClientPacketType.ToggleWrapState:
-                            {
-                                var packet = new ClientPackets.ToggleWrapState(client);
-                                if (packet.ParseFromNetworkMessage(inMessage))
-                                {
-                                    packet.Forward = OnReceivedClientToggleWarpStatePacket?.Invoke(packet) ?? true;
-                                    if (packet.Forward)
-                                    {
-                                        packet.AppendToNetworkMessage(outMessage);
-                                    }
-                                }
-                            }
+                            packet.Forward = OnReceivedClientToggleWarpStatePacket?.Invoke(packet) ?? true;
                             break;
                         case ClientPacketType.Look:
-                            {
-                                var packet = new ClientPackets.Look(client);
-                                if (packet.ParseFromNetworkMessage(inMessage))
-                                {
-                                    packet.Forward = OnReceivedClientLookPacket?.Invoke(packet) ?? true;
-                                    if (packet.Forward)
-                                    {
-                                        packet.AppendToNetworkMessage(outMessage);
-                                    }
-                                }
-                            }
+                            packet.Forward = OnReceivedClientLookPacket?.Invoke(packet) ?? true;
                             break;
                         case ClientPacketType.LookAtCreature:
-                            {
-                                var packet = new ClientPackets.LookAtCreature(client);
-                                if (packet.ParseFromNetworkMessage(inMessage))
-                                {
-                                    packet.Forward = OnReceivedClientLookAtCreaturePacket?.Invoke(packet) ?? true;
-                                    if (packet.Forward)
-                                    {
-                                        packet.AppendToNetworkMessage(outMessage);
-                                    }
-                                }
-                            }
+                            packet.Forward = OnReceivedClientLookAtCreaturePacket?.Invoke(packet) ?? true;
                             break;
                         case ClientPacketType.JoinAggression:
-                            {
-                                var packet = new ClientPackets.JoinAggression(client);
-                                if (packet.ParseFromNetworkMessage(inMessage))
-                                {
-                                    packet.Forward = OnReceivedClientJoinAggressionPacket?.Invoke(packet) ?? true;
-                                    if (packet.Forward)
-                                    {
-                                        packet.AppendToNetworkMessage(outMessage);
-                                    }
-                                }
-                            }
+                            packet.Forward = OnReceivedClientJoinAggressionPacket?.Invoke(packet) ?? true;
                             break;
                         case ClientPacketType.QuickLoot:
-                            {
-                                var packet = new ClientPackets.QuickLoot(client);
-                                if (packet.ParseFromNetworkMessage(inMessage))
-                                {
-                                    packet.Forward = OnReceivedClientQuickLootPacket?.Invoke(packet) ?? true;
-                                    if (packet.Forward)
-                                    {
-                                        packet.AppendToNetworkMessage(outMessage);
-                                    }
-                                }
-                            }
+                            packet.Forward = OnReceivedClientQuickLootPacket?.Invoke(packet) ?? true;
                             break;
                         case ClientPacketType.LootContainer:
-                            {
-                                var packet = new ClientPackets.LootContainer(client);
-                                if (packet.ParseFromNetworkMessage(inMessage))
-                                {
-                                    packet.Forward = OnReceivedClientLootContainerPacket?.Invoke(packet) ?? true;
-                                    if (packet.Forward)
-                                    {
-                                        packet.AppendToNetworkMessage(outMessage);
-                                    }
-                                }
-                            }
+                            packet.Forward = OnReceivedClientLootContainerPacket?.Invoke(packet) ?? true;
                             break;
                         case ClientPacketType.QuickLootBlackWhitelist:
-                            {
-                                var packet = new ClientPackets.QuickLootBlackWhitelist(client);
-                                if (packet.ParseFromNetworkMessage(inMessage))
-                                {
-                                    packet.Forward = OnReceivedClientQuickLootBlackWhitelistPacket?.Invoke(packet) ?? true;
-                                    if (packet.Forward)
-                                    {
-                                        packet.AppendToNetworkMessage(outMessage);
-                                    }
-                                }
-                            }
+                            packet.Forward = OnReceivedClientQuickLootBlackWhitelistPacket?.Invoke(packet) ?? true;
                             break;
                         case ClientPacketType.Talk:
-                            {
-                                var packet = new ClientPackets.Talk(client);
-                                if (packet.ParseFromNetworkMessage(inMessage))
-                                {
-                                    packet.Forward = OnReceivedClientTalkPacket?.Invoke(packet) ?? true;
-                                    if (packet.Forward)
-                                    {
-                                        packet.AppendToNetworkMessage(outMessage);
-                                    }
-                                }
-                            }
+                            packet.Forward = OnReceivedClientTalkPacket?.Invoke(packet) ?? true;
                             break;
                         case ClientPacketType.GetChannels:
-                            {
-                                var packet = new ClientPackets.GetChannels(client);
-                                if (packet.ParseFromNetworkMessage(inMessage))
-                                {
-                                    packet.Forward = OnReceivedClientGetChannelsPacket?.Invoke(packet) ?? true;
-                                    if (packet.Forward)
-                                    {
-                                        packet.AppendToNetworkMessage(outMessage);
-                                    }
-                                }
-                            }
+                            packet.Forward = OnReceivedClientGetChannelsPacket?.Invoke(packet) ?? true;
                             break;
                         case ClientPacketType.JoinChannel:
-                            {
-                                var packet = new ClientPackets.JoinChannel(client);
-                                if (packet.ParseFromNetworkMessage(inMessage))
-                                {
-                                    packet.Forward = OnReceivedClientJoinChannelPacket?.Invoke(packet) ?? true;
-                                    if (packet.Forward)
-                                    {
-                                        packet.AppendToNetworkMessage(outMessage);
-                                    }
-                                }
-                            }
+                            packet.Forward = OnReceivedClientJoinChannelPacket?.Invoke(packet) ?? true;
                             break;
                         case ClientPacketType.LeaveChannel:
-                            {
-                                var packet = new ClientPackets.LeaveChannel(client);
-                                if (packet.ParseFromNetworkMessage(inMessage))
-                                {
-                                    packet.Forward = OnReceivedClientLeaveChannelPacket?.Invoke(packet) ?? true;
-                                    if (packet.Forward)
-                                    {
-                                        packet.AppendToNetworkMessage(outMessage);
-                                    }
-                                }
-                            }
+                            packet.Forward = OnReceivedClientLeaveChannelPacket?.Invoke(packet) ?? true;
                             break;
                         case ClientPacketType.PrivateChannel:
-                            {
-                                var packet = new ClientPackets.PrivateChannel(client);
-                                if (packet.ParseFromNetworkMessage(inMessage))
-                                {
-                                    packet.Forward = OnReceivedClientPrivateChannelPacket?.Invoke(packet) ?? true;
-                                    if (packet.Forward)
-                                    {
-                                        packet.AppendToNetworkMessage(outMessage);
-                                    }
-                                }
-                            }
+                            packet.Forward = OnReceivedClientPrivateChannelPacket?.Invoke(packet) ?? true;
                             break;
                         case ClientPacketType.GuildMessage:
-                            {
-                                var packet = new ClientPackets.GuildMessage(client);
-                                if (packet.ParseFromNetworkMessage(inMessage))
-                                {
-                                    packet.Forward = OnReceivedClientGuildMessagePacket?.Invoke(packet) ?? true;
-                                    if (packet.Forward)
-                                    {
-                                        packet.AppendToNetworkMessage(outMessage);
-                                    }
-                                }
-                            }
+                            packet.Forward = OnReceivedClientGuildMessagePacket?.Invoke(packet) ?? true;
                             break;
                         case ClientPacketType.EditGuildMessage:
-                            {
-                                var packet = new ClientPackets.EditGuildMessage(client);
-                                if (packet.ParseFromNetworkMessage(inMessage))
-                                {
-                                    packet.Forward = OnReceivedClientEditGuildMessagePacket?.Invoke(packet) ?? true;
-                                    if (packet.Forward)
-                                    {
-                                        packet.AppendToNetworkMessage(outMessage);
-                                    }
-                                }
-                            }
+                            packet.Forward = OnReceivedClientEditGuildMessagePacket?.Invoke(packet) ?? true;
                             break;
                         case ClientPacketType.CloseNpcChannel:
-                            {
-                                var packet = new ClientPackets.CloseNpcChannel(client);
-                                if (packet.ParseFromNetworkMessage(inMessage))
-                                {
-                                    packet.Forward = OnReceivedClientCloseNpcChannelPacket?.Invoke(packet) ?? true;
-                                    if (packet.Forward)
-                                    {
-                                        packet.AppendToNetworkMessage(outMessage);
-                                    }
-                                }
-                            }
+                            packet.Forward = OnReceivedClientCloseNpcChannelPacket?.Invoke(packet) ?? true;
                             break;
                         case ClientPacketType.SetTactics:
-                            {
-                                var packet = new ClientPackets.SetTactics(client);
-                                if (packet.ParseFromNetworkMessage(inMessage))
-                                {
-                                    packet.Forward = OnReceivedClientSetTacticsPacket?.Invoke(packet) ?? true;
-                                    if (packet.Forward)
-                                    {
-                                        packet.AppendToNetworkMessage(outMessage);
-                                    }
-                                }
-                            }
+                            packet.Forward = OnReceivedClientSetTacticsPacket?.Invoke(packet) ?? true;
                             break;
                         case ClientPacketType.Attack:
-                            {
-                                var packet = new ClientPackets.Attack(client);
-                                if (packet.ParseFromNetworkMessage(inMessage))
-                                {
-                                    packet.Forward = OnReceivedClientAttackPacket?.Invoke(packet) ?? true;
-                                    if (packet.Forward)
-                                    {
-                                        packet.AppendToNetworkMessage(outMessage);
-                                    }
-                                }
-                            }
+                            packet.Forward = OnReceivedClientAttackPacket?.Invoke(packet) ?? true;
                             break;
                         case ClientPacketType.Follow:
-                            {
-                                var packet = new ClientPackets.Follow(client);
-                                if (packet.ParseFromNetworkMessage(inMessage))
-                                {
-                                    packet.Forward = OnReceivedClientFollowPacket?.Invoke(packet) ?? true;
-                                    if (packet.Forward)
-                                    {
-                                        packet.AppendToNetworkMessage(outMessage);
-                                    }
-                                }
-                            }
+                            packet.Forward = OnReceivedClientFollowPacket?.Invoke(packet) ?? true;
                             break;
                         case ClientPacketType.InviteToParty:
-                            {
-                                var packet = new ClientPackets.InviteToParty(client);
-                                if (packet.ParseFromNetworkMessage(inMessage))
-                                {
-                                    packet.Forward = OnReceivedClientInviteToPartyPacket?.Invoke(packet) ?? true;
-                                    if (packet.Forward)
-                                    {
-                                        packet.AppendToNetworkMessage(outMessage);
-                                    }
-                                }
-                            }
+                            packet.Forward = OnReceivedClientInviteToPartyPacket?.Invoke(packet) ?? true;
                             break;
                         case ClientPacketType.JoinParty:
-                            {
-                                var packet = new ClientPackets.JoinParty(client);
-                                if (packet.ParseFromNetworkMessage(inMessage))
-                                {
-                                    packet.Forward = OnReceivedClientJoinPartyPacket?.Invoke(packet) ?? true;
-                                    if (packet.Forward)
-                                    {
-                                        packet.AppendToNetworkMessage(outMessage);
-                                    }
-                                }
-                            }
+                            packet.Forward = OnReceivedClientJoinPartyPacket?.Invoke(packet) ?? true;
                             break;
                         case ClientPacketType.RevokeInvitation:
-                            {
-                                var packet = new ClientPackets.RevokeInvitation(client);
-                                if (packet.ParseFromNetworkMessage(inMessage))
-                                {
-                                    packet.Forward = OnReceivedClientRevokeInvitationPacket?.Invoke(packet) ?? true;
-                                    if (packet.Forward)
-                                    {
-                                        packet.AppendToNetworkMessage(outMessage);
-                                    }
-                                }
-                            }
+                            packet.Forward = OnReceivedClientRevokeInvitationPacket?.Invoke(packet) ?? true;
                             break;
                         case ClientPacketType.PassLeadership:
-                            {
-                                var packet = new ClientPackets.PassLeadership(client);
-                                if (packet.ParseFromNetworkMessage(inMessage))
-                                {
-                                    packet.Forward = OnReceivedClientPassLeadershipPacket?.Invoke(packet) ?? true;
-                                    if (packet.Forward)
-                                    {
-                                        packet.AppendToNetworkMessage(outMessage);
-                                    }
-                                }
-                            }
+                            packet.Forward = OnReceivedClientPassLeadershipPacket?.Invoke(packet) ?? true;
                             break;
                         case ClientPacketType.LeaveParty:
-                            {
-                                var packet = new ClientPackets.LeaveParty(client);
-                                if (packet.ParseFromNetworkMessage(inMessage))
-                                {
-                                    packet.Forward = OnReceivedClientLeavePartyPacket?.Invoke(packet) ?? true;
-                                    if (packet.Forward)
-                                    {
-                                        packet.AppendToNetworkMessage(outMessage);
-                                    }
-                                }
-                            }
+                            packet.Forward = OnReceivedClientLeavePartyPacket?.Invoke(packet) ?? true;
                             break;
                         case ClientPacketType.ShareExperience:
-                            {
-                                var packet = new ClientPackets.ShareExperience(client);
-                                if (packet.ParseFromNetworkMessage(inMessage))
-                                {
-                                    packet.Forward = OnReceivedClientShareExperiencePacket?.Invoke(packet) ?? true;
-                                    if (packet.Forward)
-                                    {
-                                        packet.AppendToNetworkMessage(outMessage);
-                                    }
-                                }
-                            }
+                            packet.Forward = OnReceivedClientShareExperiencePacket?.Invoke(packet) ?? true;
                             break;
                         case ClientPacketType.DisbandParty:
-                            {
-                                var packet = new ClientPackets.DisbandParty(client);
-                                if (packet.ParseFromNetworkMessage(inMessage))
-                                {
-                                    packet.Forward = OnReceivedClientDisbandPartyPacket?.Invoke(packet) ?? true;
-                                    if (packet.Forward)
-                                    {
-                                        packet.AppendToNetworkMessage(outMessage);
-                                    }
-                                }
-                            }
+                            packet.Forward = OnReceivedClientDisbandPartyPacket?.Invoke(packet) ?? true;
                             break;
                         case ClientPacketType.OpenChannel:
-                            {
-                                var packet = new ClientPackets.OpenChannel(client);
-                                if (packet.ParseFromNetworkMessage(inMessage))
-                                {
-                                    packet.Forward = OnReceivedClientOpenChannelPacket?.Invoke(packet) ?? true;
-                                    if (packet.Forward)
-                                    {
-                                        packet.AppendToNetworkMessage(outMessage);
-                                    }
-                                }
-                            }
+                            packet.Forward = OnReceivedClientOpenChannelPacket?.Invoke(packet) ?? true;
                             break;
                         case ClientPacketType.InviteToChannel:
-                            {
-                                var packet = new ClientPackets.InviteToChannel(client);
-                                if (packet.ParseFromNetworkMessage(inMessage))
-                                {
-                                    packet.Forward = OnReceivedClientInviteToChannelPacket?.Invoke(packet) ?? true;
-                                    if (packet.Forward)
-                                    {
-                                        packet.AppendToNetworkMessage(outMessage);
-                                    }
-                                }
-                            }
+                            packet.Forward = OnReceivedClientInviteToChannelPacket?.Invoke(packet) ?? true;
                             break;
                         case ClientPacketType.ExcludeFromChannel:
-                            {
-                                var packet = new ClientPackets.ExcludeFromChannel(client);
-                                if (packet.ParseFromNetworkMessage(inMessage))
-                                {
-                                    packet.Forward = OnReceivedClientExcludeFromChannelPacket?.Invoke(packet) ?? true;
-                                    if (packet.Forward)
-                                    {
-                                        packet.AppendToNetworkMessage(outMessage);
-                                    }
-                                }
-                            }
+                            packet.Forward = OnReceivedClientExcludeFromChannelPacket?.Invoke(packet) ?? true;
                             break;
                         case ClientPacketType.Cancel:
-                            {
-                                var packet = new ClientPackets.Cancel(client);
-                                if (packet.ParseFromNetworkMessage(inMessage))
-                                {
-                                    packet.Forward = OnReceivedClientCancelPacket?.Invoke(packet) ?? true;
-                                    if (packet.Forward)
-                                    {
-                                        packet.AppendToNetworkMessage(outMessage);
-                                    }
-                                }
-                            }
+                            packet.Forward = OnReceivedClientCancelPacket?.Invoke(packet) ?? true;
+                            break;
+                        case ClientPacketType.TournamentInformation:
+                            packet.Forward = OnReceivedClientTournamentInformationPacket?.Invoke(packet) ?? true;
+                            break;
+                        case ClientPacketType.SubscribeToUpdates:
+                            packet.Forward = OnReceivedClientSubscribeToUpdatesPacket?.Invoke(packet) ?? true;
+                            break;
+                        case ClientPacketType.TournamentLeaderboard:
+                            packet.Forward = OnReceivedClientTournamentLeaderboardPacket?.Invoke(packet) ?? true;
+                            break;
+                        case ClientPacketType.TournamentTicketAction:
+                            packet.Forward = OnReceivedClientTournamentTicketActionPacket?.Invoke(packet) ?? true;
                             break;
                         case ClientPacketType.GetTransactionDetails:
-                            {
-                                var packet = new ClientPackets.GetTransactionDetails(client);
-                                if (packet.ParseFromNetworkMessage(inMessage))
-                                {
-                                    packet.Forward = OnReceivedClientGetTransactionDetailsPacket?.Invoke(packet) ?? true;
-                                    if (packet.Forward)
-                                    {
-                                        packet.AppendToNetworkMessage(outMessage);
-                                    }
-                                }
-                            }
+                            packet.Forward = OnReceivedClientGetTransactionDetailsPacket?.Invoke(packet) ?? true;
                             break;
                         case ClientPacketType.UpdateExivaOptions:
-                            {
-                                var packet = new ClientPackets.UpdateExivaOptions(client);
-                                if (packet.ParseFromNetworkMessage(inMessage))
-                                {
-                                    packet.Forward = OnReceivedClientUpdateExivaOptionsPacket?.Invoke(packet) ?? true;
-                                    if (packet.Forward)
-                                    {
-                                        packet.AppendToNetworkMessage(outMessage);
-                                    }
-                                }
-                            }
+                            packet.Forward = OnReceivedClientUpdateExivaOptionsPacket?.Invoke(packet) ?? true;
                             break;
                         case ClientPacketType.BrowseField:
-                            {
-                                var packet = new ClientPackets.BrowseField(client);
-                                if (packet.ParseFromNetworkMessage(inMessage))
-                                {
-                                    packet.Forward = OnReceivedClientBrowseFieldPacket?.Invoke(packet) ?? true;
-                                    if (packet.Forward)
-                                    {
-                                        packet.AppendToNetworkMessage(outMessage);
-                                    }
-                                }
-                            }
+                            packet.Forward = OnReceivedClientBrowseFieldPacket?.Invoke(packet) ?? true;
                             break;
                         case ClientPacketType.SeekInContainer:
-                            {
-                                var packet = new ClientPackets.SeekInContainer(client);
-                                if (packet.ParseFromNetworkMessage(inMessage))
-                                {
-                                    packet.Forward = OnReceivedClientSeekInContainerPacket?.Invoke(packet) ?? true;
-                                    if (packet.Forward)
-                                    {
-                                        packet.AppendToNetworkMessage(outMessage);
-                                    }
-                                }
-                            }
+                            packet.Forward = OnReceivedClientSeekInContainerPacket?.Invoke(packet) ?? true;
                             break;
                         case ClientPacketType.InspectObject:
-                            {
-                                var packet = new ClientPackets.InspectObject(client);
-                                if (packet.ParseFromNetworkMessage(inMessage))
-                                {
-                                    packet.Forward = OnReceivedClientInspectObjectPacket?.Invoke(packet) ?? true;
-                                    if (packet.Forward)
-                                    {
-                                        packet.AppendToNetworkMessage(outMessage);
-                                    }
-                                }
-                            }
+                            packet.Forward = OnReceivedClientInspectObjectPacket?.Invoke(packet) ?? true;
                             break;
                         case ClientPacketType.InspectPlayer:
-                            {
-                                var packet = new ClientPackets.InspectPlayer(client);
-                                if (packet.ParseFromNetworkMessage(inMessage))
-                                {
-                                    packet.Forward = OnReceivedClientInspectPlayerPacket?.Invoke(packet) ?? true;
-                                    if (packet.Forward)
-                                    {
-                                        packet.AppendToNetworkMessage(outMessage);
-                                    }
-                                }
-                            }
+                            packet.Forward = OnReceivedClientInspectPlayerPacket?.Invoke(packet) ?? true;
                             break;
                         case ClientPacketType.BlessingsDialog:
-                            {
-                                var packet = new ClientPackets.BlessingsDialog(client);
-                                if (packet.ParseFromNetworkMessage(inMessage))
-                                {
-                                    packet.Forward = OnReceivedClientBlessingsDialogPacket?.Invoke(packet) ?? true;
-                                    if (packet.Forward)
-                                    {
-                                        packet.AppendToNetworkMessage(outMessage);
-                                    }
-                                }
-                            }
+                            packet.Forward = OnReceivedClientBlessingsDialogPacket?.Invoke(packet) ?? true;
                             break;
                         case ClientPacketType.TrackQuestflags:
-                            {
-                                var packet = new ClientPackets.TrackQuestflags(client);
-                                if (packet.ParseFromNetworkMessage(inMessage))
-                                {
-                                    packet.Forward = OnReceivedClientTrackQuestFlagsPacket?.Invoke(packet) ?? true;
-                                    if (packet.Forward)
-                                    {
-                                        packet.AppendToNetworkMessage(outMessage);
-                                    }
-                                }
-                            }
+                            packet.Forward = OnReceivedClientTrackQuestFlagsPacket?.Invoke(packet) ?? true;
                             break;
                         case ClientPacketType.MarketStatistics:
-                            {
-                                var packet = new ClientPackets.MarketStatistics(client);
-                                if (packet.ParseFromNetworkMessage(inMessage))
-                                {
-                                    packet.Forward = OnReceivedClientMarketStatisticsPacket?.Invoke(packet) ?? true;
-                                    if (packet.Forward)
-                                    {
-                                        packet.AppendToNetworkMessage(outMessage);
-                                    }
-                                }
-                            }
+                            packet.Forward = OnReceivedClientMarketStatisticsPacket?.Invoke(packet) ?? true;
                             break;
                         case ClientPacketType.GetOutfit:
-                            {
-                                var packet = new ClientPackets.GetOutfit(client);
-                                if (packet.ParseFromNetworkMessage(inMessage))
-                                {
-                                    packet.Forward = OnReceivedClientGetOutfitPacket?.Invoke(packet) ?? true;
-                                    if (packet.Forward)
-                                    {
-                                        packet.AppendToNetworkMessage(outMessage);
-                                    }
-                                }
-                            }
+                            packet.Forward = OnReceivedClientGetOutfitPacket?.Invoke(packet) ?? true;
                             break;
                         case ClientPacketType.SetOutfit:
-                            {
-                                var packet = new ClientPackets.SetOutfit(client);
-                                if (packet.ParseFromNetworkMessage(inMessage))
-                                {
-                                    packet.Forward = OnReceivedClientSetOutfitPacket?.Invoke(packet) ?? true;
-                                    if (packet.Forward)
-                                    {
-                                        packet.AppendToNetworkMessage(outMessage);
-                                    }
-                                }
-                            }
+                            packet.Forward = OnReceivedClientSetOutfitPacket?.Invoke(packet) ?? true;
                             break;
                         case ClientPacketType.Mount:
-                            {
-                                var packet = new ClientPackets.Mount(client);
-                                if (packet.ParseFromNetworkMessage(inMessage))
-                                {
-                                    packet.Forward = OnReceivedClientMountPacket?.Invoke(packet) ?? true;
-                                    if (packet.Forward)
-                                    {
-                                        packet.AppendToNetworkMessage(outMessage);
-                                    }
-                                }
-                            }
+                            packet.Forward = OnReceivedClientMountPacket?.Invoke(packet) ?? true;
                             break;
                         case ClientPacketType.ApplyImbuement:
-                            {
-                                var packet = new ClientPackets.ApplyImbuement(client);
-                                if (packet.ParseFromNetworkMessage(inMessage))
-                                {
-                                    packet.Forward = OnReceivedClientApplyImbuementPacket?.Invoke(packet) ?? true;
-                                    if (packet.Forward)
-                                    {
-                                        packet.AppendToNetworkMessage(outMessage);
-                                    }
-                                }
-                            }
+                            packet.Forward = OnReceivedClientApplyImbuementPacket?.Invoke(packet) ?? true;
                             break;
                         case ClientPacketType.ApplyClearingCharm:
-                            {
-                                var packet = new ClientPackets.ApplyClearingCharm(client);
-                                if (packet.ParseFromNetworkMessage(inMessage))
-                                {
-                                    packet.Forward = OnReceivedClientApplyClearingCharmPacket?.Invoke(packet) ?? true;
-                                    if (packet.Forward)
-                                    {
-                                        packet.AppendToNetworkMessage(outMessage);
-                                    }
-                                }
-                            }
+                            packet.Forward = OnReceivedClientApplyClearingCharmPacket?.Invoke(packet) ?? true;
                             break;
                         case ClientPacketType.ClosedImbuingDialog:
-                            {
-                                var packet = new ClientPackets.ClosedImbuingDialog(client);
-                                if (packet.ParseFromNetworkMessage(inMessage))
-                                {
-                                    packet.Forward = OnReceivedClientClosedImbuingDialogPacket?.Invoke(packet) ?? true;
-                                    if (packet.Forward)
-                                    {
-                                        packet.AppendToNetworkMessage(outMessage);
-                                    }
-                                }
-                            }
+                            packet.Forward = OnReceivedClientClosedImbuingDialogPacket?.Invoke(packet) ?? true;
                             break;
                         case ClientPacketType.OpenRewardWall:
-                            {
-                                var packet = new ClientPackets.OpenRewardWall(client);
-                                if (packet.ParseFromNetworkMessage(inMessage))
-                                {
-                                    packet.Forward = OnReceivedClientOpenRewardWallPacket?.Invoke(packet) ?? true;
-                                    if (packet.Forward)
-                                    {
-                                        packet.AppendToNetworkMessage(outMessage);
-                                    }
-                                }
-                            }
+                            packet.Forward = OnReceivedClientOpenRewardWallPacket?.Invoke(packet) ?? true;
                             break;
                         case ClientPacketType.DailyRewardHistory:
-                            {
-                                var packet = new ClientPackets.DailyRewardHistory(client);
-                                if (packet.ParseFromNetworkMessage(inMessage))
-                                {
-                                    packet.Forward = OnReceivedClientDailyRewardHistoryPacket?.Invoke(packet) ?? true;
-                                    if (packet.Forward)
-                                    {
-                                        packet.AppendToNetworkMessage(outMessage);
-                                    }
-                                }
-                            }
+                            packet.Forward = OnReceivedClientDailyRewardHistoryPacket?.Invoke(packet) ?? true;
                             break;
                         case ClientPacketType.CollectDailyReward:
-                            {
-                                var packet = new ClientPackets.CollectDailyReward(client);
-                                if (packet.ParseFromNetworkMessage(inMessage))
-                                {
-                                    packet.Forward = OnReceivedClientCollectDailyRewardPacket?.Invoke(packet) ?? true;
-                                    if (packet.Forward)
-                                    {
-                                        packet.AppendToNetworkMessage(outMessage);
-                                    }
-                                }
-                            }
+                            packet.Forward = OnReceivedClientCollectDailyRewardPacket?.Invoke(packet) ?? true;
                             break;
                         case ClientPacketType.CyclopediaMapAction:
-                            {
-                                var packet = new ClientPackets.CyclopediaMapAction(client);
-                                if (packet.ParseFromNetworkMessage(inMessage))
-                                {
-                                    packet.Forward = OnReceivedClientCyclopediaMapActionPacket?.Invoke(packet) ?? true;
-                                    if (packet.Forward)
-                                    {
-                                        packet.AppendToNetworkMessage(outMessage);
-                                    }
-                                }
-                            }
+                            packet.Forward = OnReceivedClientCyclopediaMapActionPacket?.Invoke(packet) ?? true;
                             break;
                         case ClientPacketType.AddBuddy:
-                            {
-                                var packet = new ClientPackets.AddBuddy(client);
-                                if (packet.ParseFromNetworkMessage(inMessage))
-                                {
-                                    packet.Forward = OnReceivedClientAddBuddyPacket?.Invoke(packet) ?? true;
-                                    if (packet.Forward)
-                                    {
-                                        packet.AppendToNetworkMessage(outMessage);
-                                    }
-                                }
-                            }
+                            packet.Forward = OnReceivedClientAddBuddyPacket?.Invoke(packet) ?? true;
                             break;
                         case ClientPacketType.RemoveBuddy:
-                            {
-                                var packet = new ClientPackets.RemoveBuddy(client);
-                                if (packet.ParseFromNetworkMessage(inMessage))
-                                {
-                                    packet.Forward = OnReceivedClientRemoveBuddyPacket?.Invoke(packet) ?? true;
-                                    if (packet.Forward)
-                                    {
-                                        packet.AppendToNetworkMessage(outMessage);
-                                    }
-                                }
-                            }
+                            packet.Forward = OnReceivedClientRemoveBuddyPacket?.Invoke(packet) ?? true;
                             break;
                         case ClientPacketType.EditBuddy:
-                            {
-                                var packet = new ClientPackets.EditBuddy(client);
-                                if (packet.ParseFromNetworkMessage(inMessage))
-                                {
-                                    packet.Forward = OnReceivedClientEditBuddyPacket?.Invoke(packet) ?? true;
-                                    if (packet.Forward)
-                                    {
-                                        packet.AppendToNetworkMessage(outMessage);
-                                    }
-                                }
-                            }
+                            packet.Forward = OnReceivedClientEditBuddyPacket?.Invoke(packet) ?? true;
                             break;
                         case ClientPacketType.BuddyGroup:
-                            {
-                                var packet = new ClientPackets.BuddyGroup(client);
-                                if (packet.ParseFromNetworkMessage(inMessage))
-                                {
-                                    packet.Forward = OnReceivedClientBuddyGroupPacket?.Invoke(packet) ?? true;
-                                    if (packet.Forward)
-                                    {
-                                        packet.AppendToNetworkMessage(outMessage);
-                                    }
-                                }
-                            }
+                            packet.Forward = OnReceivedClientBuddyGroupPacket?.Invoke(packet) ?? true;
                             break;
                         case ClientPacketType.MarkGameNewsAsRead:
-                            {
-                                var packet = new ClientPackets.MarkGameNewsAsRead(client);
-                                if (packet.ParseFromNetworkMessage(inMessage))
-                                {
-                                    packet.Forward = OnReceivedClientMarkGameNewsAsReadPacket?.Invoke(packet) ?? true;
-                                    if (packet.Forward)
-                                    {
-                                        packet.AppendToNetworkMessage(outMessage);
-                                    }
-                                }
-                            }
+                            packet.Forward = OnReceivedClientMarkGameNewsAsReadPacket?.Invoke(packet) ?? true;
                             break;
                         case ClientPacketType.OpenMonsterCyclopedia:
-                            {
-                                var packet = new ClientPackets.OpenMonsterCyclopedia(client);
-                                if (packet.ParseFromNetworkMessage(inMessage))
-                                {
-                                    packet.Forward = OnReceivedClientOpenMonsterCyclopediaPacket?.Invoke(packet) ?? true;
-                                    if (packet.Forward)
-                                    {
-                                        packet.AppendToNetworkMessage(outMessage);
-                                    }
-                                }
-                            }
+                            packet.Forward = OnReceivedClientOpenMonsterCyclopediaPacket?.Invoke(packet) ?? true;
                             break;
                         case ClientPacketType.OpenMonsterCyclopediaMonsters:
-                            {
-                                var packet = new ClientPackets.OpenMonsterCyclopediaMonsters(client);
-                                if (packet.ParseFromNetworkMessage(inMessage))
-                                {
-                                    packet.Forward = OnReceivedClientOpenMonsterCyclopediaMonstersPacket?.Invoke(packet) ?? true;
-                                    if (packet.Forward)
-                                    {
-                                        packet.AppendToNetworkMessage(outMessage);
-                                    }
-                                }
-                            }
+                            packet.Forward = OnReceivedClientOpenMonsterCyclopediaMonstersPacket?.Invoke(packet) ?? true;
                             break;
                         case ClientPacketType.OpenMonsterCyclopediaRace:
-                            {
-                                var packet = new ClientPackets.OpenMonsterCyclopediaRace(client);
-                                if (packet.ParseFromNetworkMessage(inMessage))
-                                {
-                                    packet.Forward = OnReceivedClientOpenMonsterCyclopediaRacePacket?.Invoke(packet) ?? true;
-                                    if (packet.Forward)
-                                    {
-                                        packet.AppendToNetworkMessage(outMessage);
-                                    }
-                                }
-                            }
+                            packet.Forward = OnReceivedClientOpenMonsterCyclopediaRacePacket?.Invoke(packet) ?? true;
                             break;
                         case ClientPacketType.MonsterBonusEffectAction:
-                            {
-                                var packet = new ClientPackets.MonsterBonusEffectAction(client);
-                                if (packet.ParseFromNetworkMessage(inMessage))
-                                {
-                                    packet.Forward = OnReceivedClientMonsterBonusEffectActionPacket?.Invoke(packet) ?? true;
-                                    if (packet.Forward)
-                                    {
-                                        packet.AppendToNetworkMessage(outMessage);
-                                    }
-                                }
-                            }
+                            packet.Forward = OnReceivedClientMonsterBonusEffectActionPacket?.Invoke(packet) ?? true;
                             break;
                         case ClientPacketType.OpenCyclopediaCharacterInfo:
-                            {
-                                var packet = new ClientPackets.OpenCyclopediaCharacterInfo(client);
-                                if (packet.ParseFromNetworkMessage(inMessage))
-                                {
-                                    packet.Forward = OnReceivedClientOpenCyclopediaCharacterInfoPacket?.Invoke(packet) ?? true;
-                                    if (packet.Forward)
-                                    {
-                                        packet.AppendToNetworkMessage(outMessage);
-                                    }
-                                }
-                            }
+                            packet.Forward = OnReceivedClientOpenCyclopediaCharacterInfoPacket?.Invoke(packet) ?? true;
                             break;
                         case ClientPacketType.BugReport:
-                            {
-                                var packet = new ClientPackets.BugReport(client);
-                                if (packet.ParseFromNetworkMessage(inMessage))
-                                {
-                                    packet.Forward = OnReceivedClientBugReportPacket?.Invoke(packet) ?? true;
-                                    if (packet.Forward)
-                                    {
-                                        packet.AppendToNetworkMessage(outMessage);
-                                    }
-                                }
-                            }
+                            packet.Forward = OnReceivedClientBugReportPacket?.Invoke(packet) ?? true;
                             break;
                         case ClientPacketType.ThankYou:
-                            {
-                                var packet = new ClientPackets.ThankYou(client);
-                                if (packet.ParseFromNetworkMessage(inMessage))
-                                {
-                                    packet.Forward = OnReceivedClientThankYouPacket?.Invoke(packet) ?? true;
-                                    if (packet.Forward)
-                                    {
-                                        packet.AppendToNetworkMessage(outMessage);
-                                    }
-                                }
-                            }
+                            packet.Forward = OnReceivedClientThankYouPacket?.Invoke(packet) ?? true;
                             break;
                         case ClientPacketType.GetOfferDescription:
-                            {
-                                var packet = new ClientPackets.GetOfferDescription(client);
-                                if (packet.ParseFromNetworkMessage(inMessage))
-                                {
-                                    packet.Forward = OnReceivedClientGetOfferDescription?.Invoke(packet) ?? true;
-                                    if (packet.Forward)
-                                    {
-                                        packet.AppendToNetworkMessage(outMessage);
-                                    }
-                                }
-                            }
+                            packet.Forward = OnReceivedClientGetOfferDescription?.Invoke(packet) ?? true;
                             break;
                         case ClientPacketType.StoreEvent:
-                            {
-                                var packet = new ClientPackets.StoreEvent(client);
-                                if (packet.ParseFromNetworkMessage(inMessage))
-                                {
-                                    packet.Forward = OnReceivedClientStoreEventPacket?.Invoke(packet) ?? true;
-                                    if (packet.Forward)
-                                    {
-                                        packet.AppendToNetworkMessage(outMessage);
-                                    }
-                                }
-                            }
+                            packet.Forward = OnReceivedClientStoreEventPacket?.Invoke(packet) ?? true;
                             break;
                         case ClientPacketType.FeatureEvent:
-                            {
-                                var packet = new ClientPackets.FeatureEvent(client);
-                                if (packet.ParseFromNetworkMessage(inMessage))
-                                {
-                                    packet.Forward = OnReceivedClientFeatureEventPacket?.Invoke(packet) ?? true;
-                                    if (packet.Forward)
-                                    {
-                                        packet.AppendToNetworkMessage(outMessage);
-                                    }
-                                }
-                            }
+                            packet.Forward = OnReceivedClientFeatureEventPacket?.Invoke(packet) ?? true;
                             break;
                         case ClientPacketType.PreyAction:
-                            {
-                                var packet = new ClientPackets.PreyAction(client);
-                                if (packet.ParseFromNetworkMessage(inMessage))
-                                {
-                                    packet.Forward = OnReceivedClientPreyActionPacket?.Invoke(packet) ?? true;
-                                    if (packet.Forward)
-                                    {
-                                        packet.AppendToNetworkMessage(outMessage);
-                                    }
-                                }
-                            }
+                            packet.Forward = OnReceivedClientPreyActionPacket?.Invoke(packet) ?? true;
+                            break;
+                        case ClientPacketType.SetHirelingName:
+                            packet.Forward = OnReceivedClientSetHirelingNamePacket?.Invoke(packet) ?? true;
                             break;
                         case ClientPacketType.RequestResourceBalance:
-                            {
-                                var packet = new ClientPackets.RequestResourceBalance(client);
-                                if (packet.ParseFromNetworkMessage(inMessage))
-                                {
-                                    packet.Forward = OnReceivedClientRequestResourceBalancePacket?.Invoke(packet) ?? true;
-                                    if (packet.Forward)
-                                    {
-                                        packet.AppendToNetworkMessage(outMessage);
-                                    }
-                                }
-                            }
+                            packet.Forward = OnReceivedClientRequestResourceBalancePacket?.Invoke(packet) ?? true;
+                            break;
+                        case ClientPacketType.Greet:
+                            packet.Forward = OnReceivedClientGreetPacket?.Invoke(packet) ?? true;
                             break;
                         case ClientPacketType.TransferCurrency:
-                            {
-                                var packet = new ClientPackets.TransferCurrency(client);
-                                if (packet.ParseFromNetworkMessage(inMessage))
-                                {
-                                    packet.Forward = OnReceivedClientTransferCurrencyPacket?.Invoke(packet) ?? true;
-                                    if (packet.Forward)
-                                    {
-                                        packet.AppendToNetworkMessage(outMessage);
-                                    }
-                                }
-                            }
+                            packet.Forward = OnReceivedClientTransferCurrencyPacket?.Invoke(packet) ?? true;
                             break;
                         case ClientPacketType.GetQuestLog:
-                            {
-                                var packet = new ClientPackets.GetQuestLog(client);
-                                if (packet.ParseFromNetworkMessage(inMessage))
-                                {
-                                    packet.Forward = OnReceivedClientGetQuestLogPacket?.Invoke(packet) ?? true;
-                                    if (packet.Forward)
-                                    {
-                                        packet.AppendToNetworkMessage(outMessage);
-                                    }
-                                }
-                            }
+                            packet.Forward = OnReceivedClientGetQuestLogPacket?.Invoke(packet) ?? true;
                             break;
                         case ClientPacketType.GetQuestLine:
-                            {
-                                var packet = new ClientPackets.GetQuestLine(client);
-                                if (packet.ParseFromNetworkMessage(inMessage))
-                                {
-                                    packet.Forward = OnReceivedClientGetQuestLinePacket?.Invoke(packet) ?? true;
-                                    if (packet.Forward)
-                                    {
-                                        packet.AppendToNetworkMessage(outMessage);
-                                    }
-                                }
-                            }
+                            packet.Forward = OnReceivedClientGetQuestLinePacket?.Invoke(packet) ?? true;
                             break;
                         case ClientPacketType.RuleViolationReport:
-                            {
-                                var packet = new ClientPackets.RuleViolationReport(client);
-                                if (packet.ParseFromNetworkMessage(inMessage))
-                                {
-                                    packet.Forward = OnReceivedClientRuleViolationReportPacket?.Invoke(packet) ?? true;
-                                    if (packet.Forward)
-                                    {
-                                        packet.AppendToNetworkMessage(outMessage);
-                                    }
-                                }
-                            }
+                            packet.Forward = OnReceivedClientRuleViolationReportPacket?.Invoke(packet) ?? true;
                             break;
                         case ClientPacketType.GetObjectInfo:
-                            {
-                                var packet = new ClientPackets.GetObjectInfo(client);
-                                if (packet.ParseFromNetworkMessage(inMessage))
-                                {
-                                    packet.Forward = OnReceivedClientGetObjectInfoPacket?.Invoke(packet) ?? true;
-                                    if (packet.Forward)
-                                    {
-                                        packet.AppendToNetworkMessage(outMessage);
-                                    }
-                                }
-                            }
+                            packet.Forward = OnReceivedClientGetObjectInfoPacket?.Invoke(packet) ?? true;
                             break;
                         case ClientPacketType.MarketLeave:
-                            {
-                                var packet = new ClientPackets.MarketLeave(client);
-                                if (packet.ParseFromNetworkMessage(inMessage))
-                                {
-                                    packet.Forward = OnReceivedClientMarketLeavePacket?.Invoke(packet) ?? true;
-                                    if (packet.Forward)
-                                    {
-                                        packet.AppendToNetworkMessage(outMessage);
-                                    }
-                                }
-                            }
+                            packet.Forward = OnReceivedClientMarketLeavePacket?.Invoke(packet) ?? true;
                             break;
                         case ClientPacketType.MarketBrowse:
-                            {
-                                var packet = new ClientPackets.MarketBrowse(client);
-                                if (packet.ParseFromNetworkMessage(inMessage))
-                                {
-                                    packet.Forward = OnReceivedClientMarketBrowsePacket?.Invoke(packet) ?? true;
-                                    if (packet.Forward)
-                                    {
-                                        packet.AppendToNetworkMessage(outMessage);
-                                    }
-                                }
-                            }
+                            packet.Forward = OnReceivedClientMarketBrowsePacket?.Invoke(packet) ?? true;
                             break;
                         case ClientPacketType.MarketCreate:
-                            {
-                                var packet = new ClientPackets.MarketCreate(client);
-                                if (packet.ParseFromNetworkMessage(inMessage))
-                                {
-                                    packet.Forward = OnReceivedClientMarketCreatePacket?.Invoke(packet) ?? true;
-                                    if (packet.Forward)
-                                    {
-                                        packet.AppendToNetworkMessage(outMessage);
-                                    }
-                                }
-                            }
+                            packet.Forward = OnReceivedClientMarketCreatePacket?.Invoke(packet) ?? true;
                             break;
                         case ClientPacketType.MarketCancel:
-                            {
-                                var packet = new ClientPackets.MarketCancel(client);
-                                if (packet.ParseFromNetworkMessage(inMessage))
-                                {
-                                    packet.Forward = OnReceivedClientMarketCancelPacket?.Invoke(packet) ?? true;
-                                    if (packet.Forward)
-                                    {
-                                        packet.AppendToNetworkMessage(outMessage);
-                                    }
-                                }
-                            }
+                            packet.Forward = OnReceivedClientMarketCancelPacket?.Invoke(packet) ?? true;
                             break;
                         case ClientPacketType.MarketAccept:
-                            {
-                                var packet = new ClientPackets.MarketAccept(client);
-                                if (packet.ParseFromNetworkMessage(inMessage))
-                                {
-                                    packet.Forward = OnReceivedClientMarketAcceptPacket?.Invoke(packet) ?? true;
-                                    if (packet.Forward)
-                                    {
-                                        packet.AppendToNetworkMessage(outMessage);
-                                    }
-                                }
-                            }
+                            packet.Forward = OnReceivedClientMarketAcceptPacket?.Invoke(packet) ?? true;
                             break;
                         case ClientPacketType.AnswerModalDialog:
-                            {
-                                var packet = new ClientPackets.AnswerModalDialog(client);
-                                if (packet.ParseFromNetworkMessage(inMessage))
-                                {
-                                    packet.Forward = OnReceivedClientAnswerModalDialogPacket?.Invoke(packet) ?? true;
-                                    if (packet.Forward)
-                                    {
-                                        packet.AppendToNetworkMessage(outMessage);
-                                    }
-                                }
-                            }
+                            packet.Forward = OnReceivedClientAnswerModalDialogPacket?.Invoke(packet) ?? true;
                             break;
                         case ClientPacketType.OpenIngameShop:
-                            {
-                                var packet = new ClientPackets.OpenIngameShop(client);
-                                if (packet.ParseFromNetworkMessage(inMessage))
-                                {
-                                    packet.Forward = OnReceivedClientOpenIngameShopPacket?.Invoke(packet) ?? true;
-                                    if (packet.Forward)
-                                    {
-                                        packet.AppendToNetworkMessage(outMessage);
-                                    }
-                                }
-                            }
+                            packet.Forward = OnReceivedClientOpenIngameShopPacket?.Invoke(packet) ?? true;
                             break;
                         case ClientPacketType.RequestShopOffers:
-                            {
-                                var packet = new ClientPackets.RequestShopOffers(client);
-                                if (packet.ParseFromNetworkMessage(inMessage))
-                                {
-                                    packet.Forward = OnReceivedClientRequestShopOffersPacket?.Invoke(packet) ?? true;
-                                    if (packet.Forward)
-                                    {
-                                        packet.AppendToNetworkMessage(outMessage);
-                                    }
-                                }
-                            }
+                            packet.Forward = OnReceivedClientRequestShopOffersPacket?.Invoke(packet) ?? true;
                             break;
                         case ClientPacketType.BuyIngameShopOffer:
-                            {
-                                var packet = new ClientPackets.BuyIngameShopOffer(client);
-                                if (packet.ParseFromNetworkMessage(inMessage))
-                                {
-                                    packet.Forward = OnReceivedClientBuyIngameShopOfferPacket?.Invoke(packet) ?? true;
-                                    if (packet.Forward)
-                                    {
-                                        packet.AppendToNetworkMessage(outMessage);
-                                    }
-                                }
-                            }
+                            packet.Forward = OnReceivedClientBuyIngameShopOfferPacket?.Invoke(packet) ?? true;
                             break;
                         case ClientPacketType.OpenTransactionHistory:
-                            {
-                                var packet = new ClientPackets.OpenTransactionHistory(client);
-                                if (packet.ParseFromNetworkMessage(inMessage))
-                                {
-                                    packet.Forward = OnReceivedClientOpenTransactionHistoryPacket?.Invoke(packet) ?? true;
-                                    if (packet.Forward)
-                                    {
-                                        packet.AppendToNetworkMessage(outMessage);
-                                    }
-                                }
-                            }
+                            packet.Forward = OnReceivedClientOpenTransactionHistoryPacket?.Invoke(packet) ?? true;
                             break;
                         case ClientPacketType.GetTransactionHistory:
-                            {
-                                var packet = new ClientPackets.GetTransactionHistory(client);
-                                if (packet.ParseFromNetworkMessage(inMessage))
-                                {
-                                    packet.Forward = OnReceivedClientGetTransactionHistoryPacket?.Invoke(packet) ?? true;
-                                    if (packet.Forward)
-                                    {
-                                        packet.AppendToNetworkMessage(outMessage);
-                                    }
-                                }
-                            }
+                            packet.Forward = OnReceivedClientGetTransactionHistoryPacket?.Invoke(packet) ?? true;
                             break;
                         default:
-                            // TODO: Log unknown packet.
-                            Console.WriteLine($"Unknown client packet: {((byte)currentPacket).ToString("X2")}, position: {packetPosition}");
-                            Console.WriteLine($"Last known packets: {string.Join(" ", packets.Select(p => "[" + ((byte)p.PacketType).ToString("X2") + ":" + p.Position + "]" + p.PacketType).ToArray())}");
-                            Console.WriteLine($"Data: {BitConverter.ToString(inMessage.GetData()).Replace('-', ' ')}");
+                            client.Logger.Error($"Unknown client packet: {((byte)currentPacket).ToString("X2")}, position: {packetPosition}");
+                            client.Logger.Error($"Last known packets: {string.Join(" ", packets.Select(p => "[" + ((byte)p.PacketType).ToString("X2") + ":" + p.Position + "]" + p.PacketType).ToArray())}");
+                            client.Logger.Error($"Data: {BitConverter.ToString(inMessage.GetData()).Replace('-', ' ')}");
                             return;
+                    }
+
+                    if (packet.Forward && client.Connection.AllowPacketModification)
+                    {
+                        packet.AppendToNetworkMessage(outMessage);
                     }
 
                     packets.Add((currentPacket, packetPosition));
@@ -1945,15 +744,14 @@ namespace OXGaming.TibiaAPI.Network
             }
             catch (Exception ex)
             {
-                // TODO: Log exception.
                 // Parsing failures are helpful when looking for packet changes or trying to understand
                 // the structure of a new packet. Because of that, it's better to log as much data as
                 // possible and continue.
-                Console.WriteLine(ex.ToString());
-                Console.WriteLine($"Current position: {inMessage.Position}");
-                Console.WriteLine($"Current packet: [{((byte)currentPacket).ToString("X2")}:{packetPosition}]{currentPacket}");
-                Console.WriteLine($"Last known packets: {string.Join(" ", packets.Select(p => "[" + ((byte)p.PacketType).ToString("X2") + ":" + p.Position + "]" + p.PacketType).ToArray())}");
-                Console.WriteLine($"Data: {BitConverter.ToString(inMessage.GetData()).Replace('-', ' ')}");
+                client.Logger.Error(ex.ToString());
+                client.Logger.Error($"Current position: {inMessage.Position}");
+                client.Logger.Error($"Current packet: [{((byte)currentPacket).ToString("X2")}:{packetPosition}]{currentPacket}");
+                client.Logger.Error($"Last known packets: {string.Join(" ", packets.Select(p => "[" + ((byte)p.PacketType).ToString("X2") + ":" + p.Position + "]" + p.PacketType).ToArray())}");
+                client.Logger.Error($"Data: {BitConverter.ToString(inMessage.GetData()).Replace('-', ' ')}");
             }
         }
 
@@ -1979,1917 +777,490 @@ namespace OXGaming.TibiaAPI.Network
                 while (inMessage.Position < inMessage.Size)
                 {
                     packetPosition = inMessage.Position;
-                    currentPacket = (ServerPacketType)inMessage.PeekByte();
+                    currentPacket = (ServerPacketType)inMessage.ReadByte();
+
+                    client.Logger.Debug($"[SERVER:{inMessage.SequenceNumber}] {currentPacket}");
+
+                    var packet = ServerPacket.CreateInstance(client, currentPacket);
+                    packet.ParseFromNetworkMessage(inMessage);
+
                     switch (currentPacket)
                     {
                         case ServerPacketType.CreatureData:
-                            {
-                                var packet = new ServerPackets.CreatureData(client);
-                                if (packet.ParseFromNetworkMessage(inMessage))
-                                {
-                                    packet.Forward = OnReceivedServerCreatureDataPacket?.Invoke(packet) ?? true;
-                                    if (packet.Forward)
-                                    {
-                                        packet.AppendToNetworkMessage(outMessage);
-                                    }
-                                }
-                            }
+                            packet.Forward = OnReceivedServerCreatureDataPacket?.Invoke(packet) ?? true;
                             break;
                         case ServerPacketType.PendingStateEntered:
-                            {
-                                var packet = new ServerPackets.PendingStateEntered(client);
-                                if (packet.ParseFromNetworkMessage(inMessage))
-                                {
-                                    packet.Forward = OnReceivedServerPendingStateEnteredPacket?.Invoke(packet) ?? true;
-                                    if (packet.Forward)
-                                    {
-                                        packet.AppendToNetworkMessage(outMessage);
-                                    }
-                                }
-                            }
+                            packet.Forward = OnReceivedServerPendingStateEnteredPacket?.Invoke(packet) ?? true;
                             break;
                         case ServerPacketType.ReadyForSecondaryConnection:
-                            {
-                                var packet = new ServerPackets.ReadyForSecondaryConnection(client);
-                                if (packet.ParseFromNetworkMessage(inMessage))
-                                {
-                                    packet.Forward = OnReceivedServerReadyForSecondaryConnectionPacket?.Invoke(packet) ?? true;
-                                    if (packet.Forward)
-                                    {
-                                        packet.AppendToNetworkMessage(outMessage);
-                                    }
-                                }
-                            }
+                            packet.Forward = OnReceivedServerReadyForSecondaryConnectionPacket?.Invoke(packet) ?? true;
                             break;
                         case ServerPacketType.WorldEntered:
-                            {
-                                var packet = new ServerPackets.WorldEntered(client);
-                                if (packet.ParseFromNetworkMessage(inMessage))
-                                {
-                                    packet.Forward = OnReceivedServerWorldEnteredPacket?.Invoke(packet) ?? true;
-                                    if (packet.Forward)
-                                    {
-                                        packet.AppendToNetworkMessage(outMessage);
-                                    }
-                                }
-                            }
+                            packet.Forward = OnReceivedServerWorldEnteredPacket?.Invoke(packet) ?? true;
                             break;
                         case ServerPacketType.LoginError:
-                            {
-                                var packet = new ServerPackets.LoginError(client);
-                                if (packet.ParseFromNetworkMessage(inMessage))
-                                {
-                                    packet.Forward = OnReceivedServerLoginErrorPacket?.Invoke(packet) ?? true;
-                                    if (packet.Forward)
-                                    {
-                                        packet.AppendToNetworkMessage(outMessage);
-                                    }
-                                }
-                            }
+                            packet.Forward = OnReceivedServerLoginErrorPacket?.Invoke(packet) ?? true;
                             break;
                         case ServerPacketType.LoginAdvice:
-                            {
-                                var packet = new ServerPackets.LoginAdvice(client);
-                                if (packet.ParseFromNetworkMessage(inMessage))
-                                {
-                                    packet.Forward = OnReceivedServerLoginAdvicePacket?.Invoke(packet) ?? true;
-                                    if (packet.Forward)
-                                    {
-                                        packet.AppendToNetworkMessage(outMessage);
-                                    }
-                                }
-                            }
+                            packet.Forward = OnReceivedServerLoginAdvicePacket?.Invoke(packet) ?? true;
                             break;
                         case ServerPacketType.LoginWait:
-                            {
-                                var packet = new ServerPackets.LoginWait(client);
-                                if (packet.ParseFromNetworkMessage(inMessage))
-                                {
-                                    packet.Forward = OnReceivedServerLoginWaitPacket?.Invoke(packet) ?? true;
-                                    if (packet.Forward)
-                                    {
-                                        packet.AppendToNetworkMessage(outMessage);
-                                    }
-                                }
-                            }
+                            packet.Forward = OnReceivedServerLoginWaitPacket?.Invoke(packet) ?? true;
                             break;
                         case ServerPacketType.LoginSuccess:
-                            {
-                                var packet = new ServerPackets.LoginSuccess(client);
-                                if (packet.ParseFromNetworkMessage(inMessage))
-                                {
-                                    packet.Forward = OnReceivedServerLoginSuccessPacket?.Invoke(packet) ?? true;
-                                    if (packet.Forward)
-                                    {
-                                        packet.AppendToNetworkMessage(outMessage);
-                                    }
-                                }
-                            }
+                            packet.Forward = OnReceivedServerLoginSuccessPacket?.Invoke(packet) ?? true;
                             break;
                         case ServerPacketType.StoreButtonIndicators:
-                            {
-                                var packet = new ServerPackets.StoreButtonIndicators(client);
-                                if (packet.ParseFromNetworkMessage(inMessage))
-                                {
-                                    packet.Forward = OnReceivedServerStoreButtonIndicatorsPacket?.Invoke(packet) ?? true;
-                                    if (packet.Forward)
-                                    {
-                                        packet.AppendToNetworkMessage(outMessage);
-                                    }
-                                }
-                            }
+                            packet.Forward = OnReceivedServerStoreButtonIndicatorsPacket?.Invoke(packet) ?? true;
                             break;
                         case ServerPacketType.Ping:
-                            {
-                                var packet = new ServerPackets.Ping(client);
-                                if (packet.ParseFromNetworkMessage(inMessage))
-                                {
-                                    packet.Forward = OnReceivedServerPingPacket?.Invoke(packet) ?? true;
-                                    if (packet.Forward)
-                                    {
-                                        packet.AppendToNetworkMessage(outMessage);
-                                    }
-                                }
-                            }
+                            packet.Forward = OnReceivedServerPingPacket?.Invoke(packet) ?? true;
                             break;
                         case ServerPacketType.PingBack:
-                            {
-                                var packet = new ServerPackets.PingBack(client);
-                                if (packet.ParseFromNetworkMessage(inMessage))
-                                {
-                                    packet.Forward = OnReceivedServerPingBackPacket?.Invoke(packet) ?? true;
-                                    if (packet.Forward)
-                                    {
-                                        packet.AppendToNetworkMessage(outMessage);
-                                    }
-                                }
-                            }
+                            packet.Forward = OnReceivedServerPingBackPacket?.Invoke(packet) ?? true;
                             break;
                         case ServerPacketType.LoginChallenge:
-                            {
-                                var packet = new ServerPackets.LoginChallenge(client);
-                                if (packet.ParseFromNetworkMessage(inMessage))
-                                {
-                                    packet.Forward = OnReceivedServerLoginChallengePacket?.Invoke(packet) ?? true;
-                                    if (packet.Forward)
-                                    {
-                                        packet.AppendToNetworkMessage(outMessage);
-                                    }
-                                }
-                            }
+                            packet.Forward = OnReceivedServerLoginChallengePacket?.Invoke(packet) ?? true;
                             break;
                         case ServerPacketType.Dead:
-                            {
-                                var packet = new ServerPackets.Dead(client);
-                                if (packet.ParseFromNetworkMessage(inMessage))
-                                {
-                                    packet.Forward = OnReceivedServerDeadPacket?.Invoke(packet) ?? true;
-                                    if (packet.Forward)
-                                    {
-                                        packet.AppendToNetworkMessage(outMessage);
-                                    }
-                                }
-                            }
+                            packet.Forward = OnReceivedServerDeadPacket?.Invoke(packet) ?? true;
                             break;
                         case ServerPacketType.Stash:
-                            {
-                                var packet = new ServerPackets.Stash(client);
-                                if (packet.ParseFromNetworkMessage(inMessage))
-                                {
-                                    packet.Forward = OnReceivedServerStashPacket?.Invoke(packet) ?? true;
-                                    if (packet.Forward)
-                                    {
-                                        packet.AppendToNetworkMessage(outMessage);
-                                    }
-                                }
-                            }
+                            packet.Forward = OnReceivedServerStashPacket?.Invoke(packet) ?? true;
                             break;
                         case ServerPacketType.DepotTileState:
-                            {
-                                var packet = new ServerPackets.DepotTileState(client);
-                                if (packet.ParseFromNetworkMessage(inMessage))
-                                {
-                                    packet.Forward = OnReceivedServerDepotTileStatePacket?.Invoke(packet) ?? true;
-                                    if (packet.Forward)
-                                    {
-                                        packet.AppendToNetworkMessage(outMessage);
-                                    }
-                                }
-                            }
+                            packet.Forward = OnReceivedServerDepotTileStatePacket?.Invoke(packet) ?? true;
+                            break;
+                        case ServerPacketType.SpecialContainersAvailable:
+                            packet.Forward = OnReceivedServerSpecialContainersAvailablePacket?.Invoke(packet) ?? true;
                             break;
                         case ServerPacketType.ClientCheck:
-                            {
-                                var packet = new ServerPackets.ClientCheck(client);
-                                if (packet.ParseFromNetworkMessage(inMessage))
-                                {
-                                    packet.Forward = OnReceivedServerClientCheckPacket?.Invoke(packet) ?? true;
-                                    if (packet.Forward)
-                                    {
-                                        packet.AppendToNetworkMessage(outMessage);
-                                    }
-                                }
-                            }
+                            packet.Forward = OnReceivedServerClientCheckPacket?.Invoke(packet) ?? true;
                             break;
                         case ServerPacketType.FullMap:
-                            {
-                                var packet = new ServerPackets.FullMap(client);
-                                if (packet.ParseFromNetworkMessage(inMessage))
-                                {
-                                    packet.Forward = OnReceivedServerFullMapPacket?.Invoke(packet) ?? true;
-                                    if (packet.Forward)
-                                    {
-                                        packet.AppendToNetworkMessage(outMessage);
-                                    }
-                                }
-                            }
+                            packet.Forward = OnReceivedServerFullMapPacket?.Invoke(packet) ?? true;
                             break;
                         case ServerPacketType.TopRow:
-                            {
-                                var packet = new ServerPackets.TopRow(client);
-                                if (packet.ParseFromNetworkMessage(inMessage))
-                                {
-                                    packet.Forward = OnReceivedServerTopRowPacket?.Invoke(packet) ?? true;
-                                    if (packet.Forward)
-                                    {
-                                        packet.AppendToNetworkMessage(outMessage);
-                                    }
-                                }
-                            }
+                            packet.Forward = OnReceivedServerTopRowPacket?.Invoke(packet) ?? true;
                             break;
                         case ServerPacketType.RightColumn:
-                            {
-                                var packet = new ServerPackets.RightColumn(client);
-                                if (packet.ParseFromNetworkMessage(inMessage))
-                                {
-                                    packet.Forward = OnReceivedServerRightColumnPacket?.Invoke(packet) ?? true;
-                                    if (packet.Forward)
-                                    {
-                                        packet.AppendToNetworkMessage(outMessage);
-                                    }
-                                }
-                            }
+                            packet.Forward = OnReceivedServerRightColumnPacket?.Invoke(packet) ?? true;
                             break;
                         case ServerPacketType.BottomRow:
-                            {
-                                var packet = new ServerPackets.BottomRow(client);
-                                if (packet.ParseFromNetworkMessage(inMessage))
-                                {
-                                    packet.Forward = OnReceivedServerBottomRowPacket?.Invoke(packet) ?? true;
-                                    if (packet.Forward)
-                                    {
-                                        packet.AppendToNetworkMessage(outMessage);
-                                    }
-                                }
-                            }
+                            packet.Forward = OnReceivedServerBottomRowPacket?.Invoke(packet) ?? true;
                             break;
                         case ServerPacketType.LeftColumn:
-                            {
-                                var packet = new ServerPackets.LeftColumn(client);
-                                if (packet.ParseFromNetworkMessage(inMessage))
-                                {
-                                    packet.Forward = OnReceivedServerLeftColumnPacket?.Invoke(packet) ?? true;
-                                    if (packet.Forward)
-                                    {
-                                        packet.AppendToNetworkMessage(outMessage);
-                                    }
-                                }
-                            }
+                            packet.Forward = OnReceivedServerLeftColumnPacket?.Invoke(packet) ?? true;
                             break;
                         case ServerPacketType.FieldData:
-                            {
-                                var packet = new ServerPackets.FieldData(client);
-                                if (packet.ParseFromNetworkMessage(inMessage))
-                                {
-                                    packet.Forward = OnReceivedServerFieldDataPacket?.Invoke(packet) ?? true;
-                                    if (packet.Forward)
-                                    {
-                                        packet.AppendToNetworkMessage(outMessage);
-                                    }
-                                }
-                            }
+                            packet.Forward = OnReceivedServerFieldDataPacket?.Invoke(packet) ?? true;
                             break;
                         case ServerPacketType.CreateOnMap:
-                            {
-                                var packet = new ServerPackets.CreateOnMap(client);
-                                if (packet.ParseFromNetworkMessage(inMessage))
-                                {
-                                    packet.Forward = OnReceivedServerCreateOnMapPacket?.Invoke(packet) ?? true;
-                                    if (packet.Forward)
-                                    {
-                                        packet.AppendToNetworkMessage(outMessage);
-                                    }
-                                }
-                            }
+                            packet.Forward = OnReceivedServerCreateOnMapPacket?.Invoke(packet) ?? true;
                             break;
                         case ServerPacketType.ChangeOnMap:
-                            {
-                                var packet = new ServerPackets.ChangeOnMap(client);
-                                if (packet.ParseFromNetworkMessage(inMessage))
-                                {
-                                    packet.Forward = OnReceivedServerChangeOnMapPacket?.Invoke(packet) ?? true;
-                                    if (packet.Forward)
-                                    {
-                                        packet.AppendToNetworkMessage(outMessage);
-                                    }
-                                }
-                            }
+                            packet.Forward = OnReceivedServerChangeOnMapPacket?.Invoke(packet) ?? true;
                             break;
                         case ServerPacketType.DeleteOnMap:
-                            {
-                                var packet = new ServerPackets.DeleteOnMap(client);
-                                if (packet.ParseFromNetworkMessage(inMessage))
-                                {
-                                    packet.Forward = OnReceivedServerDeleteOnMapPacket?.Invoke(packet) ?? true;
-                                    if (packet.Forward)
-                                    {
-                                        packet.AppendToNetworkMessage(outMessage);
-                                    }
-                                }
-                            }
+                            packet.Forward = OnReceivedServerDeleteOnMapPacket?.Invoke(packet) ?? true;
                             break;
                         case ServerPacketType.MoveCreature:
-                            {
-                                var packet = new ServerPackets.MoveCreature(client);
-                                if (packet.ParseFromNetworkMessage(inMessage))
-                                {
-                                    packet.Forward = OnReceivedServerMoveCreaturePacket?.Invoke(packet) ?? true;
-                                    if (packet.Forward)
-                                    {
-                                        packet.AppendToNetworkMessage(outMessage);
-                                    }
-                                }
-                            }
+                            packet.Forward = OnReceivedServerMoveCreaturePacket?.Invoke(packet) ?? true;
                             break;
                         case ServerPacketType.Container:
-                            {
-                                var packet = new ServerPackets.Container(client);
-                                if (packet.ParseFromNetworkMessage(inMessage))
-                                {
-                                    packet.Forward = OnReceivedServerContainerPacket?.Invoke(packet) ?? true;
-                                    if (packet.Forward)
-                                    {
-                                        packet.AppendToNetworkMessage(outMessage);
-                                    }
-                                }
-                            }
+                            packet.Forward = OnReceivedServerContainerPacket?.Invoke(packet) ?? true;
                             break;
                         case ServerPacketType.CloseContainer:
-                            {
-                                var packet = new ServerPackets.CloseContainer(client);
-                                if (packet.ParseFromNetworkMessage(inMessage))
-                                {
-                                    packet.Forward = OnReceivedServerCloseContainerPacket?.Invoke(packet) ?? true;
-                                    if (packet.Forward)
-                                    {
-                                        packet.AppendToNetworkMessage(outMessage);
-                                    }
-                                }
-                            }
+                            packet.Forward = OnReceivedServerCloseContainerPacket?.Invoke(packet) ?? true;
                             break;
                         case ServerPacketType.CreateInContainer:
-                            {
-                                var packet = new ServerPackets.CreateInContainer(client);
-                                if (packet.ParseFromNetworkMessage(inMessage))
-                                {
-                                    packet.Forward = OnReceivedServerCreateInContainerPacket?.Invoke(packet) ?? true;
-                                    if (packet.Forward)
-                                    {
-                                        packet.AppendToNetworkMessage(outMessage);
-                                    }
-                                }
-                            }
+                            packet.Forward = OnReceivedServerCreateInContainerPacket?.Invoke(packet) ?? true;
                             break;
                         case ServerPacketType.ChangeInContainer:
-                            {
-                                var packet = new ServerPackets.ChangeInContainer(client);
-                                if (packet.ParseFromNetworkMessage(inMessage))
-                                {
-                                    packet.Forward = OnReceivedServerChangeInContainerPacket?.Invoke(packet) ?? true;
-                                    if (packet.Forward)
-                                    {
-                                        packet.AppendToNetworkMessage(outMessage);
-                                    }
-                                }
-                            }
+                            packet.Forward = OnReceivedServerChangeInContainerPacket?.Invoke(packet) ?? true;
                             break;
                         case ServerPacketType.DeleteInContainer:
-                            {
-                                var packet = new ServerPackets.DeleteInContainer(client);
-                                if (packet.ParseFromNetworkMessage(inMessage))
-                                {
-                                    packet.Forward = OnReceivedServerDeleteInContainerPacket?.Invoke(packet) ?? true;
-                                    if (packet.Forward)
-                                    {
-                                        packet.AppendToNetworkMessage(outMessage);
-                                    }
-                                }
-                            }
+                            packet.Forward = OnReceivedServerDeleteInContainerPacket?.Invoke(packet) ?? true;
                             break;
                         case ServerPacketType.ScreenshotEvent:
-                            {
-                                var packet = new ServerPackets.ScreenshotEvent(client);
-                                if (packet.ParseFromNetworkMessage(inMessage))
-                                {
-                                    packet.Forward = OnReceivedServerScreenshotEventPacket?.Invoke(packet) ?? true;
-                                    if (packet.Forward)
-                                    {
-                                        packet.AppendToNetworkMessage(outMessage);
-                                    }
-                                }
-                            }
+                            packet.Forward = OnReceivedServerScreenshotEventPacket?.Invoke(packet) ?? true;
                             break;
                         case ServerPacketType.InspectionList:
-                            {
-                                var packet = new ServerPackets.InspectionList(client);
-                                if (packet.ParseFromNetworkMessage(inMessage))
-                                {
-                                    packet.Forward = OnReceivedServerInspectionListPacket?.Invoke(packet) ?? true;
-                                    if (packet.Forward)
-                                    {
-                                        packet.AppendToNetworkMessage(outMessage);
-                                    }
-                                }
-                            }
+                            packet.Forward = OnReceivedServerInspectionListPacket?.Invoke(packet) ?? true;
                             break;
                         case ServerPacketType.InspectionState:
-                            {
-                                var packet = new ServerPackets.InspectionState(client);
-                                if (packet.ParseFromNetworkMessage(inMessage))
-                                {
-                                    packet.Forward = OnReceivedServerInspectionStatePacket?.Invoke(packet) ?? true;
-                                    if (packet.Forward)
-                                    {
-                                        packet.AppendToNetworkMessage(outMessage);
-                                    }
-                                }
-                            }
+                            packet.Forward = OnReceivedServerInspectionStatePacket?.Invoke(packet) ?? true;
                             break;
                         case ServerPacketType.SetInventory:
-                            {
-                                var packet = new ServerPackets.SetInventory(client);
-                                if (packet.ParseFromNetworkMessage(inMessage))
-                                {
-                                    packet.Forward = OnReceivedServerSetInventoryPacket?.Invoke(packet) ?? true;
-                                    if (packet.Forward)
-                                    {
-                                        packet.AppendToNetworkMessage(outMessage);
-                                    }
-                                }
-                            }
+                            packet.Forward = OnReceivedServerSetInventoryPacket?.Invoke(packet) ?? true;
                             break;
                         case ServerPacketType.DeleteInventory:
-                            {
-                                var packet = new ServerPackets.DeleteInventory(client);
-                                if (packet.ParseFromNetworkMessage(inMessage))
-                                {
-                                    packet.Forward = OnReceivedServerDeleteInventoryPacket?.Invoke(packet) ?? true;
-                                    if (packet.Forward)
-                                    {
-                                        packet.AppendToNetworkMessage(outMessage);
-                                    }
-                                }
-                            }
+                            packet.Forward = OnReceivedServerDeleteInventoryPacket?.Invoke(packet) ?? true;
                             break;
                         case ServerPacketType.NpcOffer:
-                            {
-                                var packet = new ServerPackets.NpcOffer(client);
-                                if (packet.ParseFromNetworkMessage(inMessage))
-                                {
-                                    packet.Forward = OnReceivedServerNpcOfferPacket?.Invoke(packet) ?? true;
-                                    if (packet.Forward)
-                                    {
-                                        packet.AppendToNetworkMessage(outMessage);
-                                    }
-                                }
-                            }
+                            packet.Forward = OnReceivedServerNpcOfferPacket?.Invoke(packet) ?? true;
                             break;
                         case ServerPacketType.PlayerGoods:
-                            {
-                                var packet = new ServerPackets.PlayerGoods(client);
-                                if (packet.ParseFromNetworkMessage(inMessage))
-                                {
-                                    packet.Forward = OnReceivedServerPlayerGoodsPacket?.Invoke(packet) ?? true;
-                                    if (packet.Forward)
-                                    {
-                                        packet.AppendToNetworkMessage(outMessage);
-                                    }
-                                }
-                            }
+                            packet.Forward = OnReceivedServerPlayerGoodsPacket?.Invoke(packet) ?? true;
                             break;
                         case ServerPacketType.CloseNpcTrade:
-                            {
-                                var packet = new ServerPackets.CloseNpcTrade(client);
-                                if (packet.ParseFromNetworkMessage(inMessage))
-                                {
-                                    packet.Forward = OnReceivedServerCloseNpcTradePacket?.Invoke(packet) ?? true;
-                                    if (packet.Forward)
-                                    {
-                                        packet.AppendToNetworkMessage(outMessage);
-                                    }
-                                }
-                            }
+                            packet.Forward = OnReceivedServerCloseNpcTradePacket?.Invoke(packet) ?? true;
                             break;
                         case ServerPacketType.OwnOffer:
-                            {
-                                var packet = new ServerPackets.OwnOffer(client);
-                                if (packet.ParseFromNetworkMessage(inMessage))
-                                {
-                                    packet.Forward = OnReceivedServerOwnOfferPacket?.Invoke(packet) ?? true;
-                                    if (packet.Forward)
-                                    {
-                                        packet.AppendToNetworkMessage(outMessage);
-                                    }
-                                }
-                            }
+                            packet.Forward = OnReceivedServerOwnOfferPacket?.Invoke(packet) ?? true;
                             break;
                         case ServerPacketType.CounterOffer:
-                            {
-                                var packet = new ServerPackets.CounterOffer(client);
-                                if (packet.ParseFromNetworkMessage(inMessage))
-                                {
-                                    packet.Forward = OnReceivedServerCounterOfferPacket?.Invoke(packet) ?? true;
-                                    if (packet.Forward)
-                                    {
-                                        packet.AppendToNetworkMessage(outMessage);
-                                    }
-                                }
-                            }
+                            packet.Forward = OnReceivedServerCounterOfferPacket?.Invoke(packet) ?? true;
                             break;
                         case ServerPacketType.CloseTrade:
-                            {
-                                var packet = new ServerPackets.CloseTrade(client);
-                                if (packet.ParseFromNetworkMessage(inMessage))
-                                {
-                                    packet.Forward = OnReceivedServerCloseTradePacket?.Invoke(packet) ?? true;
-                                    if (packet.Forward)
-                                    {
-                                        packet.AppendToNetworkMessage(outMessage);
-                                    }
-                                }
-                            }
+                            packet.Forward = OnReceivedServerCloseTradePacket?.Invoke(packet) ?? true;
                             break;
                         case ServerPacketType.Ambiente:
-                            {
-                                var packet = new ServerPackets.Ambiente(client);
-                                if (packet.ParseFromNetworkMessage(inMessage))
-                                {
-                                    packet.Forward = OnReceivedServerAmbientePacket?.Invoke(packet) ?? true;
-                                    if (packet.Forward)
-                                    {
-                                        packet.AppendToNetworkMessage(outMessage);
-                                    }
-                                }
-                            }
+                            packet.Forward = OnReceivedServerAmbientePacket?.Invoke(packet) ?? true;
                             break;
                         case ServerPacketType.GraphicalEffects:
-                            {
-                                var packet = new ServerPackets.GraphicalEffects(client);
-                                if (packet.ParseFromNetworkMessage(inMessage))
-                                {
-                                    packet.Forward = OnReceivedServerGraphicalEffectsPacket?.Invoke(packet) ?? true;
-                                    if (packet.Forward)
-                                    {
-                                        packet.AppendToNetworkMessage(outMessage);
-                                    }
-                                }
-                            }
+                            packet.Forward = OnReceivedServerGraphicalEffectsPacket?.Invoke(packet) ?? true;
                             break;
                         case ServerPacketType.RemoveGraphicalEffect:
-                            {
-                                var packet = new ServerPackets.RemoveGraphicalEffect(client);
-                                if (packet.ParseFromNetworkMessage(inMessage))
-                                {
-                                    packet.Forward = OnReceivedServerRemoveGraphicalEffectPacket?.Invoke(packet) ?? true;
-                                    if (packet.Forward)
-                                    {
-                                        packet.AppendToNetworkMessage(outMessage);
-                                    }
-                                }
-                            }
+                            packet.Forward = OnReceivedServerRemoveGraphicalEffectPacket?.Invoke(packet) ?? true;
                             break;
                         case ServerPacketType.MissileEffect:
-                            {
-                                var packet = new ServerPackets.MissileEffect(client);
-                                if (packet.ParseFromNetworkMessage(inMessage))
-                                {
-                                    packet.Forward = OnReceivedServerMissileEffectPacket?.Invoke(packet) ?? true;
-                                    if (packet.Forward)
-                                    {
-                                        packet.AppendToNetworkMessage(outMessage);
-                                    }
-                                }
-                            }
+                            packet.Forward = OnReceivedServerMissileEffectPacket?.Invoke(packet) ?? true;
                             break;
                         case ServerPacketType.Trappers:
-                            {
-                                var packet = new ServerPackets.Trappers(client);
-                                if (packet.ParseFromNetworkMessage(inMessage))
-                                {
-                                    packet.Forward = OnReceivedServerTrappersPacket?.Invoke(packet) ?? true;
-                                    if (packet.Forward)
-                                    {
-                                        packet.AppendToNetworkMessage(outMessage);
-                                    }
-                                }
-                            }
+                            packet.Forward = OnReceivedServerTrappersPacket?.Invoke(packet) ?? true;
                             break;
                         case ServerPacketType.CreatureHealth:
-                            {
-                                var packet = new ServerPackets.CreatureHealth(client);
-                                if (packet.ParseFromNetworkMessage(inMessage))
-                                {
-                                    packet.Forward = OnReceivedServerCreatureHealthPacket?.Invoke(packet) ?? true;
-                                    if (packet.Forward)
-                                    {
-                                        packet.AppendToNetworkMessage(outMessage);
-                                    }
-                                }
-                            }
+                            packet.Forward = OnReceivedServerCreatureHealthPacket?.Invoke(packet) ?? true;
                             break;
                         case ServerPacketType.CreatureLight:
-                            {
-                                var packet = new ServerPackets.CreatureLight(client);
-                                if (packet.ParseFromNetworkMessage(inMessage))
-                                {
-                                    packet.Forward = OnReceivedServerCreatureLightPacket?.Invoke(packet) ?? true;
-                                    if (packet.Forward)
-                                    {
-                                        packet.AppendToNetworkMessage(outMessage);
-                                    }
-                                }
-                            }
+                            packet.Forward = OnReceivedServerCreatureLightPacket?.Invoke(packet) ?? true;
                             break;
                         case ServerPacketType.CreatureOutfit:
-                            {
-                                var packet = new ServerPackets.CreatureOutfit(client);
-                                if (packet.ParseFromNetworkMessage(inMessage))
-                                {
-                                    packet.Forward = OnReceivedServerCreatureOutfitPacket?.Invoke(packet) ?? true;
-                                    if (packet.Forward)
-                                    {
-                                        packet.AppendToNetworkMessage(outMessage);
-                                    }
-                                }
-                            }
+                            packet.Forward = OnReceivedServerCreatureOutfitPacket?.Invoke(packet) ?? true;
                             break;
                         case ServerPacketType.CreatureSpeed:
-                            {
-                                var packet = new ServerPackets.CreatureSpeed(client);
-                                if (packet.ParseFromNetworkMessage(inMessage))
-                                {
-                                    packet.Forward = OnReceivedServerCreatureSpeedPacket?.Invoke(packet) ?? true;
-                                    if (packet.Forward)
-                                    {
-                                        packet.AppendToNetworkMessage(outMessage);
-                                    }
-                                }
-                            }
+                            packet.Forward = OnReceivedServerCreatureSpeedPacket?.Invoke(packet) ?? true;
                             break;
                         case ServerPacketType.CreatureSkull:
-                            {
-                                var packet = new ServerPackets.CreatureSkull(client);
-                                if (packet.ParseFromNetworkMessage(inMessage))
-                                {
-                                    packet.Forward = OnReceivedServerCreatureSkullPacket?.Invoke(packet) ?? true;
-                                    if (packet.Forward)
-                                    {
-                                        packet.AppendToNetworkMessage(outMessage);
-                                    }
-                                }
-                            }
+                            packet.Forward = OnReceivedServerCreatureSkullPacket?.Invoke(packet) ?? true;
                             break;
                         case ServerPacketType.CreatureParty:
-                            {
-                                var packet = new ServerPackets.CreatureParty(client);
-                                if (packet.ParseFromNetworkMessage(inMessage))
-                                {
-                                    packet.Forward = OnReceivedServerCreaturePartyPacket?.Invoke(packet) ?? true;
-                                    if (packet.Forward)
-                                    {
-                                        packet.AppendToNetworkMessage(outMessage);
-                                    }
-                                }
-                            }
+                            packet.Forward = OnReceivedServerCreaturePartyPacket?.Invoke(packet) ?? true;
                             break;
                         case ServerPacketType.CreatureUnpass:
-                            {
-                                var packet = new ServerPackets.CreatureUnpass(client);
-                                if (packet.ParseFromNetworkMessage(inMessage))
-                                {
-                                    packet.Forward = OnReceivedServerCreatureUnpassPacket?.Invoke(packet) ?? true;
-                                    if (packet.Forward)
-                                    {
-                                        packet.AppendToNetworkMessage(outMessage);
-                                    }
-                                }
-                            }
+                            packet.Forward = OnReceivedServerCreatureUnpassPacket?.Invoke(packet) ?? true;
                             break;
                         case ServerPacketType.CreatureMarks:
-                            {
-                                var packet = new ServerPackets.CreatureMarks(client);
-                                if (packet.ParseFromNetworkMessage(inMessage))
-                                {
-                                    packet.Forward = OnReceivedServerCreatureMarksPacket?.Invoke(packet) ?? true;
-                                    if (packet.Forward)
-                                    {
-                                        packet.AppendToNetworkMessage(outMessage);
-                                    }
-                                }
-                            }
+                            packet.Forward = OnReceivedServerCreatureMarksPacket?.Invoke(packet) ?? true;
                             break;
                         case ServerPacketType.CreaturePvpHelpers:
-                            {
-                                var packet = new ServerPackets.CreaturePvpHelpers(client);
-                                if (packet.ParseFromNetworkMessage(inMessage))
-                                {
-                                    packet.Forward = OnReceivedServerCreaturePvpHelpersPacket?.Invoke(packet) ?? true;
-                                    if (packet.Forward)
-                                    {
-                                        packet.AppendToNetworkMessage(outMessage);
-                                    }
-                                }
-                            }
+                            packet.Forward = OnReceivedServerCreaturePvpHelpersPacket?.Invoke(packet) ?? true;
                             break;
                         case ServerPacketType.CreatureType:
-                            {
-                                var packet = new ServerPackets.CreatureType(client);
-                                if (packet.ParseFromNetworkMessage(inMessage))
-                                {
-                                    packet.Forward = OnReceivedServerCreatureTypePacket?.Invoke(packet) ?? true;
-                                    if (packet.Forward)
-                                    {
-                                        packet.AppendToNetworkMessage(outMessage);
-                                    }
-                                }
-                            }
+                            packet.Forward = OnReceivedServerCreatureTypePacket?.Invoke(packet) ?? true;
                             break;
                         case ServerPacketType.EditText:
-                            {
-                                var packet = new ServerPackets.EditText(client);
-                                if (packet.ParseFromNetworkMessage(inMessage))
-                                {
-                                    packet.Forward = OnReceivedServerEditTextPacket?.Invoke(packet) ?? true;
-                                    if (packet.Forward)
-                                    {
-                                        packet.AppendToNetworkMessage(outMessage);
-                                    }
-                                }
-                            }
+                            packet.Forward = OnReceivedServerEditTextPacket?.Invoke(packet) ?? true;
                             break;
                         case ServerPacketType.EditList:
-                            {
-                                var packet = new ServerPackets.EditList(client);
-                                if (packet.ParseFromNetworkMessage(inMessage))
-                                {
-                                    packet.Forward = OnReceivedServerEditListPacket?.Invoke(packet) ?? true;
-                                    if (packet.Forward)
-                                    {
-                                        packet.AppendToNetworkMessage(outMessage);
-                                    }
-                                }
-                            }
+                            packet.Forward = OnReceivedServerEditListPacket?.Invoke(packet) ?? true;
                             break;
                         case ServerPacketType.ShowGameNews:
-                            {
-                                var packet = new ServerPackets.ShowGameNews(client);
-                                if (packet.ParseFromNetworkMessage(inMessage))
-                                {
-                                    packet.Forward = OnReceivedServerShowGameNewsPacket?.Invoke(packet) ?? true;
-                                    if (packet.Forward)
-                                    {
-                                        packet.AppendToNetworkMessage(outMessage);
-                                    }
-                                }
-                            }
+                            packet.Forward = OnReceivedServerShowGameNewsPacket?.Invoke(packet) ?? true;
                             break;
                         case ServerPacketType.BlessingsDialog:
-                            {
-                                var packet = new ServerPackets.BlessingsDialog(client);
-                                if (packet.ParseFromNetworkMessage(inMessage))
-                                {
-                                    packet.Forward = OnReceivedServerBlessingsDialogPacket?.Invoke(packet) ?? true;
-                                    if (packet.Forward)
-                                    {
-                                        packet.AppendToNetworkMessage(outMessage);
-                                    }
-                                }
-                            }
+                            packet.Forward = OnReceivedServerBlessingsDialogPacket?.Invoke(packet) ?? true;
                             break;
                         case ServerPacketType.Blessings:
-                            {
-                                var packet = new ServerPackets.Blessings(client);
-                                if (packet.ParseFromNetworkMessage(inMessage))
-                                {
-                                    packet.Forward = OnReceivedServerBlessingsPacket?.Invoke(packet) ?? true;
-                                    if (packet.Forward)
-                                    {
-                                        packet.AppendToNetworkMessage(outMessage);
-                                    }
-                                }
-                            }
+                            packet.Forward = OnReceivedServerBlessingsPacket?.Invoke(packet) ?? true;
                             break;
                         case ServerPacketType.SwitchPreset:
-                            {
-                                var packet = new ServerPackets.SwitchPreset(client);
-                                if (packet.ParseFromNetworkMessage(inMessage))
-                                {
-                                    packet.Forward = OnReceivedServerSwitchPresetPacket?.Invoke(packet) ?? true;
-                                    if (packet.Forward)
-                                    {
-                                        packet.AppendToNetworkMessage(outMessage);
-                                    }
-                                }
-                            }
+                            packet.Forward = OnReceivedServerSwitchPresetPacket?.Invoke(packet) ?? true;
                             break;
                         case ServerPacketType.PremiumTrigger:
-                            {
-                                var packet = new ServerPackets.PremiumTrigger(client);
-                                if (packet.ParseFromNetworkMessage(inMessage))
-                                {
-                                    packet.Forward = OnReceivedServerPremiumTriggerPacket?.Invoke(packet) ?? true;
-                                    if (packet.Forward)
-                                    {
-                                        packet.AppendToNetworkMessage(outMessage);
-                                    }
-                                }
-                            }
+                            packet.Forward = OnReceivedServerPremiumTriggerPacket?.Invoke(packet) ?? true;
                             break;
                         case ServerPacketType.PlayerDataBasic:
-                            {
-                                var packet = new ServerPackets.PlayerDataBasic(client);
-                                if (packet.ParseFromNetworkMessage(inMessage))
-                                {
-                                    packet.Forward = OnReceivedServerPlayerDataBasicPacket?.Invoke(packet) ?? true;
-                                    if (packet.Forward)
-                                    {
-                                        packet.AppendToNetworkMessage(outMessage);
-                                    }
-                                }
-                            }
+                            packet.Forward = OnReceivedServerPlayerDataBasicPacket?.Invoke(packet) ?? true;
                             break;
                         case ServerPacketType.PlayerDataCurrent:
-                            {
-                                var packet = new ServerPackets.PlayerDataCurrent(client);
-                                if (packet.ParseFromNetworkMessage(inMessage))
-                                {
-                                    packet.Forward = OnReceivedServerPlayerDataCurrentPacket?.Invoke(packet) ?? true;
-                                    if (packet.Forward)
-                                    {
-                                        packet.AppendToNetworkMessage(outMessage);
-                                    }
-                                }
-                            }
+                            packet.Forward = OnReceivedServerPlayerDataCurrentPacket?.Invoke(packet) ?? true;
                             break;
                         case ServerPacketType.PlayerSkills:
-                            {
-                                var packet = new ServerPackets.PlayerSkills(client);
-                                if (packet.ParseFromNetworkMessage(inMessage))
-                                {
-                                    packet.Forward = OnReceivedServerPlayerSkillsPacket?.Invoke(packet) ?? true;
-                                    if (packet.Forward)
-                                    {
-                                        packet.AppendToNetworkMessage(outMessage);
-                                    }
-                                }
-                            }
+                            packet.Forward = OnReceivedServerPlayerSkillsPacket?.Invoke(packet) ?? true;
                             break;
                         case ServerPacketType.PlayerState:
-                            {
-                                var packet = new ServerPackets.PlayerState(client);
-                                if (packet.ParseFromNetworkMessage(inMessage))
-                                {
-                                    packet.Forward = OnReceivedServerPlayerStatePacket?.Invoke(packet) ?? true;
-                                    if (packet.Forward)
-                                    {
-                                        packet.AppendToNetworkMessage(outMessage);
-                                    }
-                                }
-                            }
+                            packet.Forward = OnReceivedServerPlayerStatePacket?.Invoke(packet) ?? true;
                             break;
                         case ServerPacketType.ClearTarget:
-                            {
-                                var packet = new ServerPackets.ClearTarget(client);
-                                if (packet.ParseFromNetworkMessage(inMessage))
-                                {
-                                    packet.Forward = OnReceivedServerClearTargetPacket?.Invoke(packet) ?? true;
-                                    if (packet.Forward)
-                                    {
-                                        packet.AppendToNetworkMessage(outMessage);
-                                    }
-                                }
-                            }
+                            packet.Forward = OnReceivedServerClearTargetPacket?.Invoke(packet) ?? true;
                             break;
                         case ServerPacketType.SpellDelay:
-                            {
-                                var packet = new ServerPackets.SpellDelay(client);
-                                if (packet.ParseFromNetworkMessage(inMessage))
-                                {
-                                    packet.Forward = OnReceivedServerSpellDelayPacket?.Invoke(packet) ?? true;
-                                    if (packet.Forward)
-                                    {
-                                        packet.AppendToNetworkMessage(outMessage);
-                                    }
-                                }
-                            }
+                            packet.Forward = OnReceivedServerSpellDelayPacket?.Invoke(packet) ?? true;
                             break;
                         case ServerPacketType.SpellGroupDelay:
-                            {
-                                var packet = new ServerPackets.SpellGroupDelay(client);
-                                if (packet.ParseFromNetworkMessage(inMessage))
-                                {
-                                    packet.Forward = OnReceivedServerSpellGroupDelayPacket?.Invoke(packet) ?? true;
-                                    if (packet.Forward)
-                                    {
-                                        packet.AppendToNetworkMessage(outMessage);
-                                    }
-                                }
-                            }
+                            packet.Forward = OnReceivedServerSpellGroupDelayPacket?.Invoke(packet) ?? true;
                             break;
                         case ServerPacketType.MultiUseDelay:
-                            {
-                                var packet = new ServerPackets.MultiUseDelay(client);
-                                if (packet.ParseFromNetworkMessage(inMessage))
-                                {
-                                    packet.Forward = OnReceivedServerMultiUseDelayPacket?.Invoke(packet) ?? true;
-                                    if (packet.Forward)
-                                    {
-                                        packet.AppendToNetworkMessage(outMessage);
-                                    }
-                                }
-                            }
+                            packet.Forward = OnReceivedServerMultiUseDelayPacket?.Invoke(packet) ?? true;
                             break;
                         case ServerPacketType.SetTactics:
-                            {
-                                var packet = new ServerPackets.SetTactics(client);
-                                if (packet.ParseFromNetworkMessage(inMessage))
-                                {
-                                    packet.Forward = OnReceivedServerSetTacticsPacket?.Invoke(packet) ?? true;
-                                    if (packet.Forward)
-                                    {
-                                        packet.AppendToNetworkMessage(outMessage);
-                                    }
-                                }
-                            }
+                            packet.Forward = OnReceivedServerSetTacticsPacket?.Invoke(packet) ?? true;
                             break;
                         case ServerPacketType.SetStoreDeepLink:
-                            {
-                                var packet = new ServerPackets.SetStoreDeepLink(client);
-                                if (packet.ParseFromNetworkMessage(inMessage))
-                                {
-                                    packet.Forward = OnReceivedServerSetStoreDeepLinkPacket?.Invoke(packet) ?? true;
-                                    if (packet.Forward)
-                                    {
-                                        packet.AppendToNetworkMessage(outMessage);
-                                    }
-                                }
-                            }
+                            packet.Forward = OnReceivedServerSetStoreDeepLinkPacket?.Invoke(packet) ?? true;
                             break;
                         case ServerPacketType.RestingAreaState:
-                            {
-                                var packet = new ServerPackets.RestingAreaState(client);
-                                if (packet.ParseFromNetworkMessage(inMessage))
-                                {
-                                    packet.Forward = OnReceivedServerRestingAreaStatePacket?.Invoke(packet) ?? true;
-                                    if (packet.Forward)
-                                    {
-                                        packet.AppendToNetworkMessage(outMessage);
-                                    }
-                                }
-                            }
+                            packet.Forward = OnReceivedServerRestingAreaStatePacket?.Invoke(packet) ?? true;
                             break;
                         case ServerPacketType.Talk:
-                            {
-                                var packet = new ServerPackets.Talk(client);
-                                if (packet.ParseFromNetworkMessage(inMessage))
-                                {
-                                    packet.Forward = OnReceivedServerTalkPacket?.Invoke(packet) ?? true;
-                                    if (packet.Forward)
-                                    {
-                                        packet.AppendToNetworkMessage(outMessage);
-                                    }
-                                }
-                            }
+                            packet.Forward = OnReceivedServerTalkPacket?.Invoke(packet) ?? true;
                             break;
                         case ServerPacketType.Channels:
-                            {
-                                var packet = new ServerPackets.Channels(client);
-                                if (packet.ParseFromNetworkMessage(inMessage))
-                                {
-                                    packet.Forward = OnReceivedServerChannelsPacket?.Invoke(packet) ?? true;
-                                    if (packet.Forward)
-                                    {
-                                        packet.AppendToNetworkMessage(outMessage);
-                                    }
-                                }
-                            }
+                            packet.Forward = OnReceivedServerChannelsPacket?.Invoke(packet) ?? true;
                             break;
                         case ServerPacketType.OpenChannel:
-                            {
-                                var packet = new ServerPackets.OpenChannel(client);
-                                if (packet.ParseFromNetworkMessage(inMessage))
-                                {
-                                    packet.Forward = OnReceivedServerOpenChannelPacket?.Invoke(packet) ?? true;
-                                    if (packet.Forward)
-                                    {
-                                        packet.AppendToNetworkMessage(outMessage);
-                                    }
-                                }
-                            }
+                            packet.Forward = OnReceivedServerOpenChannelPacket?.Invoke(packet) ?? true;
                             break;
                         case ServerPacketType.PrivateChannel:
-                            {
-                                var packet = new ServerPackets.PrivateChannel(client);
-                                if (packet.ParseFromNetworkMessage(inMessage))
-                                {
-                                    packet.Forward = OnReceivedServerPrivateChannelPacket?.Invoke(packet) ?? true;
-                                    if (packet.Forward)
-                                    {
-                                        packet.AppendToNetworkMessage(outMessage);
-                                    }
-                                }
-                            }
+                            packet.Forward = OnReceivedServerPrivateChannelPacket?.Invoke(packet) ?? true;
                             break;
                         case ServerPacketType.EditGuildMessage:
-                            {
-                                var packet = new ServerPackets.EditGuildMessage(client);
-                                if (packet.ParseFromNetworkMessage(inMessage))
-                                {
-                                    packet.Forward = OnReceivedServerEditGuildMessagePacket?.Invoke(packet) ?? true;
-                                    if (packet.Forward)
-                                    {
-                                        packet.AppendToNetworkMessage(outMessage);
-                                    }
-                                }
-                            }
+                            packet.Forward = OnReceivedServerEditGuildMessagePacket?.Invoke(packet) ?? true;
                             break;
                         case ServerPacketType.OpenOwnChannel:
-                            {
-                                var packet = new ServerPackets.OpenOwnChannel(client);
-                                if (packet.ParseFromNetworkMessage(inMessage))
-                                {
-                                    packet.Forward = OnReceivedServerOpenOwnChannelPacket?.Invoke(packet) ?? true;
-                                    if (packet.Forward)
-                                    {
-                                        packet.AppendToNetworkMessage(outMessage);
-                                    }
-                                }
-                            }
+                            packet.Forward = OnReceivedServerOpenOwnChannelPacket?.Invoke(packet) ?? true;
                             break;
                         case ServerPacketType.CloseChannel:
-                            {
-                                var packet = new ServerPackets.CloseChannel(client);
-                                if (packet.ParseFromNetworkMessage(inMessage))
-                                {
-                                    packet.Forward = OnReceivedServerCloseChannelPacket?.Invoke(packet) ?? true;
-                                    if (packet.Forward)
-                                    {
-                                        packet.AppendToNetworkMessage(outMessage);
-                                    }
-                                }
-                            }
+                            packet.Forward = OnReceivedServerCloseChannelPacket?.Invoke(packet) ?? true;
                             break;
                         case ServerPacketType.Message:
-                            {
-                                var packet = new ServerPackets.Message(client);
-                                if (packet.ParseFromNetworkMessage(inMessage))
-                                {
-                                    packet.Forward = OnReceivedServerMessagePacket?.Invoke(packet) ?? true;
-                                    if (packet.Forward)
-                                    {
-                                        packet.AppendToNetworkMessage(outMessage);
-                                    }
-                                }
-                            }
+                            packet.Forward = OnReceivedServerMessagePacket?.Invoke(packet) ?? true;
                             break;
                         case ServerPacketType.SnapBack:
-                            {
-                                var packet = new ServerPackets.SnapBack(client);
-                                if (packet.ParseFromNetworkMessage(inMessage))
-                                {
-                                    packet.Forward = OnReceivedServerSnapBackPacket?.Invoke(packet) ?? true;
-                                    if (packet.Forward)
-                                    {
-                                        packet.AppendToNetworkMessage(outMessage);
-                                    }
-                                }
-                            }
+                            packet.Forward = OnReceivedServerSnapBackPacket?.Invoke(packet) ?? true;
                             break;
                         case ServerPacketType.Wait:
-                            {
-                                var packet = new ServerPackets.Wait(client);
-                                if (packet.ParseFromNetworkMessage(inMessage))
-                                {
-                                    packet.Forward = OnReceivedServerWaitPacket?.Invoke(packet) ?? true;
-                                    if (packet.Forward)
-                                    {
-                                        packet.AppendToNetworkMessage(outMessage);
-                                    }
-                                }
-                            }
+                            packet.Forward = OnReceivedServerWaitPacket?.Invoke(packet) ?? true;
                             break;
                         case ServerPacketType.UnjustifiedPoints:
-                            {
-                                var packet = new ServerPackets.UnjustifiedPoints(client);
-                                if (packet.ParseFromNetworkMessage(inMessage))
-                                {
-                                    packet.Forward = OnReceivedServerUnjustifiedPointsPacket?.Invoke(packet) ?? true;
-                                    if (packet.Forward)
-                                    {
-                                        packet.AppendToNetworkMessage(outMessage);
-                                    }
-                                }
-                            }
+                            packet.Forward = OnReceivedServerUnjustifiedPointsPacket?.Invoke(packet) ?? true;
                             break;
                         case ServerPacketType.PvpSituations:
-                            {
-                                var packet = new ServerPackets.PvpSituations(client);
-                                if (packet.ParseFromNetworkMessage(inMessage))
-                                {
-                                    packet.Forward = OnReceivedServerPvpSituationsPacket?.Invoke(packet) ?? true;
-                                    if (packet.Forward)
-                                    {
-                                        packet.AppendToNetworkMessage(outMessage);
-                                    }
-                                }
-                            }
+                            packet.Forward = OnReceivedServerPvpSituationsPacket?.Invoke(packet) ?? true;
                             break;
                         case ServerPacketType.TopFloor:
-                            {
-                                var packet = new ServerPackets.TopFloor(client);
-                                if (packet.ParseFromNetworkMessage(inMessage))
-                                {
-                                    packet.Forward = OnReceivedServerTopFloorPacket?.Invoke(packet) ?? true;
-                                    if (packet.Forward)
-                                    {
-                                        packet.AppendToNetworkMessage(outMessage);
-                                    }
-                                }
-                            }
+                            packet.Forward = OnReceivedServerTopFloorPacket?.Invoke(packet) ?? true;
                             break;
                         case ServerPacketType.BottomFloor:
-                            {
-                                var packet = new ServerPackets.BottomFloor(client);
-                                if (packet.ParseFromNetworkMessage(inMessage))
-                                {
-                                    packet.Forward = OnReceivedServerBottomFloorPacket?.Invoke(packet) ?? true;
-                                    if (packet.Forward)
-                                    {
-                                        packet.AppendToNetworkMessage(outMessage);
-                                    }
-                                }
-                            }
+                            packet.Forward = OnReceivedServerBottomFloorPacket?.Invoke(packet) ?? true;
                             break;
                         case ServerPacketType.UpdateLootContainers:
-                            {
-                                var packet = new ServerPackets.UpdateLootContainers(client);
-                                if (packet.ParseFromNetworkMessage(inMessage))
-                                {
-                                    packet.Forward = OnReceivedServerUpdateLootContainersPacket?.Invoke(packet) ?? true;
-                                    if (packet.Forward)
-                                    {
-                                        packet.AppendToNetworkMessage(outMessage);
-                                    }
-                                }
-                            }
+                            packet.Forward = OnReceivedServerUpdateLootContainersPacket?.Invoke(packet) ?? true;
+                            break;
+                        case ServerPacketType.PlayerDataTournament:
+                            packet.Forward = OnReceivedServerPlayerDataTournamentPacket?.Invoke(packet) ?? true;
+                            break;
+                        case ServerPacketType.TournamentLeaderboard:
+                            packet.Forward = OnReceivedServerTournamentLeaderboardPacket?.Invoke(packet) ?? true;
+                            break;
+                        case ServerPacketType.TournamentInformation:
+                            packet.Forward = OnReceivedServerTournamentInformationPacket?.Invoke(packet) ?? true;
                             break;
                         case ServerPacketType.Outfit:
-                            {
-                                var packet = new ServerPackets.Outfit(client);
-                                if (packet.ParseFromNetworkMessage(inMessage))
-                                {
-                                    packet.Forward = OnReceivedServerOutfitPacket?.Invoke(packet) ?? true;
-                                    if (packet.Forward)
-                                    {
-                                        packet.AppendToNetworkMessage(outMessage);
-                                    }
-                                }
-                            }
+                            packet.Forward = OnReceivedServerOutfitPacket?.Invoke(packet) ?? true;
                             break;
                         case ServerPacketType.ExivaSuppressed:
-                            {
-                                var packet = new ServerPackets.ExivaSuppressed(client);
-                                if (packet.ParseFromNetworkMessage(inMessage))
-                                {
-                                    packet.Forward = OnReceivedServerExivaSuppressedPacket?.Invoke(packet) ?? true;
-                                    if (packet.Forward)
-                                    {
-                                        packet.AppendToNetworkMessage(outMessage);
-                                    }
-                                }
-                            }
+                            packet.Forward = OnReceivedServerExivaSuppressedPacket?.Invoke(packet) ?? true;
                             break;
                         case ServerPacketType.UpdateExivaOptions:
-                            {
-                                var packet = new ServerPackets.UpdateExivaOptions(client);
-                                if (packet.ParseFromNetworkMessage(inMessage))
-                                {
-                                    packet.Forward = OnReceivedServerUpdateExivaOptionsPacket?.Invoke(packet) ?? true;
-                                    if (packet.Forward)
-                                    {
-                                        packet.AppendToNetworkMessage(outMessage);
-                                    }
-                                }
-                            }
+                            packet.Forward = OnReceivedServerUpdateExivaOptionsPacket?.Invoke(packet) ?? true;
                             break;
                         case ServerPacketType.TransactionDetails:
-                            {
-                                var packet = new ServerPackets.TransactionDetails(client);
-                                if (packet.ParseFromNetworkMessage(inMessage))
-                                {
-                                    packet.Forward = OnReceivedServerTransactionDetailsPacket?.Invoke(packet) ?? true;
-                                    if (packet.Forward)
-                                    {
-                                        packet.AppendToNetworkMessage(outMessage);
-                                    }
-                                }
-                            }
+                            packet.Forward = OnReceivedServerTransactionDetailsPacket?.Invoke(packet) ?? true;
                             break;
                         case ServerPacketType.ImpactTracking:
-                            {
-                                var packet = new ServerPackets.ImpactTracking(client);
-                                if (packet.ParseFromNetworkMessage(inMessage))
-                                {
-                                    packet.Forward = OnReceivedServerImpactTrackingPacket?.Invoke(packet) ?? true;
-                                    if (packet.Forward)
-                                    {
-                                        packet.AppendToNetworkMessage(outMessage);
-                                    }
-                                }
-                            }
+                            packet.Forward = OnReceivedServerImpactTrackingPacket?.Invoke(packet) ?? true;
                             break;
                         case ServerPacketType.MarketStatistics:
-                            {
-                                var packet = new ServerPackets.MarketStatistics(client);
-                                if (packet.ParseFromNetworkMessage(inMessage))
-                                {
-                                    packet.Forward = OnReceivedServerMarketStatisticsPacket?.Invoke(packet) ?? true;
-                                    if (packet.Forward)
-                                    {
-                                        packet.AppendToNetworkMessage(outMessage);
-                                    }
-                                }
-                            }
+                            packet.Forward = OnReceivedServerMarketStatisticsPacket?.Invoke(packet) ?? true;
                             break;
                         case ServerPacketType.ItemWasted:
-                            {
-                                var packet = new ServerPackets.ItemWasted(client);
-                                if (packet.ParseFromNetworkMessage(inMessage))
-                                {
-                                    packet.Forward = OnReceivedServerItemWastedPacket?.Invoke(packet) ?? true;
-                                    if (packet.Forward)
-                                    {
-                                        packet.AppendToNetworkMessage(outMessage);
-                                    }
-                                }
-                            }
+                            packet.Forward = OnReceivedServerItemWastedPacket?.Invoke(packet) ?? true;
                             break;
                         case ServerPacketType.ItemLooted:
-                            {
-                                var packet = new ServerPackets.ItemLooted(client);
-                                if (packet.ParseFromNetworkMessage(inMessage))
-                                {
-                                    packet.Forward = OnReceivedServerItemLootedPacket?.Invoke(packet) ?? true;
-                                    if (packet.Forward)
-                                    {
-                                        packet.AppendToNetworkMessage(outMessage);
-                                    }
-                                }
-                            }
+                            packet.Forward = OnReceivedServerItemLootedPacket?.Invoke(packet) ?? true;
                             break;
                         case ServerPacketType.TrackQuestflags:
-                            {
-                                var packet = new ServerPackets.TrackQuestflags(client);
-                                if (packet.ParseFromNetworkMessage(inMessage))
-                                {
-                                    packet.Forward = OnReceivedServerTrackQuestFlagsPacket?.Invoke(packet) ?? true;
-                                    if (packet.Forward)
-                                    {
-                                        packet.AppendToNetworkMessage(outMessage);
-                                    }
-                                }
-                            }
+                            packet.Forward = OnReceivedServerTrackQuestFlagsPacket?.Invoke(packet) ?? true;
                             break;
                         case ServerPacketType.KillTracking:
-                            {
-                                var packet = new ServerPackets.KillTracking(client);
-                                if (packet.ParseFromNetworkMessage(inMessage))
-                                {
-                                    packet.Forward = OnReceivedServerKillTrackingPacket?.Invoke(packet) ?? true;
-                                    if (packet.Forward)
-                                    {
-                                        packet.AppendToNetworkMessage(outMessage);
-                                    }
-                                }
-                            }
+                            packet.Forward = OnReceivedServerKillTrackingPacket?.Invoke(packet) ?? true;
                             break;
                         case ServerPacketType.BuddyData:
-                            {
-                                var packet = new ServerPackets.BuddyData(client);
-                                if (packet.ParseFromNetworkMessage(inMessage))
-                                {
-                                    packet.Forward = OnReceivedServerBuddyDataPacket?.Invoke(packet) ?? true;
-                                    if (packet.Forward)
-                                    {
-                                        packet.AppendToNetworkMessage(outMessage);
-                                    }
-                                }
-                            }
+                            packet.Forward = OnReceivedServerBuddyDataPacket?.Invoke(packet) ?? true;
                             break;
                         case ServerPacketType.BuddyStatusChange:
-                            {
-                                var packet = new ServerPackets.BuddyStatusChange(client);
-                                if (packet.ParseFromNetworkMessage(inMessage))
-                                {
-                                    packet.Forward = OnReceivedServerBuddyStatusChangePacket?.Invoke(packet) ?? true;
-                                    if (packet.Forward)
-                                    {
-                                        packet.AppendToNetworkMessage(outMessage);
-                                    }
-                                }
-                            }
+                            packet.Forward = OnReceivedServerBuddyStatusChangePacket?.Invoke(packet) ?? true;
                             break;
                         case ServerPacketType.BuddyGroupData:
-                            {
-                                var packet = new ServerPackets.BuddyGroupData(client);
-                                if (packet.ParseFromNetworkMessage(inMessage))
-                                {
-                                    packet.Forward = OnReceivedServerBuddyGroupDataPacket?.Invoke(packet) ?? true;
-                                    if (packet.Forward)
-                                    {
-                                        packet.AppendToNetworkMessage(outMessage);
-                                    }
-                                }
-                            }
+                            packet.Forward = OnReceivedServerBuddyGroupDataPacket?.Invoke(packet) ?? true;
                             break;
                         case ServerPacketType.MonsterCyclopedia:
-                            {
-                                var packet = new ServerPackets.MonsterCyclopedia(client);
-                                if (packet.ParseFromNetworkMessage(inMessage))
-                                {
-                                    packet.Forward = OnReceivedServerMonsterCyclopediaPacket?.Invoke(packet) ?? true;
-                                    if (packet.Forward)
-                                    {
-                                        packet.AppendToNetworkMessage(outMessage);
-                                    }
-                                }
-                            }
+                            packet.Forward = OnReceivedServerMonsterCyclopediaPacket?.Invoke(packet) ?? true;
                             break;
                         case ServerPacketType.MonsterCyclopediaMonsters:
-                            {
-                                var packet = new ServerPackets.MonsterCyclopediaMonsters(client);
-                                if (packet.ParseFromNetworkMessage(inMessage))
-                                {
-                                    packet.Forward = OnReceivedServerMonsterCyclopediaMonstersPacket?.Invoke(packet) ?? true;
-                                    if (packet.Forward)
-                                    {
-                                        packet.AppendToNetworkMessage(outMessage);
-                                    }
-                                }
-                            }
+                            packet.Forward = OnReceivedServerMonsterCyclopediaMonstersPacket?.Invoke(packet) ?? true;
                             break;
                         case ServerPacketType.MonsterCyclopediaRace:
-                            {
-                                var packet = new ServerPackets.MonsterCyclopediaRace(client);
-                                if (packet.ParseFromNetworkMessage(inMessage))
-                                {
-                                    packet.Forward = OnReceivedServerMonsterCyclopediaRacePacket?.Invoke(packet) ?? true;
-                                    if (packet.Forward)
-                                    {
-                                        packet.AppendToNetworkMessage(outMessage);
-                                    }
-                                }
-                            }
+                            packet.Forward = OnReceivedServerMonsterCyclopediaRacePacket?.Invoke(packet) ?? true;
                             break;
                         case ServerPacketType.MonsterCyclopediaBonusEffects:
-                            {
-                                var packet = new ServerPackets.MonsterCyclopediaBonusEffects(client);
-                                if (packet.ParseFromNetworkMessage(inMessage))
-                                {
-                                    packet.Forward = OnReceivedServerMonsterCyclopediaBonusEffectsPacket?.Invoke(packet) ?? true;
-                                    if (packet.Forward)
-                                    {
-                                        packet.AppendToNetworkMessage(outMessage);
-                                    }
-                                }
-                            }
+                            packet.Forward = OnReceivedServerMonsterCyclopediaBonusEffectsPacket?.Invoke(packet) ?? true;
                             break;
                         case ServerPacketType.MonsterCyclopediaNewDetails:
-                            {
-                                var packet = new ServerPackets.MonsterCyclopediaNewDetails(client);
-                                if (packet.ParseFromNetworkMessage(inMessage))
-                                {
-                                    packet.Forward = OnReceivedServerMonsterCyclopediaNewDetailsPacket?.Invoke(packet) ?? true;
-                                    if (packet.Forward)
-                                    {
-                                        packet.AppendToNetworkMessage(outMessage);
-                                    }
-                                }
-                            }
+                            packet.Forward = OnReceivedServerMonsterCyclopediaNewDetailsPacket?.Invoke(packet) ?? true;
                             break;
                         case ServerPacketType.CyclopediaCharacterInfo:
-                            {
-                                var packet = new ServerPackets.CyclopediaCharacterInfo(client);
-                                if (packet.ParseFromNetworkMessage(inMessage))
-                                {
-                                    packet.Forward = OnReceivedServerCyclopediaCharacterInfoPacket?.Invoke(packet) ?? true;
-                                    if (packet.Forward)
-                                    {
-                                        packet.AppendToNetworkMessage(outMessage);
-                                    }
-                                }
-                            }
+                            packet.Forward = OnReceivedServerCyclopediaCharacterInfoPacket?.Invoke(packet) ?? true;
+                            break;
+                        case ServerPacketType.HirelingNameChange:
+                            packet.Forward = OnReceivedServerHirelingNameChangePacket?.Invoke(packet) ?? true;
                             break;
                         case ServerPacketType.TutorialHint:
-                            {
-                                var packet = new ServerPackets.TutorialHint(client);
-                                if (packet.ParseFromNetworkMessage(inMessage))
-                                {
-                                    packet.Forward = OnReceivedServerTutorialHintPacket?.Invoke(packet) ?? true;
-                                    if (packet.Forward)
-                                    {
-                                        packet.AppendToNetworkMessage(outMessage);
-                                    }
-                                }
-                            }
+                            packet.Forward = OnReceivedServerTutorialHintPacket?.Invoke(packet) ?? true;
                             break;
                         case ServerPacketType.CyclopediaMapData:
                             {
                                 if (client.VersionNumber >= 11800000)
                                 {
-                                    var packet = new ServerPackets.CyclopediaMapData(client);
-                                    if (packet.ParseFromNetworkMessage(inMessage))
-                                    {
-                                        packet.Forward = OnReceivedServerCyclopediaMapDataPacket?.Invoke(packet) ?? true;
-                                        if (packet.Forward)
-                                        {
-                                            packet.AppendToNetworkMessage(outMessage);
-                                        }
-                                    }
+                                    packet.Forward = OnReceivedServerCyclopediaMapDataPacket?.Invoke(packet) ?? true;
                                 }
                                 else
                                 {
-                                    var packet = new ServerPackets.AutomapFlag(client);
-                                    if (packet.ParseFromNetworkMessage(inMessage))
-                                    {
-                                        packet.Forward = OnReceivedServerAutomapFlagPacket?.Invoke(packet) ?? true;
-                                        if (packet.Forward)
-                                        {
-                                            packet.AppendToNetworkMessage(outMessage);
-                                        }
-                                    }
+                                    packet.Forward = OnReceivedServerAutomapFlagPacket?.Invoke(packet) ?? true;
                                 }
                             }
                             break;
                         case ServerPacketType.DailyRewardCollectionState:
-                            {
-                                var packet = new ServerPackets.DailyRewardCollectionState(client);
-                                if (packet.ParseFromNetworkMessage(inMessage))
-                                {
-                                    packet.Forward = OnReceivedServerDailyRewardCollectionStatePacket?.Invoke(packet) ?? true;
-                                    if (packet.Forward)
-                                    {
-                                        packet.AppendToNetworkMessage(outMessage);
-                                    }
-                                }
-                            }
+                            packet.Forward = OnReceivedServerDailyRewardCollectionStatePacket?.Invoke(packet) ?? true;
                             break;
                         case ServerPacketType.CreditBalance:
-                            {
-                                var packet = new ServerPackets.CreditBalance(client);
-                                if (packet.ParseFromNetworkMessage(inMessage))
-                                {
-                                    packet.Forward = OnReceivedServerCreditBalancePacket?.Invoke(packet) ?? true;
-                                    if (packet.Forward)
-                                    {
-                                        packet.AppendToNetworkMessage(outMessage);
-                                    }
-                                }
-                            }
+                            packet.Forward = OnReceivedServerCreditBalancePacket?.Invoke(packet) ?? true;
                             break;
                         case ServerPacketType.IngameShopError:
-                            {
-                                var packet = new ServerPackets.IngameShopError(client);
-                                if (packet.ParseFromNetworkMessage(inMessage))
-                                {
-                                    packet.Forward = OnReceivedServerIngameShopErrorPacket?.Invoke(packet) ?? true;
-                                    if (packet.Forward)
-                                    {
-                                        packet.AppendToNetworkMessage(outMessage);
-                                    }
-                                }
-                            }
+                            packet.Forward = OnReceivedServerIngameShopErrorPacket?.Invoke(packet) ?? true;
                             break;
                         case ServerPacketType.RequestPurchaseData:
-                            {
-                                var packet = new ServerPackets.RequestPurchaseData(client);
-                                if (packet.ParseFromNetworkMessage(inMessage))
-                                {
-                                    packet.Forward = OnReceivedServerRequestPurchaseDataPacket?.Invoke(packet) ?? true;
-                                    if (packet.Forward)
-                                    {
-                                        packet.AppendToNetworkMessage(outMessage);
-                                    }
-                                }
-                            }
+                            packet.Forward = OnReceivedServerRequestPurchaseDataPacket?.Invoke(packet) ?? true;
                             break;
                         case ServerPacketType.OpenRewardWall:
-                            {
-                                var packet = new ServerPackets.OpenRewardWall(client);
-                                if (packet.ParseFromNetworkMessage(inMessage))
-                                {
-                                    packet.Forward = OnReceivedServerOpenRewardWallPacket?.Invoke(packet) ?? true;
-                                    if (packet.Forward)
-                                    {
-                                        packet.AppendToNetworkMessage(outMessage);
-                                    }
-                                }
-                            }
+                            packet.Forward = OnReceivedServerOpenRewardWallPacket?.Invoke(packet) ?? true;
                             break;
                         case ServerPacketType.CloseRewardWall:
-                            {
-                                var packet = new ServerPackets.CloseRewardWall(client);
-                                if (packet.ParseFromNetworkMessage(inMessage))
-                                {
-                                    packet.Forward = OnReceivedServerCloseRewardWallPacket?.Invoke(packet) ?? true;
-                                    if (packet.Forward)
-                                    {
-                                        packet.AppendToNetworkMessage(outMessage);
-                                    }
-                                }
-                            }
+                            packet.Forward = OnReceivedServerCloseRewardWallPacket?.Invoke(packet) ?? true;
                             break;
                         case ServerPacketType.DailyRewardBasic:
-                            {
-                                var packet = new ServerPackets.DailyRewardBasic(client);
-                                if (packet.ParseFromNetworkMessage(inMessage))
-                                {
-                                    packet.Forward = OnReceivedServerDailyRewardBasicPacket?.Invoke(packet) ?? true;
-                                    if (packet.Forward)
-                                    {
-                                        packet.AppendToNetworkMessage(outMessage);
-                                    }
-                                }
-                            }
+                            packet.Forward = OnReceivedServerDailyRewardBasicPacket?.Invoke(packet) ?? true;
                             break;
                         case ServerPacketType.DailyRewardHistory:
-                            {
-                                var packet = new ServerPackets.DailyRewardHistory(client);
-                                if (packet.ParseFromNetworkMessage(inMessage))
-                                {
-                                    packet.Forward = OnReceivedServerDailyRewardHistoryPacket?.Invoke(packet) ?? true;
-                                    if (packet.Forward)
-                                    {
-                                        packet.AppendToNetworkMessage(outMessage);
-                                    }
-                                }
-                            }
+                            packet.Forward = OnReceivedServerDailyRewardHistoryPacket?.Invoke(packet) ?? true;
                             break;
                         case ServerPacketType.PreyFreeListRerollAvailability:
-                            {
-                                var packet = new ServerPackets.PreyFreeListRerollAvailability(client);
-                                if (packet.ParseFromNetworkMessage(inMessage))
-                                {
-                                    packet.Forward = OnReceivedServerPreyFreeListRerollAvailabilityPacket?.Invoke(packet) ?? true;
-                                    if (packet.Forward)
-                                    {
-                                        packet.AppendToNetworkMessage(outMessage);
-                                    }
-                                }
-                            }
+                            packet.Forward = OnReceivedServerPreyFreeListRerollAvailabilityPacket?.Invoke(packet) ?? true;
                             break;
                         case ServerPacketType.PreyTimeLeft:
-                            {
-                                var packet = new ServerPackets.PreyTimeLeft(client);
-                                if (packet.ParseFromNetworkMessage(inMessage))
-                                {
-                                    packet.Forward = OnReceivedServerPreyTimeLeftPacket?.Invoke(packet) ?? true;
-                                    if (packet.Forward)
-                                    {
-                                        packet.AppendToNetworkMessage(outMessage);
-                                    }
-                                }
-                            }
+                            packet.Forward = OnReceivedServerPreyTimeLeftPacket?.Invoke(packet) ?? true;
                             break;
                         case ServerPacketType.PreyData:
-                            {
-                                var packet = new ServerPackets.PreyData(client);
-                                if (packet.ParseFromNetworkMessage(inMessage))
-                                {
-                                    packet.Forward = OnReceivedServerPreyDataPacket?.Invoke(packet) ?? true;
-                                    if (packet.Forward)
-                                    {
-                                        packet.AppendToNetworkMessage(outMessage);
-                                    }
-                                }
-                            }
+                            packet.Forward = OnReceivedServerPreyDataPacket?.Invoke(packet) ?? true;
                             break;
                         case ServerPacketType.PreyPrices:
-                            {
-                                var packet = new ServerPackets.PreyPrices(client);
-                                if (packet.ParseFromNetworkMessage(inMessage))
-                                {
-                                    packet.Forward = OnReceivedServerPreyPricesPacket?.Invoke(packet) ?? true;
-                                    if (packet.Forward)
-                                    {
-                                        packet.AppendToNetworkMessage(outMessage);
-                                    }
-                                }
-                            }
+                            packet.Forward = OnReceivedServerPreyPricesPacket?.Invoke(packet) ?? true;
                             break;
                         case ServerPacketType.OfferDescription:
-                            {
-                                var packet = new ServerPackets.OfferDescription(client);
-                                if (packet.ParseFromNetworkMessage(inMessage))
-                                {
-                                    packet.Forward = OnReceivedServerOfferDescription?.Invoke(packet) ?? true;
-                                    if (packet.Forward)
-                                    {
-                                        packet.AppendToNetworkMessage(outMessage);
-                                    }
-                                }
-                            }
+                            packet.Forward = OnReceivedServerOfferDescription?.Invoke(packet) ?? true;
                             break;
                         case ServerPacketType.ImbuingDialogRefresh:
-                            {
-                                var packet = new ServerPackets.ImbuingDialogRefresh(client);
-                                if (packet.ParseFromNetworkMessage(inMessage))
-                                {
-                                    packet.Forward = OnReceivedServerImbuingDialogRefreshPacket?.Invoke(packet) ?? true;
-                                    if (packet.Forward)
-                                    {
-                                        packet.AppendToNetworkMessage(outMessage);
-                                    }
-                                }
-                            }
+                            packet.Forward = OnReceivedServerImbuingDialogRefreshPacket?.Invoke(packet) ?? true;
                             break;
                         case ServerPacketType.CloseImbuingDialog:
-                            {
-                                var packet = new ServerPackets.CloseImbuingDialog(client);
-                                if (packet.ParseFromNetworkMessage(inMessage))
-                                {
-                                    packet.Forward = OnReceivedServerCloseImbuingDialogPacket?.Invoke(packet) ?? true;
-                                    if (packet.Forward)
-                                    {
-                                        packet.AppendToNetworkMessage(outMessage);
-                                    }
-                                }
-                            }
+                            packet.Forward = OnReceivedServerCloseImbuingDialogPacket?.Invoke(packet) ?? true;
                             break;
                         case ServerPacketType.ShowMessageDialog:
-                            {
-                                var packet = new ServerPackets.ShowMessageDialog(client);
-                                if (packet.ParseFromNetworkMessage(inMessage))
-                                {
-                                    packet.Forward = OnReceivedServerShowMessageDialogPacket?.Invoke(packet) ?? true;
-                                    if (packet.Forward)
-                                    {
-                                        packet.AppendToNetworkMessage(outMessage);
-                                    }
-                                }
-                            }
+                            packet.Forward = OnReceivedServerShowMessageDialogPacket?.Invoke(packet) ?? true;
                             break;
                         case ServerPacketType.RequestResourceBalance:
-                            {
-                                var packet = new ServerPackets.RequestResourceBalance(client);
-                                if (packet.ParseFromNetworkMessage(inMessage))
-                                {
-                                    packet.Forward = OnReceivedServerRequestResourceBalancePacket?.Invoke(packet) ?? true;
-                                    if (packet.Forward)
-                                    {
-                                        packet.AppendToNetworkMessage(outMessage);
-                                    }
-                                }
-                            }
+                            packet.Forward = OnReceivedServerRequestResourceBalancePacket?.Invoke(packet) ?? true;
                             break;
                         case ServerPacketType.TibiaTime:
-                            {
-                                var packet = new ServerPackets.TibiaTime(client);
-                                if (packet.ParseFromNetworkMessage(inMessage))
-                                {
-                                    packet.Forward = OnReceivedServerTibiaTimePacket?.Invoke(packet) ?? true;
-                                    if (packet.Forward)
-                                    {
-                                        packet.AppendToNetworkMessage(outMessage);
-                                    }
-                                }
-                            }
+                            packet.Forward = OnReceivedServerTibiaTimePacket?.Invoke(packet) ?? true;
                             break;
                         case ServerPacketType.QuestLog:
-                            {
-                                var packet = new ServerPackets.QuestLog(client);
-                                if (packet.ParseFromNetworkMessage(inMessage))
-                                {
-                                    packet.Forward = OnReceivedServerQuestLogPacket?.Invoke(packet) ?? true;
-                                    if (packet.Forward)
-                                    {
-                                        packet.AppendToNetworkMessage(outMessage);
-                                    }
-                                }
-                            }
+                            packet.Forward = OnReceivedServerQuestLogPacket?.Invoke(packet) ?? true;
                             break;
                         case ServerPacketType.QuestLine:
-                            {
-                                var packet = new ServerPackets.QuestLine(client);
-                                if (packet.ParseFromNetworkMessage(inMessage))
-                                {
-                                    packet.Forward = OnReceivedServerQuestLinePacket?.Invoke(packet) ?? true;
-                                    if (packet.Forward)
-                                    {
-                                        packet.AppendToNetworkMessage(outMessage);
-                                    }
-                                }
-                            }
+                            packet.Forward = OnReceivedServerQuestLinePacket?.Invoke(packet) ?? true;
                             break;
                         case ServerPacketType.UpdatingShopBalance:
-                            {
-                                var packet = new ServerPackets.UpdatingShopBalance(client);
-                                if (packet.ParseFromNetworkMessage(inMessage))
-                                {
-                                    packet.Forward = OnReceivedServerUpdatingShopBalancePacket?.Invoke(packet) ?? true;
-                                    if (packet.Forward)
-                                    {
-                                        packet.AppendToNetworkMessage(outMessage);
-                                    }
-                                }
-                            }
+                            packet.Forward = OnReceivedServerUpdatingShopBalancePacket?.Invoke(packet) ?? true;
                             break;
                         case ServerPacketType.ChannelEvent:
-                            {
-                                var packet = new ServerPackets.ChannelEvent(client);
-                                if (packet.ParseFromNetworkMessage(inMessage))
-                                {
-                                    packet.Forward = OnReceivedServerChannelEventPacket?.Invoke(packet) ?? true;
-                                    if (packet.Forward)
-                                    {
-                                        packet.AppendToNetworkMessage(outMessage);
-                                    }
-                                }
-                            }
+                            packet.Forward = OnReceivedServerChannelEventPacket?.Invoke(packet) ?? true;
                             break;
                         case ServerPacketType.ObjectInfo:
-                            {
-                                var packet = new ServerPackets.ObjectInfo(client);
-                                if (packet.ParseFromNetworkMessage(inMessage))
-                                {
-                                    packet.Forward = OnReceivedServerObjectInfoPacket?.Invoke(packet) ?? true;
-                                    if (packet.Forward)
-                                    {
-                                        packet.AppendToNetworkMessage(outMessage);
-                                    }
-                                }
-                            }
+                            packet.Forward = OnReceivedServerObjectInfoPacket?.Invoke(packet) ?? true;
                             break;
                         case ServerPacketType.PlayerInventory:
-                            {
-                                var packet = new ServerPackets.PlayerInventory(client);
-                                if (packet.ParseFromNetworkMessage(inMessage))
-                                {
-                                    packet.Forward = OnReceivedServerPlayerInventoryPacket?.Invoke(packet) ?? true;
-                                    if (packet.Forward)
-                                    {
-                                        packet.AppendToNetworkMessage(outMessage);
-                                    }
-                                }
-                            }
+                            packet.Forward = OnReceivedServerPlayerInventoryPacket?.Invoke(packet) ?? true;
                             break;
                         case ServerPacketType.MarketEnter:
-                            {
-                                var packet = new ServerPackets.MarketEnter(client);
-                                if (packet.ParseFromNetworkMessage(inMessage))
-                                {
-                                    packet.Forward = OnReceivedServerMarketEnterPacket?.Invoke(packet) ?? true;
-                                    if (packet.Forward)
-                                    {
-                                        packet.AppendToNetworkMessage(outMessage);
-                                    }
-                                }
-                            }
+                            packet.Forward = OnReceivedServerMarketEnterPacket?.Invoke(packet) ?? true;
                             break;
                         case ServerPacketType.MarketLeave:
-                            {
-                                var packet = new ServerPackets.MarketLeave(client);
-                                if (packet.ParseFromNetworkMessage(inMessage))
-                                {
-                                    packet.Forward = OnReceivedServerMarketLeavePacket?.Invoke(packet) ?? true;
-                                    if (packet.Forward)
-                                    {
-                                        packet.AppendToNetworkMessage(outMessage);
-                                    }
-                                }
-                            }
+                            packet.Forward = OnReceivedServerMarketLeavePacket?.Invoke(packet) ?? true;
                             break;
                         case ServerPacketType.MarketDetail:
-                            {
-                                var packet = new ServerPackets.MarketDetail(client);
-                                if (packet.ParseFromNetworkMessage(inMessage))
-                                {
-                                    packet.Forward = OnReceivedServerMarketDetailPacket?.Invoke(packet) ?? true;
-                                    if (packet.Forward)
-                                    {
-                                        packet.AppendToNetworkMessage(outMessage);
-                                    }
-                                }
-                            }
+                            packet.Forward = OnReceivedServerMarketDetailPacket?.Invoke(packet) ?? true;
                             break;
                         case ServerPacketType.MarketBrowse:
-                            {
-                                var packet = new ServerPackets.MarketBrowse(client);
-                                if (packet.ParseFromNetworkMessage(inMessage))
-                                {
-                                    packet.Forward = OnReceivedServerMarketBrowsePacket?.Invoke(packet) ?? true;
-                                    if (packet.Forward)
-                                    {
-                                        packet.AppendToNetworkMessage(outMessage);
-                                    }
-                                }
-                            }
+                            packet.Forward = OnReceivedServerMarketBrowsePacket?.Invoke(packet) ?? true;
                             break;
                         case ServerPacketType.ShowModalDialog:
-                            {
-                                var packet = new ServerPackets.ShowModalDialog(client);
-                                if (packet.ParseFromNetworkMessage(inMessage))
-                                {
-                                    packet.Forward = OnReceivedServerShowModalDialogPacket?.Invoke(packet) ?? true;
-                                    if (packet.Forward)
-                                    {
-                                        packet.AppendToNetworkMessage(outMessage);
-                                    }
-                                }
-                            }
+                            packet.Forward = OnReceivedServerShowModalDialogPacket?.Invoke(packet) ?? true;
                             break;
                         case ServerPacketType.StoreCategories:
                             {
                                 if (client.VersionNumber >= 11600000)
                                 {
-                                    var packet = new ServerPackets.StoreCategories(client);
-                                    if (packet.ParseFromNetworkMessage(inMessage))
-                                    {
-                                        packet.Forward = OnReceivedServerStoreCategoriesPacket?.Invoke(packet) ?? true;
-                                        if (packet.Forward)
-                                        {
-                                            packet.AppendToNetworkMessage(outMessage);
-                                        }
-                                    }
+                                    packet.Forward = OnReceivedServerStoreCategoriesPacket?.Invoke(packet) ?? true;
                                 }
                                 else
                                 {
-                                    var packet = new ServerPackets.PremiumShop(client);
-                                    if (packet.ParseFromNetworkMessage(inMessage))
-                                    {
-                                        packet.Forward = OnReceivedServerPremiumShopPacket?.Invoke(packet) ?? true;
-                                        if (packet.Forward)
-                                        {
-                                            packet.AppendToNetworkMessage(outMessage);
-                                        }
-                                    }
+                                    packet.Forward = OnReceivedServerPremiumShopPacket?.Invoke(packet) ?? true;
                                 }
                             }
                             break;
                         case ServerPacketType.StoreOffers:
-                            {
-                                var packet = new ServerPackets.StoreOffers(client);
-                                if (packet.ParseFromNetworkMessage(inMessage))
-                                {
-                                    packet.Forward = OnReceivedServerStoreOffersPacket?.Invoke(packet) ?? true;
-                                    if (packet.Forward)
-                                    {
-                                        packet.AppendToNetworkMessage(outMessage);
-                                    }
-                                }
-                            }
+                            packet.Forward = OnReceivedServerStoreOffersPacket?.Invoke(packet) ?? true;
                             break;
                         case ServerPacketType.TransactionHistory:
-                            {
-                                var packet = new ServerPackets.TransactionHistory(client);
-                                if (packet.ParseFromNetworkMessage(inMessage))
-                                {
-                                    packet.Forward = OnReceivedServerTransactionHistoryPacket?.Invoke(packet) ?? true;
-                                    if (packet.Forward)
-                                    {
-                                        packet.AppendToNetworkMessage(outMessage);
-                                    }
-                                }
-                            }
+                            packet.Forward = OnReceivedServerTransactionHistoryPacket?.Invoke(packet) ?? true;
                             break;
                         case ServerPacketType.StoreSuccess:
-                            {
-                                var packet = new ServerPackets.StoreSuccess(client);
-                                if (packet.ParseFromNetworkMessage(inMessage))
-                                {
-                                    packet.Forward = OnReceivedServerStoreSuccessPacket?.Invoke(packet) ?? true;
-                                    if (packet.Forward)
-                                    {
-                                        packet.AppendToNetworkMessage(outMessage);
-                                    }
-                                }
-                            }
+                            packet.Forward = OnReceivedServerStoreSuccessPacket?.Invoke(packet) ?? true;
                             break;
                         default:
-                            // TODO: Log unknown packet.
-                            Console.WriteLine($"Unknown server packet: {((byte)currentPacket).ToString("X2")}, position: {packetPosition}");
-                            Console.WriteLine($"Last known packets: {string.Join(" ", packets.Select(p => "[" + ((byte)p.PacketType).ToString("X2") + ":" + p.Position + "]" + p.PacketType).ToArray())}");
-                            Console.WriteLine($"Data: {BitConverter.ToString(inMessage.GetData()).Replace('-', ' ')}");
+                            client.Logger.Error($"Unknown server packet: {((byte)currentPacket).ToString("X2")}, position: {packetPosition}");
+                            client.Logger.Error($"Last known packets: {string.Join(" ", packets.Select(p => "[" + ((byte)p.PacketType).ToString("X2") + ":" + p.Position + "]" + p.PacketType).ToArray())}");
+                            client.Logger.Error($"Data: {BitConverter.ToString(inMessage.GetData()).Replace('-', ' ')}");
                             return;
+                    }
+
+                    if (packet.Forward && client.Connection.AllowPacketModification)
+                    {
+                        packet.AppendToNetworkMessage(outMessage);
                     }
 
                     packets.Add((currentPacket, packetPosition));
@@ -3898,15 +1269,14 @@ namespace OXGaming.TibiaAPI.Network
             }
             catch (Exception ex)
             {
-                // TODO: Log exception.
                 // Parsing failures are helpful when looking for packet changes or trying to understand
                 // the structure of a new packet. Because of that, it's better to log as much data as
                 // possible and continue.
-                Console.WriteLine(ex.ToString());
-                Console.WriteLine($"Current position: {inMessage.Position}");
-                Console.WriteLine($"Current packet: [{((byte)currentPacket).ToString("X2")}:{packetPosition}]{currentPacket}");
-                Console.WriteLine($"Last known packets: {string.Join(" ", packets.Select(p => "[" + ((byte)p.PacketType).ToString("X2") + ":" + p.Position + "]" + p.PacketType).ToArray())}");
-                Console.WriteLine($"Data: {BitConverter.ToString(inMessage.GetData()).Replace('-', ' ')}");
+                client.Logger.Error(ex.ToString());
+                client.Logger.Error($"Current position: {inMessage.Position}");
+                client.Logger.Error($"Current packet: [{((byte)currentPacket).ToString("X2")}:{packetPosition}]{currentPacket}");
+                client.Logger.Error($"Last known packets: {string.Join(" ", packets.Select(p => "[" + ((byte)p.PacketType).ToString("X2") + ":" + p.Position + "]" + p.PacketType).ToArray())}");
+                client.Logger.Error($"Data: {BitConverter.ToString(inMessage.GetData()).Replace('-', ' ')}");
             }
         }
     }

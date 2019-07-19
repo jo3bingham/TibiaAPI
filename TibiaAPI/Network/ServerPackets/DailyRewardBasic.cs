@@ -21,13 +21,8 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
             PacketType = ServerPacketType.DailyRewardBasic;
         }
 
-        public override bool ParseFromNetworkMessage(NetworkMessage message)
+        public override void ParseFromNetworkMessage(NetworkMessage message)
         {
-            if (message.ReadByte() != (byte)ServerPacketType.DailyRewardBasic)
-            {
-                return false;
-            }
-
             DailyRewards.Capacity = message.ReadByte();
             for (var i = 0; i < DailyRewards.Capacity; ++i)
             {
@@ -45,7 +40,6 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
             }
 
             UnlockableRewards = message.ReadByte();
-            return true;
         }
 
         public override void AppendToNetworkMessage(NetworkMessage message)

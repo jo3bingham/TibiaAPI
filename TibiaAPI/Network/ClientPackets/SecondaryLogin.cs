@@ -10,16 +10,6 @@ namespace OXGaming.TibiaAPI.Network.ClientPackets
             PacketType = ClientPacketType.SecondaryLogin;
         }
 
-        public override bool ParseFromNetworkMessage(NetworkMessage message)
-        {
-            if (message.ReadByte() != (byte)ClientPacketType.SecondaryLogin)
-            {
-                return false;
-            }
-
-            return true;
-        }
-
         public override void AppendToNetworkMessage(NetworkMessage message)
         {
             message.Write((byte)ClientPacketType.SecondaryLogin);

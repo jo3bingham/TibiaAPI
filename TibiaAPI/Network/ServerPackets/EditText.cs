@@ -21,20 +21,14 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
             PacketType = ServerPacketType.EditText;
         }
 
-        public override bool ParseFromNetworkMessage(NetworkMessage message)
+        public override void ParseFromNetworkMessage(NetworkMessage message)
         {
-            if (message.ReadByte() != (byte)ServerPacketType.EditText)
-            {
-                return false;
-            }
-
             WindowId = message.ReadUInt32();
             Window = message.ReadObjectInstance();
             MaxTextLength = message.ReadUInt16();
             Text = message.ReadString();
             Author = message.ReadString();
             Date = message.ReadString();
-            return true;
         }
 
         public override void AppendToNetworkMessage(NetworkMessage message)

@@ -14,16 +14,10 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
             PacketType = ServerPacketType.CreatureParty;
         }
 
-        public override bool ParseFromNetworkMessage(NetworkMessage message)
+        public override void ParseFromNetworkMessage(NetworkMessage message)
         {
-            if (message.ReadByte() != (byte)ServerPacketType.CreatureParty)
-            {
-                return false;
-            }
-
             CreatureId = message.ReadUInt32();
             PartyShield = message.ReadByte();
-            return true;
         }
 
         public override void AppendToNetworkMessage(NetworkMessage message)

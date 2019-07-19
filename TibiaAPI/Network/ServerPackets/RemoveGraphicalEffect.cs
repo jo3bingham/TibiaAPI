@@ -15,16 +15,10 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
             PacketType = ServerPacketType.RemoveGraphicalEffect;
         }
 
-        public override bool ParseFromNetworkMessage(NetworkMessage message)
+        public override void ParseFromNetworkMessage(NetworkMessage message)
         {
-            if (message.ReadByte() != (byte)ServerPacketType.RemoveGraphicalEffect)
-            {
-                return false;
-            }
-
             Position = message.ReadPosition();
             Id = message.ReadByte();
-            return true;
         }
 
         public override void AppendToNetworkMessage(NetworkMessage message)

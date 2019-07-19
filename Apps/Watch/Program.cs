@@ -9,6 +9,7 @@ using OXGaming.TibiaAPI;
 using OXGaming.TibiaAPI.Constants;
 using OXGaming.TibiaAPI.Network;
 using OXGaming.TibiaAPI.Network.ServerPackets;
+using OXGaming.TibiaAPI.Utilities;
 
 namespace Watch
 {
@@ -29,6 +30,10 @@ namespace Watch
         static TcpListener _tcpListener;
 
         static Thread _clientSendThread;
+
+        private static Logger.LogLevel _logLevel = Logger.LogLevel.Error;
+
+        private static Logger.LogOutput _logOutput = Logger.LogOutput.Console;
 
         static string _recordingName;
 
@@ -68,6 +73,16 @@ namespace Watch
                             }
                         }
                         break;
+                    case "--loglevel":
+                        {
+                            _logLevel = Logger.ConvertToLogLevel(splitArg[1]);
+                        }
+                        break;
+                    case "--logoutput":
+                        {
+                            _logOutput = Logger.ConvertToLogOutput(splitArg[1]);
+                        }
+                        break;
                     default:
                         break;
                 }
@@ -103,6 +118,9 @@ namespace Watch
         {
             try
             {
+                _client.Logger.Level = _logLevel;
+                _client.Logger.Output = _logOutput;
+
                 _clientBuffer = new byte[NetworkMessage.MaxMessageSize];
 
                 if (_tcpListener == null)

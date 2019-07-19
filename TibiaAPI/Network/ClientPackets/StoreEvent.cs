@@ -14,19 +14,13 @@ namespace OXGaming.TibiaAPI.Network.ClientPackets
             PacketType = ClientPacketType.StoreEvent;
         }
 
-        public override bool ParseFromNetworkMessage(NetworkMessage message)
+        public override void ParseFromNetworkMessage(NetworkMessage message)
         {
-            if (message.ReadByte() != (byte)ClientPacketType.StoreEvent)
-            {
-                return false;
-            }
-
             EventType = message.ReadByte();
             if (EventType == 0 || EventType == 3)
             {
                 OfferId = message.ReadUInt32();
             }
-            return true;
         }
 
         public override void AppendToNetworkMessage(NetworkMessage message)

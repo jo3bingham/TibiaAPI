@@ -31,13 +31,8 @@ namespace OXGaming.TibiaAPI.Network.ClientPackets
             PacketType = ClientPacketType.Login;
         }
 
-        public override bool ParseFromNetworkMessage(NetworkMessage message)
+        public override void ParseFromNetworkMessage(NetworkMessage message)
         {
-            if (message.ReadByte() != (byte)ClientPacketType.Login)
-            {
-                return false;
-            }
-
             ClientType = message.ReadUInt16();
             ProtocolVersion = message.ReadUInt16();
             ClientVersion = message.ReadUInt32();
@@ -66,7 +61,6 @@ namespace OXGaming.TibiaAPI.Network.ClientPackets
             // Skip the RSA encryption junk data.
             var rsaEndPosition = message.Position;
             message.Seek((int)(128 - (rsaStartPosition - rsaEndPosition)), SeekOrigin.Current);
-            return true;
         }
 
         public override void AppendToNetworkMessage(NetworkMessage message)

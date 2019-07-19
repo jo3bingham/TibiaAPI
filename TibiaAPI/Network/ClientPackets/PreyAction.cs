@@ -15,20 +15,14 @@ namespace OXGaming.TibiaAPI.Network.ClientPackets
             PacketType = ClientPacketType.PreyAction;
         }
 
-        public override bool ParseFromNetworkMessage(NetworkMessage message)
+        public override void ParseFromNetworkMessage(NetworkMessage message)
         {
-            if (message.ReadByte() != (byte)ClientPacketType.PreyAction)
-            {
-                return false;
-            }
-
             PreyId = message.ReadByte();
             ActionType = (PreyActionType)message.ReadByte();
             if (ActionType == PreyActionType.MonsterSelection)
             {
                 MonsterIndex = message.ReadByte();
             }
-            return true;
         }
 
         public override void AppendToNetworkMessage(NetworkMessage message)

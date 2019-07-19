@@ -12,16 +12,10 @@ namespace OXGaming.TibiaAPI.Network.ClientPackets
             PacketType = ClientPacketType.Follow;
         }
 
-        public override bool ParseFromNetworkMessage(NetworkMessage message)
+        public override void ParseFromNetworkMessage(NetworkMessage message)
         {
-            if (message.ReadByte() != (byte)ClientPacketType.Follow)
-            {
-                return false;
-            }
-
             CreatureId = message.ReadUInt32();
             message.ReadUInt32(); // Creature ID again.
-            return true;
         }
 
         public override void AppendToNetworkMessage(NetworkMessage message)

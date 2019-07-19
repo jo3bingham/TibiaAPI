@@ -22,13 +22,8 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
             PacketType = ServerPacketType.MarketDetail;
         }
 
-        public override bool ParseFromNetworkMessage(NetworkMessage message)
+        public override void ParseFromNetworkMessage(NetworkMessage message)
         {
-            if (message.ReadByte() != (byte)ServerPacketType.MarketDetail)
-            {
-                return false;
-            }
-
             TypeId = message.ReadUInt16();
 
             foreach (MarketDetailField value in Enum.GetValues(typeof(MarketDetailField)))
@@ -62,7 +57,6 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
                 var minimumPrice = message.ReadUInt32();
                 SellStatistics.Add((totalTransactions, totalPrice, maximumPrice, minimumPrice));
             }
-            return true;
         }
 
         public override void AppendToNetworkMessage(NetworkMessage message)

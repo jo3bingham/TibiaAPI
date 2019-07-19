@@ -22,13 +22,8 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
             PacketType = ServerPacketType.PlayerDataBasic;
         }
 
-        public override bool ParseFromNetworkMessage(NetworkMessage message)
+        public override void ParseFromNetworkMessage(NetworkMessage message)
         {
-            if (message.ReadByte() != (byte)ServerPacketType.PlayerDataBasic)
-            {
-                return false;
-            }
-
             HasPremium = message.ReadBool();
             PremiumUntil = message.ReadUInt32();
             Profession = message.ReadByte();
@@ -39,7 +34,6 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
             {
                 KnownSpells.Add(message.ReadByte());
             }
-            return true;
         }
 
         public override void AppendToNetworkMessage(NetworkMessage message)

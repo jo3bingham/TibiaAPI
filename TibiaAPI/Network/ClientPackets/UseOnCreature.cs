@@ -19,18 +19,12 @@ namespace OXGaming.TibiaAPI.Network.ClientPackets
             PacketType = ClientPacketType.UseOnCreature;
         }
 
-        public override bool ParseFromNetworkMessage(NetworkMessage message)
+        public override void ParseFromNetworkMessage(NetworkMessage message)
         {
-            if (message.ReadByte() != (byte)ClientPacketType.UseOnCreature)
-            {
-                return false;
-            }
-
             Position = message.ReadPosition();
             ObjectId = message.ReadUInt16();
             StackPositionOrData = message.ReadByte();
             CreatureId = message.ReadUInt32();
-            return true;
         }
 
         public override void AppendToNetworkMessage(NetworkMessage message)

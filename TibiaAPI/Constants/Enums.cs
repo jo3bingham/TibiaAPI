@@ -138,7 +138,8 @@
         InventoryGold = 1,
         PreyBonusRerolls = 10,
         CollectionTokens = 20,
-        CharmPoints = 30
+        CharmPoints = 30,
+        TournamentCoins = 40
     }
 
     public enum FluidColor
@@ -162,7 +163,8 @@
         Mounts = 4,
         Blessings = 5,
         XpBoost = 6,
-        Prey = 7
+        Prey = 7,
+        TournamentTicket = 11
     }
 
     public enum Direction
@@ -359,6 +361,10 @@
         InviteToChannel = 0xAB,
         ExcludeFromChannel = 0xAC,
         Cancel = 0xBE,
+        TournamentInformation = 0xC4,
+        SubscribeToUpdates = 0xC6,
+        TournamentLeaderboard = 0xC7,
+        TournamentTicketAction = 0xC8,
         GetTransactionDetails = 0xC9,
         UpdateExivaOptions = 0xCA,
         BrowseField = 0xCB,
@@ -394,7 +400,9 @@
         StoreEvent = 0xE9,
         FeatureEvent = 0xEA,
         PreyAction = 0xEB,
+        SetHirelingName = 0xEC,
         RequestResourceBalance = 0xED,
+        Greet = 0xEE,
         TransferCurrency = 0xEF,
         GetQuestLog = 0xF0,
         GetQuestLine = 0xF1,
@@ -431,6 +439,7 @@
         Dead = 0x28,
         Stash = 0x29,
         DepotTileState = 0x2A,
+        SpecialContainersAvailable = 0x2C,
         ClientCheck = 0x63,
         FullMap = 0x64,
         TopRow = 0x65,
@@ -506,6 +515,9 @@
         TopFloor = 0xBE,
         BottomFloor = 0xBF,
         UpdateLootContainers = 0xC0,
+        PlayerDataTournament = 0xC1,
+        TournamentInformation = 0xC4,
+        TournamentLeaderboard = 0xC5,
         Outfit = 0xC8,
         ExivaSuppressed = 0xC9,
         UpdateExivaOptions = 0xCA,
@@ -525,6 +537,7 @@
         MonsterCyclopediaBonusEffects = 0xD8,
         MonsterCyclopediaNewDetails = 0xD9,
         CyclopediaCharacterInfo = 0xDA,
+        HirelingNameChange = 0xDB,
         TutorialHint = 0xDC,
         CyclopediaMapData = 0xDD,
         DailyRewardCollectionState = 0xDE,

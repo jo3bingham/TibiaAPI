@@ -19,13 +19,8 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
             PacketType = ServerPacketType.MarketBrowse;
         }
 
-        public override bool ParseFromNetworkMessage(NetworkMessage message)
+        public override void ParseFromNetworkMessage(NetworkMessage message)
         {
-           if (message.ReadByte() != (byte)ServerPacketType.MarketBrowse)
-           {
-               return false;
-           }
-
            TypeId = message.ReadUInt16();
 
            BuyOffers.Capacity = (int)message.ReadUInt32();
@@ -39,7 +34,6 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
            {
                SellOffers.Add(message.ReadMarketOffer((int)MarketOfferType.Sell, TypeId));
            }
-           return true;
         }
 
         public override void AppendToNetworkMessage(NetworkMessage message)

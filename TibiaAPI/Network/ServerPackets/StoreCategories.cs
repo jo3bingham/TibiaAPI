@@ -16,13 +16,8 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
             PacketType = ServerPacketType.StoreCategories;
         }
 
-        public override bool ParseFromNetworkMessage(NetworkMessage message)
+        public override void ParseFromNetworkMessage(NetworkMessage message)
         {
-            if (message.ReadByte() != (byte)ServerPacketType.StoreCategories)
-            {
-                return false;
-            }
-
             Categories.Capacity = message.ReadUInt16();
             for (var i = 0; i < Categories.Capacity; ++i)
             {
@@ -39,7 +34,6 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
 
                 Categories.Add((name, highlightState, icons, parentName));
             }
-            return true;
         }
 
         public override void AppendToNetworkMessage(NetworkMessage message)

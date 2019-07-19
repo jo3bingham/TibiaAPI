@@ -19,13 +19,8 @@ namespace OXGaming.TibiaAPI.Network.ClientPackets
             PacketType = ClientPacketType.SetOutfit;
         }
 
-        public override bool ParseFromNetworkMessage(NetworkMessage message)
+        public override void ParseFromNetworkMessage(NetworkMessage message)
         {
-            if (message.ReadByte() != (byte)ClientPacketType.SetOutfit)
-            {
-                return false;
-            }
-
             OutfitId = message.ReadUInt16();
             HeadColor = message.ReadByte();
             TorsoColor = message.ReadByte();
@@ -33,7 +28,6 @@ namespace OXGaming.TibiaAPI.Network.ClientPackets
             DetailColor = message.ReadByte();
             Addons = message.ReadByte();
             MountId = message.ReadUInt16();
-            return true;
         }
 
         public override void AppendToNetworkMessage(NetworkMessage message)

@@ -12,15 +12,9 @@ namespace OXGaming.TibiaAPI.Network.ClientPackets
             PacketType = ClientPacketType.CloseContainer;
         }
 
-        public override bool ParseFromNetworkMessage(NetworkMessage message)
+        public override void ParseFromNetworkMessage(NetworkMessage message)
         {
-            if (message.ReadByte() != (byte)ClientPacketType.CloseContainer)
-            {
-                return false;
-            }
-
             ContainerId = message.ReadByte();
-            return true;
         }
 
         public override void AppendToNetworkMessage(NetworkMessage message)

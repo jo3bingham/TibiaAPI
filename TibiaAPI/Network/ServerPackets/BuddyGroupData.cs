@@ -18,13 +18,8 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
             PacketType = ServerPacketType.BuddyGroupData;
         }
 
-        public override bool ParseFromNetworkMessage(NetworkMessage message)
+        public override void ParseFromNetworkMessage(NetworkMessage message)
         {
-            if (message.ReadByte() != (byte)ServerPacketType.BuddyGroupData)
-            {
-                return false;
-            }
-
             Groups.Capacity = message.ReadByte();
             for (var i = 0; i < Groups.Capacity; ++i)
             {
@@ -34,7 +29,6 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
                 Groups.Add((groupId, groupName, isModifiable));
             }
             NumberOfUserCreatedGroupsLeft = message.ReadByte();
-            return true;
         }
 
         public override void AppendToNetworkMessage(NetworkMessage message)

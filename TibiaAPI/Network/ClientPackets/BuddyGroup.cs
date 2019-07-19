@@ -15,19 +15,13 @@ namespace OXGaming.TibiaAPI.Network.ClientPackets
             PacketType = ClientPacketType.BuddyGroup;
         }
 
-        public override bool ParseFromNetworkMessage(NetworkMessage message)
+        public override void ParseFromNetworkMessage(NetworkMessage message)
         {
-            if (message.ReadByte() != (byte)ClientPacketType.BuddyGroup)
-            {
-                return false;
-            }
-
             Groups.Capacity = message.ReadByte();
             for (var i = 0; i < Groups.Capacity; ++i)
             {
                 Groups.Add(message.ReadString());
             }
-            return true;
         }
 
         public override void AppendToNetworkMessage(NetworkMessage message)

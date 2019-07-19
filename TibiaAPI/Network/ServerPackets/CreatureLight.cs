@@ -15,17 +15,11 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
             PacketType = ServerPacketType.CreatureLight;
         }
 
-        public override bool ParseFromNetworkMessage(NetworkMessage message)
+        public override void ParseFromNetworkMessage(NetworkMessage message)
         {
-            if (message.ReadByte() != (byte)ServerPacketType.CreatureLight)
-            {
-                return false;
-            }
-
             CreatureId = message.ReadUInt32();
             Brightness = message.ReadByte();
             LightColor = message.ReadByte();
-            return true;
         }
 
         public override void AppendToNetworkMessage(NetworkMessage message)

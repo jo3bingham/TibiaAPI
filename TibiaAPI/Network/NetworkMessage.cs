@@ -608,14 +608,14 @@ namespace OXGaming.TibiaAPI.Network
                                     }
                                     break;
                                 default:
-                                    Console.WriteLine($"Unknown SetDailyReward type: {type}");
+                                    _client.Logger.Error($"Unknown SetDailyReward type: {type}");
                                     break;
                             }
                         }
                     }
                     break;
                 default:
-                    Console.WriteLine($"Unknown DailyReward type: {dailyReward.Type}");
+                    _client.Logger.Debug($"Unknown DailyReward type: {dailyReward.Type}");
                     break;
             }
 
@@ -1389,7 +1389,6 @@ namespace OXGaming.TibiaAPI.Network
                 var ret = zStream.inflate(zlibConst.Z_SYNC_FLUSH);
                 if (ret != zlibConst.Z_OK)
                 {
-                    Console.WriteLine($"Data: {BitConverter.ToString(GetData()).Replace('-', ' ')}");
                     throw new Exception($"[NetworkMessage.PrepareToParse] zlib inflate failed: {ret}");
                 }
 

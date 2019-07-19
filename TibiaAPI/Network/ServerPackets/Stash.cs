@@ -17,13 +17,8 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
             PacketType = ServerPacketType.Stash;
         }
 
-        public override bool ParseFromNetworkMessage(NetworkMessage message)
+        public override void ParseFromNetworkMessage(NetworkMessage message)
         {
-            if (message.ReadByte() != (byte)ServerPacketType.Stash)
-            {
-                return false;
-            }
-
             Items.Capacity = message.ReadUInt16();
             for (var i = 0; i < Items.Capacity; ++i)
             {
@@ -32,7 +27,6 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
                 Items.Add((itemId, itemCount));
             }
             FreeSlots = message.ReadUInt16();
-            return true;
         }
 
         public override void AppendToNetworkMessage(NetworkMessage message)

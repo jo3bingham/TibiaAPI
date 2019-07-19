@@ -14,16 +14,10 @@ namespace OXGaming.TibiaAPI.Network.ClientPackets
             PacketType = ClientPacketType.TransferCurrency;
         }
 
-        public override bool ParseFromNetworkMessage(NetworkMessage message)
+        public override void ParseFromNetworkMessage(NetworkMessage message)
         {
-            if (message.ReadByte() != (byte)ClientPacketType.TransferCurrency)
-            {
-                return false;
-            }
-
             PlayerName = message.ReadString();
             Amount = message.ReadUInt32();
-            return true;
         }
 
         public override void AppendToNetworkMessage(NetworkMessage message)

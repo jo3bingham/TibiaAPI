@@ -17,18 +17,12 @@ namespace OXGaming.TibiaAPI.Network.ClientPackets
             PacketType = ClientPacketType.SellObject;
         }
 
-        public override bool ParseFromNetworkMessage(NetworkMessage message)
+        public override void ParseFromNetworkMessage(NetworkMessage message)
         {
-            if (message.ReadByte() != (byte)ClientPacketType.SellObject)
-            {
-                return false;
-            }
-
             ObjectId = message.ReadUInt16();
             Data = message.ReadByte();
             Amount = message.ReadByte();
             KeepEquipped = message.ReadBool();
-            return true;
         }
 
         public override void AppendToNetworkMessage(NetworkMessage message)

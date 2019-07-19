@@ -16,17 +16,11 @@ namespace OXGaming.TibiaAPI.Network.ClientPackets
             PacketType = ClientPacketType.EditList;
         }
 
-        public override bool ParseFromNetworkMessage(NetworkMessage message)
+        public override void ParseFromNetworkMessage(NetworkMessage message)
         {
-            if (message.ReadByte() != (byte)ClientPacketType.EditList)
-            {
-                return false;
-            }
-
             WindowType = message.ReadByte();
             WindowId = message.ReadUInt32();
             Text = message.ReadString();
-            return true;
         }
 
         public override void AppendToNetworkMessage(NetworkMessage message)

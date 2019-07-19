@@ -20,13 +20,8 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
             PacketType = ServerPacketType.ImbuingDialogRefresh;
         }
 
-        public override bool ParseFromNetworkMessage(NetworkMessage message)
+        public override void ParseFromNetworkMessage(NetworkMessage message)
         {
-            if (message.ReadByte() != (byte)ServerPacketType.ImbuingDialogRefresh)
-            {
-                return false;
-            }
-
             AppearanceTypeId = message.ReadUInt16();
 
             ExistingImbuements.Capacity = message.ReadByte();
@@ -60,7 +55,6 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
                var objectCount = message.ReadUInt16();
                AvailableAstralSources.Add(new AstralSource(astralId, objectCount));
             }
-            return true;
         }
 
         public override void AppendToNetworkMessage(NetworkMessage message)

@@ -17,17 +17,11 @@ namespace OXGaming.TibiaAPI.Network.ClientPackets
             PacketType = ClientPacketType.ToggleWrapState;
         }
 
-        public override bool ParseFromNetworkMessage(NetworkMessage message)
+        public override void ParseFromNetworkMessage(NetworkMessage message)
         {
-            if (message.ReadByte() != (byte)ClientPacketType.ToggleWrapState)
-            {
-                return false;
-            }
-
             Position = message.ReadPosition();
             ObjectId = message.ReadUInt16();
             StackPosition = message.ReadByte();
-            return true;
         }
 
         public override void AppendToNetworkMessage(NetworkMessage message)

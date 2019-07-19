@@ -15,20 +15,14 @@ namespace OXGaming.TibiaAPI.Network.ClientPackets
             PacketType = ClientPacketType.MonsterBonusEffectAction;
         }
 
-        public override bool ParseFromNetworkMessage(NetworkMessage message)
+        public override void ParseFromNetworkMessage(NetworkMessage message)
         {
-            if (message.ReadByte() != (byte)ClientPacketType.MonsterBonusEffectAction)
-            {
-                return false;
-            }
-
             CharmId = message.ReadByte();
             Type = message.ReadByte();
             if (Type == 1) // Assign (2 = Unassign)
             {
                 RaceId = message.ReadUInt16();
             }
-            return true;
         }
 
         public override void AppendToNetworkMessage(NetworkMessage message)

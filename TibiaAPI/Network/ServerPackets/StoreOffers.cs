@@ -28,13 +28,8 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
             PacketType = ServerPacketType.StoreOffers;
         }
 
-        public override bool ParseFromNetworkMessage(NetworkMessage message)
+        public override void ParseFromNetworkMessage(NetworkMessage message)
         {
-            if (message.ReadByte() != (byte)ServerPacketType.StoreOffers)
-            {
-                return false;
-            }
-
             CategoryName = message.ReadString();
             DisplayOfferId = message.ReadUInt32();
             WindowType = message.ReadByte();
@@ -210,7 +205,6 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
                 }
                 BannerSwitchDelay = message.ReadByte();
             }
-            return true;
         }
 
         public override void AppendToNetworkMessage(NetworkMessage message)

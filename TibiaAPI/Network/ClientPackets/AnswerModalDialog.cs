@@ -15,17 +15,11 @@ namespace OXGaming.TibiaAPI.Network.ClientPackets
             PacketType = ClientPacketType.AnswerModalDialog;
         }
 
-        public override bool ParseFromNetworkMessage(NetworkMessage message)
+        public override void ParseFromNetworkMessage(NetworkMessage message)
         {
-            if (message.ReadByte() != (byte)ClientPacketType.AnswerModalDialog)
-            {
-                return false;
-            }
-
             WindowId = message.ReadUInt32();
             ButtonId = message.ReadByte();
             Choice = message.ReadByte();
-            return true;
         }
 
         public override void AppendToNetworkMessage(NetworkMessage message)

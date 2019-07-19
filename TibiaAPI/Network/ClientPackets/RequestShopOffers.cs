@@ -22,13 +22,8 @@ namespace OXGaming.TibiaAPI.Network.ClientPackets
             PacketType = ClientPacketType.RequestShopOffers;
         }
 
-        public override bool ParseFromNetworkMessage(NetworkMessage message)
+        public override void ParseFromNetworkMessage(NetworkMessage message)
         {
-            if (message.ReadByte() != (byte)ClientPacketType.RequestShopOffers)
-            {
-                return false;
-            }
-
             ServiceType = message.ReadByte();
             if (Client.VersionNumber >= 11900000)
             {
@@ -68,7 +63,6 @@ namespace OXGaming.TibiaAPI.Network.ClientPackets
 
             SortOrder = message.ReadByte();
             DeeplinkSource = message.ReadByte();
-            return true;
         }
 
         public override void AppendToNetworkMessage(NetworkMessage message)

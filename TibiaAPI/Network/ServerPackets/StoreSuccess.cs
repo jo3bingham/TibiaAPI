@@ -17,18 +17,15 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
             PacketType = ServerPacketType.StoreSuccess;
         }
 
-        public override bool ParseFromNetworkMessage(NetworkMessage message)
+        public override void ParseFromNetworkMessage(NetworkMessage message)
         {
-            if (message.ReadByte() != (byte)ServerPacketType.StoreSuccess)
-            {
-                return false;
-            }
-
             ReasonType = message.ReadByte();
             Text = message.ReadString();
-            CurrentCreditBalance = message.ReadInt32();
-            ConfirmedCreditBalance = message.ReadInt32();
-            return true;
+            if (Client.VersionNumber < 12158493)
+            {
+                CurrentCreditBalance = message.ReadInt32();
+                ConfirmedCreditBalance = message.ReadInt32();
+            }
         }
 
         public override void AppendToNetworkMessage(NetworkMessage message)
@@ -36,8 +33,11 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
             message.Write((byte)ServerPacketType.StoreSuccess);
             message.Write(ReasonType);
             message.Write(Text);
-            message.Write(CurrentCreditBalance);
-            message.Write(ConfirmedCreditBalance);
+            if (Client.VersionNumber < 12158493)
+            {
+                message.Write(CurrentCreditBalance);
+                message.Write(ConfirmedCreditBalance);
+            }
         }
     }
 }

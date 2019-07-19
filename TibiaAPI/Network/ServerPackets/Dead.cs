@@ -16,20 +16,14 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
             PacketType = ServerPacketType.Dead;
         }
 
-        public override bool ParseFromNetworkMessage(NetworkMessage message)
+        public override void ParseFromNetworkMessage(NetworkMessage message)
         {
-            if (message.ReadByte() != (byte)ServerPacketType.Dead)
-            {
-                return false;
-            }
-
             DeathType = (DeathType)message.ReadByte();
             if (DeathType == DeathType.Regular)
             {
                 FairFightFactor = message.ReadByte();
             }
             IsSubsequentBlessingApplicable = message.ReadBool();
-            return true;
         }
 
         public override void AppendToNetworkMessage(NetworkMessage message)

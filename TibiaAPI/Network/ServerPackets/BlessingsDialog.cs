@@ -29,13 +29,8 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
             PacketType = ServerPacketType.BlessingsDialog;
         }
 
-        public override bool ParseFromNetworkMessage(NetworkMessage message)
+        public override void ParseFromNetworkMessage(NetworkMessage message)
         {
-            if (message.ReadByte() != (byte)ServerPacketType.BlessingsDialog)
-            {
-                return false;
-            }
-
             Blessings.Capacity = message.ReadByte();
             for (var i = 0; i < Blessings.Capacity; ++i)
             {
@@ -62,7 +57,6 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
                 var text = message.ReadString();
                 History.Add((timestamp, color, text));
             }
-            return true;
         }
 
         public override void AppendToNetworkMessage(NetworkMessage message)

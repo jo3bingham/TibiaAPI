@@ -23,13 +23,8 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
             PacketType = ServerPacketType.OpenRewardWall;
         }
 
-        public override bool ParseFromNetworkMessage(NetworkMessage message)
+        public override void ParseFromNetworkMessage(NetworkMessage message)
         {
-            if (message.ReadByte() != (byte)ServerPacketType.OpenRewardWall)
-            {
-                return false;
-            }
-
             IsRewardShrine = message.ReadBool();
             TimeRemainingUntilCanClaimNextReward = message.ReadUInt32();
             IndexOfNextReward = message.ReadByte();
@@ -41,7 +36,6 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
             TimeLeftToClaimCurrentReward = message.ReadUInt32();
             RewardStreak = message.ReadUInt16();
             EffectiveRewardsStreak = message.ReadUInt16();
-            return true;
         }
 
         public override void AppendToNetworkMessage(NetworkMessage message)

@@ -17,13 +17,8 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
             PacketType = ServerPacketType.QuestLine;
         }
 
-        public override bool ParseFromNetworkMessage(NetworkMessage message)
+        public override void ParseFromNetworkMessage(NetworkMessage message)
         {
-            if (message.ReadByte() != (byte)ServerPacketType.QuestLine)
-            {
-                return false;
-            }
-
             QuestId = message.ReadUInt16();
             Questflags.Capacity = message.ReadByte();
             for (var i = 0; i < Questflags.Capacity; ++i)
@@ -33,7 +28,6 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
                 var description = message.ReadString();
                 Questflags.Add((id, name, description));
             }
-            return true;
         }
 
         public override void AppendToNetworkMessage(NetworkMessage message)

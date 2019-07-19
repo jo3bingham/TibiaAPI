@@ -16,17 +16,11 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
             PacketType = ServerPacketType.MissileEffect;
         }
 
-        public override bool ParseFromNetworkMessage(NetworkMessage message)
+        public override void ParseFromNetworkMessage(NetworkMessage message)
         {
-            if (message.ReadByte() != (byte)ServerPacketType.MissileEffect)
-            {
-                return false;
-            }
-
             FromPosition = message.ReadPosition();
             ToPosition = message.ReadPosition();
             Effect = message.ReadByte();
-            return true;
         }
 
         public override void AppendToNetworkMessage(NetworkMessage message)

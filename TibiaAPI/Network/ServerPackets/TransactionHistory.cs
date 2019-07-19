@@ -21,13 +21,8 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
             PacketType = ServerPacketType.TransactionHistory;
         }
 
-        public override bool ParseFromNetworkMessage(NetworkMessage message)
+        public override void ParseFromNetworkMessage(NetworkMessage message)
         {
-            if (message.ReadByte() != (byte)ServerPacketType.TransactionHistory)
-            {
-                return false;
-            }
-
             CurrentPage = message.ReadUInt32();
             NumberOfPages = message.ReadUInt32();
 
@@ -63,7 +58,6 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
                     Transactions.Add((timestamp, type, creditChange, name));
                 }
             }
-            return true;
         }
 
         public override void AppendToNetworkMessage(NetworkMessage message)

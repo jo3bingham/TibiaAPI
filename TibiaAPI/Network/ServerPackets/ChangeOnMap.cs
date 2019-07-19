@@ -13,7 +13,7 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
 
         public ObjectInstance ObjectInstance { get; set; }
 
-        public Position Position { get; set; }
+        public Position Position { get; set; } = new Position(0xFFFF, 0xFFFF, 7);
 
         public ushort Id { get; set; }
 
@@ -25,13 +25,8 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
             PacketType = ServerPacketType.ChangeOnMap;
         }
 
-        public override bool ParseFromNetworkMessage(NetworkMessage message)
+        public override void ParseFromNetworkMessage(NetworkMessage message)
         {
-            if (message.ReadByte() != (byte)ServerPacketType.ChangeOnMap)
-            {
-                return false;
-            }
-
             var x = message.ReadUInt16();
             if (x != ushort.MaxValue)
             {
@@ -97,7 +92,6 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
                     throw new Exception($"[ChangeOnMap.ParseFromNetworkMessage] Received object of type {Id} when a creature was expected.");
                 }
             }
-            return true;
         }
 
         public override void AppendToNetworkMessage(NetworkMessage message)

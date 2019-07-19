@@ -22,13 +22,8 @@ namespace OXGaming.TibiaAPI.Network.ClientPackets
             PacketType = ClientPacketType.EditBuddy;
         }
 
-        public override bool ParseFromNetworkMessage(NetworkMessage message)
+        public override void ParseFromNetworkMessage(NetworkMessage message)
         {
-            if (message.ReadByte() != (byte)ClientPacketType.EditBuddy)
-            {
-                return false;
-            }
-
             PlayerId = message.ReadUInt32();
             Description = message.ReadString();
             Icon = message.ReadUInt32();
@@ -38,7 +33,6 @@ namespace OXGaming.TibiaAPI.Network.ClientPackets
             {
                 Groups.Add(message.ReadByte());
             }
-            return true;
         }
 
         public override void AppendToNetworkMessage(NetworkMessage message)

@@ -12,15 +12,9 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
             PacketType = ServerPacketType.MultiUseDelay;
         }
 
-        public override bool ParseFromNetworkMessage(NetworkMessage message)
+        public override void ParseFromNetworkMessage(NetworkMessage message)
         {
-            if (message.ReadByte() != (byte)ServerPacketType.MultiUseDelay)
-            {
-                return false;
-            }
-
             Delay = message.ReadUInt32();
-            return true;
         }
 
         public override void AppendToNetworkMessage(NetworkMessage message)

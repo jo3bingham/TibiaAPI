@@ -29,13 +29,8 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
             PacketType = ServerPacketType.PlayerSkills;
         }
 
-        public override bool ParseFromNetworkMessage(NetworkMessage message)
+        public override void ParseFromNetworkMessage(NetworkMessage message)
         {
-            if (message.ReadByte() != (byte)ServerPacketType.PlayerSkills)
-            {
-                return false;
-            }
-
             if (Client.VersionNumber < 12000000)
             {
                 FistFighting = (message.ReadUInt16(), message.ReadUInt16(), 0, message.ReadByte());
@@ -70,7 +65,6 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
                 MaxCapacity = message.ReadUInt32();
                 BonusCapacity = message.ReadUInt32();
             }
-            return true;
         }
 
         public override void AppendToNetworkMessage(NetworkMessage message)

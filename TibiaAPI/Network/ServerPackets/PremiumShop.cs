@@ -10,13 +10,8 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
             PacketType = ServerPacketType.StoreCategories;
         }
 
-        public override bool ParseFromNetworkMessage(NetworkMessage message)
+        public override void ParseFromNetworkMessage(NetworkMessage message)
         {
-            if (message.ReadByte() != (byte)ServerPacketType.StoreCategories)
-            {
-                return false;
-            }
-
             var updateCreditBalance = message.ReadBool();
             if (updateCreditBalance)
             {
@@ -37,7 +32,6 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
                 }
                 message.ReadString();
             }
-            return true;
         }
 
         public override void AppendToNetworkMessage(NetworkMessage message)

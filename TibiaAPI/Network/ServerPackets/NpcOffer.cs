@@ -20,13 +20,8 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
             PacketType = ServerPacketType.NpcOffer;
         }
 
-        public override bool ParseFromNetworkMessage(NetworkMessage message)
+        public override void ParseFromNetworkMessage(NetworkMessage message)
         {
-            if (message.ReadByte() != (byte)ServerPacketType.NpcOffer)
-            {
-                return false;
-            }
-
             NpcName = message.ReadString();
             if (Client.VersionNumber >= 12087995)
             {
@@ -43,7 +38,6 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
                 var sellPrice = message.ReadUInt32();
                 Offers.Add((id, data, name, weight, buyPrice, sellPrice));
             }
-            return true;
         }
 
         public override void AppendToNetworkMessage(NetworkMessage message)

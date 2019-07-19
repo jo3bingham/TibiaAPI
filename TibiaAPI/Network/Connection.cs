@@ -137,8 +137,7 @@ namespace OXGaming.TibiaAPI.Network
             catch (Exception ex)
             {
                 _isStarted = false;
-                Console.WriteLine(ex.ToString());
-                // TODO: Log exception.
+                _client.Logger.Error(ex.ToString());
             }
 
             return _isStarted;
@@ -224,8 +223,7 @@ namespace OXGaming.TibiaAPI.Network
                     }
                     catch (Exception ex)
                     {
-                        Console.WriteLine(ex.ToString());
-                        // TODO: Log exception.
+                        _client.Logger.Error(ex.ToString());
                     }
                 }
             }
@@ -311,8 +309,7 @@ namespace OXGaming.TibiaAPI.Network
                     }
                     catch (Exception ex)
                     {
-                        Console.WriteLine(ex.ToString());
-                        // TODO: Log exception.
+                        _client.Logger.Error(ex.ToString());
                     }
                 }
             }
@@ -368,8 +365,7 @@ namespace OXGaming.TibiaAPI.Network
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.ToString());
-                // TODO: Log exception.
+                _client.Logger.Error(ex.ToString());
             }
 
             _isStarted = false;
@@ -452,8 +448,7 @@ namespace OXGaming.TibiaAPI.Network
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.ToString());
-                // TODO: Log exception.
+                _client.Logger.Error(ex.ToString());
             }
         }
 
@@ -494,8 +489,7 @@ namespace OXGaming.TibiaAPI.Network
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.ToString());
-                // TODO: Log exception.
+                _client.Logger.Error(ex.ToString());
             }
         }
 
@@ -519,8 +513,7 @@ namespace OXGaming.TibiaAPI.Network
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.ToString());
-                // TODO: Log exception.
+                _client.Logger.Error(ex.ToString());
             }
 
             ClientSend();
@@ -546,8 +539,7 @@ namespace OXGaming.TibiaAPI.Network
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.ToString());
-                // TODO: Log exception.
+                _client.Logger.Error(ex.ToString());
             }
 
             ServerSend();
@@ -584,6 +576,8 @@ namespace OXGaming.TibiaAPI.Network
                     throw new Exception($"[Connection.BeginGetContextCallback] Invalid HTTP request data: {clientRequest ?? "null"}");
                 }
 
+                _client.Logger.Debug($"Client POST: {clientRequest}");
+
                 var response = PostAsync(clientRequest).Result;
                 if (string.IsNullOrEmpty(response))
                 {
@@ -592,6 +586,8 @@ namespace OXGaming.TibiaAPI.Network
                     _httpListener.BeginGetContext(new AsyncCallback(BeginGetContextCallback), _httpListener);
                     return;
                 }
+
+                _client.Logger.Debug($"Server response: {response}");
 
                 // Login data is the only thing we have to modify, everything else can be piped through.
                 dynamic loginData = JsonConvert.DeserializeObject(response);
@@ -628,8 +624,7 @@ namespace OXGaming.TibiaAPI.Network
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.ToString());
-                // TODO: Log exception.
+                _client.Logger.Error(ex.ToString());
             }
         }
 
@@ -661,8 +656,7 @@ namespace OXGaming.TibiaAPI.Network
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.ToString());
-                // TODO: Log exception.
+                _client.Logger.Error(ex.ToString());
             }
         }
 
@@ -727,8 +721,8 @@ namespace OXGaming.TibiaAPI.Network
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.ToString());
-                // TODO: Log exception.
+                _client.Logger.Error(ex.ToString());
+                _client.Logger.Error($"Data: {BitConverter.ToString(_clientInMessage.GetData()).Replace('-', ' ')}");
             }
         }
 
@@ -816,6 +810,13 @@ namespace OXGaming.TibiaAPI.Network
                         _clientOutMessage.SequenceNumber = _clientInMessage.SequenceNumber;
 
                         ParseClientMessage(_client, _clientInMessage, _clientOutMessage);
+
+                        if (AllowPacketModification)
+                        {
+                            _client.Logger.Debug($"In Size: {_clientInMessage.Size}, Out Size: {_clientOutMessage.Size}");
+                            _client.Logger.Debug($"In Data: {BitConverter.ToString(_clientInMessage.GetData()).Replace('-', ' ')}");
+                            _client.Logger.Debug($"Out Data: {BitConverter.ToString(_clientOutMessage.GetData()).Replace('-', ' ')}");
+                        }
                         SendToServer(AllowPacketModification ? _clientOutMessage : _clientInMessage);
                     }
                     else
@@ -839,8 +840,8 @@ namespace OXGaming.TibiaAPI.Network
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.ToString());
-                // TODO: Log exception.
+                _client.Logger.Error(ex.ToString());
+                _client.Logger.Error($"Data: {BitConverter.ToString(_clientInMessage.GetData()).Replace('-', ' ')}");
             }
         }
 
@@ -887,6 +888,14 @@ namespace OXGaming.TibiaAPI.Network
                     _serverOutMessage.SequenceNumber = _serverInMessage.SequenceNumber;
 
                     ParseServerMessage(_client, _serverInMessage, _serverOutMessage);
+
+                    if (AllowPacketModification)
+                    {
+                        _client.Logger.Debug($"In Size: {_serverInMessage.Size}, Out Size: {_serverOutMessage.Size}");
+                        _client.Logger.Debug($"In Data: {BitConverter.ToString(_serverInMessage.GetData()).Replace('-', ' ')}");
+                        _client.Logger.Debug($"Out Data: {BitConverter.ToString(_serverOutMessage.GetData()).Replace('-', ' ')}");
+                    }
+
                     SendToClient(AllowPacketModification ? _serverOutMessage : _serverInMessage);
                 }
                 else
@@ -908,8 +917,8 @@ namespace OXGaming.TibiaAPI.Network
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.ToString());
-                // TODO: Log exception.
+                _client.Logger.Error(ex.ToString());
+                _client.Logger.Error($"Data: {BitConverter.ToString(_serverInMessage.GetData()).Replace('-', ' ')}");
             }
         }
 
@@ -935,8 +944,7 @@ namespace OXGaming.TibiaAPI.Network
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.ToString());
-                // TODO: Log exception.
+                _client.Logger.Error(ex.ToString());
                 return string.Empty;
             }
         }

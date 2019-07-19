@@ -14,16 +14,10 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
             PacketType = ServerPacketType.CreatureUnpass;
         }
 
-        public override bool ParseFromNetworkMessage(NetworkMessage message)
+        public override void ParseFromNetworkMessage(NetworkMessage message)
         {
-            if (message.ReadByte() != (byte)ServerPacketType.CreatureUnpass)
-            {
-                return false;
-            }
-
             CreatureId = message.ReadUInt32();
             IsUnpassable = message.ReadBool();
-            return true;
         }
 
         public override void AppendToNetworkMessage(NetworkMessage message)
