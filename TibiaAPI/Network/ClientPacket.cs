@@ -84,6 +84,8 @@ namespace OXGaming.TibiaAPI.Network
                     return new ClientPackets.AcceptTrade(client);
                 case ClientPacketType.RejectTrade:
                     return new ClientPackets.RejectTrade(client);
+                case ClientPacketType.FriendSystemAction:
+                    return new ClientPackets.FriendSystemAction(client);
                 case ClientPacketType.UseObject:
                     return new ClientPackets.UseObject(client);
                 case ClientPacketType.UseTwoObjects:
