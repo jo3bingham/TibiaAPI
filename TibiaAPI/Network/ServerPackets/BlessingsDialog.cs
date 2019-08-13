@@ -7,8 +7,8 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
 {
     public class BlessingsDialog : ServerPacket
     {
-        public List<(ushort BlessingId, byte Amount)> Blessings { get; } =
-            new List<(ushort BlessingId, byte Amount)>();
+        public List<(ushort BlessingId, ushort Amount)> Blessings { get; } =
+            new List<(ushort BlessingId, ushort Amount)>();
         public List<(uint Timestamp, byte Color, string Text)> History { get; } =
             new List<(uint Timestamp, byte Color, string Text)>();
 
@@ -35,7 +35,9 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
             for (var i = 0; i < Blessings.Capacity; ++i)
             {
                 var blessingId = message.ReadUInt16();
-                var amount = message.ReadByte();
+                // Either they increased the amount capacity from 1-byte to 2-bytes,
+                // or there's a new byte here, but I don't have the data to confirm.
+                var amount = Client.VersionNumber < 12200000 ? message.ReadByte() : message.ReadUInt16();
                 Blessings.Add((blessingId, amount));
             }
 
@@ -68,7 +70,14 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
             {
                 var (BlessingId, Amount) = Blessings[i];
                 message.Write(BlessingId);
-                message.Write(Amount);
+                if (Client.VersionNumber < 12200000)
+                {
+                    message.Write((byte)Amount);
+                }
+                else
+                {
+                    message.Write(Amount);
+                }
             }
 
             message.Write(IsPremium);

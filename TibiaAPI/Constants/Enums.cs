@@ -283,7 +283,8 @@
         ThankYou = 41,
         Market = 42,
         Mana = 43,
-        BeyondLast = 44
+        BeyondLast = 44,
+        BoostedCreature = 49
     }
 
     public enum ClientPacketType

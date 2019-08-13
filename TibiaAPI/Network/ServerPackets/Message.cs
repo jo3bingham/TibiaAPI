@@ -33,31 +33,12 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
             switch (MessageMode)
             {
                 case MessageModeType.ChannelManagement:
-                    {
-                        ChannelId = message.ReadUInt16();
-                    }
-                    break;
                 case MessageModeType.Guild:
                 case MessageModeType.PartyManagement:
                 case MessageModeType.Party:
                     {
                         ChannelId = message.ReadUInt16();
                     }
-                    break;
-                case MessageModeType.Login:
-                case MessageModeType.Admin:
-                case MessageModeType.Game:
-                case MessageModeType.GameHighlight:
-                case MessageModeType.Failure:
-                    break;
-                case MessageModeType.Look:
-                    break;
-                case MessageModeType.Status:
-                case MessageModeType.Loot:
-                case MessageModeType.TradeNpc:
-                case MessageModeType.HotkeyUse:
-                case MessageModeType.Market:
-                case MessageModeType.Report:
                     break;
                 case MessageModeType.DamageDealed:
                 case MessageModeType.DamageReceived:
@@ -80,6 +61,20 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
                         FirstValue = message.ReadUInt32();
                         FirstColor = message.ReadByte();
                     }
+                    break;
+                case MessageModeType.Login:
+                case MessageModeType.Admin:
+                case MessageModeType.Game:
+                case MessageModeType.GameHighlight:
+                case MessageModeType.Failure:
+                case MessageModeType.Look:
+                case MessageModeType.Status:
+                case MessageModeType.Loot:
+                case MessageModeType.TradeNpc:
+                case MessageModeType.HotkeyUse:
+                case MessageModeType.Market:
+                case MessageModeType.Report:
+                case MessageModeType.BoostedCreature:
                     break;
                 default:
                     throw new Exception($"Invalid MessageMode: {MessageMode}");

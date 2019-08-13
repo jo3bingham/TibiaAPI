@@ -423,7 +423,14 @@ namespace OXGaming.TibiaAPI.Network
                         creature.GuildFlag = ReadByte();
 
                         creature.Type = (CreatureType)ReadByte();
-                        if (creature.IsSummon)
+                        if (creature.Type == CreatureType.Player)
+                        {
+                            // This needs more data to understand if this read comes here,
+                            // or before the Type read, and what it's for. Possibly related
+                            // to the new friends feature.
+                            creature.Unknown = ReadByte();
+                        }
+                        else if (creature.IsSummon)
                         {
                             creature.SummonerCreatureId = ReadUInt32();
                         }
@@ -1023,7 +1030,11 @@ namespace OXGaming.TibiaAPI.Network
                         Write(value.GuildFlag);
 
                         Write((byte)value.Type);
-                        if (value.IsSummon)
+                        if (value.Type == CreatureType.Player)
+                        {
+                            Write(value.Unknown);
+                        }
+                        else if (value.IsSummon)
                         {
                             Write(value.SummonerCreatureId);
                         }
