@@ -89,31 +89,12 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
             switch (MessageMode)
             {
                 case MessageModeType.ChannelManagement:
-                    {
-                        message.Write(ChannelId);
-                    }
-                    break;
                 case MessageModeType.Guild:
                 case MessageModeType.PartyManagement:
                 case MessageModeType.Party:
                     {
                         message.Write(ChannelId);
                     }
-                    break;
-                case MessageModeType.Login:
-                case MessageModeType.Admin:
-                case MessageModeType.Game:
-                case MessageModeType.GameHighlight:
-                case MessageModeType.Failure:
-                    break;
-                case MessageModeType.Look:
-                    break;
-                case MessageModeType.Status:
-                case MessageModeType.Loot:
-                case MessageModeType.TradeNpc:
-                case MessageModeType.HotkeyUse:
-                case MessageModeType.Market:
-                case MessageModeType.Report:
                     break;
                 case MessageModeType.DamageDealed:
                 case MessageModeType.DamageReceived:
@@ -136,6 +117,20 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
                         message.Write(FirstValue);
                         message.Write(FirstColor);
                     }
+                    break;
+                case MessageModeType.Login:
+                case MessageModeType.Admin:
+                case MessageModeType.Game:
+                case MessageModeType.GameHighlight:
+                case MessageModeType.Failure:
+                case MessageModeType.Look:
+                case MessageModeType.Status:
+                case MessageModeType.Loot:
+                case MessageModeType.TradeNpc:
+                case MessageModeType.HotkeyUse:
+                case MessageModeType.Market:
+                case MessageModeType.Report:
+                case MessageModeType.BoostedCreature:
                     break;
                 default:
                     throw new Exception($"Invalid MessageMode: {MessageMode}");

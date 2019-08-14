@@ -7,8 +7,8 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
 {
     public class BlessingsDialog : ServerPacket
     {
-        public List<(ushort BlessingId, ushort Amount)> Blessings { get; } =
-            new List<(ushort BlessingId, ushort Amount)>();
+        public List<(ushort BlessingId, byte TotalAmount, byte AmountFromStore)> Blessings { get; } =
+            new List<(ushort BlessingId, byte TotalAmount, byte AmountFromStore)>();
         public List<(uint Timestamp, byte Color, string Text)> History { get; } =
             new List<(uint Timestamp, byte Color, string Text)>();
 
@@ -35,10 +35,9 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
             for (var i = 0; i < Blessings.Capacity; ++i)
             {
                 var blessingId = message.ReadUInt16();
-                // Either they increased the amount capacity from 1-byte to 2-bytes,
-                // or there's a new byte here, but I don't have the data to confirm.
-                var amount = Client.VersionNumber < 12200000 ? message.ReadByte() : message.ReadUInt16();
-                Blessings.Add((blessingId, amount));
+                var totalAmount = message.ReadByte();
+                var amountFromStore = message.ReadByte();
+                Blessings.Add((blessingId, totalAmount, amountFromStore));
             }
 
             IsPremium = message.ReadBool();
@@ -68,16 +67,10 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
             message.Write((byte)count);
             for (var i = 0; i < count; ++i)
             {
-                var (BlessingId, Amount) = Blessings[i];
+                var (BlessingId, TotalAmount, AmountFromStore) = Blessings[i];
                 message.Write(BlessingId);
-                if (Client.VersionNumber < 12200000)
-                {
-                    message.Write((byte)Amount);
-                }
-                else
-                {
-                    message.Write(Amount);
-                }
+                message.Write(TotalAmount);
+                message.Write(AmountFromStore);
             }
 
             message.Write(IsPremium);

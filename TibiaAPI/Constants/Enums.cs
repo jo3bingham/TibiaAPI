@@ -488,7 +488,7 @@
         CreatureParty = 0x91,
         CreatureUnpass = 0x92,
         CreatureMarks = 0x93,
-        //CreaturePvpHelpers = 0x94,
+        CreaturePvpHelpers = 0x94,
         DepotSearchResults = 0x94,
         CreatureType = 0x95,
         EditText = 0x96,
