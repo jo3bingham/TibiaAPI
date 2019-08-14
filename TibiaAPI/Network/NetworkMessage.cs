@@ -425,10 +425,7 @@ namespace OXGaming.TibiaAPI.Network
                         creature.Type = (CreatureType)ReadByte();
                         if (creature.Type == CreatureType.Player)
                         {
-                            // This needs more data to understand if this read comes here,
-                            // or before the Type read, and what it's for. Possibly related
-                            // to the new friends feature.
-                            creature.Unknown = ReadByte();
+                            creature.Vocation = ReadByte();
                         }
                         else if (creature.IsSummon)
                         {
@@ -1032,7 +1029,7 @@ namespace OXGaming.TibiaAPI.Network
                         Write((byte)value.Type);
                         if (value.Type == CreatureType.Player)
                         {
-                            Write(value.Unknown);
+                            Write(value.Vocation);
                         }
                         else if (value.IsSummon)
                         {

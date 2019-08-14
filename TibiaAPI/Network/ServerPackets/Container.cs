@@ -23,6 +23,7 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
         public bool IsDragAndDropEnabled { get; set; }
         public bool IsPaginationEnabled { get; set; }
         public bool IsSubContainer { get; set; }
+        public bool ShowDepotSearchButton { get; set; }
 
         public Container(Client client)
         {
@@ -37,6 +38,7 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
             ContainerName = message.ReadString();
             NumberOfSlotsPerPage = message.ReadByte();
             IsSubContainer = message.ReadBool();
+            ShowDepotSearchButton = message.ReadBool();
             IsDragAndDropEnabled = message.ReadBool();
             IsPaginationEnabled = message.ReadBool();
             NumberOfTotalObjects = message.ReadUInt16();
@@ -57,6 +59,7 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
             message.Write(ContainerName);
             message.Write(NumberOfSlotsPerPage);
             message.Write(IsSubContainer);
+            message.Write(ShowDepotSearchButton);
             message.Write(IsDragAndDropEnabled);
             message.Write(IsPaginationEnabled);
             message.Write(NumberOfTotalObjects);

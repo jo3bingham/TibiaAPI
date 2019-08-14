@@ -126,8 +126,8 @@ namespace OXGaming.TibiaAPI.Network
                     return new ServerPackets.CreatureUnpass(client);
                 case ServerPacketType.CreatureMarks:
                     return new ServerPackets.CreatureMarks(client);
-                case ServerPacketType.CreaturePvpHelpers:
-                    return new ServerPackets.CreaturePvpHelpers(client);
+                case ServerPacketType.DepotSearchResults:
+                    return new ServerPackets.DepotSearchResults(client);
                 case ServerPacketType.CreatureType:
                     return new ServerPackets.CreatureType(client);
                 case ServerPacketType.EditText:

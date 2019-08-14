@@ -1,4 +1,6 @@
-﻿using OXGaming.TibiaAPI.Constants;
+﻿using System;
+
+using OXGaming.TibiaAPI.Constants;
 
 namespace OXGaming.TibiaAPI.Network.ClientPackets
 {
@@ -10,7 +12,7 @@ namespace OXGaming.TibiaAPI.Network.ClientPackets
         public uint PlayerId { get; set; }
 
         public byte Action { get; set; }
-        public byte Config { get; set; }
+        public byte ConfigId { get; set; }
         public byte FriendshipLevel { get; set; }
 
         public bool AllowInspect { get; set; }
@@ -83,10 +85,14 @@ namespace OXGaming.TibiaAPI.Network.ClientPackets
             }
             else if (Action == 0x10) // Change Config
             {
-                Config = message.ReadByte();
+                ConfigId = message.ReadByte();
                 ShowCharacterInfo = message.ReadBool();
                 ShowAccountInfo = message.ReadBool();
                 AllowInspect = message.ReadBool();
+            }
+            else
+            {
+                throw new Exception($"Invalid Friend System Action: {Action}");
             }
         }
 
@@ -148,10 +154,14 @@ namespace OXGaming.TibiaAPI.Network.ClientPackets
             }
             else if (Action == 0x10) // Change Config
             {
-                message.Write(Config);
+                message.Write(ConfigId);
                 message.Write(ShowCharacterInfo);
                 message.Write(ShowAccountInfo);
                 message.Write(AllowInspect);
+            }
+            else
+            {
+                throw new Exception($"Invalid Friend System Action: {Action}");
             }
         }
     }
