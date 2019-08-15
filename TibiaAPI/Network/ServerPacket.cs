@@ -136,6 +136,10 @@ namespace OXGaming.TibiaAPI.Network
                     return new ServerPackets.EditList(client);
                 case ServerPacketType.ShowGameNews:
                     return new ServerPackets.ShowGameNews(client);
+                case ServerPacketType.DepotSearchDetailList:
+                    return new ServerPackets.DepotSearchDetailList(client);
+                case ServerPacketType.CloseDepotSearch:
+                    return new ServerPackets.CloseDepotSearch(client);
                 case ServerPacketType.BlessingsDialog:
                     return new ServerPackets.BlessingsDialog(client);
                 case ServerPacketType.Blessings:

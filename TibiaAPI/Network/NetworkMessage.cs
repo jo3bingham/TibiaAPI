@@ -463,7 +463,11 @@ namespace OXGaming.TibiaAPI.Network
                         creature.PartyFlag = ReadByte();
 
                         creature.Type = (CreatureType)ReadByte();
-                        if (creature.IsSummon)
+                        if (creature.Type == CreatureType.Player)
+                        {
+                            creature.Vocation = ReadByte();
+                        }
+                        else if (creature.IsSummon)
                         {
                             creature.SummonerCreatureId = ReadUInt32();
                         }
