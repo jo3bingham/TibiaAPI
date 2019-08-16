@@ -165,9 +165,12 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
                 LevelDisplay = message.ReadUInt16();
                 Outfit = message.ReadCreatureOutfit();
                 Unknown2 = message.ReadByte();
-                Unknown5 = message.ReadByte();
-                Unknown6 = message.ReadByte();
-                Unknown7 = message.ReadByte();
+                if (Client.VersionNumber >= 12200000)
+                {
+                    Unknown5 = message.ReadByte();
+                    Unknown6 = message.ReadByte();
+                    Unknown7 = message.ReadByte();
+                }
             }
             else if (Type == 1) // Character Stats
             {
@@ -404,15 +407,18 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
             else if (Type == 10) // Badges
             {
                 Unknown8 = message.ReadByte();
-                Unknown9 = message.ReadByte();
-                Unknown10 = message.ReadByte();
-                LoyaltyTitle = message.ReadString();
-                Badges.Capacity = message.ReadByte();
-                for (var i = 0; i < Badges.Capacity; ++i)
+                if (Unknown8 != 0)
                 {
-                    var id = message.ReadUInt32();
-                    var name = message.ReadString();
-                    Badges.Add((id, name));
+                    Unknown9 = message.ReadByte();
+                    Unknown10 = message.ReadByte();
+                    LoyaltyTitle = message.ReadString();
+                    Badges.Capacity = message.ReadByte();
+                    for (var i = 0; i < Badges.Capacity; ++i)
+                    {
+                        var id = message.ReadUInt32();
+                        var name = message.ReadString();
+                        Badges.Add((id, name));
+                    }
                 }
             }
             else if (Type == 11) // Titles
@@ -458,9 +464,12 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
                     message.Write((ushort)Outfit.Id);
                 }
                 message.Write(Unknown2);
-                message.Write(Unknown5);
-                message.Write(Unknown6);
-                message.Write(Unknown7);
+                if (Client.VersionNumber > 12200000)
+                {
+                    message.Write(Unknown5);
+                    message.Write(Unknown6);
+                    message.Write(Unknown7);
+                }
             }
             else if (Type == 1)
             {
@@ -723,16 +732,19 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
             else if (Type == 10) // Badges
             {
                 message.Write(Unknown8);
-                message.Write(Unknown9);
-                message.Write(Unknown10);
-                message.Write(LoyaltyTitle);
-                var count = Math.Min(Badges.Count, byte.MaxValue);
-                message.Write((byte)count);
-                for (var i = 0; i < count; ++i)
+                if (Unknown8 != 0)
                 {
-                    var (id, name) = Badges[i];
-                    message.Write(id);
-                    message.Write(name);
+                    message.Write(Unknown9);
+                    message.Write(Unknown10);
+                    message.Write(LoyaltyTitle);
+                    var count = Math.Min(Badges.Count, byte.MaxValue);
+                    message.Write((byte)count);
+                    for (var i = 0; i < count; ++i)
+                    {
+                        var (id, name) = Badges[i];
+                        message.Write(id);
+                        message.Write(name);
+                    }
                 }
             }
             else if (Type == 11) // Titles

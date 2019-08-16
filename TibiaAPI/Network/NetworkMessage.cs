@@ -423,7 +423,7 @@ namespace OXGaming.TibiaAPI.Network
                         creature.GuildFlag = ReadByte();
 
                         creature.Type = (CreatureType)ReadByte();
-                        if (creature.Type == CreatureType.Player)
+                        if (creature.Type == CreatureType.Player && _client.VersionNumber >= 12200000)
                         {
                             creature.Vocation = ReadByte();
                         }
@@ -463,7 +463,7 @@ namespace OXGaming.TibiaAPI.Network
                         creature.PartyFlag = ReadByte();
 
                         creature.Type = (CreatureType)ReadByte();
-                        if (creature.Type == CreatureType.Player)
+                        if (creature.Type == CreatureType.Player && _client.VersionNumber >= 12200000)
                         {
                             creature.Vocation = ReadByte();
                         }
@@ -1031,7 +1031,7 @@ namespace OXGaming.TibiaAPI.Network
                         Write(value.GuildFlag);
 
                         Write((byte)value.Type);
-                        if (value.Type == CreatureType.Player)
+                        if (value.Type == CreatureType.Player && _client.VersionNumber >= 12200000)
                         {
                             Write(value.Vocation);
                         }
@@ -1074,7 +1074,11 @@ namespace OXGaming.TibiaAPI.Network
                         Write(value.PartyFlag);
 
                         Write((byte)value.Type);
-                        if (value.IsSummon)
+                        if (value.Type == CreatureType.Player && _client.VersionNumber >= 12200000)
+                        {
+                            Write(value.Vocation);
+                        }
+                        else if (value.IsSummon)
                         {
                             Write(value.SummonerCreatureId);
                         }

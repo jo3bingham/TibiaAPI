@@ -36,7 +36,11 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
             {
                 var blessingId = message.ReadUInt16();
                 var totalAmount = message.ReadByte();
-                var amountFromStore = message.ReadByte();
+                var amountFromStore = byte.MinValue;
+                if (Client.VersionNumber >= 12200000)
+                {
+                    amountFromStore = message.ReadByte();
+                }
                 Blessings.Add((blessingId, totalAmount, amountFromStore));
             }
 
@@ -70,7 +74,10 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
                 var (BlessingId, TotalAmount, AmountFromStore) = Blessings[i];
                 message.Write(BlessingId);
                 message.Write(TotalAmount);
-                message.Write(AmountFromStore);
+                if (Client.VersionNumber >= 12200000)
+                {
+                    message.Write(AmountFromStore);
+                }
             }
 
             message.Write(IsPremium);
