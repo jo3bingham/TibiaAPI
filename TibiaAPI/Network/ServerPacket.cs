@@ -78,6 +78,8 @@ namespace OXGaming.TibiaAPI.Network
                     return new ServerPackets.ChangeInContainer(client);
                 case ServerPacketType.DeleteInContainer:
                     return new ServerPackets.DeleteInContainer(client);
+                case ServerPacketType.FriendSystemData:
+                    return new ServerPackets.FriendSystemData(client);
                 case ServerPacketType.ScreenshotEvent:
                     return new ServerPackets.ScreenshotEvent(client);
                 case ServerPacketType.InspectionList:
@@ -126,8 +128,8 @@ namespace OXGaming.TibiaAPI.Network
                     return new ServerPackets.CreatureUnpass(client);
                 case ServerPacketType.CreatureMarks:
                     return new ServerPackets.CreatureMarks(client);
-                case ServerPacketType.CreaturePvpHelpers:
-                    return new ServerPackets.CreaturePvpHelpers(client);
+                case ServerPacketType.DepotSearchResults:
+                    return new ServerPackets.DepotSearchResults(client);
                 case ServerPacketType.CreatureType:
                     return new ServerPackets.CreatureType(client);
                 case ServerPacketType.EditText:
@@ -136,6 +138,10 @@ namespace OXGaming.TibiaAPI.Network
                     return new ServerPackets.EditList(client);
                 case ServerPacketType.ShowGameNews:
                     return new ServerPackets.ShowGameNews(client);
+                case ServerPacketType.DepotSearchDetailList:
+                    return new ServerPackets.DepotSearchDetailList(client);
+                case ServerPacketType.CloseDepotSearch:
+                    return new ServerPackets.CloseDepotSearch(client);
                 case ServerPacketType.BlessingsDialog:
                     return new ServerPackets.BlessingsDialog(client);
                 case ServerPacketType.Blessings:

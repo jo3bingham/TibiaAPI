@@ -7,8 +7,8 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
 {
     public class BlessingsDialog : ServerPacket
     {
-        public List<(ushort BlessingId, byte Amount)> Blessings { get; } =
-            new List<(ushort BlessingId, byte Amount)>();
+        public List<(ushort BlessingId, byte TotalAmount, byte AmountFromStore)> Blessings { get; } =
+            new List<(ushort BlessingId, byte TotalAmount, byte AmountFromStore)>();
         public List<(uint Timestamp, byte Color, string Text)> History { get; } =
             new List<(uint Timestamp, byte Color, string Text)>();
 
@@ -35,8 +35,13 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
             for (var i = 0; i < Blessings.Capacity; ++i)
             {
                 var blessingId = message.ReadUInt16();
-                var amount = message.ReadByte();
-                Blessings.Add((blessingId, amount));
+                var totalAmount = message.ReadByte();
+                var amountFromStore = byte.MinValue;
+                if (Client.VersionNumber >= 12200000)
+                {
+                    amountFromStore = message.ReadByte();
+                }
+                Blessings.Add((blessingId, totalAmount, amountFromStore));
             }
 
             IsPremium = message.ReadBool();
@@ -66,9 +71,13 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
             message.Write((byte)count);
             for (var i = 0; i < count; ++i)
             {
-                var (BlessingId, Amount) = Blessings[i];
+                var (BlessingId, TotalAmount, AmountFromStore) = Blessings[i];
                 message.Write(BlessingId);
-                message.Write(Amount);
+                message.Write(TotalAmount);
+                if (Client.VersionNumber >= 12200000)
+                {
+                    message.Write(AmountFromStore);
+                }
             }
 
             message.Write(IsPremium);

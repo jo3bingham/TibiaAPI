@@ -423,7 +423,11 @@ namespace OXGaming.TibiaAPI.Network
                         creature.GuildFlag = ReadByte();
 
                         creature.Type = (CreatureType)ReadByte();
-                        if (creature.IsSummon)
+                        if (creature.Type == CreatureType.Player && _client.VersionNumber >= 12200000)
+                        {
+                            creature.Vocation = ReadByte();
+                        }
+                        else if (creature.IsSummon)
                         {
                             creature.SummonerCreatureId = ReadUInt32();
                         }
@@ -459,7 +463,11 @@ namespace OXGaming.TibiaAPI.Network
                         creature.PartyFlag = ReadByte();
 
                         creature.Type = (CreatureType)ReadByte();
-                        if (creature.IsSummon)
+                        if (creature.Type == CreatureType.Player && _client.VersionNumber >= 12200000)
+                        {
+                            creature.Vocation = ReadByte();
+                        }
+                        else if (creature.IsSummon)
                         {
                             creature.SummonerCreatureId = ReadUInt32();
                         }
@@ -502,11 +510,12 @@ namespace OXGaming.TibiaAPI.Network
         {
             var timestamp = ReadUInt32();
             var counter = ReadUInt16();
+            var itemId = typeId;
 
             if (typeId == (int)MarketRequestType.OwnHistory ||
                 typeId == (int)MarketRequestType.OwnOffers)
             {
-                typeId = ReadUInt16();
+                itemId = ReadUInt16();
             }
 
             var amount = ReadUInt16();
@@ -526,7 +535,7 @@ namespace OXGaming.TibiaAPI.Network
                 character = ReadString();
             }
 
-            return new Offer(new OfferId(timestamp, counter), kind, typeId, amount, piecePrice, character, terminationReason);
+            return new Offer(new OfferId(timestamp, counter), kind, itemId, amount, piecePrice, character, terminationReason);
         }
 
         public ImbuementData ReadImbuementData()
@@ -1023,7 +1032,11 @@ namespace OXGaming.TibiaAPI.Network
                         Write(value.GuildFlag);
 
                         Write((byte)value.Type);
-                        if (value.IsSummon)
+                        if (value.Type == CreatureType.Player && _client.VersionNumber >= 12200000)
+                        {
+                            Write(value.Vocation);
+                        }
+                        else if (value.IsSummon)
                         {
                             Write(value.SummonerCreatureId);
                         }
@@ -1062,7 +1075,11 @@ namespace OXGaming.TibiaAPI.Network
                         Write(value.PartyFlag);
 
                         Write((byte)value.Type);
-                        if (value.IsSummon)
+                        if (value.Type == CreatureType.Player && _client.VersionNumber >= 12200000)
+                        {
+                            Write(value.Vocation);
+                        }
+                        else if (value.IsSummon)
                         {
                             Write(value.SummonerCreatureId);
                         }

@@ -32,6 +32,8 @@ namespace OXGaming.TibiaAPI.Network
                     return new ClientPackets.PerformanceMetrics(client);
                 case ClientPacketType.StashAction:
                     return new ClientPackets.StashAction(client);
+                case ClientPacketType.DepotSearchRetrieve:
+                    return new ClientPackets.DepotSearchRetrieve(client);
                 case ClientPacketType.ClientCheck:
                     return new ClientPackets.ClientCheck(client);
                 case ClientPacketType.GoPath:
@@ -84,6 +86,8 @@ namespace OXGaming.TibiaAPI.Network
                     return new ClientPackets.AcceptTrade(client);
                 case ClientPacketType.RejectTrade:
                     return new ClientPackets.RejectTrade(client);
+                case ClientPacketType.FriendSystemAction:
+                    return new ClientPackets.FriendSystemAction(client);
                 case ClientPacketType.UseObject:
                     return new ClientPackets.UseObject(client);
                 case ClientPacketType.UseTwoObjects:
@@ -114,6 +118,14 @@ namespace OXGaming.TibiaAPI.Network
                     return new ClientPackets.LootContainer(client);
                 case ClientPacketType.QuickLootBlackWhitelist:
                     return new ClientPackets.QuickLootBlackWhitelist(client);
+                case ClientPacketType.OpenDepotSearch:
+                    return new ClientPackets.OpenDepotSearch(client);
+                case ClientPacketType.CloseDepotSearch:
+                    return new ClientPackets.CloseDepotSearch(client);
+                case ClientPacketType.DepotSearchType:
+                    return new ClientPackets.DepotSearchType(client);
+                case ClientPacketType.OpenParentContainer:
+                    return new ClientPackets.OpenParentContainer(client);
                 case ClientPacketType.Talk:
                     return new ClientPackets.Talk(client);
                 case ClientPacketType.GetChannels:

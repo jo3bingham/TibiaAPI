@@ -49,6 +49,7 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
                     }
                     break;
                 case MessageModeType.Spell:
+                case MessageModeType.Potion:
                     {
                         Position = message.ReadPosition();
                     }

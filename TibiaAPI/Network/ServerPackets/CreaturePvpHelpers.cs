@@ -11,7 +11,7 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
         public CreaturePvpHelpers(Client client)
         {
             Client = client;
-            PacketType = ServerPacketType.CreaturePvpHelpers;
+            PacketType = ServerPacketType.DepotSearchResults;
         }
 
         public override void ParseFromNetworkMessage(NetworkMessage message)
@@ -22,7 +22,7 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
 
         public override void AppendToNetworkMessage(NetworkMessage message)
         {
-            message.Write((byte)ServerPacketType.CreaturePvpHelpers);
+            message.Write((byte)ServerPacketType.DepotSearchResults);
             message.Write(CreatureId);
             message.Write(PvpHelpers);
         }

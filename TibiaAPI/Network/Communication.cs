@@ -20,6 +20,7 @@ namespace OXGaming.TibiaAPI.Network
         public event ReceivedPacketEventHandler OnReceivedClientPingBackPacket;
         public event ReceivedPacketEventHandler OnReceivedClientPerformanceMetricsPacket;
         public event ReceivedPacketEventHandler OnReceivedClientStashActionPacket;
+        public event ReceivedPacketEventHandler OnReceivedClientDepotSearchRetrievePacket;
         public event ReceivedPacketEventHandler OnReceivedClientClientCheckPacket;
         public event ReceivedPacketEventHandler OnReceivedClientGoPathPacket;
         public event ReceivedPacketEventHandler OnReceivedClientGoNorthPacket;
@@ -46,6 +47,7 @@ namespace OXGaming.TibiaAPI.Network
         public event ReceivedPacketEventHandler OnReceivedClientLookTradePacket;
         public event ReceivedPacketEventHandler OnReceivedClientAcceptTradePacket;
         public event ReceivedPacketEventHandler OnReceivedClientRejectTradePacket;
+        public event ReceivedPacketEventHandler OnReceivedClientFriendSystemActionPacket;
         public event ReceivedPacketEventHandler OnReceivedClientUseObjectPacket;
         public event ReceivedPacketEventHandler OnReceivedClientUseTwoObjectsPacket;
         public event ReceivedPacketEventHandler OnReceivedClientUseOnCreaturePacket;
@@ -61,6 +63,10 @@ namespace OXGaming.TibiaAPI.Network
         public event ReceivedPacketEventHandler OnReceivedClientQuickLootPacket;
         public event ReceivedPacketEventHandler OnReceivedClientLootContainerPacket;
         public event ReceivedPacketEventHandler OnReceivedClientQuickLootBlackWhitelistPacket;
+        public event ReceivedPacketEventHandler OnReceivedClientOpenDepotSearchPacket;
+        public event ReceivedPacketEventHandler OnReceivedClientCloseDepotSearchPacket;
+        public event ReceivedPacketEventHandler OnReceivedClientDepotSearchTypePacket;
+        public event ReceivedPacketEventHandler OnReceivedClientOpenParentContainerPacket;
         public event ReceivedPacketEventHandler OnReceivedClientTalkPacket;
         public event ReceivedPacketEventHandler OnReceivedClientGetChannelsPacket;
         public event ReceivedPacketEventHandler OnReceivedClientJoinChannelPacket;
@@ -174,6 +180,7 @@ namespace OXGaming.TibiaAPI.Network
         public event ReceivedPacketEventHandler OnReceivedServerCreateInContainerPacket;
         public event ReceivedPacketEventHandler OnReceivedServerChangeInContainerPacket;
         public event ReceivedPacketEventHandler OnReceivedServerDeleteInContainerPacket;
+        public event ReceivedPacketEventHandler OnReceivedServerFriendSystemDataPacket;
         public event ReceivedPacketEventHandler OnReceivedServerScreenshotEventPacket;
         public event ReceivedPacketEventHandler OnReceivedServerInspectionListPacket;
         public event ReceivedPacketEventHandler OnReceivedServerInspectionStatePacket;
@@ -199,10 +206,13 @@ namespace OXGaming.TibiaAPI.Network
         public event ReceivedPacketEventHandler OnReceivedServerCreatureUnpassPacket;
         public event ReceivedPacketEventHandler OnReceivedServerCreatureMarksPacket;
         public event ReceivedPacketEventHandler OnReceivedServerCreaturePvpHelpersPacket;
+        public event ReceivedPacketEventHandler OnReceivedServerDepotSearchResultsPacket;
         public event ReceivedPacketEventHandler OnReceivedServerCreatureTypePacket;
         public event ReceivedPacketEventHandler OnReceivedServerEditTextPacket;
         public event ReceivedPacketEventHandler OnReceivedServerEditListPacket;
         public event ReceivedPacketEventHandler OnReceivedServerShowGameNewsPacket;
+        public event ReceivedPacketEventHandler OnReceivedServerDepotSearchDetailListPacket;
+        public event ReceivedPacketEventHandler OnReceivedServerCloseDepotSearchPacket;
         public event ReceivedPacketEventHandler OnReceivedServerBlessingsDialogPacket;
         public event ReceivedPacketEventHandler OnReceivedServerBlessingsPacket;
         public event ReceivedPacketEventHandler OnReceivedServerSwitchPresetPacket;
@@ -363,6 +373,9 @@ namespace OXGaming.TibiaAPI.Network
                         case ClientPacketType.StashAction:
                             packet.Forward = OnReceivedClientStashActionPacket?.Invoke(packet) ?? true;
                             break;
+                        case ClientPacketType.DepotSearchRetrieve:
+                            packet.Forward = OnReceivedClientDepotSearchRetrievePacket?.Invoke(packet) ?? true;
+                            break;
                         case ClientPacketType.ClientCheck:
                             packet.Forward = OnReceivedClientClientCheckPacket?.Invoke(packet) ?? true;
                             break;
@@ -441,6 +454,9 @@ namespace OXGaming.TibiaAPI.Network
                         case ClientPacketType.RejectTrade:
                             packet.Forward = OnReceivedClientRejectTradePacket?.Invoke(packet) ?? true;
                             break;
+                        case ClientPacketType.FriendSystemAction:
+                            packet.Forward = OnReceivedClientFriendSystemActionPacket?.Invoke(packet) ?? true;
+                            break;
                         case ClientPacketType.UseObject:
                             packet.Forward = OnReceivedClientUseObjectPacket?.Invoke(packet) ?? true;
                             break;
@@ -485,6 +501,18 @@ namespace OXGaming.TibiaAPI.Network
                             break;
                         case ClientPacketType.QuickLootBlackWhitelist:
                             packet.Forward = OnReceivedClientQuickLootBlackWhitelistPacket?.Invoke(packet) ?? true;
+                            break;
+                        case ClientPacketType.OpenDepotSearch:
+                            packet.Forward = OnReceivedClientOpenDepotSearchPacket?.Invoke(packet) ?? true;
+                            break;
+                        case ClientPacketType.CloseDepotSearch:
+                            packet.Forward = OnReceivedClientCloseDepotSearchPacket?.Invoke(packet) ?? true;
+                            break;
+                        case ClientPacketType.DepotSearchType:
+                            packet.Forward = OnReceivedClientDepotSearchTypePacket?.Invoke(packet) ?? true;
+                            break;
+                        case ClientPacketType.OpenParentContainer:
+                            packet.Forward = OnReceivedClientOpenParentContainerPacket?.Invoke(packet) ?? true;
                             break;
                         case ClientPacketType.Talk:
                             packet.Forward = OnReceivedClientTalkPacket?.Invoke(packet) ?? true;
@@ -882,6 +910,9 @@ namespace OXGaming.TibiaAPI.Network
                         case ServerPacketType.DeleteInContainer:
                             packet.Forward = OnReceivedServerDeleteInContainerPacket?.Invoke(packet) ?? true;
                             break;
+                        case ServerPacketType.FriendSystemData:
+                            packet.Forward = OnReceivedServerFriendSystemDataPacket?.Invoke(packet) ?? true;
+                            break;
                         case ServerPacketType.ScreenshotEvent:
                             packet.Forward = OnReceivedServerScreenshotEventPacket?.Invoke(packet) ?? true;
                             break;
@@ -954,8 +985,15 @@ namespace OXGaming.TibiaAPI.Network
                         case ServerPacketType.CreatureMarks:
                             packet.Forward = OnReceivedServerCreatureMarksPacket?.Invoke(packet) ?? true;
                             break;
-                        case ServerPacketType.CreaturePvpHelpers:
-                            packet.Forward = OnReceivedServerCreaturePvpHelpersPacket?.Invoke(packet) ?? true;
+                        case ServerPacketType.DepotSearchResults:
+                            if (client.VersionNumber >= 12200000)
+                            {
+                                packet.Forward = OnReceivedServerDepotSearchResultsPacket?.Invoke(packet) ?? true;
+                            }
+                            else
+                            {
+                                packet.Forward = OnReceivedServerCreaturePvpHelpersPacket?.Invoke(packet) ?? true;
+                            }
                             break;
                         case ServerPacketType.CreatureType:
                             packet.Forward = OnReceivedServerCreatureTypePacket?.Invoke(packet) ?? true;
@@ -968,6 +1006,12 @@ namespace OXGaming.TibiaAPI.Network
                             break;
                         case ServerPacketType.ShowGameNews:
                             packet.Forward = OnReceivedServerShowGameNewsPacket?.Invoke(packet) ?? true;
+                            break;
+                        case ServerPacketType.DepotSearchDetailList:
+                            packet.Forward = OnReceivedServerDepotSearchDetailListPacket?.Invoke(packet) ?? true;
+                            break;
+                        case ServerPacketType.CloseDepotSearch:
+                            packet.Forward = OnReceivedServerCloseDepotSearchPacket?.Invoke(packet) ?? true;
                             break;
                         case ServerPacketType.BlessingsDialog:
                             packet.Forward = OnReceivedServerBlessingsDialogPacket?.Invoke(packet) ?? true;

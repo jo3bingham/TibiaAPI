@@ -36,6 +36,7 @@ namespace OXGaming.TibiaAPI.Creatures
         public byte PartyFlag { get; set; }
         public byte PkFlag { get; set; }
         public byte SpeechCategory { get; set; }
+        public byte Vocation { get; set; }
 
         public bool Visible { get; set; }
 
