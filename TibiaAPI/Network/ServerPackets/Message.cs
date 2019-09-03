@@ -75,6 +75,7 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
                 case MessageModeType.Market:
                 case MessageModeType.Report:
                 case MessageModeType.BoostedCreature:
+                case MessageModeType.OfflineTraining:
                     break;
                 default:
                     throw new Exception($"Invalid MessageMode: {MessageMode}");

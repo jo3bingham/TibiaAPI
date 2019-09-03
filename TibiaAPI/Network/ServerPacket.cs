@@ -78,6 +78,8 @@ namespace OXGaming.TibiaAPI.Network
                     return new ServerPackets.ChangeInContainer(client);
                 case ServerPacketType.DeleteInContainer:
                     return new ServerPackets.DeleteInContainer(client);
+                case ServerPacketType.FriendSystemData:
+                    return new ServerPackets.FriendSystemData(client);
                 case ServerPacketType.ScreenshotEvent:
                     return new ServerPackets.ScreenshotEvent(client);
                 case ServerPacketType.InspectionList:

@@ -510,11 +510,12 @@ namespace OXGaming.TibiaAPI.Network
         {
             var timestamp = ReadUInt32();
             var counter = ReadUInt16();
+            var itemId = typeId;
 
             if (typeId == (int)MarketRequestType.OwnHistory ||
                 typeId == (int)MarketRequestType.OwnOffers)
             {
-                typeId = ReadUInt16();
+                itemId = ReadUInt16();
             }
 
             var amount = ReadUInt16();
@@ -534,7 +535,7 @@ namespace OXGaming.TibiaAPI.Network
                 character = ReadString();
             }
 
-            return new Offer(new OfferId(timestamp, counter), kind, typeId, amount, piecePrice, character, terminationReason);
+            return new Offer(new OfferId(timestamp, counter), kind, itemId, amount, piecePrice, character, terminationReason);
         }
 
         public ImbuementData ReadImbuementData()

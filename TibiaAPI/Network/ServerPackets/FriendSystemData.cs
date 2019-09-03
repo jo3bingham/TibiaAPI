@@ -45,8 +45,12 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
                 for (var i = 0; i < count; ++i)
                 {
                     var unknown = message.ReadByte();
+                    if (unknown == 1)
+                    {
+                        var unknown1 = message.ReadUInt32();
+                    }
                     var invitedName = message.ReadString();
-                    var unknown1 = message.ReadUInt16();
+                    var unknown2 = message.ReadUInt16();
                     var inviteeName = message.ReadString();
                     var timestamp = message.ReadUInt32();
                 }

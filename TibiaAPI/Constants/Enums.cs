@@ -284,7 +284,9 @@
         Market = 42,
         Mana = 43,
         BeyondLast = 44,
-        BoostedCreature = 49
+        BoostedCreature = 49,
+        OfflineTraining = 50,
+        Potion = 52
     }
 
     public enum ClientPacketType
