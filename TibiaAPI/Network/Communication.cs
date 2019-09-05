@@ -761,7 +761,7 @@ namespace OXGaming.TibiaAPI.Network
                             return;
                     }
 
-                    if (packet.Forward && client.Connection.AllowPacketModification)
+                    if (packet.Forward && client.Connection.IsClientPacketModificationEnabled)
                     {
                         packet.AppendToNetworkMessage(outMessage);
                     }
@@ -1052,7 +1052,7 @@ namespace OXGaming.TibiaAPI.Network
                         case ServerPacketType.SetTactics:
                             packet.Forward = OnReceivedServerSetTacticsPacket?.Invoke(packet) ?? true;
                             break;
-                        case ServerPacketType.SetStoreDeepLink:
+                        case ServerPacketType.SetStoreButtonDeeplink:
                             packet.Forward = OnReceivedServerSetStoreDeepLinkPacket?.Invoke(packet) ?? true;
                             break;
                         case ServerPacketType.RestingAreaState:
@@ -1302,7 +1302,7 @@ namespace OXGaming.TibiaAPI.Network
                             return;
                     }
 
-                    if (packet.Forward && client.Connection.AllowPacketModification)
+                    if (packet.Forward && client.Connection.IsServerPacketModificationEnabled)
                     {
                         packet.AppendToNetworkMessage(outMessage);
                     }

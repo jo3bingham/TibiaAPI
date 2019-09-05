@@ -40,7 +40,7 @@ namespace Record
         static string _loginWebService = string.Empty;
         static string _tibiaDirectory = string.Empty;
 
-        static int _httpPort = 80;
+        static int _httpPort = 7171;
 
         static bool _isWritingToFile = false;
 
@@ -126,7 +126,9 @@ namespace Record
                     client.Connection.OnReceivedServerMessage += Proxy_OnReceivedServerMessage;
 
                     // Disable packet parsing as we only care about the raw, decrypted packets and speed.
-                    client.StartConnection(enablePacketParsing: false, httpPort: _httpPort, loginWebService: _loginWebService);
+                    client.Connection.IsClientPacketParsingEnabled = false;
+                    client.Connection.IsServerPacketParsingEnabled = false;
+                    client.StartConnection(httpPort: _httpPort, loginWebService: _loginWebService);
 
                     while (Console.ReadLine() != "quit")
                     {

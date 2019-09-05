@@ -112,12 +112,12 @@ namespace OXGaming.TibiaAPI.Network
         /// Gets the actual data from the underlying buffer.
         /// </value>
         /// <remarks>
-        /// Get this only when necessary as it creates a new byte array.
+        /// Call this only when necessary as it creates a new byte array.
         /// </remarks>
         public byte[] GetData()
         {
             var data = new byte[Size];
-            Array.Copy(_buffer, data, Size);
+            Buffer.BlockCopy(_buffer, 0, data, 0, (int)Size);
             return data;
         }
 

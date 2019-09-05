@@ -511,7 +511,7 @@
         SpellGroupDelay = 0xA5,
         MultiUseDelay = 0xA6,
         SetTactics = 0xA7,
-        SetStoreDeepLink = 0xA8,
+        SetStoreButtonDeeplink = 0xA8,
         RestingAreaState = 0xA9,
         Talk = 0xAA,
         Channels = 0xAB,

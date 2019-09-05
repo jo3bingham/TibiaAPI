@@ -2,16 +2,16 @@
 
 namespace OXGaming.TibiaAPI.Network.ServerPackets
 {
-    public class SetStoreDeepLink : ServerPacket
+    public class SetStoreButtonDeeplink : ServerPacket
     {
         public ushort Unknown { get; set; }
 
         public byte StoreServiceType { get; set; }
 
-        public SetStoreDeepLink(Client client)
+        public SetStoreButtonDeeplink(Client client)
         {
             Client = client;
-            PacketType = ServerPacketType.SetStoreDeepLink;
+            PacketType = ServerPacketType.SetStoreButtonDeeplink;
         }
 
         public override void ParseFromNetworkMessage(NetworkMessage message)
@@ -26,7 +26,7 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
 
         public override void AppendToNetworkMessage(NetworkMessage message)
         {
-            message.Write((byte)ServerPacketType.SetStoreDeepLink);
+            message.Write((byte)ServerPacketType.SetStoreButtonDeeplink);
             if (Client.VersionNumber >= 11887288)
             {
                 message.Write(Unknown);

@@ -13,6 +13,7 @@ using ComponentAce.Compression.Libs.zlib;
 using Newtonsoft.Json;
 
 using OXGaming.TibiaAPI.Constants;
+using OXGaming.TibiaAPI.Utilities;
 
 namespace OXGaming.TibiaAPI.Network
 {
@@ -32,7 +33,6 @@ namespace OXGaming.TibiaAPI.Network
 
         private readonly Client _client;
 
-        private readonly HttpClient _httpClient = new HttpClient();
         private readonly HttpListener _httpListener = new HttpListener();
 
         private readonly NetworkMessage _clientInMessage;
@@ -64,11 +64,10 @@ namespace OXGaming.TibiaAPI.Network
         private uint _clientSequenceNumber = 1;
         private uint _serverSequenceNumber = 1;
 
-        private bool _isPacketParsingEnabled;
+        private bool _isResettingConnection = false;
         private bool _isSendingToClient = false;
         private bool _isSendingToServer = false;
         private bool _isStarted;
-        private bool _recompressPackets;
 
         public delegate void ReceivedMessageEventHandler(byte[] data);
 
@@ -77,7 +76,13 @@ namespace OXGaming.TibiaAPI.Network
 
         public ConnectionState ConnectionState { get; set; } = ConnectionState.Disconnected;
 
-        public bool AllowPacketModification { get; set; } = false;
+        public bool IsClientPacketDecryptionEnabled { get; set; } = true;
+        public bool IsClientPacketModificationEnabled { get; set; } = false;
+        public bool IsClientPacketParsingEnabled { get; set; } = true;
+        public bool IsServerPacketDecryptionEnabled { get; set; } = true;
+        public bool IsServerPacketCompressionEnabled { get; set; } = false;
+        public bool IsServerPacketModificationEnabled { get; set; } = false;
+        public bool IsServerPacketParsingEnabled { get; set; } = true;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Connection"/> class that acts as a proxy
@@ -90,8 +95,6 @@ namespace OXGaming.TibiaAPI.Network
             _clientOutMessage = new NetworkMessage(_client);
             _serverInMessage = new NetworkMessage(_client);
             _serverOutMessage = new NetworkMessage(_client);
-
-            _httpClient.DefaultRequestHeaders.Add("user-agent", "Mozilla/5.0");
         }
 
         /// <summary>
@@ -99,7 +102,7 @@ namespace OXGaming.TibiaAPI.Network
         /// connection requests from the Tibia client.
         /// </summary>
         /// <returns>Returns true on success, or if already started. Returns false if an exception is thrown.</returns>
-        internal bool Start(bool enablePacketParsing = true, int httpPort = 80, string loginWebService = "", bool recompressPackets = false)
+        internal bool Start(int httpPort = 7171, string loginWebService = "")
         {
             if (_isStarted)
             {
@@ -130,8 +133,6 @@ namespace OXGaming.TibiaAPI.Network
 
                 _isStarted = true;
                 _loginWebService = loginWebService;
-                _isPacketParsingEnabled = enablePacketParsing;
-                _recompressPackets = recompressPackets;
                 ConnectionState = ConnectionState.ConnectingStage1;
             }
             catch (Exception ex)
@@ -187,7 +188,7 @@ namespace OXGaming.TibiaAPI.Network
                 }
             }
 
-            message.PrepareToSend(_xteaKey, (_recompressPackets ? _zStream : null));
+            message.PrepareToSend(_xteaKey, (IsServerPacketCompressionEnabled ? _zStream : null));
             SendToClient(message.GetData());
         }
 
@@ -379,6 +380,13 @@ namespace OXGaming.TibiaAPI.Network
         /// </summary>
         private void ResetConnection()
         {
+            if (_isResettingConnection)
+            {
+                return;
+            }
+
+            _isResettingConnection = true;
+
             lock (_clientSendLock)
             {
                 _isSendingToClient = false;
@@ -408,6 +416,7 @@ namespace OXGaming.TibiaAPI.Network
             _clientSequenceNumber = 1;
             _serverSequenceNumber = 1;
             _xteaKey = null;
+            _isResettingConnection = false;
             ConnectionState = ConnectionState.ConnectingStage1;
         }
 
@@ -772,7 +781,7 @@ namespace OXGaming.TibiaAPI.Network
 
                     OnReceivedClientMessage?.Invoke(_clientInMessage.GetData());
 
-                    if (_isPacketParsingEnabled)
+                    if (IsClientPacketParsingEnabled)
                     {
                         _clientOutMessage.Reset();
                         ParseClientMessage(_client, _clientInMessage, _clientOutMessage);
@@ -801,27 +810,33 @@ namespace OXGaming.TibiaAPI.Network
                 }
                 else
                 {
-                    _clientInMessage.PrepareToParse(_xteaKey);
-                    OnReceivedClientMessage?.Invoke(_clientInMessage.GetData());
+                    if (IsClientPacketDecryptionEnabled)
+                    {
+                        _clientInMessage.PrepareToParse(_xteaKey);
+                        OnReceivedClientMessage?.Invoke(_clientInMessage.GetData());
+                    }
 
-                    if (_isPacketParsingEnabled)
+                    if (IsClientPacketParsingEnabled)
                     {
                         _clientOutMessage.Reset();
                         _clientOutMessage.SequenceNumber = _clientInMessage.SequenceNumber;
 
                         ParseClientMessage(_client, _clientInMessage, _clientOutMessage);
 
-                        if (AllowPacketModification)
+                        if (IsClientPacketModificationEnabled && _client.Logger.Level == Logger.LogLevel.Debug)
                         {
                             _client.Logger.Debug($"In Size: {_clientInMessage.Size}, Out Size: {_clientOutMessage.Size}");
                             _client.Logger.Debug($"In Data: {BitConverter.ToString(_clientInMessage.GetData()).Replace('-', ' ')}");
                             _client.Logger.Debug($"Out Data: {BitConverter.ToString(_clientOutMessage.GetData()).Replace('-', ' ')}");
                         }
-                        SendToServer(AllowPacketModification ? _clientOutMessage : _clientInMessage);
+                        SendToServer(IsClientPacketModificationEnabled ? _clientOutMessage : _clientInMessage);
                     }
                     else
                     {
-                        _clientInMessage.PrepareToSend(_xteaKey);
+                        if (IsClientPacketDecryptionEnabled)
+                        {
+                            _clientInMessage.PrepareToSend(_xteaKey);
+                        }
                         SendToServer(_clientInMessage.GetData());
                     }
                 }
@@ -879,28 +894,34 @@ namespace OXGaming.TibiaAPI.Network
                     count += read;
                 }
 
-                _serverInMessage.PrepareToParse(_xteaKey, _zStream);
-                OnReceivedServerMessage?.Invoke(_serverInMessage.GetData());
+                if (IsServerPacketDecryptionEnabled)
+                {
+                    _serverInMessage.PrepareToParse(_xteaKey, _zStream);
+                    OnReceivedServerMessage?.Invoke(_serverInMessage.GetData());
+                }
 
-                if (_isPacketParsingEnabled)
+                if (IsServerPacketParsingEnabled)
                 {
                     _serverOutMessage.Reset();
                     _serverOutMessage.SequenceNumber = _serverInMessage.SequenceNumber;
 
                     ParseServerMessage(_client, _serverInMessage, _serverOutMessage);
 
-                    if (AllowPacketModification)
+                    if (IsServerPacketModificationEnabled && _client.Logger.Level == Logger.LogLevel.Debug)
                     {
                         _client.Logger.Debug($"In Size: {_serverInMessage.Size}, Out Size: {_serverOutMessage.Size}");
                         _client.Logger.Debug($"In Data: {BitConverter.ToString(_serverInMessage.GetData()).Replace('-', ' ')}");
                         _client.Logger.Debug($"Out Data: {BitConverter.ToString(_serverOutMessage.GetData()).Replace('-', ' ')}");
                     }
 
-                    SendToClient(AllowPacketModification ? _serverOutMessage : _serverInMessage);
+                    SendToClient(IsServerPacketModificationEnabled ? _serverOutMessage : _serverInMessage);
                 }
                 else
                 {
-                    _serverInMessage.PrepareToSend(_xteaKey, (_recompressPackets ? _zStream : null));
+                    if (IsServerPacketDecryptionEnabled)
+                    {
+                        _serverInMessage.PrepareToSend(_xteaKey, IsServerPacketCompressionEnabled ? _zStream : null);
+                    }
                     SendToClient(_serverInMessage.GetData());
                 }
 
@@ -935,12 +956,16 @@ namespace OXGaming.TibiaAPI.Network
         {
             try
             {
-                var postContent = new StringContent(content, Encoding.UTF8, "application/json");
-                var response = await _httpClient
-                    .PostAsync(new Uri(GetLoginWebService()), postContent)
-                    .ConfigureAwait(false);
-                response.EnsureSuccessStatusCode();
-                return await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+                using (var httpClient = new HttpClient())
+                {
+                    httpClient.DefaultRequestHeaders.Add("user-agent", "Mozilla/5.0");
+                    var postContent = new StringContent(content, Encoding.UTF8, "application/json");
+                    using (var response = await httpClient.PostAsync(new Uri(GetLoginWebService()), postContent).ConfigureAwait(false))
+                    {
+                        postContent.Dispose();
+                        return await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+                    }
+                }
             }
             catch (Exception ex)
             {
@@ -978,7 +1003,7 @@ namespace OXGaming.TibiaAPI.Network
             {
                 if (disposing)
                 {
-                    _httpClient.Dispose();
+                    _httpListener.Close();
 
                     if (_clientSocket != null)
                     {

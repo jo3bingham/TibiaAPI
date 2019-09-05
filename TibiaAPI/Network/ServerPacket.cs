@@ -168,8 +168,8 @@ namespace OXGaming.TibiaAPI.Network
                     return new ServerPackets.MultiUseDelay(client);
                 case ServerPacketType.SetTactics:
                     return new ServerPackets.SetTactics(client);
-                case ServerPacketType.SetStoreDeepLink:
-                    return new ServerPackets.SetStoreDeepLink(client);
+                case ServerPacketType.SetStoreButtonDeeplink:
+                    return new ServerPackets.SetStoreButtonDeeplink(client);
                 case ServerPacketType.RestingAreaState:
                     return new ServerPackets.RestingAreaState(client);
                 case ServerPacketType.Talk:

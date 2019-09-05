@@ -42,9 +42,9 @@ namespace OXGaming.TibiaAPI
             Connection = new Network.Connection(this);
         }
 
-        public bool StartConnection(bool enablePacketParsing = true, int httpPort = 80, string loginWebService = "")
+        public bool StartConnection(int httpPort = 7171, string loginWebService = "")
         {
-            return Connection.Start(enablePacketParsing, httpPort, loginWebService);
+            return Connection.Start(httpPort, loginWebService);
         }
 
         public void StopConnection()
