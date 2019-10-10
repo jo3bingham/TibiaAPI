@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.IO.Compression;
 using System.Net;
 using System.Net.Http;
 using System.Net.Sockets;
@@ -587,7 +588,16 @@ namespace OXGaming.TibiaAPI.Network
 
                 _client.Logger.Debug($"Client POST: {clientRequest}");
 
-                var response = PostAsync(clientRequest).Result;
+                var data = PostAsync(clientRequest).Result;
+                var response = string.Empty;
+                using (var compressedStream = new MemoryStream(data))
+                using (var zipStream = new GZipStream(compressedStream, CompressionMode.Decompress))
+                using (var resultStream = new MemoryStream())
+                {
+                    zipStream.CopyTo(resultStream);
+                    response = Encoding.UTF8.GetString(resultStream.ToArray());
+                }
+
                 if (string.IsNullOrEmpty(response))
                 {
                     // This can happen with Open-Tibia servers where their login service doesn't handle all
@@ -598,29 +608,41 @@ namespace OXGaming.TibiaAPI.Network
 
                 _client.Logger.Debug($"Server response: {response}");
 
-                // Login data is the only thing we have to modify, everything else can be piped through.
-                dynamic loginData = JsonConvert.DeserializeObject(response);
-                if (loginData != null && loginData.session != null)
+                try
                 {
-                    // Change the address and port of each game world to that of the TCP listener so that
-                    // the Tibia client connects to the TCP listener instead of a game world.
-                    var address = ((IPEndPoint)_tcpListener.LocalEndpoint).Address.ToString();
-                    var port = ((IPEndPoint)_tcpListener.LocalEndpoint).Port;
-                    foreach (var world in loginData.playdata.worlds)
+                    // Login data is the only thing we have to modify, everything else can be piped through.
+                    dynamic loginData = JsonConvert.DeserializeObject(response);
+                    if (loginData != null && loginData.session != null)
                     {
-                        world.externaladdressprotected = address;
-                        world.externaladdressunprotected = address;
-                        world.externalportprotected = port;
-                        world.externalportunprotected = port;
-                    }
+                        // Change the address and port of each game world to that of the TCP listener so that
+                        // the Tibia client connects to the TCP listener instead of a game world.
+                        var address = ((IPEndPoint)_tcpListener.LocalEndpoint).Address.ToString();
+                        var port = ((IPEndPoint)_tcpListener.LocalEndpoint).Port;
+                        foreach (var world in loginData.playdata.worlds)
+                        {
+                            world.externaladdressprotected = address;
+                            world.externaladdressunprotected = address;
+                            world.externalportprotected = port;
+                            world.externalportunprotected = port;
+                        }
 
-                    // Store the original login data so when the Tibia client tries to connect to a game world
-                    // the server socket can recall the address and port to connect to.
-                    _loginData = JsonConvert.DeserializeObject(response);
-                    response = JsonConvert.SerializeObject(loginData);
+                        // Store the original login data so when the Tibia client tries to connect to a game world
+                        // the server socket can recall the address and port to connect to.
+                        _loginData = JsonConvert.DeserializeObject(response);
+                        response = JsonConvert.SerializeObject(loginData);
+                    }
+                }
+                catch (JsonReaderException)
+                {
+                    // This exception can occur if the login server responds with something other than JSON.
+                    // This is usually HTML when Tibia is down for maintenance. Ignore the exception and continue on.
+                }
+                catch
+                {
+                    throw;
                 }
 
-                var data = Encoding.UTF8.GetBytes(response);
+                data = Encoding.UTF8.GetBytes(response);
                 context.Response.ContentLength64 = data.Length;
                 context.Response.OutputStream.Write(data, 0, data.Length);
                 context.Response.Close();
@@ -952,25 +974,29 @@ namespace OXGaming.TibiaAPI.Network
         /// <returns>
         /// The response from CipSoft's web service.
         /// </returns>
-        private async Task<string> PostAsync(string content)
+        private async Task<byte[]> PostAsync(string content)
         {
             try
             {
                 using (var httpClient = new HttpClient())
                 {
-                    httpClient.DefaultRequestHeaders.Add("user-agent", "Mozilla/5.0");
+                    httpClient.DefaultRequestHeaders.Add("User-Agent", "Mozilla/5.0");
+                    httpClient.DefaultRequestHeaders.Add("Connection", "Keep-Alive");
+                    httpClient.DefaultRequestHeaders.Add("Accept-Language", "en-US,*");
+                    httpClient.DefaultRequestHeaders.Add("Accept-Encoding", "gzip, deflate");
                     var postContent = new StringContent(content, Encoding.UTF8, "application/json");
+                    postContent.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue("application/json");
                     using (var response = await httpClient.PostAsync(new Uri(GetLoginWebService()), postContent).ConfigureAwait(false))
                     {
                         postContent.Dispose();
-                        return await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+                        return await response.Content.ReadAsByteArrayAsync().ConfigureAwait(false);
                     }
                 }
             }
             catch (Exception ex)
             {
                 _client.Logger.Error(ex.ToString());
-                return string.Empty;
+                return Array.Empty<byte>();
             }
         }
 
