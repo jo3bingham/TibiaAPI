@@ -8,10 +8,10 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
     {
         public List<(ushort FemaleLooktype, ushort MaleLooktype)> HirelingDresses { get; } =
             new List<(ushort FemaleLooktype, ushort MaleLooktype)>();
-        public List<(ushort Id, string Name, byte Addons, bool EnableStoreLink, uint StoreOfferId)> Outfits { get; } =
-            new List<(ushort Id, string Name, byte Addons, bool EnableStoreLink, uint StoreOfferId)>();
-        public List<(ushort Id, string Name, bool EnableStoreLink, uint StoreOfferId)> Mounts { get; } =
-            new List<(ushort Id, string Name, bool EnableStoreLink, uint StoreOfferId)>();
+        public List<(ushort Id, string Name, byte Addons, byte ButtonType, uint StoreOfferId)> Outfits { get; } =
+            new List<(ushort Id, string Name, byte Addons, byte ButtonType, uint StoreOfferId)>();
+        public List<(ushort Id, string Name, byte ButtonType, uint StoreOfferId)> Mounts { get; } =
+            new List<(ushort Id, string Name, byte ButtonType, uint StoreOfferId)>();
 
         public ushort MountId { get; set; }
         public ushort OutfitId { get; set; }
@@ -45,13 +45,13 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
                 var id = message.ReadUInt16();
                 var name = message.ReadString();
                 var addons = message.ReadByte();
-                var enableStoreLink = Client.VersionNumber >= 11750000 ? message.ReadBool() : false;
+                var buttonType = Client.VersionNumber >= 11750000 ? message.ReadByte() : byte.MinValue;
                 uint storeOfferId = 0;
-                if (enableStoreLink)
+                if (buttonType == 0x01)
                 {
                     storeOfferId = message.ReadUInt32();
                 }
-                Outfits.Add((id, name, addons, enableStoreLink, storeOfferId));
+                Outfits.Add((id, name, addons, buttonType, storeOfferId));
             }
 
             Mounts.Capacity = Client.VersionNumber >= 11750000 ? message.ReadUInt16() : message.ReadByte();
@@ -59,13 +59,13 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
             {
                 var id = message.ReadUInt16();
                 var name = message.ReadString();
-                var enableStoreLink = Client.VersionNumber >= 11750000 ? message.ReadBool(): false;
+                var buttonType = Client.VersionNumber >= 11750000 ? message.ReadByte() : byte.MinValue;
                 uint storeOfferId = 0;
-                if (enableStoreLink)
+                if (buttonType == 0x01)
                 {
                     storeOfferId = message.ReadUInt32();
                 }
-                Mounts.Add((id, name, enableStoreLink, storeOfferId));
+                Mounts.Add((id, name, buttonType, storeOfferId));
             }
 
             Type = message.ReadUInt16();
@@ -106,16 +106,16 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
 
             for (var i = 0; i < count; ++i)
             {
-                var outfit = Outfits[i];
-                message.Write(outfit.Id);
-                message.Write(outfit.Name);
-                message.Write(outfit.Addons);
+                var (Id, Name, Addons, ButtonType, StoreOfferId) = Outfits[i];
+                message.Write(Id);
+                message.Write(Name);
+                message.Write(Addons);
                 if (Client.VersionNumber >= 11750000)
                 {
-                    message.Write(outfit.EnableStoreLink);
-                    if (outfit.EnableStoreLink)
+                    message.Write(ButtonType);
+                    if (ButtonType == 0x01)
                     {
-                        message.Write(outfit.StoreOfferId);
+                        message.Write(StoreOfferId);
                     }
                 }
             }
@@ -133,13 +133,13 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
 
             for (var i = 0; i < count; ++i)
             {
-                var (Id, Name, EnableStoreLink, StoreOfferId) = Mounts[i];
+                var (Id, Name, ButtonType, StoreOfferId) = Mounts[i];
                 message.Write(Id);
                 message.Write(Name);
                 if (Client.VersionNumber >= 11750000)
                 {
-                    message.Write(EnableStoreLink);
-                    if (EnableStoreLink)
+                    message.Write(ButtonType);
+                    if (ButtonType == 0x01)
                     {
                         message.Write(StoreOfferId);
                     }

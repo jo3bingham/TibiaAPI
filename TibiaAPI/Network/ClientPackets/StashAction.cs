@@ -9,6 +9,7 @@ namespace OXGaming.TibiaAPI.Network.ClientPackets
         public ushort ItemId { get; set; }
 
         public byte StashType { get; set; }
+        public byte Unknown { get; set; }
 
         public StashAction(Client client)
         {
@@ -24,6 +25,10 @@ namespace OXGaming.TibiaAPI.Network.ClientPackets
             {
                 ItemId = message.ReadUInt16();
                 ItemCount = message.ReadUInt32();
+                if (Client.VersionNumber >= 12200000)
+                {
+                    Unknown = message.ReadByte();
+                }
             }
         }
 
@@ -35,6 +40,10 @@ namespace OXGaming.TibiaAPI.Network.ClientPackets
             {
                 message.Write(ItemId);
                 message.Write(ItemCount);
+                if (Client.VersionNumber >= 12200000)
+                {
+                    message.Write(Unknown);
+                }
             }
         }
     }

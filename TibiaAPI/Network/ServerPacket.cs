@@ -112,6 +112,8 @@ namespace OXGaming.TibiaAPI.Network
                     return new ServerPackets.MissileEffect(client);
                 case ServerPacketType.Trappers:
                     return new ServerPackets.Trappers(client);
+                case ServerPacketType.CreatureUpdate:
+                    return new ServerPackets.CreatureUpdate(client);
                 case ServerPacketType.CreatureHealth:
                     return new ServerPackets.CreatureHealth(client);
                 case ServerPacketType.CreatureLight:

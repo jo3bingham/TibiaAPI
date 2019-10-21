@@ -482,6 +482,7 @@
         RemoveGraphicalEffect = 0x84,
         MissileEffect = 0x85,
         Trappers = 0x87,
+        CreatureUpdate = 0x8B,
         CreatureHealth = 0x8C,
         CreatureLight = 0x8D,
         CreatureOutfit = 0x8E,

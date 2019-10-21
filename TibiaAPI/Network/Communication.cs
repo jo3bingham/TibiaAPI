@@ -197,6 +197,7 @@ namespace OXGaming.TibiaAPI.Network
         public event ReceivedPacketEventHandler OnReceivedServerRemoveGraphicalEffectPacket;
         public event ReceivedPacketEventHandler OnReceivedServerMissileEffectPacket;
         public event ReceivedPacketEventHandler OnReceivedServerTrappersPacket;
+        public event ReceivedPacketEventHandler OnReceivedServerCreatureUpdatePacket;
         public event ReceivedPacketEventHandler OnReceivedServerCreatureHealthPacket;
         public event ReceivedPacketEventHandler OnReceivedServerCreatureLightPacket;
         public event ReceivedPacketEventHandler OnReceivedServerCreatureOutfitPacket;
@@ -960,6 +961,9 @@ namespace OXGaming.TibiaAPI.Network
                             break;
                         case ServerPacketType.Trappers:
                             packet.Forward = OnReceivedServerTrappersPacket?.Invoke(packet) ?? true;
+                            break;
+                        case ServerPacketType.CreatureUpdate:
+                            packet.Forward = OnReceivedServerCreatureUpdatePacket?.Invoke(packet) ?? true;
                             break;
                         case ServerPacketType.CreatureHealth:
                             packet.Forward = OnReceivedServerCreatureHealthPacket?.Invoke(packet) ?? true;
