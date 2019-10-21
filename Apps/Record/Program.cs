@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Collections.Concurrent;
 using System.Diagnostics;
 using System.IO;
 using System.Threading;
@@ -21,9 +21,7 @@ namespace Record
 
     class Program
     {
-        static readonly Queue<Message> _fileWriteQueue = new Queue<Message>();
-
-        static readonly object _queueLock = new object();
+        static readonly ConcurrentQueue<Message> _fileWriteQueue = new ConcurrentQueue<Message>();
 
         static readonly Stopwatch _stopWatch = new Stopwatch();
 
@@ -195,10 +193,7 @@ namespace Record
                 Type = packetType
             };
 
-            lock (_queueLock)
-            {
-                _fileWriteQueue.Enqueue(packetData);
-            }
+            _fileWriteQueue.Enqueue(packetData);
 
             if (!_isWritingToFile)
             {
@@ -219,32 +214,21 @@ namespace Record
         {
             try
             {
-                Message packet = null;
-
-                lock (_queueLock)
+                while (_fileWriteQueue.TryDequeue(out var packet))
                 {
-                    if (_fileWriteQueue.Count > 0)
-                    {
-                        packet = _fileWriteQueue.Dequeue();
-                    }
+                    _binaryWriter.Write((byte)packet.Type);
+                    _binaryWriter.Write(packet.Timestamp);
+                    _binaryWriter.Write(packet.Data.Length);
+                    _binaryWriter.Write(packet.Data);
                 }
-
-                if (packet == null)
-                {
-                    _isWritingToFile = false;
-                    return;
-                }
-
-                _binaryWriter.Write((byte)packet.Type);
-                _binaryWriter.Write(packet.Timestamp);
-                _binaryWriter.Write(packet.Data.Length);
-                _binaryWriter.Write(packet.Data);
-
-                WriteData();
             }
             catch (Exception ex)
             {
                 Console.WriteLine(ex);
+            }
+            finally
+            {
+                _isWritingToFile = false;
             }
         }
     }
