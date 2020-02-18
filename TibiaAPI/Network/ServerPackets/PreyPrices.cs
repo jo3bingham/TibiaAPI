@@ -5,9 +5,13 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
     public class PreyPrices : ServerPacket
     {
         public uint ListRerollPrice { get; set; }
+        public uint TaskRerollPrice { get; set; }
+        public uint UnknownUInt { get; set; }
 
         public byte AutomaticBonusReroll { get; set; }
         public byte LockPrey { get; set; }
+        public byte TaskWildcards { get; set; }
+        public byte UnknownByte { get; set; }
 
         public PreyPrices(Client client)
         {
@@ -22,6 +26,13 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
             {
                 AutomaticBonusReroll = message.ReadByte();
                 LockPrey = message.ReadByte();
+                if (Client.VersionNumber >= 1230000)
+                {
+                    TaskRerollPrice = message.ReadUInt32();
+                    UnknownUInt = message.ReadUInt32();
+                    TaskWildcards = message.ReadByte();
+                    UnknownByte = message.ReadByte();
+                }
             }
         }
 
@@ -33,6 +44,13 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
             {
                 message.Write(AutomaticBonusReroll);
                 message.Write(LockPrey);
+                if (Client.VersionNumber >= 1230000)
+                {
+                    message.Write(TaskRerollPrice);
+                    message.Write(UnknownUInt);
+                    message.Write(TaskWildcards);
+                    message.Write(UnknownByte);
+                }
             }
         }
     }
