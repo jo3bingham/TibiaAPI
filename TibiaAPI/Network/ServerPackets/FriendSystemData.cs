@@ -6,7 +6,7 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
 {
     public class FriendSystemData : ServerPacket
     {
-        public byte Type { get; set; }
+        public FriendSystemDataType DataType { get; set; }
 
         public FriendSystemData(Client client)
         {
@@ -16,13 +16,35 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
 
         public override void ParseFromNetworkMessage(NetworkMessage message)
         {
-            // TODO: Figure out Types 0x00 and 0x07 (if they exist),
-            // and others (if there are any).
-            Type = message.ReadByte();
-            if (Type == 0x01) // New Invitations Pending
+            // TODO: Figure out others DataTypes (if there are any).
+            // 0x09 and above seem to have no purpose.
+            DataType = (FriendSystemDataType)message.ReadByte();
+            if (DataType == FriendSystemDataType.SpecialEvent)
+            {
+                var eventType = message.ReadByte();
+                if (eventType == 0)
+                {
+                    // Error: You need to set a main character to use this feature. [Cancel]
+                }
+                else if (eventType == 1)
+                {
+                    // Error: text [Ok]
+                    var text = message.ReadString();
+                }
+                else if (eventType == 2)
+                {
+                    // Display "No results." in the search tab
+                }
+                else if (eventType >= 3)
+                {
+                    // Clears the search tab and shows the default text if no results are displayed
+                    // Enables the Invite & Blacklist button if results are displayed
+                }
+            }
+            else if (DataType == FriendSystemDataType.InvitationPending)
             {
             }
-            if (Type == 0x02) // Friends
+            else if (DataType == FriendSystemDataType.Friends)
             {
                 var count = message.ReadUInt16();
                 for (var i = 0; i < count; ++i)
@@ -30,32 +52,29 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
                     var accountId = message.ReadUInt32();
                     var playerId = message.ReadUInt32();
                     var name = message.ReadString();
-                    var unknown = message.ReadUInt16();
+                    var title = message.ReadString();
                     var world = message.ReadString();
                     var vocation = message.ReadString();
                     var level = message.ReadUInt16();
                     var outfit = message.ReadCreatureOutfit();
-                    var friendshipLevel = message.ReadByte();
+                    var friendshipLevel = (FriendGroup)message.ReadByte();
                     var timestamp = message.ReadUInt32();
                 }
             }
-            else if (Type == 0x03) // Invitations
+            else if (DataType == FriendSystemDataType.Invitations)
             {
                 var count = message.ReadUInt16();
                 for (var i = 0; i < count; ++i)
                 {
-                    var unknown = message.ReadByte();
-                    if (unknown == 1)
-                    {
-                        var unknown1 = message.ReadUInt32();
-                    }
+                    var isSentInvitation = message.ReadBool();
+                    var accountId = message.ReadUInt32();
                     var invitedName = message.ReadString();
-                    var unknown2 = message.ReadUInt16();
+                    var invitedTitle = message.ReadString();
                     var inviteeName = message.ReadString();
                     var timestamp = message.ReadUInt32();
                 }
             }
-            else if (Type == 0x04) // Blacklist
+            else if (DataType == FriendSystemDataType.Blacklist)
             {
                 var count = message.ReadUInt16();
                 for (var i = 0; i < count; ++i)
@@ -65,21 +84,23 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
                     var timestamp = message.ReadUInt32();
                 }
             }
-            else if (Type == 0x05) // Character Info
+            else if (DataType == FriendSystemDataType.CharacterSearch)
             {
                 var accountId = message.ReadUInt32();
-                var unknown = message.ReadUInt16();
+                var hasPendingInvitation = message.ReadBool();
+                var isBlacklisted = message.ReadBool();
                 var isFriend = message.ReadBool();
                 if (isFriend)
                 {
-                    var unknown1 = message.ReadByte();
+                    var isOnline = message.ReadBool();
                     var lastGameLogin = message.ReadUInt32();
-                    var unknown2 = message.ReadBytes(3);
+                    var isPremium = message.ReadBool();
+                    var loyalityTitle = message.ReadString();
                     var badges = message.ReadByte();
                     for (var i = 0; i < badges; ++i)
                     {
                         var badgeId = message.ReadUInt32();
-                        var badgeName = message.ReadUInt32();
+                        var badgeName = message.ReadString();
                     }
                 }
                 var characters = message.ReadByte();
@@ -88,15 +109,15 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
                     var playerId = message.ReadUInt32();
                     var name = message.ReadString();
                     var isMainCharacter = message.ReadBool();
-                    var unknown3 = message.ReadUInt16();
+                    var title = message.ReadString();
                     var world = message.ReadString();
                     var vocation = message.ReadString();
                     var level = message.ReadUInt16();
-                    var unknown4 = message.ReadByte();
+                    var isOnline = message.ReadBool();
                     var outfit = message.ReadCreatureOutfit();
                 }
             }
-            else if (Type == 0x06) // Badges
+            else if (DataType == FriendSystemDataType.Badges)
             {
                 var count = message.ReadByte();
                 for (var i = 0; i < count; ++i)
@@ -108,12 +129,15 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
                     var displayBadge = message.ReadBool();
                 }
             }
-            else if (Type == 0x08) // Config
+            else if (DataType == FriendSystemDataType.NewFriend)
+            {
+            }
+            else if (DataType == FriendSystemDataType.Config)
             {
                 var count = message.ReadByte();
                 for (var i = 0; i < count; ++i)
                 {
-                    var configId = message.ReadByte();
+                    var configId = (FriendGroup)message.ReadByte();
                     var showCharacterInfo = message.ReadBool();
                     var showAccountInfo = message.ReadBool();
                     var allowInspect = message.ReadBool();
@@ -121,13 +145,14 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
             }
             else
             {
-                throw new Exception($"Invalid Friend System Data: {Type}");
+                throw new Exception($"Invalid Friend System Data: {DataType}");
             }
         }
 
         public override void AppendToNetworkMessage(NetworkMessage message)
         {
             message.Write((byte)ServerPacketType.FriendSystemData);
+            message.Write((byte)DataType);
         }
     }
 }
