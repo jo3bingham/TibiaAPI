@@ -42,10 +42,10 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
         public List<(uint Timestamp, string Description, byte Status)> RecentPvpKills { get; } =
             new List<(uint Timestamp, string Description, byte Status)>();
 
-        public List<(ushort Id, string Name, bool IsPremium, uint Unknown)> Mounts { get; } =
-            new List<(ushort Id, string Name, bool IsPremium, uint Unknown)>();
-        public List<(ushort Id, string Name, byte Addons, bool IsPremium, uint Unknown)> Outfits { get; } =
-            new List<(ushort Id, string Name, byte Addons, bool IsPremium, uint Unknown)>();
+        public List<(ushort Id, string Name, byte Category, uint Unknown)> Mounts { get; } =
+            new List<(ushort Id, string Name, byte Category, uint Unknown)>();
+        public List<(ushort Id, string Name, byte Addons, byte Category, uint Unknown)> Outfits { get; } =
+            new List<(ushort Id, string Name, byte Addons, byte Category, uint Unknown)>();
 
         public List<(byte Type, ushort Level, ushort Base, ushort Loyalty, ushort Progress)> Skills { get; } =
             new List<(byte Type, ushort Level, ushort Base, ushort Loyalty, ushort Progress)>();
@@ -61,18 +61,17 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
 
         public string LoyaltyTitle { get; set; }
         public string PlayerName { get; set; }
+        public String Title { get; set; }
         public string Vocation { get; set; }
 
         public ulong Experience { get; set; }
-        public ulong Unknown4 { get; set; }
 
         public uint CapacityBonus { get; set; }
         public uint CapacityCurrent { get; set; }
         public uint CapacityMax { get; set; }
         public uint RemainingDailyRewardXpBoostTime { get; set; }
         public uint RemainingStoreXpBoostTime { get; set; }
-        public uint Stamina { get; set; }
-        public uint Unknown3 { get; set; }
+        public uint TournamentFactor { get; set; }
 
         public ushort AchievementPoints { get; set; }
         public ushort Armor { get; set; }
@@ -109,7 +108,9 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
         public ushort SecretAchievementsMax { get; set; }
         public ushort SpeedBase { get; set; }
         public ushort SpeedCurrent { get; set; }
-        public ushort StoreXpBoost { get; set; }
+        public ushort Stamina { get; set; }
+        public ushort StoreXpBoostAddend { get; set; }
+        public ushort StoreXpBoostTime { get; set; }
         public ushort Unknown { get; set; }
 
         public byte AttackType { get; set; }
@@ -120,6 +121,7 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
         public byte ConvertedDamageType { get; set; }
         public byte CurrentCharacterTitle { get; set; }
         public byte DetailColor { get; set; }
+        public byte Error { get; set; }
         public byte HeadColor { get; set; }
         public byte InstantRewardAccess { get; set; }
         public byte LegsColor { get; set; }
@@ -130,15 +132,12 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
         public byte Soul { get; set; }
         public byte TorsoColor { get; set; }
         public byte Type { get; set; }
-        public byte Unknown2 { get; set; }
-        public byte Unknown5 { get; set; }
-        public byte Unknown6 { get; set; }
-        public byte Unknown7 { get; set; }
-        public byte Unknown8 { get; set; }
-        public byte Unknown9 { get; set; }
-        public byte Unknown10 { get; set; }
 
-        public bool IsUpToDate { get; set; }
+        public bool HideStamina { get; set; }
+        public bool IsOnline { get; set; }
+        public bool IsPremium { get; set; }
+        public bool ShowAccountInformation { get; set; }
+        public bool ShowPersonalTabs { get; set; }
         public bool ShowStoreXpBoostButton { get; set; }
 
         public CyclopediaCharacterInfo(Client client)
@@ -152,24 +151,28 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
             Type = message.ReadByte();
             if (Client.VersionNumber >= 12158493)
             {
-                IsUpToDate = message.ReadBool();
-                if (IsUpToDate)
+                Error = message.ReadByte();
+                if (Error != 0)
                 {
+                    // 1: No data available at the moment.
+                    // 2: You are not allowed to see this character's data.
+                    // 3: You are not allowed to inspect this character.
                     return;
                 }
             }
-            if (Type == 0)
+            if (Type == 0) // Basic Information
             {
                 PlayerName = message.ReadString();
                 Vocation = message.ReadString();
                 LevelDisplay = message.ReadUInt16();
                 Outfit = message.ReadCreatureOutfit();
-                Unknown2 = message.ReadByte();
+                // This may also indicate Tournament characters
+                HideStamina = message.ReadBool();
                 if (Client.VersionNumber >= 12200000)
                 {
-                    Unknown5 = message.ReadByte();
-                    Unknown6 = message.ReadByte();
-                    Unknown7 = message.ReadByte();
+                    // Shows the Story Summary and Character Titles tabs
+                    ShowPersonalTabs = message.ReadBool();
+                    Title = message.ReadString();
                 }
             }
             else if (Type == 1) // Character Stats
@@ -178,18 +181,19 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
                 Level = message.ReadUInt16();
                 LevelPercent = message.ReadByte();
                 BaseXpGain = message.ReadUInt16();
+                TournamentFactor = message.ReadUInt32();
                 GrindingAddend = message.ReadUInt16();
-                StoreXpBoost = message.ReadUInt16();
+                StoreXpBoostAddend = message.ReadUInt16();
                 HuntingBoostFactor = message.ReadUInt16();
-                Food = message.ReadUInt16();
-                Unknown3 = message.ReadUInt32();
+                StoreXpBoostTime = message.ReadUInt16();
                 ShowStoreXpBoostButton = message.ReadBool();
                 HealthCurrent = message.ReadUInt16();
                 HealthMax = message.ReadUInt16();
                 ManaCurrent = message.ReadUInt16();
                 ManaMax = message.ReadUInt16();
                 Soul = message.ReadByte();
-                Stamina = message.ReadUInt32();
+                Stamina = message.ReadUInt16();
+                Food = message.ReadUInt16();
                 OfflineTrainingTime = message.ReadUInt16();
                 SpeedCurrent = message.ReadUInt16();
                 SpeedBase = message.ReadUInt16();
@@ -316,9 +320,10 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
                     var id = message.ReadUInt16();
                     var name = message.ReadString();
                     var addons = message.ReadByte();
-                    var isPremium = message.ReadBool();
+                    // 0 = Standard, 1 = Quest, 2 = Store
+                    var category = message.ReadByte();
                     var unknown = message.ReadUInt32();
-                    Outfits.Add((id, name, addons, isPremium, unknown));
+                    Outfits.Add((id, name, addons, category, unknown));
                 }
                 HeadColor = message.ReadByte();
                 TorsoColor = message.ReadByte();
@@ -330,9 +335,10 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
                 {
                     var id = message.ReadUInt16();
                     var name = message.ReadString();
-                    var isPremium = message.ReadBool();
+                    // 0 = Standard, 1 = Quest, 2 = Store
+                    var category = message.ReadByte();
                     var unknown = message.ReadUInt32();
-                    Mounts.Add((id, name, isPremium, unknown));
+                    Mounts.Add((id, name, category, unknown));
                 }
             }
             else if (Type == 8) // Store Summary
@@ -406,11 +412,11 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
             }
             else if (Type == 10) // Badges
             {
-                Unknown8 = message.ReadByte();
-                if (Unknown8 != 0)
+                ShowAccountInformation = message.ReadBool();
+                if (ShowAccountInformation)
                 {
-                    Unknown9 = message.ReadByte();
-                    Unknown10 = message.ReadByte();
+                    IsOnline = message.ReadBool();
+                    IsPremium = message.ReadBool();
                     LoyaltyTitle = message.ReadString();
                     Badges.Capacity = message.ReadByte();
                     for (var i = 0; i < Badges.Capacity; ++i)
@@ -443,8 +449,8 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
             message.Write(Type);
             if (Client.VersionNumber >= 12158493)
             {
-                message.Write(IsUpToDate);
-                if (IsUpToDate)
+                message.Write(Error);
+                if (Error != 0)
                 {
                     return;
                 }
@@ -463,12 +469,11 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
                     message.Write((ushort)0);
                     message.Write((ushort)Outfit.Id);
                 }
-                message.Write(Unknown2);
+                message.Write(HideStamina);
                 if (Client.VersionNumber > 12200000)
                 {
-                    message.Write(Unknown5);
-                    message.Write(Unknown6);
-                    message.Write(Unknown7);
+                    message.Write(ShowPersonalTabs);
+                    message.Write(Title);
                 }
             }
             else if (Type == 1)
@@ -477,11 +482,11 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
                 message.Write(Level);
                 message.Write(LevelPercent);
                 message.Write(BaseXpGain);
+                message.Write(TournamentFactor);
                 message.Write(GrindingAddend);
-                message.Write(StoreXpBoost);
+                message.Write(StoreXpBoostAddend);
                 message.Write(HuntingBoostFactor);
-                message.Write(Food);
-                message.Write(Unknown3);
+                message.Write(StoreXpBoostTime);
                 message.Write(ShowStoreXpBoostButton);
                 message.Write(HealthCurrent);
                 message.Write(HealthMax);
@@ -489,6 +494,7 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
                 message.Write(ManaMax);
                 message.Write(Soul);
                 message.Write(Stamina);
+                message.Write(Food);
                 message.Write(OfflineTrainingTime);
                 message.Write(SpeedCurrent);
                 message.Write(SpeedBase);
@@ -731,11 +737,11 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
             }
             else if (Type == 10) // Badges
             {
-                message.Write(Unknown8);
-                if (Unknown8 != 0)
+                message.Write(ShowAccountInformation);
+                if (ShowAccountInformation)
                 {
-                    message.Write(Unknown9);
-                    message.Write(Unknown10);
+                    message.Write(IsOnline);
+                    message.Write(IsPremium);
                     message.Write(LoyaltyTitle);
                     var count = Math.Min(Badges.Count, byte.MaxValue);
                     message.Write((byte)count);
