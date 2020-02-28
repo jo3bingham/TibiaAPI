@@ -195,6 +195,27 @@
         SetCurrentArea = 10
     }
 
+    public enum FriendSystemDataType
+    {
+        SpecialEvent = 0,
+        InvitationPending = 1,
+        Friends = 2,
+        Invitations = 3,
+        Blacklist = 4,
+        CharacterSearch = 5,
+        Badges = 6,
+        NewFriend = 7,
+        Config = 8
+    }
+
+    public enum FriendGroup
+    {
+        Others = 0,
+        Contacts = 1,
+        Friends = 2,
+        CloseFriends = 3
+    }
+
     public enum MarketDetailField
     {
         Armor = 0,
