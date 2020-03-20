@@ -391,13 +391,10 @@ namespace OXGaming.TibiaAPI.Network
                         var removeCreatureId = ReadUInt32();
                         var creatureId = ReadUInt32();
 
-                        //creature = (creatureId == _client.Player.Id) ? _client.Player : new Creature(creatureId);
-                        creature = new Creature(creatureId)
-                        {
-                            Type = (CreatureType)ReadByte(),
-                            RemoveCreatureId = removeCreatureId,
-                            InstanceType = (CreatureInstanceType)id
-                        };
+                        creature = (creatureId == _client.Player.Id) ? _client.Player : new Creature(creatureId);
+                        creature.Type = (CreatureType)ReadByte();
+                        creature.RemoveCreatureId = removeCreatureId;
+                        creature.InstanceType = (CreatureInstanceType)id;
 
                         creature = _client.CreatureStorage.ReplaceCreature(creature, creature.RemoveCreatureId);
                         if (creature == null)

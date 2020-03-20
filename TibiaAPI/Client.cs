@@ -14,6 +14,8 @@ namespace OXGaming.TibiaAPI
 
         public WorldMap.WorldMapStorage WorldMapStorage { get; } = new WorldMap.WorldMapStorage();
 
+        public Creatures.Creature Player { get; } = new Creatures.Creature(0, Constants.CreatureType.Player);
+
         public Network.Connection Connection { get; }
 
         public Utilities.Logger Logger { get; } = new Utilities.Logger();

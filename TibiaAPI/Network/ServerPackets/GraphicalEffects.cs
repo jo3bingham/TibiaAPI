@@ -23,7 +23,7 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
         public override void ParseFromNetworkMessage(NetworkMessage message)
         {
             Position = message.ReadPosition();
-            if (Client.VersionNumber < 12000000)
+            if (Client.VersionNumber <= 12007695)
             {
                 Effect = message.ReadByte();
             }

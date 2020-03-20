@@ -78,7 +78,8 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
                 case MessageModeType.OfflineTraining:
                     break;
                 default:
-                    throw new Exception($"Invalid MessageMode: {MessageMode}");
+                    Client.Logger.Warning($"[ServerPackets.Message.ParseFromNetworkMessage] Invalid MessageMode: {MessageMode}");
+                    break;
             }
             Text = message.ReadString();
         }
@@ -134,7 +135,8 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
                 case MessageModeType.BoostedCreature:
                     break;
                 default:
-                    throw new Exception($"Invalid MessageMode: {MessageMode}");
+                    Client.Logger.Warning($"[ServerPackets.Message.AppendToNetworkMessage] Invalid MessageMode: {MessageMode}");
+                    break;
             }
             message.Write(Text);
         }
