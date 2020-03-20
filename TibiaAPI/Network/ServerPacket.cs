@@ -202,6 +202,8 @@ namespace OXGaming.TibiaAPI.Network
                     return new ServerPackets.BestiaryTracker(client);
                 case ServerPacketType.PreyHuntingTaskBaseData:
                     return new ServerPackets.PreyHuntingTaskBaseData(client);
+                case ServerPacketType.PreyHuntingTaskData:
+                    return new ServerPackets.PreyHuntingTaskData(client);
                 case ServerPacketType.TopFloor:
                     return new ServerPackets.TopFloor(client);
                 case ServerPacketType.BottomFloor:

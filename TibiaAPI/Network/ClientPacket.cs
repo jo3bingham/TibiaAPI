@@ -34,6 +34,8 @@ namespace OXGaming.TibiaAPI.Network
                     return new ClientPackets.StashAction(client);
                 case ClientPacketType.DepotSearchRetrieve:
                     return new ClientPackets.DepotSearchRetrieve(client);
+                case ClientPacketType.TrackBestiaryRace:
+                    return new ClientPackets.TrackBestiaryRace(client);
                 case ClientPacketType.ClientCheck:
                     return new ClientPackets.ClientCheck(client);
                 case ClientPacketType.GoPath:

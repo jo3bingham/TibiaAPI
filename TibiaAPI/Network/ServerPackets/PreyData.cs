@@ -46,6 +46,8 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
                         UnlockOption = message.ReadByte(); // 0 = temporary and permanent, 1 = permanent
                     }
                     break;
+                case PreyDataState.Inactive:
+                    break;
                 case PreyDataState.Active:
                     {
                         Name = message.ReadString();
@@ -95,6 +97,10 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
                         }
                     }
                     break;
+                default:
+                    {
+                        throw new Exception($"[PreyData.ParseFromNetworkMessage] Unknown state: {State}");
+                    }
             }
 
             TimeLeftUntilFreeListReroll = message.ReadUInt16();
@@ -196,7 +202,7 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
                     break;
                 default:
                     {
-                        throw new Exception($"[PreyData.ParseFromNetworkMessage] Unknown state: {State}");
+                        throw new Exception($"[PreyData.AppendToNetworkMessage] Unknown state: {State}");
                     }
             }
             message.Write(TimeLeftUntilFreeListReroll);

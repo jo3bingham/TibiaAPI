@@ -1,9 +1,12 @@
 ﻿using OXGaming.TibiaAPI.Constants;
+using OXGaming.TibiaAPI.Utilities;
 
 namespace OXGaming.TibiaAPI.Network.ClientPackets
 {
     public class StashAction : ClientPacket
     {
+        public Position Position { get; set; }
+
         public uint ItemCount { get; set; }
 
         public ushort ItemId { get; set; }
@@ -21,7 +24,15 @@ namespace OXGaming.TibiaAPI.Network.ClientPackets
         {
             StashType = message.ReadByte();
             // TODO: Are there more stash types? 3 = retrieve?
-            if (StashType == 3)
+            if (StashType == 1)
+            {
+                // This hasn't been validated as 100% accurate.
+                // Based on the following data: 01 FF FF 40 00 0A 3D 17 0A
+                Position = message.ReadPosition();
+                ItemId = message.ReadUInt16();
+                Unknown = message.ReadByte();
+            }
+            else if (StashType == 3)
             {
                 ItemId = message.ReadUInt16();
                 ItemCount = message.ReadUInt32();
@@ -36,7 +47,13 @@ namespace OXGaming.TibiaAPI.Network.ClientPackets
         {
             message.Write((byte)ClientPacketType.StashAction);
             message.Write(StashType);
-            if (StashType == 3)
+            if (StashType == 1)
+            {
+                message.Write(Position);
+                message.Write(ItemId);
+                message.Write(Unknown);
+            }
+            else if (StashType == 3)
             {
                 message.Write(ItemId);
                 message.Write(ItemCount);
