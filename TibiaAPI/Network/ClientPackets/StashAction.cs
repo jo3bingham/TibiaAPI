@@ -24,7 +24,7 @@ namespace OXGaming.TibiaAPI.Network.ClientPackets
         {
             StashType = message.ReadByte();
             // TODO: Are there more stash types? 3 = retrieve?
-            if (StashType == 1)
+            if (StashType == 1 || StashType == 2)
             {
                 // This hasn't been validated as 100% accurate.
                 // Based on the following data: 01 FF FF 40 00 0A 3D 17 0A
