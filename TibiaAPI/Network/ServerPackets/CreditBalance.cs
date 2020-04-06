@@ -4,10 +4,9 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
 {
     public class CreditBalance : ServerPacket
     {
-        public uint Unknown { get; set; }
-
         public int TransferableTibiaCoins { get; set; }
         public int TotalTibiaCoins { get; set; }
+        public int TournamentCoins { get; set; }
 
         public bool UpdateCreditBalance { get; set; }
 
@@ -26,7 +25,7 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
                 TransferableTibiaCoins = message.ReadInt32();
                 if (Client.VersionNumber >= 12158493)
                 {
-                    Unknown = message.ReadUInt32();
+                    TournamentCoins = message.ReadInt32();
                 }
             }
         }
@@ -41,7 +40,7 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
                 message.Write(TransferableTibiaCoins);
                 if (Client.VersionNumber >= 12158493)
                 {
-                    message.Write(Unknown);
+                    message.Write(TournamentCoins);
                 }
             }
         }
