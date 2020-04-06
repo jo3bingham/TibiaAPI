@@ -1,5 +1,7 @@
-﻿using OXGaming.TibiaAPI.Constants;
+﻿using System;
 using System.Collections.Generic;
+
+using OXGaming.TibiaAPI.Constants;
 
 namespace OXGaming.TibiaAPI.Network.ServerPackets
 {
@@ -40,8 +42,7 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
                 MemberInfo.Add((playerId, unknown, loot, supplies, damage, health));
             }
             // I'm not sure the purpose of this? Not because it's not always present,
-            // but because players who have already been sent previously can appear
-            // again and it's not always present.
+            // but because players who have already been sent previously can appear again.
             HasNames = message.ReadBool();
             if (HasNames)
             {
@@ -58,6 +59,33 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
         public override void AppendToNetworkMessage(NetworkMessage message)
         {
             message.Write((byte)ServerPacketType.PartyHuntAnalyser);
+            message.Write(SessionMinutes);
+            message.Write(LeaderId);
+            message.Write(Unknown);
+            var count = Math.Min(byte.MaxValue, MemberInfo.Count);
+            message.Write((byte)count);
+            for (var i = 0; i < count; ++i)
+            {
+                var (PlayerId, Unknown, Loot, Supplies, Damage, Health) = MemberInfo[i];
+                message.Write(PlayerId);
+                message.Write(Unknown);
+                message.Write(Loot);
+                message.Write(Supplies);
+                message.Write(Damage);
+                message.Write(Health);
+            }
+            message.Write(HasNames);
+            if (HasNames)
+            {
+                count = Math.Min(byte.MaxValue, Members.Count);
+                message.Write((byte)count);
+                for (var i = 0; i < count; ++i)
+                {
+                    var (PlayerId, Name) = Members[i];
+                    message.Write(PlayerId);
+                    message.Write(Name);
+                }
+            }
         }
     }
 }
