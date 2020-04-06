@@ -284,8 +284,10 @@
         Market = 42,
         Mana = 43,
         BeyondLast = 44,
+        Attention = 48,
         BoostedCreature = 49,
         OfflineTraining = 50,
+        Transaction = 51,
         Potion = 52
     }
 
