@@ -76,6 +76,7 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
                 case MessageModeType.Report:
                 case MessageModeType.BoostedCreature:
                 case MessageModeType.OfflineTraining:
+                case MessageModeType.Transaction:
                     break;
                 default:
                     throw new Exception($"Invalid MessageMode: {MessageMode}");
@@ -132,6 +133,7 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
                 case MessageModeType.Market:
                 case MessageModeType.Report:
                 case MessageModeType.BoostedCreature:
+                case MessageModeType.Transaction:
                     break;
                 default:
                     throw new Exception($"Invalid MessageMode: {MessageMode}");

@@ -72,6 +72,7 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
         public byte SelectedVocation { get; set; }
         public byte Type { get; set; }
         public byte Tickets { get; set; }
+        public byte Unknown { get; set; }
 
         public bool HasClaimedVoucher { get; set; }
         public bool HasRegularCharacter { get; set; }
@@ -187,6 +188,10 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
                     RestrictedPlaytime = message.ReadUInt32();
                     RestrictedDeaths = message.ReadUInt32();
                 }
+            }
+            else if (Type == 5)
+            {
+                Unknown = message.ReadByte();
             }
         }
 
@@ -315,6 +320,10 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
                     message.Write(RestrictedPlaytime);
                     message.Write(RestrictedDeaths);
                 }
+            }
+            else if (Type == 5)
+            {
+                message.Write(Unknown);
             }
         }
     }

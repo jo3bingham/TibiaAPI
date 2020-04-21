@@ -16,6 +16,8 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
 
         public string PlayerName { get; set; }
 
+        public byte Unknown { get; set; }
+
         public bool IsPlayer { get; set; }
 
         public InspectionList(Client client)
@@ -26,6 +28,11 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
 
         public override void ParseFromNetworkMessage(NetworkMessage message)
         {
+            if (Client.VersionNumber >= 12300000)
+            {
+                Unknown = message.ReadByte();
+            }
+
             IsPlayer = message.ReadBool();
 
             Items.Capacity = message.ReadByte();
@@ -70,6 +77,12 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
         public override void AppendToNetworkMessage(NetworkMessage message)
         {
             message.Write((byte)ServerPacketType.InspectionList);
+
+            if (Client.VersionNumber >= 12300000)
+            {
+                message.Write(Unknown);
+            }
+
             message.Write(IsPlayer);
 
             var count = Math.Min(Items.Count, byte.MaxValue);
