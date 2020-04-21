@@ -10,7 +10,7 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
         public double SpeedB { get; set; }
         public double SpeedC { get; set; }
 
-        public int PlayerId { get; set; }
+        public uint PlayerId { get; set; }
 
         public ushort BeatDuration { get; set; }
 
@@ -31,7 +31,12 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
 
         public override void ParseFromNetworkMessage(NetworkMessage message)
         {
-            PlayerId = message.ReadInt32();
+            PlayerId = message.ReadUInt32();
+            if (Client.Player.Id != PlayerId)
+            {
+                Client.CreatureStorage.Reset();
+            }
+            Client.Player.Id = PlayerId;
             BeatDuration = message.ReadUInt16();
             SpeedA = message.ReadDouble();
             SpeedB = message.ReadDouble();

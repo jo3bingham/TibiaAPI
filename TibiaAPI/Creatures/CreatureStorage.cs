@@ -6,9 +6,9 @@ namespace OXGaming.TibiaAPI.Creatures
 {
     public class CreatureStorage
     {
-        private const int MaxCreaturesCount = 1300;
+        private const int MaxCreaturesCount = 2600;
 
-        private readonly List<Creature> _creatures = new List<Creature>();
+        private readonly List<Creature> _creatures = new List<Creature>(MaxCreaturesCount);
 
         public void Reset()
         {
