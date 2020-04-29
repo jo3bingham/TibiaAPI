@@ -44,6 +44,8 @@ namespace OXGaming.TibiaAPI.Network
                     return new ServerPackets.Stash(client);
                 case ServerPacketType.DepotTileState:
                     return new ServerPackets.DepotTileState(client);
+                case ServerPacketType.PartyHuntAnalyser:
+                    return new ServerPackets.PartyHuntAnalyser(client);
                 case ServerPacketType.SpecialContainersAvailable:
                     return new ServerPackets.SpecialContainersAvailable(client);
                 case ServerPacketType.ClientCheck:
@@ -198,6 +200,12 @@ namespace OXGaming.TibiaAPI.Network
                     return new ServerPackets.UnjustifiedPoints(client);
                 case ServerPacketType.PvpSituations:
                     return new ServerPackets.PvpSituations(client);
+                case ServerPacketType.BestiaryTracker:
+                    return new ServerPackets.BestiaryTracker(client);
+                case ServerPacketType.PreyHuntingTaskBaseData:
+                    return new ServerPackets.PreyHuntingTaskBaseData(client);
+                case ServerPacketType.PreyHuntingTaskData:
+                    return new ServerPackets.PreyHuntingTaskData(client);
                 case ServerPacketType.TopFloor:
                     return new ServerPackets.TopFloor(client);
                 case ServerPacketType.BottomFloor:
@@ -206,10 +214,14 @@ namespace OXGaming.TibiaAPI.Network
                     return new ServerPackets.UpdateLootContainers(client);
                 case ServerPacketType.PlayerDataTournament:
                     return new ServerPackets.PlayerDataTournament(client);
-                case ServerPacketType.TournamentLeaderboard:
-                    return new ServerPackets.TournamentLeaderboard(client);
                 case ServerPacketType.TournamentInformation:
                     return new ServerPackets.TournamentInformation(client);
+                case ServerPacketType.TournamentLeaderboard:
+                    return new ServerPackets.TournamentLeaderboard(client);
+                case ServerPacketType.CyclopediaStaticHouseData:
+                    return new ServerPackets.CyclopediaStaticHouseData(client);
+                case ServerPacketType.CyclopediaCurrentHouseData:
+                    return new ServerPackets.CyclopediaCurrentHouseData(client);
                 case ServerPacketType.Outfit:
                     return new ServerPackets.Outfit(client);
                 case ServerPacketType.ExivaSuppressed:

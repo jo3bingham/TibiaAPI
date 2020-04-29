@@ -34,6 +34,8 @@ namespace OXGaming.TibiaAPI.Network
                     return new ClientPackets.StashAction(client);
                 case ClientPacketType.DepotSearchRetrieve:
                     return new ClientPackets.DepotSearchRetrieve(client);
+                case ClientPacketType.TrackBestiaryRace:
+                    return new ClientPackets.TrackBestiaryRace(client);
                 case ClientPacketType.ClientCheck:
                     return new ClientPackets.ClientCheck(client);
                 case ClientPacketType.GoPath:
@@ -168,6 +170,8 @@ namespace OXGaming.TibiaAPI.Network
                     return new ClientPackets.InviteToChannel(client);
                 case ClientPacketType.ExcludeFromChannel:
                     return new ClientPackets.ExcludeFromChannel(client);
+                case ClientPacketType.CyclopediaHouseAction:
+                    return new ClientPackets.CyclopediaHouseAction(client);
                 case ClientPacketType.Cancel:
                     return new ClientPackets.Cancel(client);
                 case ClientPacketType.TournamentInformation:
