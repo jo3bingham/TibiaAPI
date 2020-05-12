@@ -444,6 +444,7 @@ namespace Extract
                             return true;
                         };
 
+                        var packetCount = 0;
                         var startTimestamp = long.MinValue;
                         while (reader.BaseStream.Position < reader.BaseStream.Length)
                         {
@@ -452,7 +453,13 @@ namespace Extract
                             {
                                 packetType = (PacketType)reader.ReadByte();
                                 var timestamp = reader.ReadInt64();
-                                if (startTimestamp == long.MinValue)
+                                // Converted recordings lack a timestamp, so we need to make an artificial one.
+                                if (timestamp == 0)
+                                {
+                                    packetCount++;
+                                    timestamp = packetCount * 100;
+                                }
+                                else if (startTimestamp == long.MinValue)
                                 {
                                     startTimestamp = timestamp;
                                 }
