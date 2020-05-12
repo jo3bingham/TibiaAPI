@@ -148,6 +148,7 @@ namespace Extract
                                 if (!long.TryParse(splitArg[1], out _timestamp))
                                 {
                                     Console.WriteLine($"{splitArg[1]} is not a valid timestamp!");
+                                    return false;
                                 }
                             }
                             break;
