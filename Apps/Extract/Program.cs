@@ -40,7 +40,7 @@ namespace Extract
         private static string _recording;
         private static string _tibiaDirectory = string.Empty;
 
-        private static long _timestamp = long.MaxValue;
+        private static ulong _timestamp = ulong.MaxValue;
 
         private static bool _convertToNewFormat = false;
         private static bool _extractItemData = false;
@@ -145,7 +145,7 @@ namespace Extract
                         case "--time":
                         case "--timestamp":
                             {
-                                if (!long.TryParse(splitArg[1], out _timestamp))
+                                if (!ulong.TryParse(splitArg[1], out _timestamp))
                                 {
                                     Console.WriteLine($"{splitArg[1]} is not a valid timestamp!");
                                     return false;
@@ -445,7 +445,7 @@ namespace Extract
                         };
 
                         var packetCount = 0;
-                        var startTimestamp = long.MinValue;
+                        var startTimestamp = ulong.MinValue;
                         while (reader.BaseStream.Position < reader.BaseStream.Length)
                         {
                             var packetType = PacketType.Server;
@@ -459,11 +459,11 @@ namespace Extract
                                     packetCount++;
                                     timestamp = packetCount * 100;
                                 }
-                                else if (startTimestamp == long.MinValue)
+                                else if (startTimestamp == ulong.MinValue)
                                 {
-                                    startTimestamp = timestamp;
+                                    startTimestamp = (ulong)timestamp;
                                 }
-                                var elapsed = (timestamp - startTimestamp) / 1000;
+                                var elapsed = ((ulong)timestamp - startTimestamp) / 1000;
                                 if (elapsed >= _timestamp)
                                 {
                                     break;
