@@ -84,6 +84,15 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
                         }
                     }
                     break;
+                case PreyDataState.ListSelection:
+                    {
+                        RaceIds.Capacity = message.ReadUInt16();
+                        for (var i = 0; i < RaceIds.Capacity; ++i)
+                        {
+                            RaceIds.Add(message.ReadUInt16());
+                        }
+                    }
+                    break;
                 case PreyDataState.WildcardSelection:
                     {
                         BonusType = message.ReadByte(); // 0 = damage, 1 = defense, 2 = exp, 3 = loot
@@ -183,6 +192,16 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
                                 message.Write((ushort)0);
                                 message.Write((ushort)prey.Outfit.Id);
                             }
+                        }
+                    }
+                    break;
+                case PreyDataState.ListSelection:
+                    {
+                        var count = Math.Min(RaceIds.Count, ushort.MaxValue);
+                        message.Write((ushort)count);
+                        for (var i = 0; i < count; ++i)
+                        {
+                            message.Write(RaceIds[i]);
                         }
                     }
                     break;

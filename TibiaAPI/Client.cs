@@ -20,8 +20,6 @@ namespace OXGaming.TibiaAPI
 
         public Utilities.Logger Logger { get; } = new Utilities.Logger();
 
-        public Creatures.Creature Player { get; } = new Creatures.Creature(0);
-
         public string Version { get; private set; }
 
         public uint VersionNumber { get; private set; } = 0;

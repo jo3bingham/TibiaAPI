@@ -384,13 +384,14 @@ namespace Watch
                 {
                     var lastTimestamp = 0L;
                     var version = reader.ReadString();
+                    var sequenceNumber = 0U;
                     while (reader.BaseStream.Position < reader.BaseStream.Length && !_userQuit)
                     {
                         var packetType = (PacketType)reader.ReadByte();
                         var timestamp = reader.ReadInt64();
                         var size = reader.ReadUInt32();
                         var packetSize = reader.ReadUInt16();
-                        var sequenceNumber = reader.ReadUInt32();
+                        var _sequenceNumber = reader.ReadUInt32();
                         var data = reader.ReadBytes((int)size - 6);
 
                         if (packetType == PacketType.Client || data[2] == (byte)ServerPacketType.LoginChallenge)
@@ -400,7 +401,7 @@ namespace Watch
 
                         var message = new NetworkMessage(_client)
                         {
-                            SequenceNumber = sequenceNumber
+                            SequenceNumber = sequenceNumber++
                         };
                         message.Write(data, 2, (uint)(data.Length - 2));
 
