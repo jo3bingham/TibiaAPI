@@ -25,7 +25,7 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
         {
             CreatureId = message.ReadUInt32();
             Type = message.ReadByte();
-            if (Type == 0x00) // Outdated Creature
+            if (Type == 0x00)
             {
                 var id = message.ReadUInt16();
                 if (id == (ushort)CreatureInstanceType.UnknownCreature)
@@ -126,10 +126,61 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
             message.Write((byte)ServerPacketType.CreatureUpdate);
             message.Write(CreatureId);
             message.Write(Type);
-            if (Type == 0x00 && Creature != null) // Outdated Creature
+            if (Type == 0x00 && Creature != null)
             {
                 message.Write((ushort)Creature.InstanceType);
-                if (Creature.InstanceType == CreatureInstanceType.OutdatedCreature)
+                if (Creature.InstanceType == CreatureInstanceType.UnknownCreature)
+                {
+                    message.Write(Creature.RemoveCreatureId);
+                    message.Write(Creature.Id);
+                    message.Write((byte)Creature.Type);
+                    if (Creature.IsSummon)
+                    {
+                        message.Write(Creature.SummonerCreatureId);
+                    }
+
+                    message.Write(Creature.Name);
+                    message.Write(Creature.HealthPercent);
+                    message.Write((byte)Creature.Direction);
+
+                    if (Creature.Outfit is OutfitInstance)
+                    {
+                        message.Write((OutfitInstance)Creature.Outfit);
+                    }
+                    else
+                    {
+                        message.Write((ushort)0);
+                        message.Write((ushort)Creature.Outfit.Id);
+                    }
+
+                    message.Write((ushort)Creature.Mount.Id);
+                    message.Write(Creature.Brightness);
+                    message.Write(Creature.LightColor);
+                    message.Write(Creature.Speed);
+                    message.Write(Creature.PkFlag);
+                    message.Write(Creature.PartyFlag);
+                    message.Write(Creature.GuildFlag);
+
+                    message.Write((byte)Creature.Type);
+                    if (Creature.Type == Constants.CreatureType.Player)
+                    {
+                        message.Write(Creature.Vocation);
+                    }
+                    else if (Creature.IsSummon)
+                    {
+                        message.Write(Creature.SummonerCreatureId);
+                    }
+
+                    message.Write(Creature.SpeechCategory);
+                    message.Write(Creature.Mark);
+                    message.Write(Creature.InspectionState);
+                    if (Client.VersionNumber < 11900000)
+                    {
+                        message.Write(Creature.PvpHelpers);
+                    }
+                    message.Write(Creature.IsUnpassable);
+                }
+                else if (Creature.InstanceType == CreatureInstanceType.OutdatedCreature)
                 {
                     message.Write(Creature.Id);
                     message.Write(Creature.HealthPercent);
