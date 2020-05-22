@@ -129,7 +129,7 @@
         Active = 2,
         Selection = 3,
         SelectionChangeMonster = 4,
-        Unknown = 5,
+        ListSelection = 5,
         WildcardSelection = 6
     }
 
