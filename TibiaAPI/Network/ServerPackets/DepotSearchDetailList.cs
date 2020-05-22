@@ -33,7 +33,7 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
             for (var i = 0; i < DepotDisplayItems.Capacity; ++i)
             {
                 var itemId = message.ReadUInt16();
-                var amount = message.ReadByte();
+                var amount = Client.VersionNumber < 12319667 ? message.ReadByte() : byte.MinValue;
                 DepotDisplayItems.Add((itemId, amount));
             }
             InboxItemCount = message.ReadUInt32();
@@ -41,14 +41,14 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
             for (var i = 0; i < InboxDisplayItems.Capacity; ++i)
             {
                 var itemId = message.ReadUInt16();
-                var amount = message.ReadByte();
+                var amount = Client.VersionNumber < 12319667 ? message.ReadByte() : byte.MinValue;
                 InboxDisplayItems.Add((itemId, amount));
             }
             ContainsSupplyStashItem = message.ReadBool();
             if (ContainsSupplyStashItem)
             {
                 var itemId = message.ReadUInt16();
-                var amount = message.ReadUInt32();
+                var amount = Client.VersionNumber < 12319667 ? message.ReadByte() : byte.MinValue;
                 SupplyStashItem = (itemId, amount);
             }
         }
