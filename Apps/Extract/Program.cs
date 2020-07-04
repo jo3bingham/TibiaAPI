@@ -40,6 +40,8 @@ namespace Extract
         private static string _recording;
         private static string _tibiaDirectory = string.Empty;
 
+        private static ulong _timestamp = ulong.MaxValue;
+
         private static bool _convertToNewFormat = false;
         private static bool _extractItemData = false;
         private static bool _extractMapData = false;
@@ -94,6 +96,9 @@ namespace Extract
                                     "If this parameter is not specified, and an OXR file is being used, " +
                                     "the Extract app will first try to find the equivalent client version in the ClientData folder. " +
                                     "Otherwise, it will use the default path CipSoft uses upon installation.\n");
+                                Console.WriteLine("[optional] --time=<seconds> or --timestamp=<seconds>: " +
+                                    "<seconds> is the number of seconds from the start of the recording to stop extraction." +
+                                    "If this is not specified, extraction will run until the end of the recording.");
 
                                 Console.WriteLine("[optional] --loglevel=[debug,info,warning,error,disabled]: " +
                                     "Sets the log level within the API. Default: error");
@@ -135,6 +140,16 @@ namespace Extract
                         case "--tibiadirectory":
                             {
                                 _tibiaDirectory = splitArg[1].Replace("\"", "");
+                            }
+                            break;
+                        case "--time":
+                        case "--timestamp":
+                            {
+                                if (!ulong.TryParse(splitArg[1], out _timestamp))
+                                {
+                                    Console.WriteLine($"{splitArg[1]} is not a valid timestamp!");
+                                    return false;
+                                }
                             }
                             break;
                         case "--loglevel":
@@ -429,6 +444,8 @@ namespace Extract
                             return true;
                         };
 
+                        var packetCount = 0;
+                        var startTimestamp = ulong.MinValue;
                         while (reader.BaseStream.Position < reader.BaseStream.Length)
                         {
                             var packetType = PacketType.Server;
@@ -436,6 +453,21 @@ namespace Extract
                             {
                                 packetType = (PacketType)reader.ReadByte();
                                 var timestamp = reader.ReadInt64();
+                                // Converted recordings lack a timestamp, so we need to make an artificial one.
+                                if (timestamp == 0)
+                                {
+                                    packetCount++;
+                                    timestamp = packetCount * 100;
+                                }
+                                else if (startTimestamp == ulong.MinValue)
+                                {
+                                    startTimestamp = (ulong)timestamp;
+                                }
+                                var elapsed = ((ulong)timestamp - startTimestamp) / 1000;
+                                if (elapsed >= _timestamp)
+                                {
+                                    break;
+                                }
                             }
 
                             var size = reader.ReadUInt32();
