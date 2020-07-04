@@ -294,16 +294,15 @@ namespace Watch
                 var worldName = Encoding.UTF8.GetString(_clientBuffer, 0, count - 1);
                 if (!worldName.Equals(OxWorldName, StringComparison.CurrentCultureIgnoreCase))
                 {
-                    throw new Exception($"World name does not match {OxWorldName}: {worldName}.");
+                    throw new Exception($"World name does not match `{OxWorldName}`: {worldName}");
                 }
 
                 var loginChallengeMessage = new NetworkMessage(_client)
                 {
                     SequenceNumber = 0
                 };
-                // null should never be passed for the Client parameter in a packet constructor,
-                // however, the LoginChallenge packet never uses it so it's safe here.
-                var loginChallengePacket = new LoginChallenge(null)
+
+                var loginChallengePacket = new LoginChallenge(_client)
                 {
                     Timestamp = (uint)DateTime.Now.Subtract(new DateTime(1970, 1, 1, 0, 0, 0)).TotalSeconds,
                     Random = 0xFF
@@ -326,14 +325,12 @@ namespace Watch
             {
                 if (_clientSocket == null)
                 {
-                    Console.WriteLine("Not good #1");
                     return;
                 }
 
                 var count = _clientSocket.EndReceive(ar);
                 if (count <= 0)
                 {
-                    Console.WriteLine("Not good #2");
                     return;
                 }
 

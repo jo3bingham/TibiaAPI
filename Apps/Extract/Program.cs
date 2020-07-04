@@ -7,6 +7,7 @@ using System.Xml;
 using OXGaming.TibiaAPI;
 using OXGaming.TibiaAPI.Constants;
 using OXGaming.TibiaAPI.Network;
+using OXGaming.TibiaAPI.Network.ClientPackets;
 using OXGaming.TibiaAPI.Network.ServerPackets;
 using OXGaming.TibiaAPI.Utilities;
 
@@ -28,7 +29,10 @@ namespace Extract
 
         private static FileStream _otbmFile;
 
+        private static Look _lastLookItemPacket;
+
         private static StreamWriter _itemFile;
+        private static StreamWriter _lookItemTextFile;
         private static StreamWriter _monsterFile;
         private static StreamWriter _npcFile;
 
@@ -36,14 +40,15 @@ namespace Extract
 
         private static Logger.LogOutput _logOutput = Logger.LogOutput.Console;
 
+        private static string _currentFilename;
         private static string _outDirectory;
         private static string _recording;
         private static string _tibiaDirectory = string.Empty;
 
         private static ulong _timestamp = ulong.MaxValue;
 
-        private static bool _convertToNewFormat = false;
         private static bool _extractItemData = false;
+        private static bool _extractLookItemText = false;
         private static bool _extractMapData = false;
         private static bool _extractMonsterData = false;
         private static bool _extractNpcData = false;
@@ -57,14 +62,14 @@ namespace Extract
                 {
                     switch (splitArg[0])
                     {
-                        case "--convert":
-                            {
-                                _convertToNewFormat = true;
-                            }
-                            break;
                         case "--items":
                             {
                                 _extractItemData = true;
+                            }
+                            break;
+                        case "--lookitemtext":
+                            {
+                                _extractLookItemText = true;
                             }
                             break;
                         case "--map":
@@ -108,8 +113,8 @@ namespace Extract
 
                                 Console.WriteLine("The following options can be combined to extract multiple data sets at once, or individually, " +
                                     "but at least one option must be specified or the extraction process won't proceed.\n");
-                                Console.WriteLine("--convert: Used for converting an old recording (.dat) to the new format (.oxr).\n");
                                 Console.WriteLine("--items: Used for extracting item information to items.txt.\n");
+                                Console.WriteLine("--lookitemtext: Used for extracting text from `Look` messages for items to lookitemtext.txt.\n");
                                 Console.WriteLine("--map: Used for extracting map data to the OTBM format.\n");
                                 Console.WriteLine("--monsters: Used for extracting monster information to monsters.txt.\n");
                                 Console.WriteLine("--npcs: Used for extracting npc information to npcs.txt.\n");
@@ -192,15 +197,14 @@ namespace Extract
                     return;
                 }
 
-                if (!_convertToNewFormat && !_extractItemData && !_extractMapData && !_extractMonsterData && !_extractNpcData)
+                if (!_extractItemData && !_extractLookItemText && !_extractMapData && !_extractMonsterData && !_extractNpcData)
                 {
                     Console.WriteLine("You must specificy at least one extraction option.");
                     Console.WriteLine("Use -h, or --help, for help.");
                     return;
                 }
 
-                var isDirectory = !(_recording.EndsWith(".dat", StringComparison.CurrentCultureIgnoreCase) ||
-                                    _recording.EndsWith(".oxr", StringComparison.CurrentCultureIgnoreCase));
+                var isDirectory = !_recording.EndsWith(".oxr", StringComparison.CurrentCultureIgnoreCase);
                 if (isDirectory && !Directory.Exists(_recording))
                 {
                     Console.WriteLine($"Directory does not exist: {_recording}");
@@ -243,6 +247,12 @@ namespace Extract
                     _itemFile = new StreamWriter("items.txt", true);
                 }
 
+                if (_extractLookItemText)
+                {
+                    Console.WriteLine("Extracting `Look` message text for items...");
+                    _lookItemTextFile = new StreamWriter("lookitemtext.txt", true);
+                }
+
                 if (_extractMonsterData)
                 {
                     Console.WriteLine("Extracting monster data...");
@@ -255,311 +265,16 @@ namespace Extract
                     _npcFile = new StreamWriter("npcs.txt", true);
                 }
 
-                Console.WriteLine($"Extracting data from {filenames.Count} recordings...");
-                foreach (var filename in filenames)
-                {
-                    Console.WriteLine($"Extracting data from {filename}...");
-                    using (var reader = new BinaryReader(File.OpenRead(filename)))
-                    {
-                        var isOxRecording = filename.EndsWith(".oxr", StringComparison.CurrentCultureIgnoreCase);
-                        if (isOxRecording)
-                        {
-                            // OXR files begin with the client version they were recorded with.
-                            // This allows us to easily parse recordings from older client versions.
-                            var version = reader.ReadString();
-                            Console.WriteLine($"Client version: {version}");
-                            if (int.TryParse(version.Replace(".", ""), out var versionNumber))
-                            {
-                                var clientDataDirectory = $"ClientData/{versionNumber}";
-                                if (!Directory.Exists(clientDataDirectory))
-                                {
-                                    Console.WriteLine($"ClientData directory for version {version} doesn't exist. Falling back to Tibia directory.");
-                                }
-                                else
-                                {
-                                    _tibiaDirectory = clientDataDirectory;
-                                }
-                            }
-                            else
-                            {
-                                Console.WriteLine($"Invalid client version at beginning of recording: {version}");
-                            }
-                        }
-
-                        _otbmFile = null;
-                        _client = new Client(_tibiaDirectory);
-                        var oxrFile = (isOxRecording || !_convertToNewFormat) ? null :
-                            new BinaryWriter(File.Open(Path.Combine(Path.GetDirectoryName(filename), Path.GetFileNameWithoutExtension(filename) + ".oxr"), FileMode.Create));
-                        if (oxrFile != null)
-                        {
-                            Console.WriteLine("Converting to .oxr format...");
-                            oxrFile.Write(_client.Version);
-                        }
-
-                        _client.Logger.Level = _logLevel;
-                        _client.Logger.Output = _logOutput;
-
-                        _client.Connection.OnReceivedServerCreatureDataPacket += (packet) =>
-                        {
-                            var p = (CreatureData)packet;
-                            if (p.Creature != null)
-                            {
-                                if (_extractMonsterData && p.Creature.Type == OXGaming.TibiaAPI.Constants.CreatureType.Monster && !_knownMonsterIds.Contains(p.Creature.Id))
-                                {
-                                    _monsterFile.WriteLine($"{p.Creature.Name} {p.Creature.Position}");
-                                    _knownMonsterIds.Add(p.Creature.Id);
-                                }
-                                else if (_extractNpcData && p.Creature.Type == OXGaming.TibiaAPI.Constants.CreatureType.Npc && !_knownNpcIds.Contains(p.Creature.Id))
-                                {
-                                    _npcFile.WriteLine($"{p.Creature.Name} {p.Creature.Position}");
-                                    _knownNpcIds.Add(p.Creature.Id);
-                                }
-                            }
-                            return true;
-                        };
-
-                        _client.Connection.OnReceivedServerChangeOnMapPacket += (packet) =>
-                        {
-                            var p = (ChangeOnMap)packet;
-                            if (_extractItemData && p.ObjectInstance != null && p.Id > (int)CreatureInstanceType.Creature)
-                            {
-                                _itemFile.WriteLine($"{p.ObjectInstance.Id} {p.Position.ToString()}");
-                            }
-                            else if (p.Creature != null)
-                            {
-                                if (_extractMonsterData && p.Creature.Type == OXGaming.TibiaAPI.Constants.CreatureType.Monster && !_knownMonsterIds.Contains(p.Creature.Id))
-                                {
-                                    _monsterFile.WriteLine($"{p.Creature.Name} {p.Creature.Position}");
-                                    _knownMonsterIds.Add(p.Creature.Id);
-                                }
-                                else if (_extractNpcData && p.Creature.Type == OXGaming.TibiaAPI.Constants.CreatureType.Npc && !_knownNpcIds.Contains(p.Creature.Id))
-                                {
-                                    _npcFile.WriteLine($"{p.Creature.Name} {p.Creature.Position}");
-                                    _knownNpcIds.Add(p.Creature.Id);
-                                }
-                            }
-                            return true;
-                        };
-
-                        _client.Connection.OnReceivedServerCreateOnMapPacket += (packet) =>
-                        {
-                            var p = (CreateOnMap)packet;
-                            if (_extractItemData && p.ObjectInstance != null && p.Id > (int)CreatureInstanceType.Creature)
-                            {
-                                _itemFile.WriteLine($"{p.ObjectInstance.Id} {p.Position.ToString()}");
-                            }
-                            else if (p.Creature != null)
-                            {
-                                if (_extractMonsterData && p.Creature.Type == OXGaming.TibiaAPI.Constants.CreatureType.Monster && !_knownMonsterIds.Contains(p.Creature.Id))
-                                {
-                                    _monsterFile.WriteLine($"{p.Creature.Name} {p.Creature.Position}");
-                                    _knownMonsterIds.Add(p.Creature.Id);
-                                }
-                                else if (_extractNpcData && p.Creature.Type == OXGaming.TibiaAPI.Constants.CreatureType.Npc && !_knownNpcIds.Contains(p.Creature.Id))
-                                {
-                                    _npcFile.WriteLine($"{p.Creature.Name} {p.Creature.Position}");
-                                    _knownNpcIds.Add(p.Creature.Id);
-                                }
-                            }
-                            return true;
-                        };
-
-                        _client.Connection.OnReceivedServerBottomFloorPacket += Proxy_OnReceivedMapPacket;
-                        _client.Connection.OnReceivedServerBottomRowPacket += Proxy_OnReceivedMapPacket;
-                        _client.Connection.OnReceivedServerTopFloorPacket += Proxy_OnReceivedMapPacket;
-                        _client.Connection.OnReceivedServerTopRowPacket += Proxy_OnReceivedMapPacket;
-                        _client.Connection.OnReceivedServerLeftColumnPacket += Proxy_OnReceivedMapPacket;
-                        _client.Connection.OnReceivedServerRightColumnPacket += Proxy_OnReceivedMapPacket;
-                        _client.Connection.OnReceivedServerFieldDataPacket += Proxy_OnReceivedMapPacket;
-
-                        _client.Connection.OnReceivedServerFullMapPacket += (packet) =>
-                        {
-                            var p = (FullMap)packet;
-
-                            if (_extractMapData && _otbmFile == null)
-                            {
-                                Console.WriteLine($"Extracting map data... ");
-                                var pos = p.Position;
-                                var currentDate = DateTime.UtcNow;
-                                var fileNameData = new object[]
-                                {
-                                Path.GetFileNameWithoutExtension(filename), pos.X, pos.Y, pos.Z, currentDate.Day, currentDate.Month, currentDate.Year, currentDate.Hour, currentDate.Minute, currentDate.Second
-                                };
-
-                                var otbmName = string.Format("{0}__{1}_{2}_{3}__{4}_{5}_{6}__{7}_{8}_{9}", fileNameData);
-                                var outputPath = $"{otbmName}.otbm";
-                                if (!string.IsNullOrEmpty(_outDirectory))
-                                {
-                                    outputPath = Path.Combine(_outDirectory, outputPath);
-                                }
-
-                                _otbmFile = InitializeMapFile(otbmName, outputPath);
-                            }
-
-                            foreach (var (_, _, position) in p.Fields)
-                            {
-                                if (_extractMapData)
-                                {
-                                    ParseField(position);
-                                }
-
-                                var mapPosition = _client.WorldMapStorage.ToMap(position);
-                                var field = _client.WorldMapStorage.GetField(mapPosition.X, mapPosition.Y, mapPosition.Z);
-                                if (field != null)
-                                {
-                                    for (var i = 0; i < MapSizeW; ++i)
-                                    {
-                                        var obj = field.GetObject(i);
-                                        if (obj == null)
-                                        {
-                                            continue;
-                                        }
-
-                                        if (_extractItemData && obj.Id > (int)CreatureInstanceType.Creature)
-                                        {
-                                            _itemFile.WriteLine($"{obj.Id} {position.ToString()}");
-                                        }
-                                        else if (obj.Id <= (int)CreatureInstanceType.Creature)
-                                        {
-                                            var creature = _client.CreatureStorage.GetCreature(obj.Data);
-                                            if (creature == null)
-                                            {
-                                                continue;
-                                            }
-
-                                            if (_extractMonsterData && creature.Type == OXGaming.TibiaAPI.Constants.CreatureType.Monster && !_knownMonsterIds.Contains(creature.Id))
-                                            {
-                                                _monsterFile.WriteLine($"{creature.Name} {creature.Position}");
-                                                _knownMonsterIds.Add(creature.Id);
-                                            }
-                                            else if (_extractNpcData && creature.Type == OXGaming.TibiaAPI.Constants.CreatureType.Npc && !_knownNpcIds.Contains(creature.Id))
-                                            {
-                                                _npcFile.WriteLine($"{creature.Name} {creature.Position}");
-                                                _knownNpcIds.Add(creature.Id);
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                            return true;
-                        };
-
-                        var packetCount = 0;
-                        var startTimestamp = ulong.MinValue;
-                        while (reader.BaseStream.Position < reader.BaseStream.Length)
-                        {
-                            var packetType = PacketType.Server;
-                            if (isOxRecording)
-                            {
-                                packetType = (PacketType)reader.ReadByte();
-                                var timestamp = reader.ReadInt64();
-                                // Converted recordings lack a timestamp, so we need to make an artificial one.
-                                if (timestamp == 0)
-                                {
-                                    packetCount++;
-                                    timestamp = packetCount * 100;
-                                }
-                                else if (startTimestamp == ulong.MinValue)
-                                {
-                                    startTimestamp = (ulong)timestamp;
-                                }
-                                var elapsed = ((ulong)timestamp - startTimestamp) / 1000;
-                                if (elapsed >= _timestamp)
-                                {
-                                    break;
-                                }
-                            }
-
-                            var size = reader.ReadUInt32();
-                            if ((reader.BaseStream.Length - reader.BaseStream.Position) < size)
-                            {
-                                break;
-                            }
-
-                            if (oxrFile != null)
-                            {
-                                var currentPosition = reader.BaseStream.Position;
-                                oxrFile.Write((byte)PacketType.Server);
-                                // Unfortunately, we don't know the timestamp of each packet.
-                                oxrFile.Write(0L);
-                                oxrFile.Write(size);
-                                oxrFile.Write(reader.ReadBytes((int)size));
-                                reader.BaseStream.Position = currentPosition;
-                            }
-
-                            // We don't care about client packets right now, so skip them.
-                            if (packetType == PacketType.Client)
-                            {
-                                reader.BaseStream.Position += size;
-                                continue;
-                            }
-
-                            var wholeSize = reader.ReadUInt16();
-                            var sequenceNumber = reader.ReadUInt32();
-                            var packetSize = reader.ReadUInt16();
-                            var outMessage = new NetworkMessage(_client);
-                            var message = new NetworkMessage(_client)
-                            {
-                                Size = size
-                            };
-
-                            // Tibia10 recordings seem to contain login data (worlds, characters, etc.)
-                            // in their first packet. We don't parse this, and we don't need to, so skip it.
-                            if (_client.VersionNumber <= 11405409 && sequenceNumber == 0 && reader.PeekChar() == 0x28)
-                            {
-                                reader.BaseStream.Position += size - 8;
-                                continue;
-                            }
-
-                            reader.BaseStream.Position -= 8;
-
-                            Array.Copy(reader.ReadBytes((int)message.Size), message.GetBuffer(), message.Size);
-
-                            if (packetType == PacketType.Server)
-                            {
-                                _client.Connection.ParseServerMessage(_client, message, outMessage);
-                            }
-                            else
-                            {
-                                _client.Connection.ParseClientMessage(_client, message, outMessage);
-                            }
-                        }
-
-                        _client.Dispose();
-                        _knownMonsterIds.Clear();
-
-                        if (oxrFile != null)
-                        {
-                            oxrFile.Close();
-                        }
-
-                        if (_otbmFile != null)
-                        {
-                            // node towns
-                            _otbmFile.WriteByte(254);
-                            _otbmFile.WriteByte(6);
-
-                            // end towns node
-                            _otbmFile.WriteByte(255);
-
-                            // end map data node
-                            _otbmFile.WriteByte(255);
-
-                            // end root node
-                            _otbmFile.WriteByte(255);
-
-                            _otbmFile.Close();
-                        }
-
-                        _knownPositions.Clear();
-                    }
-
-                    Console.WriteLine("Done");
-                }
+                ExtractRecordings(filenames);
 
                 if (_itemFile != null)
                 {
                     _itemFile.Close();
+                }
+
+                if (_lookItemTextFile != null)
+                {
+                    _lookItemTextFile.Close();
                 }
 
                 if (_monsterFile != null)
@@ -580,7 +295,333 @@ namespace Extract
             }
         }
 
-        static bool Proxy_OnReceivedMapPacket(Packet packet)
+        private static void ExtractRecordings(List<string> filenames)
+        {
+            Console.WriteLine($"Extracting data from {filenames.Count} recording(s)...");
+            foreach (var filename in filenames)
+            {
+                Console.WriteLine($"Extracting data from {filename}...");
+                using (var reader = new BinaryReader(File.OpenRead(filename)))
+                {
+                    var isOxRecording = filename.EndsWith(".oxr", StringComparison.CurrentCultureIgnoreCase);
+                    if (!isOxRecording)
+                    {
+                        Console.WriteLine($"Skipping invalid recording file: {filename}");
+                        continue;
+                    }
+
+                    _currentFilename = filename;
+
+                    // OXR files begin with the client version they were recorded with.
+                    // This allows us to easily parse recordings from older client versions.
+                    var version = reader.ReadString();
+                    Console.WriteLine($"Client version: {version}");
+                    if (int.TryParse(version.Replace(".", ""), out var versionNumber))
+                    {
+                        var clientDataDirectory = $"ClientData/{versionNumber}";
+                        if (!Directory.Exists(clientDataDirectory))
+                        {
+                            Console.WriteLine($"ClientData directory for version {version} doesn't exist. Falling back to default Tibia directory.");
+                        }
+                        else
+                        {
+                            _tibiaDirectory = clientDataDirectory;
+                        }
+                    }
+                    else
+                    {
+                        Console.WriteLine($"Invalid client version at beginning of recording: {version}");
+                    }
+
+                    _otbmFile = null;
+                    _client = new Client(_tibiaDirectory);
+                    _client.Logger.Level = _logLevel;
+                    _client.Logger.Output = _logOutput;
+
+                    _client.Connection.OnReceivedClientLookPacket += Connection_OnReceivedClientLookPacket;
+
+                    _client.Connection.OnReceivedServerCreatureDataPacket += Connection_OnReceivedServerCreatureDataPacket;
+                    _client.Connection.OnReceivedServerChangeOnMapPacket += Connection_OnReceivedServerChangeOnMapPacket;
+                    _client.Connection.OnReceivedServerCreateOnMapPacket += Connection_OnReceivedServerCreateOnMapPacket;
+                    _client.Connection.OnReceivedServerBottomFloorPacket += Connection_OnReceivedMapPacket;
+                    _client.Connection.OnReceivedServerBottomRowPacket += Connection_OnReceivedMapPacket;
+                    _client.Connection.OnReceivedServerTopFloorPacket += Connection_OnReceivedMapPacket;
+                    _client.Connection.OnReceivedServerTopRowPacket += Connection_OnReceivedMapPacket;
+                    _client.Connection.OnReceivedServerLeftColumnPacket += Connection_OnReceivedMapPacket;
+                    _client.Connection.OnReceivedServerRightColumnPacket += Connection_OnReceivedMapPacket;
+                    _client.Connection.OnReceivedServerFieldDataPacket += Connection_OnReceivedMapPacket;
+                    _client.Connection.OnReceivedServerFullMapPacket += Connection_OnReceivedServerFullMapPacket;
+                    _client.Connection.OnReceivedServerMessagePacket += Connection_OnReceivedServerMessagePacket;
+
+                    var packetCount = 0;
+                    var startTimestamp = ulong.MinValue;
+                    while (reader.BaseStream.Position < reader.BaseStream.Length)
+                    {
+                        var packetType = PacketType.Server;
+                        if (isOxRecording)
+                        {
+                            packetType = (PacketType)reader.ReadByte();
+                            var timestamp = reader.ReadInt64();
+                            // Converted recordings lack a timestamp, so we need to make an artificial one.
+                            if (timestamp == 0)
+                            {
+                                packetCount++;
+                                timestamp = packetCount * 100;
+                            }
+                            else if (startTimestamp == ulong.MinValue)
+                            {
+                                startTimestamp = (ulong)timestamp;
+                            }
+                            var elapsed = ((ulong)timestamp - startTimestamp) / 1000;
+                            if (elapsed >= _timestamp)
+                            {
+                                break;
+                            }
+                        }
+
+                        var size = reader.ReadUInt32();
+                        if ((reader.BaseStream.Length - reader.BaseStream.Position) < size)
+                        {
+                            break;
+                        }
+
+                        var wholeSize = reader.ReadUInt16();
+                        var sequenceNumber = reader.ReadUInt32();
+                        var packetSize = reader.ReadUInt16();
+                        var outMessage = new NetworkMessage(_client);
+                        var message = new NetworkMessage(_client)
+                        {
+                            Size = size
+                        };
+
+                        // Tibia10 recordings seem to contain login data (worlds, characters, etc.)
+                        // in their first packet. We don't parse this, and we don't need to, so skip it.
+                        if (_client.VersionNumber <= 11405409 && sequenceNumber == 0 && reader.PeekChar() == 0x28)
+                        {
+                            reader.BaseStream.Position += size - 8;
+                            continue;
+                        }
+
+                        reader.BaseStream.Position -= 8;
+
+                        Array.Copy(reader.ReadBytes((int)message.Size), message.GetBuffer(), message.Size);
+
+                        if (packetType == PacketType.Server)
+                        {
+                            _client.Connection.ParseServerMessage(_client, message, outMessage);
+                        }
+                        else
+                        {
+                            _client.Connection.ParseClientMessage(_client, message, outMessage);
+                        }
+                    }
+
+                    _client.Dispose();
+                    _knownMonsterIds.Clear();
+
+                    if (_otbmFile != null)
+                    {
+                        // node towns
+                        _otbmFile.WriteByte(254);
+                        _otbmFile.WriteByte(6);
+
+                        // end towns node
+                        _otbmFile.WriteByte(255);
+
+                        // end map data node
+                        _otbmFile.WriteByte(255);
+
+                        // end root node
+                        _otbmFile.WriteByte(255);
+
+                        _otbmFile.Close();
+                    }
+
+                    _knownPositions.Clear();
+                }
+
+                Console.WriteLine("Done");
+            }
+        }
+
+        private static bool Connection_OnReceivedServerMessagePacket(Packet packet)
+        {
+            var p = (Message)packet;
+            if (_extractLookItemText && p.MessageMode == MessageModeType.Look && _lastLookItemPacket != null)
+            {
+                // To perserve the format of the file, replace newlines with literals.
+                // For example, instead of a multiline text looking like this:
+                /* Test Line One
+                   Test Line Two*/
+                // It would look like the following in the file instead:
+                // Test Line One\nText Line Two
+                var text = p.Text.Replace("\n", "\\n");
+                _lookItemTextFile.WriteLine($"{_lastLookItemPacket.ObjectId}::{_lastLookItemPacket.Position}::{text}");
+
+                // Clear the last `Look` packet so that a `Look` message from something
+                // other than an item doesn't get used.
+                _lastLookItemPacket = null;
+            }
+            return true;
+        }
+
+        private static bool Connection_OnReceivedClientLookPacket(Packet packet)
+        {
+            if (_extractLookItemText)
+            {
+                var p = (Look)packet;
+                // This packet should only be used for items (`LookAtCreature` should be used for creatures),
+                // but check the ID to ensure this is an item being looked at.
+                if (p.ObjectId >= 100)
+                {
+                    _lastLookItemPacket = p;
+                }
+            }
+            return true;
+        }
+
+        private static bool Connection_OnReceivedServerFullMapPacket(Packet packet)
+        {
+            var p = (FullMap)packet;
+
+            // Because the API supports relogging and switching characters,
+            // or the player could have teleported during their session, there's
+            // a chance the recording could contain multiple FullMap packets.
+            // In this case, use the same .otbm file for outputting.
+            if (_extractMapData && _otbmFile == null)
+            {
+                Console.WriteLine($"Extracting map data... ");
+                var pos = p.Position;
+                var currentDate = DateTime.UtcNow;
+                var fileNameData = new object[]
+                {
+                    Path.GetFileNameWithoutExtension(_currentFilename), pos.X, pos.Y, pos.Z, currentDate.Day, currentDate.Month, currentDate.Year, currentDate.Hour, currentDate.Minute, currentDate.Second
+                };
+
+                var otbmName = string.Format("{0}__{1}_{2}_{3}__{4}_{5}_{6}__{7}_{8}_{9}", fileNameData);
+                var outputPath = $"{otbmName}.otbm";
+                if (!string.IsNullOrEmpty(_outDirectory))
+                {
+                    outputPath = Path.Combine(_outDirectory, outputPath);
+                }
+
+                _otbmFile = InitializeMapFile(otbmName, outputPath);
+            }
+
+            foreach (var (_, _, position) in p.Fields)
+            {
+                if (_extractMapData)
+                {
+                    ParseField(position);
+                }
+
+                var mapPosition = _client.WorldMapStorage.ToMap(position);
+                var field = _client.WorldMapStorage.GetField(mapPosition.X, mapPosition.Y, mapPosition.Z);
+                if (field != null)
+                {
+                    for (var i = 0; i < MapSizeW; ++i)
+                    {
+                        var obj = field.GetObject(i);
+                        if (obj == null)
+                        {
+                            continue;
+                        }
+
+                        if (_extractItemData && obj.Id > (int)CreatureInstanceType.Creature)
+                        {
+                            _itemFile.WriteLine($"{obj.Id} {position.ToString()}");
+                        }
+                        else if (obj.Id <= (int)CreatureInstanceType.Creature)
+                        {
+                            var creature = _client.CreatureStorage.GetCreature(obj.Data);
+                            if (creature == null)
+                            {
+                                continue;
+                            }
+
+                            if (_extractMonsterData && creature.Type == OXGaming.TibiaAPI.Constants.CreatureType.Monster && !_knownMonsterIds.Contains(creature.Id))
+                            {
+                                _monsterFile.WriteLine($"{creature.Name} {creature.Position}");
+                                _knownMonsterIds.Add(creature.Id);
+                            }
+                            else if (_extractNpcData && creature.Type == OXGaming.TibiaAPI.Constants.CreatureType.Npc && !_knownNpcIds.Contains(creature.Id))
+                            {
+                                _npcFile.WriteLine($"{creature.Name} {creature.Position}");
+                                _knownNpcIds.Add(creature.Id);
+                            }
+                        }
+                    }
+                }
+            }
+            return true;
+        }
+
+        private static bool Connection_OnReceivedServerCreatureDataPacket(Packet packet)
+        {
+            var p = (CreatureData)packet;
+            if (p.Creature != null)
+            {
+                if (_extractMonsterData && p.Creature.Type == OXGaming.TibiaAPI.Constants.CreatureType.Monster && !_knownMonsterIds.Contains(p.Creature.Id))
+                {
+                    _monsterFile.WriteLine($"{p.Creature.Name} {p.Creature.Position}");
+                    _knownMonsterIds.Add(p.Creature.Id);
+                }
+                else if (_extractNpcData && p.Creature.Type == OXGaming.TibiaAPI.Constants.CreatureType.Npc && !_knownNpcIds.Contains(p.Creature.Id))
+                {
+                    _npcFile.WriteLine($"{p.Creature.Name} {p.Creature.Position}");
+                    _knownNpcIds.Add(p.Creature.Id);
+                }
+            }
+            return true;
+        }
+
+        private static bool Connection_OnReceivedServerChangeOnMapPacket(Packet packet)
+        {
+            var p = (ChangeOnMap)packet;
+            if (_extractItemData && p.ObjectInstance != null && p.Id > (int)CreatureInstanceType.Creature)
+            {
+                _itemFile.WriteLine($"{p.ObjectInstance.Id} {p.Position.ToString()}");
+            }
+            else if (p.Creature != null)
+            {
+                if (_extractMonsterData && p.Creature.Type == OXGaming.TibiaAPI.Constants.CreatureType.Monster && !_knownMonsterIds.Contains(p.Creature.Id))
+                {
+                    _monsterFile.WriteLine($"{p.Creature.Name} {p.Creature.Position}");
+                    _knownMonsterIds.Add(p.Creature.Id);
+                }
+                else if (_extractNpcData && p.Creature.Type == OXGaming.TibiaAPI.Constants.CreatureType.Npc && !_knownNpcIds.Contains(p.Creature.Id))
+                {
+                    _npcFile.WriteLine($"{p.Creature.Name} {p.Creature.Position}");
+                    _knownNpcIds.Add(p.Creature.Id);
+                }
+            }
+            return true;
+        }
+
+        private static bool Connection_OnReceivedServerCreateOnMapPacket(Packet packet)
+        {
+            var p = (CreateOnMap)packet;
+            if (_extractItemData && p.ObjectInstance != null && p.Id > (int)CreatureInstanceType.Creature)
+            {
+                _itemFile.WriteLine($"{p.ObjectInstance.Id} {p.Position.ToString()}");
+            }
+            else if (p.Creature != null)
+            {
+                if (_extractMonsterData && p.Creature.Type == OXGaming.TibiaAPI.Constants.CreatureType.Monster && !_knownMonsterIds.Contains(p.Creature.Id))
+                {
+                    _monsterFile.WriteLine($"{p.Creature.Name} {p.Creature.Position}");
+                    _knownMonsterIds.Add(p.Creature.Id);
+                }
+                else if (_extractNpcData && p.Creature.Type == OXGaming.TibiaAPI.Constants.CreatureType.Npc && !_knownNpcIds.Contains(p.Creature.Id))
+                {
+                    _npcFile.WriteLine($"{p.Creature.Name} {p.Creature.Position}");
+                    _knownNpcIds.Add(p.Creature.Id);
+                }
+            }
+            return true;
+        }
+
+        static bool Connection_OnReceivedMapPacket(Packet packet)
         {
             var p = (Map)packet;
             foreach (var (_, _, position) in p.Fields)
@@ -694,7 +735,7 @@ namespace Extract
                 file.WriteByte(2);
                 {
                     // description
-                    var description = "Saved with jo3bingham's tracker.";
+                    var description = "Created via jo3bingham's TibiaAPI";
                     file.WriteByte(1);
                     WriteData(file, BitConverter.GetBytes((ushort)description.Length));
                     WriteData(file, Encoding.ASCII.GetBytes(description));
@@ -763,7 +804,7 @@ namespace Extract
                 for (int i = 0; i < MapSizeW; ++i)
                 {
                     var item = field.GetObject(i);
-                    if (item == null || item.Id == 97 || item.Id == 98 || item.Id == 99 || _ignoreIds.Contains(item.Id))
+                    if (item == null || item.Id < 100 || _ignoreIds.Contains(item.Id))
                     {
                         continue;
                     }
