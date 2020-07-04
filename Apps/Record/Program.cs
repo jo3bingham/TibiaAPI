@@ -27,6 +27,8 @@ namespace Record
 
         static BinaryWriter _binaryWriter;
 
+        static Client _client;
+
         static FileStream _fileStream;
 
         static Thread _fileWriteThread;
@@ -102,7 +104,7 @@ namespace Record
             {
                 ParseArgs(args);
 
-                using (var client = new Client(_tibiaDirectory))
+                using (_client = new Client(_tibiaDirectory))
                 {
                     var utcNow = DateTime.UtcNow;
                     var filename = $"{utcNow.Day}_{utcNow.Month}_{utcNow.Year}__{utcNow.Hour}_{utcNow.Minute}_{utcNow.Second}.oxr";
@@ -112,30 +114,25 @@ namespace Record
                         Directory.CreateDirectory(recordingDirectory);
                     }
 
+                    Console.CancelKeyPress += Console_CancelKeyPress;
+
                     _fileStream = new FileStream(Path.Combine(recordingDirectory, filename), FileMode.Append);
                     _binaryWriter = new BinaryWriter(_fileStream);
 
-                    _binaryWriter.Write(client.Version);
+                    _binaryWriter.Write(_client.Version);
 
-                    client.Logger.Level = _logLevel;
-                    client.Logger.Output = _logOutput;
+                    _client.Logger.Level = _logLevel;
+                    _client.Logger.Output = _logOutput;
 
-                    client.Connection.OnReceivedClientMessage += Proxy_OnReceivedClientMessage;
-                    client.Connection.OnReceivedServerMessage += Proxy_OnReceivedServerMessage;
+                    _client.Connection.OnReceivedClientMessage += Proxy_OnReceivedClientMessage;
+                    _client.Connection.OnReceivedServerMessage += Proxy_OnReceivedServerMessage;
 
-                    // Disable packet parsing as we only care about the raw, decrypted packets and speed.
-                    client.Connection.IsClientPacketParsingEnabled = false;
-                    client.Connection.IsServerPacketParsingEnabled = false;
-                    client.StartConnection(httpPort: _httpPort, loginWebService: _loginWebService);
+                    // Disable packet parsing as we only care about the raw, decrypted packets, and speed.
+                    _client.Connection.IsClientPacketParsingEnabled = false;
+                    _client.Connection.IsServerPacketParsingEnabled = false;
+                    _client.StartConnection(httpPort: _httpPort, loginWebService: _loginWebService);
 
-                    while (Console.ReadLine() != "quit")
-                    {
-                    }
-
-                    client.StopConnection();
-
-                    client.Connection.OnReceivedClientMessage -= Proxy_OnReceivedClientMessage;
-                    client.Connection.OnReceivedServerMessage -= Proxy_OnReceivedServerMessage;
+                    while (Console.ReadLine() != "quit") { }
                 }
             }
             catch (Exception ex)
@@ -144,28 +141,46 @@ namespace Record
             }
             finally
             {
-                if (_fileWriteThread != null)
-                {
-                    // Block the application from shutting down until the file-write thread
-                    // finishes writing all incoming packets to disk. This is safe to do as
-                    // the proxy connection will have been stopped, no matter what, by now.
-                    _fileWriteThread.Join();
-                }
+                Shutdown();
+            }
+        }
 
-                if (_binaryWriter != null)
-                {
-                    _binaryWriter.Close();
-                }
+        private static void Console_CancelKeyPress(object sender, ConsoleCancelEventArgs e)
+        {
+            Shutdown();
+        }
 
-                if (_fileStream != null)
-                {
-                    _fileStream.Close();
-                }
+        private static void Shutdown()
+        {
+            if (_client != null)
+            {
+                _client.StopConnection();
 
-                if (_stopWatch.IsRunning)
-                {
-                    _stopWatch.Stop();
-                }
+                _client.Connection.OnReceivedClientMessage -= Proxy_OnReceivedClientMessage;
+                _client.Connection.OnReceivedServerMessage -= Proxy_OnReceivedServerMessage;
+            }
+
+            if (_fileWriteThread != null)
+            {
+                // Block the application from shutting down until the file-write thread
+                // finishes writing all incoming packets to disk. This is safe to do as
+                // the proxy connection will have been stopped, no matter what, by now.
+                _fileWriteThread.Join();
+            }
+
+            if (_binaryWriter != null)
+            {
+                _binaryWriter.Close();
+            }
+
+            if (_fileStream != null)
+            {
+                _fileStream.Close();
+            }
+
+            if (_stopWatch.IsRunning)
+            {
+                _stopWatch.Stop();
             }
         }
 
