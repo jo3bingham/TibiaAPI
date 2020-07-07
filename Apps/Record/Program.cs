@@ -33,7 +33,7 @@ namespace Record
 
         static Thread _fileWriteThread;
 
-        private static Logger.LogLevel _logLevel = Logger.LogLevel.Error;
+        private static Logger.LogLevel _logLevel = Logger.LogLevel.Debug;
 
         private static Logger.LogOutput _logOutput = Logger.LogOutput.Console;
 
