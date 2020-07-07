@@ -37,7 +37,7 @@ namespace Watch
 
         static string _recordingName;
 
-        static int _httpPort = 80;
+        static int _httpPort = 7171;
 
         static bool _userQuit;
 
@@ -107,9 +107,7 @@ namespace Watch
 
             Initialize();
 
-            while (Console.ReadLine() != "quit")
-            {
-            }
+            while (Console.ReadLine() != "quit") { }
 
             _userQuit |= _clientSendThread != null;
         }

@@ -23,9 +23,7 @@ namespace OXGaming.TibiaAPI.Network
     /// </summary>
     public class Connection : Communication, IDisposable
     {
-        private const string loginWebService1100 = "https://secure.tibia.com/services/login.php";
-        private const string loginWebService1132 = "https://secure.tibia.com/services/clientservices.php";
-        private const string loginWebService1186 = "https://www.tibia.com/services/clientservices.php";
+        private const string LOGIN_WEB_SERVICE = "https://www.tibia.com/clientservices/loginservice.php";
 
         private readonly object _clientSendLock = new object();
         private readonly object _serverSendLock = new object();
@@ -1002,22 +1000,7 @@ namespace OXGaming.TibiaAPI.Network
 
         private string GetLoginWebService()
         {
-            if (!string.IsNullOrEmpty(_loginWebService))
-            {
-                return _loginWebService;
-            }
-
-            if (_client.VersionNumber >= 11867253)
-            {
-                return loginWebService1186;
-            }
-
-            if (_client.VersionNumber >= 11325206)
-            {
-                return loginWebService1132;
-            }
-
-            return loginWebService1100;
+            return !string.IsNullOrEmpty(_loginWebService) ? _loginWebService : LOGIN_WEB_SERVICE;
         }
 
         #region IDisposable Support
