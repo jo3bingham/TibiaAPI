@@ -195,7 +195,9 @@ namespace Watch
                                     "\"showrewardnews\": false," +
                                     "\"isreturner\": false," +
                                     "\"fpstracking\": false," +
-                                    "\"optiontracking\": false}" +
+                                    "\"optiontracking\": false," +
+                                    "\"tournamentticketpurchasestate\": 0," +
+                                    "\"tournamentcyclephase\": 0}" +
                                 ",\"playdata\":" +
                                     "{\"worlds\":" +
                                         "[{\"id\": 0," +
@@ -207,7 +209,9 @@ namespace Watch
                                         "\"previewstate\": 0," +
                                         "\"location\": null," +
                                         "\"anticheatprotection\": false," +
-                                        "\"pvptype\": 0}]" +
+                                        "\"pvptype\": 0," +
+                                        "\"istournamentworld\": false," +
+                                        "\"restrictedstore\": false}]" +
                                     ",\"characters\":" +
                                         "[{\"worldid\": 0," +
                                         "\"name\": \"" + filename + "\"," +
@@ -215,13 +219,15 @@ namespace Watch
                                         "\"vocation\": null," +
                                         "\"ismale\": false," +
                                         "\"ishidden\": false," +
+                                        "\"ismaincharacter\": false," +
                                         "\"tutorial\": false," +
                                         "\"outfitid\": 0," +
                                         "\"headcolor\": 0," +
                                         "\"torsocolor\": 0," +
                                         "\"legscolor\": 0," +
                                         "\"detailcolor\": 0," +
-                                        "\"addonsflags\": 0}]" +
+                                        "\"addonsflags\": 0," +
+                                        "\"istournamentparticipant\": false}]" +
                                     "}" +
                                 "}";
 
