@@ -20,6 +20,15 @@ namespace OXGaming.TibiaAPI.Creatures
             return _creatures.FirstOrDefault(c => c.Id == creatureId);
         }
 
+        public Creature GetCreature(string name)
+        {
+            if (string.IsNullOrEmpty(name))
+            {
+                return null;
+            }
+            return _creatures.FirstOrDefault(c => c.Name.Equals(name, StringComparison.OrdinalIgnoreCase));
+        }
+
         public void RemoveCreature(uint creatureId)
         {
             var creature = GetCreature(creatureId);

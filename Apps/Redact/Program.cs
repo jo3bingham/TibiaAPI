@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Text.RegularExpressions;
 
 using OXGaming.TibiaAPI;
 using OXGaming.TibiaAPI.Constants;
@@ -9,6 +10,8 @@ namespace Redact
 {
     class Program
     {
+        static Regex _lookPlayerRx = new Regex(@"you see .*\(level \d+\).*(she|he) is", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+
         static string _recordingName;
 
         static bool _keepClientPackets;
@@ -126,6 +129,7 @@ namespace Redact
             client.Connection.OnReceivedServerCreateOnMapPacket += Connection_OnReceivedServerCreateOnMapPacket;
             client.Connection.OnReceivedServerCreatureUpdatePacket += Connection_OnReceivedServerCreatureUpdatePacket;
             client.Connection.OnReceivedServerTalkPacket += Connection_OnReceivedServerTalkPacket;
+            client.Connection.OnReceivedServerMessagePacket += Connection_OnReceivedServerMessagePacket;
 
             // These packets aren't necessary in a redacted recording.
             if (_keepClientPackets)
@@ -165,20 +169,28 @@ namespace Redact
 
             writer.Write(version);
 
+            var clientSequenceNumber = 0u;
+            var serverSequenceNumber = 0u;
+
             while (reader.BaseStream.Position < reader.BaseStream.Length)
             {
                 var packetType = (PacketType)reader.ReadByte();
                 var timestamp = reader.ReadInt64();
                 var size = reader.ReadUInt32();
+
+                // If the Record app wasn't properly shutdown, a recording could
+                // possibly be missing data at the end.
+                if (reader.BaseStream.Length - reader.BaseStream.Position < size)
+                {
+                    break;
+                }
+
                 _ = reader.ReadUInt16(); // packet size
-                var sequenceNumber = reader.ReadUInt32();
+                _ = reader.ReadUInt32(); // sequence number
+                var outMessage = new NetworkMessage(client);
                 var message = new NetworkMessage(client)
                 {
                     Size = size
-                };
-                var outMessage = new NetworkMessage(client)
-                {
-                    SequenceNumber = sequenceNumber
                 };
 
                 reader.BaseStream.Position -= 6;
@@ -199,9 +211,10 @@ namespace Redact
                     continue;
                 }
 
-                // Prepare the message to send without an XTEA key so that the proper
+                // Prepare the message without an XTEA key so that the proper
                 // sizes are added to the packet data, but it stays unencrypted.
                 outMessage.PrepareToSend(null);
+                outMessage.SequenceNumber = packetType == PacketType.Client ? clientSequenceNumber++ : serverSequenceNumber++;
 
                 var data = outMessage.GetData();
 
@@ -221,17 +234,35 @@ namespace Redact
             return true;
         }
 
+        private static bool Connection_OnReceivedServerMessagePacket(Packet packet)
+        {
+            var p = (OXGaming.TibiaAPI.Network.ServerPackets.Message)packet;
+            if (p.MessageMode == MessageModeType.Look)
+            {
+                if (_lookPlayerRx.IsMatch(p.Text) || p.Text.Contains("You see yourself."))
+                {
+                    p.Text = "Redacted";
+                }
+            }
+            return true;
+        }
+
         private static bool Connection_OnReceivedServerTalkPacket(Packet packet)
         {
             var p = (OXGaming.TibiaAPI.Network.ServerPackets.Talk)packet;
-            p.SpeakerName = "Redacted";
+            var creature = p.Client.CreatureStorage.GetCreature(p.SpeakerName);
+            if (creature is null || creature.Type == CreatureType.Player)
+            {
+                p.SpeakerLevel = 100;
+                p.SpeakerName = "Redacted";
+            }
             return true;
         }
 
         private static bool Connection_OnReceivedServerCreatureUpdatePacket(Packet packet)
         {
             var p = (OXGaming.TibiaAPI.Network.ServerPackets.CreatureUpdate)packet;
-            if (p.Creature is object)
+            if (p.Creature is object && p.Creature.Type == CreatureType.Player)
             {
                 p.Creature.Name = "Redacted";
             }
@@ -241,7 +272,7 @@ namespace Redact
         private static bool Connection_OnReceivedServerCreateOnMapPacket(Packet packet)
         {
             var p = (OXGaming.TibiaAPI.Network.ServerPackets.CreateOnMap)packet;
-            if (p.Creature is object)
+            if (p.Creature is object && p.Creature.Type == CreatureType.Player)
             {
                 p.Creature.Name = "Redacted";
             }

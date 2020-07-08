@@ -1054,9 +1054,9 @@ namespace OXGaming.TibiaAPI.Network
                         Write(value.HealthPercent);
                         Write((byte)value.Direction);
 
-                        if (value.Outfit is OutfitInstance)
+                        if (value.Outfit is OutfitInstance instance)
                         {
-                            Write((OutfitInstance)value.Outfit);
+                            Write(instance);
                         }
                         else
                         {
@@ -1064,7 +1064,7 @@ namespace OXGaming.TibiaAPI.Network
                             Write((ushort)value.Outfit.Id);
                         }
 
-                        Write(value.Mount.Id);
+                        Write((ushort)value.Mount.Id);
                         Write(value.Brightness);
                         Write(value.LightColor);
                         Write(value.Speed);
