@@ -42,7 +42,7 @@ namespace OXGaming.TibiaAPI.Network
                     return new ServerPackets.Dead(client);
                 case ServerPacketType.Stash:
                     return new ServerPackets.Stash(client);
-                case ServerPacketType.DepotTileState:
+                case ServerPacketType.SpecialContainersAvailable:
                     return new ServerPackets.DepotTileState(client);
                 case ServerPacketType.PartyHuntAnalyser:
                     return new ServerPackets.PartyHuntAnalyser(client);

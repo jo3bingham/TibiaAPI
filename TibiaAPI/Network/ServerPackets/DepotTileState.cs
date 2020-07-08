@@ -9,7 +9,7 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
         public DepotTileState(Client client)
         {
             Client = client;
-            PacketType = ServerPacketType.DepotTileState;
+            PacketType = ServerPacketType.SpecialContainersAvailable;
         }
 
         public override void ParseFromNetworkMessage(NetworkMessage message)
