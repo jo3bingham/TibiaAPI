@@ -26,13 +26,11 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
         public ushort KillsToCompleteSecondStage { get; set; }
         public ushort KillsToCompleteThirdStage { get; set; }
         public ushort Speed { get; set; }
-        public ushort UnknownUShort { get; set; }
 
         public byte CharmId { get; set; }
         public byte CurrentKillStage { get; set; }
         public byte Difficulty { get; set; }
         public byte Occurrence { get; set; }
-        public byte Unknown { get; set; }
 
         public bool HasCharmAssigned { get; set; }
 
@@ -113,7 +111,8 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
                             }
                             else
                             {
-                                Unknown = message.ReadByte(); // always 1?
+                                // TODO
+                                message.ReadByte(); // always 1?
                             }
                         }
                     }
@@ -148,7 +147,8 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
 
                     if ((Difficulty == 3 && CurrentKillStage != 3) || (Difficulty == 2 && CurrentKillStage > 1))
                     {
-                        UnknownUShort = message.ReadUInt16();
+                        // TODO
+                        message.ReadUInt16();
                     }
                 }
             }
@@ -156,117 +156,118 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
 
         public override void AppendToNetworkMessage(NetworkMessage message)
         {
-            message.Write((byte)ServerPacketType.MonsterCyclopediaRace);
-            message.Write(Id);
-            message.Write(Name);
-            message.Write(CurrentKillStage);
-            message.Write(TotalKillCount);
-            message.Write(KillsToCompleteFirstStage);
-            message.Write(KillsToCompleteSecondStage);
-            message.Write(KillsToCompleteThirdStage);
-            message.Write(Difficulty);
-            if (Client.VersionNumber >= 11807048)
-            {
-                message.Write(Occurrence);
-            }
+            // TODO
+            // message.Write((byte)ServerPacketType.MonsterCyclopediaRace);
+            // message.Write(Id);
+            // message.Write(Name);
+            // message.Write(CurrentKillStage);
+            // message.Write(TotalKillCount);
+            // message.Write(KillsToCompleteFirstStage);
+            // message.Write(KillsToCompleteSecondStage);
+            // message.Write(KillsToCompleteThirdStage);
+            // message.Write(Difficulty);
+            // if (Client.VersionNumber >= 11807048)
+            // {
+            //     message.Write(Occurrence);
+            // }
 
-            var count = Math.Min(Loot.Count, byte.MaxValue);
-            message.Write((byte)count);
-            for (var i = 0; i < count; ++i)
-            {
-                var (ObjectId, Rarity, IsFromSpecialEvent, Name, IsCumulative) = Loot[i];
-                message.Write(ObjectId);
-                message.Write(Rarity);
-                if (Client.VersionNumber >= 11807048)
-                {
-                    message.Write(IsFromSpecialEvent);
-                }
-                if (ObjectId > 0)
-                {
-                    message.Write(Name);
-                    message.Write(IsCumulative);
-                }
-            }
+            // var count = Math.Min(Loot.Count, byte.MaxValue);
+            // message.Write((byte)count);
+            // for (var i = 0; i < count; ++i)
+            // {
+            //     var (ObjectId, Rarity, IsFromSpecialEvent, Name, IsCumulative) = Loot[i];
+            //     message.Write(ObjectId);
+            //     message.Write(Rarity);
+            //     if (Client.VersionNumber >= 11807048)
+            //     {
+            //         message.Write(IsFromSpecialEvent);
+            //     }
+            //     if (ObjectId > 0)
+            //     {
+            //         message.Write(Name);
+            //         message.Write(IsCumulative);
+            //     }
+            // }
 
-            if (Client.VersionNumber >= 11807048)
-            {
-                if (CurrentKillStage > 1)
-                {
-                    message.Write(CharmPoints);
-                    message.Write(Hitpoints);
-                    message.Write(Experience);
-                    message.Write(Speed);
-                    message.Write(Armor);
+            // if (Client.VersionNumber >= 11807048)
+            // {
+            //     if (CurrentKillStage > 1)
+            //     {
+            //         message.Write(CharmPoints);
+            //         message.Write(Hitpoints);
+            //         message.Write(Experience);
+            //         message.Write(Speed);
+            //         message.Write(Armor);
 
-                    if (CurrentKillStage > 2)
-                    {
-                        count = Math.Min(Stats.Count, byte.MaxValue);
-                        message.Write((byte)count);
-                        for (var i = 0; i < count; ++i)
-                        {
-                            var (StatId, Percentage) = Stats[i];
-                            message.Write(StatId);
-                            message.Write(Percentage);
-                        }
+            //         if (CurrentKillStage > 2)
+            //         {
+            //             count = Math.Min(Stats.Count, byte.MaxValue);
+            //             message.Write((byte)count);
+            //             for (var i = 0; i < count; ++i)
+            //             {
+            //                 var (StatId, Percentage) = Stats[i];
+            //                 message.Write(StatId);
+            //                 message.Write(Percentage);
+            //             }
 
-                        count = Math.Min(Locations.Count, ushort.MaxValue);
-                        message.Write((ushort)count);
-                        for (var i = 0; i < count; ++i)
-                        {
-                            message.Write(Locations[i]);
-                        }
+            //             count = Math.Min(Locations.Count, ushort.MaxValue);
+            //             message.Write((ushort)count);
+            //             for (var i = 0; i < count; ++i)
+            //             {
+            //                 message.Write(Locations[i]);
+            //             }
 
-                        if (CurrentKillStage > 3)
-                        {
-                            message.Write(HasCharmAssigned);
-                            if (HasCharmAssigned)
-                            {
-                                message.Write(CharmId);
-                                message.Write(CharmRemovalCost);
-                            }
-                            else
-                            {
-                                message.Write(Unknown);
-                            }
-                        }
-                    }
-                }
-            }
-            else
-            {
-                if (Difficulty == 3 || (Difficulty == 2 && CurrentKillStage > 1))
-                {
-                    message.Write(CharmPoints);
-                    message.Write(Hitpoints);
-                    message.Write(Experience);
-                    message.Write(Speed);
-                    message.Write(Armor);
-                }
+            //             if (CurrentKillStage > 3)
+            //             {
+            //                 message.Write(HasCharmAssigned);
+            //                 if (HasCharmAssigned)
+            //                 {
+            //                     message.Write(CharmId);
+            //                     message.Write(CharmRemovalCost);
+            //                 }
+            //                 else
+            //                 {
+            //                     //message.Write(Unknown);
+            //                 }
+            //             }
+            //         }
+            //     }
+            // }
+            // else
+            // {
+            //     if (Difficulty == 3 || (Difficulty == 2 && CurrentKillStage > 1))
+            //     {
+            //         message.Write(CharmPoints);
+            //         message.Write(Hitpoints);
+            //         message.Write(Experience);
+            //         message.Write(Speed);
+            //         message.Write(Armor);
+            //     }
 
-                if ((Difficulty == 3 && CurrentKillStage > 2) || (Difficulty == 2 && CurrentKillStage > 2))
-                {
-                    count = Math.Min(Stats.Count, byte.MaxValue);
-                    message.Write((byte)count);
-                    for (var i = 0; i < count; ++i)
-                    {
-                        var (statId, percentage) = Stats[i];
-                        message.Write(statId);
-                        message.Write(percentage);
-                    }
+            //     if ((Difficulty == 3 && CurrentKillStage > 2) || (Difficulty == 2 && CurrentKillStage > 2))
+            //     {
+            //         count = Math.Min(Stats.Count, byte.MaxValue);
+            //         message.Write((byte)count);
+            //         for (var i = 0; i < count; ++i)
+            //         {
+            //             var (statId, percentage) = Stats[i];
+            //             message.Write(statId);
+            //             message.Write(percentage);
+            //         }
 
-                    count = Math.Min(Locations.Count, ushort.MaxValue);
-                    message.Write((ushort)count);
-                    for (var i = 0; i < count; ++i)
-                    {
-                        message.Write(Locations[i]);
-                    }
+            //         count = Math.Min(Locations.Count, ushort.MaxValue);
+            //         message.Write((ushort)count);
+            //         for (var i = 0; i < count; ++i)
+            //         {
+            //             message.Write(Locations[i]);
+            //         }
 
-                    if ((Difficulty == 3 && CurrentKillStage != 3) || (Difficulty == 2 && CurrentKillStage > 1))
-                    {
-                        message.Write(UnknownUShort);
-                    }
-                }
-            }
+            //         if ((Difficulty == 3 && CurrentKillStage != 3) || (Difficulty == 2 && CurrentKillStage > 1))
+            //         {
+            //             //message.Write(Unknown);
+            //         }
+            //     }
+            // }
         }
     }
 }

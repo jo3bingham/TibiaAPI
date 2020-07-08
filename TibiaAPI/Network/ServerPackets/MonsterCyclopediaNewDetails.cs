@@ -4,8 +4,6 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
 {
     public class MonsterCyclopediaNewDetails : ServerPacket
     {
-        private byte[] _unknown = new byte[3];
-
         public ushort RaceId { get; set; }
 
         public MonsterCyclopediaNewDetails(Client client)
@@ -20,7 +18,7 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
 
             if (Client.VersionNumber < 11900000 && Client.VersionNumber > 11596424)
             {
-                _unknown = message.ReadBytes(3);
+                message.ReadBytes(3);
             }
         }
 
@@ -30,7 +28,7 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
             message.Write(RaceId);
             if (Client.VersionNumber < 11900000 && Client.VersionNumber > 11596424)
             {
-                message.Write(_unknown);
+                //message.Write(Unknown);
             }
         }
     }

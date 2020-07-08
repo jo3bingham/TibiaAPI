@@ -5,7 +5,6 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
     public class DepotTileState : ServerPacket
     {
         public byte State { get; set; }
-        public byte Unknown { get; set; }
 
         public DepotTileState(Client client)
         {
@@ -18,18 +17,19 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
             State = message.ReadByte();
             if (Client.VersionNumber >= 12087995)
             {
-                Unknown = message.ReadByte();
+                message.ReadByte();
             }
         }
 
         public override void AppendToNetworkMessage(NetworkMessage message)
         {
-            message.Write((byte)ServerPacketType.DepotTileState);
-            message.Write(State);
-            if (Client.VersionNumber >= 12087995)
-            {
-                message.Write(Unknown);
-            }
+            // TODO
+            // message.Write((byte)ServerPacketType.DepotTileState);
+            // message.Write(State);
+            // if (Client.VersionNumber >= 12087995)
+            // {
+            //     //message.Write(Unknown);
+            // }
         }
     }
 }

@@ -12,6 +12,8 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
 
         public override void ParseFromNetworkMessage(NetworkMessage message)
         {
+            // TODO
+            
             //DD 9D 00 00 01 00 00 00 00 05 
 
             //DC 9D 00 00 
@@ -55,7 +57,8 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
 
         public override void AppendToNetworkMessage(NetworkMessage message)
         {
-            message.Write((byte)ServerPacketType.CyclopediaCurrentHouseData);
+            // TODO
+            // message.Write((byte)ServerPacketType.CyclopediaCurrentHouseData);
         }
     }
 }

@@ -16,8 +16,6 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
 
         public string PlayerName { get; set; }
 
-        public byte Unknown { get; set; }
-
         public bool IsPlayer { get; set; }
 
         public InspectionList(Client client)
@@ -30,7 +28,8 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
         {
             if (Client.VersionNumber >= 12300000)
             {
-                Unknown = message.ReadByte();
+                // TODO
+                message.ReadByte();
             }
 
             IsPlayer = message.ReadBool();
@@ -76,67 +75,68 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
 
         public override void AppendToNetworkMessage(NetworkMessage message)
         {
-            message.Write((byte)ServerPacketType.InspectionList);
+            // TODO
+            // message.Write((byte)ServerPacketType.InspectionList);
 
-            if (Client.VersionNumber >= 12300000)
-            {
-                message.Write(Unknown);
-            }
+            // if (Client.VersionNumber >= 12300000)
+            // {
+            //     //message.Write(Unknown);
+            // }
 
-            message.Write(IsPlayer);
+            // message.Write(IsPlayer);
 
-            var count = Math.Min(Items.Count, byte.MaxValue);
-            message.Write((byte)count);
-            for (var i = 0; i < count; ++i)
-            {
-                var (Name, Slot, Item, ImbuementIds, Details) = Items[i];
+            // var count = Math.Min(Items.Count, byte.MaxValue);
+            // message.Write((byte)count);
+            // for (var i = 0; i < count; ++i)
+            // {
+            //     var (Name, Slot, Item, ImbuementIds, Details) = Items[i];
 
-                message.Write(Name);
+            //     message.Write(Name);
 
-                if (IsPlayer)
-                {
-                    message.Write(Slot);
-                }
+            //     if (IsPlayer)
+            //     {
+            //         message.Write(Slot);
+            //     }
 
-                message.Write(Item);
+            //     message.Write(Item);
 
-                var size = Math.Min(ImbuementIds.Count, byte.MaxValue);
-                message.Write((byte)size);
-                for (var j = 0; j < size; ++j)
-                {
-                    message.Write(ImbuementIds[j]);
-                }
+            //     var size = Math.Min(ImbuementIds.Count, byte.MaxValue);
+            //     message.Write((byte)size);
+            //     for (var j = 0; j < size; ++j)
+            //     {
+            //         message.Write(ImbuementIds[j]);
+            //     }
 
-                size = Math.Min(Details.Count, byte.MaxValue);
-                message.Write((byte)size);
-                for (var j = 0; j < size; ++j)
-                {
-                    message.Write(Details[j].Name);
-                    message.Write(Details[j].Description);
-                }
-            }
+            //     size = Math.Min(Details.Count, byte.MaxValue);
+            //     message.Write((byte)size);
+            //     for (var j = 0; j < size; ++j)
+            //     {
+            //         message.Write(Details[j].Name);
+            //         message.Write(Details[j].Description);
+            //     }
+            // }
 
-            if (IsPlayer)
-            {
-                message.Write(PlayerName);
-                if (PlayerOutfit is OutfitInstance)
-                {
-                    message.Write((OutfitInstance)PlayerOutfit);
-                }
-                else
-                {
-                    message.Write((ushort)0);
-                    message.Write((ushort)PlayerOutfit.Id);
-                }
+            // if (IsPlayer)
+            // {
+            //     message.Write(PlayerName);
+            //     if (PlayerOutfit is OutfitInstance)
+            //     {
+            //         message.Write((OutfitInstance)PlayerOutfit);
+            //     }
+            //     else
+            //     {
+            //         message.Write((ushort)0);
+            //         message.Write((ushort)PlayerOutfit.Id);
+            //     }
 
-                count = Math.Min(PlayerDetails.Count, byte.MaxValue);
-                message.Write((byte)count);
-                for (var j = 0; j < count; ++j)
-                {
-                    message.Write(PlayerDetails[j].Name);
-                    message.Write(PlayerDetails[j].Description);
-                }
-            }
+            //     count = Math.Min(PlayerDetails.Count, byte.MaxValue);
+            //     message.Write((byte)count);
+            //     for (var j = 0; j < count; ++j)
+            //     {
+            //         message.Write(PlayerDetails[j].Name);
+            //         message.Write(PlayerDetails[j].Description);
+            //     }
+            // }
         }
     }
 }

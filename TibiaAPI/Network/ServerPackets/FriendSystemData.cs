@@ -151,8 +151,9 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
 
         public override void AppendToNetworkMessage(NetworkMessage message)
         {
-            message.Write((byte)ServerPacketType.FriendSystemData);
-            message.Write((byte)DataType);
+            // TODO
+            // message.Write((byte)ServerPacketType.FriendSystemData);
+            // message.Write((byte)DataType);
         }
     }
 }

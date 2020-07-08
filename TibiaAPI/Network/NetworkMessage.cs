@@ -905,7 +905,7 @@ namespace OXGaming.TibiaAPI.Network
         /// </param>
         public void Write(double value)
         {
-            const byte precision = 2;
+            const byte precision = 3;
             Write(precision);
             Write((uint)((value * Math.Pow(10, precision)) + int.MaxValue));
         }

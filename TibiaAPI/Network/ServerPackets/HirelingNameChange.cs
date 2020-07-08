@@ -17,7 +17,8 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
 
         public override void AppendToNetworkMessage(NetworkMessage message)
         {
-            message.Write((byte)ServerPacketType.HirelingNameChange);
+            // TODO
+            // message.Write((byte)ServerPacketType.HirelingNameChange);
         }
     }
 }

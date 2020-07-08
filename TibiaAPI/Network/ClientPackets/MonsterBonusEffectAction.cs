@@ -6,8 +6,8 @@ namespace OXGaming.TibiaAPI.Network.ClientPackets
     {
         public ushort RaceId { get; set; }
 
-        public byte Type { get; set; }
         public byte CharmId { get; set; }
+        public byte Type { get; set; }
 
         public MonsterBonusEffectAction(Client client)
         {

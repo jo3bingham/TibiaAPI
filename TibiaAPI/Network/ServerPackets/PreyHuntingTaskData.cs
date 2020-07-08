@@ -19,7 +19,6 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
         public byte Index { get; set; }
         public byte Stars { get; set; }
         public byte State { get; set; }
-        public byte Unknown { get; set; }
         public byte UnlockOption { get; set; }
 
         public PreyHuntingTaskData(Client client)
@@ -66,7 +65,8 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
                 case 4:
                     {
                         RaceId = message.ReadUInt16();
-                        Unknown = message.ReadByte();
+                        // TODO
+                        message.ReadByte();
                         RequiredKills = message.ReadUInt16();
                         CurrentKills = message.ReadUInt16();
                         Stars = message.ReadByte();
@@ -75,7 +75,8 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
                 case 5:
                     {
                         RaceId = message.ReadUInt16();
-                        Unknown = message.ReadByte();
+                        // TODO
+                        message.ReadByte();
                         RequiredKills = message.ReadUInt16();
                         CurrentKills = message.ReadUInt16();
                     }
@@ -89,62 +90,63 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
 
         public override void AppendToNetworkMessage(NetworkMessage message)
         {
-            message.Write((byte)ServerPacketType.PreyHuntingTaskData);
-            message.Write(Index);
-            message.Write(State);
-            switch (State)
-            {
-                case 0:
-                    message.Write(UnlockOption);
-                    break;
-                case 1:
-                    break;
-                case 2:
-                    {
-                        var count = Math.Min(ushort.MaxValue, Selection.Capacity);
-                        message.Write((ushort)count);
-                        for (var i = 0; i < count; ++i)
-                        {
-                            var (RaceId, IsUnlocked) = Selection[i];
-                            message.Write(RaceId);
-                            message.Write(IsUnlocked);
-                        }
-                    }
-                    break;
-                case 3:
-                    {
-                        var count = Math.Min(ushort.MaxValue, ListSelection.Capacity);
-                        message.Write((ushort)count);
-                        for (var i = 0; i < count; ++i)
-                        {
-                            var (RaceId, IsUnlocked) = ListSelection[i];
-                            message.Write(RaceId);
-                            message.Write(IsUnlocked);
-                        }
-                    }
-                    break;
-                case 4:
-                    {
-                        RaceId = message.ReadUInt16();
-                        Unknown = message.ReadByte();
-                        RequiredKills = message.ReadUInt16();
-                        CurrentKills = message.ReadUInt16();
-                        Stars = message.ReadByte();
-                    }
-                    break;
-                case 5:
-                    {
-                        RaceId = message.ReadUInt16();
-                        Unknown = message.ReadByte();
-                        RequiredKills = message.ReadUInt16();
-                        CurrentKills = message.ReadUInt16();
-                    }
-                    break;
-                default:
-                    {
-                        throw new Exception($"[PreyHuntingTaskData.AppendToNetworkMessage] Unknown state: {State}");
-                    }
-            }
+            // TODO
+            // message.Write((byte)ServerPacketType.PreyHuntingTaskData);
+            // message.Write(Index);
+            // message.Write(State);
+            // switch (State)
+            // {
+            //     case 0:
+            //         message.Write(UnlockOption);
+            //         break;
+            //     case 1:
+            //         break;
+            //     case 2:
+            //         {
+            //             var count = Math.Min(ushort.MaxValue, Selection.Capacity);
+            //             message.Write((ushort)count);
+            //             for (var i = 0; i < count; ++i)
+            //             {
+            //                 var (RaceId, IsUnlocked) = Selection[i];
+            //                 message.Write(RaceId);
+            //                 message.Write(IsUnlocked);
+            //             }
+            //         }
+            //         break;
+            //     case 3:
+            //         {
+            //             var count = Math.Min(ushort.MaxValue, ListSelection.Capacity);
+            //             message.Write((ushort)count);
+            //             for (var i = 0; i < count; ++i)
+            //             {
+            //                 var (RaceId, IsUnlocked) = ListSelection[i];
+            //                 message.Write(RaceId);
+            //                 message.Write(IsUnlocked);
+            //             }
+            //         }
+            //         break;
+            //     case 4:
+            //         {
+            //             message.Write(RaceId);
+            //             //message.Write(Unknown);
+            //             message.Write(RequiredKills);
+            //             message.Write(CurrentKills);
+            //             message.Write(Stars);
+            //         }
+            //         break;
+            //     case 5:
+            //         {
+            //             message.Write(RaceId);
+            //             //message.Write(Unknown);
+            //             message.Write(RequiredKills);
+            //             message.Write(CurrentKills);
+            //         }
+            //         break;
+            //     default:
+            //         {
+            //             throw new Exception($"[PreyHuntingTaskData.AppendToNetworkMessage] Unknown state: {State}");
+            //         }
+            // }
         }
     }
 }

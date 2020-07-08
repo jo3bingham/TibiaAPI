@@ -13,6 +13,7 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
 
         public byte ManaPercent { get; set; }
         public byte Type { get; set; }
+        // TODO
         public byte Unknown { get; set; }
 
         public CreatureUpdate(Client client)
@@ -115,6 +116,7 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
             {
                 ManaPercent = message.ReadByte();
             }
+            // TODO
             else if (Type == 0x0C) // Unknown
             {
                 Unknown = message.ReadByte();
@@ -220,6 +222,7 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
             {
                 message.Write(ManaPercent);
             }
+            // TODO
             else if (Type == 0x0C) // Unknown
             {
                 message.Write(Unknown);

@@ -9,7 +9,7 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
     public class CyclopediaCharacterInfo : ServerPacket
     {
         public List<byte> HirelingJobIds { get; } = new List<byte>();
-        // NOTE: I'm assuming these are byte IDs like Jobs above; need to confirm.
+        // TODO: I'm assuming these are byte IDs like Jobs above; need to confirm.
         public List<byte> HirelingOutfitIds { get; } = new List<byte>();
 
         public List<(string Name, byte Amount)> Blessings { get; } =
@@ -111,7 +111,6 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
         public ushort Stamina { get; set; }
         public ushort StoreXpBoostAddend { get; set; }
         public ushort StoreXpBoostTime { get; set; }
-        public ushort Unknown { get; set; }
 
         public byte AttackType { get; set; }
         public byte BlessingsCurrent { get; set; }
@@ -209,9 +208,9 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
 
                 if (Client.VersionNumber < 12158493)
                 {
-                    Unknown = message.ReadUInt16(); // Always 218?
+                    // TODO
+                    message.ReadUInt16(); // Always 218?
                     PlayerName = message.ReadString();
-                    Client.Logger.Error(PlayerName);
                     Vocation = message.ReadString();
                     LevelDisplay = message.ReadUInt16();
                     Outfit = message.ReadCreatureOutfit();
@@ -515,7 +514,7 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
 
                 if (Client.VersionNumber < 12158493)
                 {
-                    message.Write(Unknown);
+                    message.Write((ushort)218); // Unknown
                     message.Write(PlayerName);
                     message.Write(Vocation);
                     message.Write(LevelDisplay);

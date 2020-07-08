@@ -18,10 +18,8 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
         public ushort CurrentPage { get; set; }
         public ushort NumberOfPages { get; set; }
         public ushort RefreshRate { get; set; }
-        public ushort Unknown { get; set; }
 
         public byte EntriesPerPage { get; set; }
-        public byte Unknown1 { get; set; }
 
         public TournamentLeaderboard(Client client)
         {
@@ -31,7 +29,8 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
 
         public override void ParseFromNetworkMessage(NetworkMessage message)
         {
-            Unknown = message.ReadUInt16();
+            // TODO
+            message.ReadUInt16();
             Worlds.Capacity = message.ReadByte();
             for (var i = 0; i < Worlds.Capacity; ++i)
             {
@@ -54,39 +53,41 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
                 var isNameHighlighted = message.ReadBool();
                 Characters.Add((currentRank, previousRank, name, vocation, points, rankChangeDirection, isRankChangeHighlighted, isNameHighlighted));
             }
-            Unknown1 = message.ReadByte();
+            // TODO
+            message.ReadByte();
             Rewards = message.ReadString();
         }
 
         public override void AppendToNetworkMessage(NetworkMessage message)
         {
-            message.Write((byte)ServerPacketType.TournamentLeaderboard);
-            message.Write(Unknown);
-            var count = Math.Min(Worlds.Count, byte.MaxValue);
-            message.Write((byte)count);
-            for (var i = 0; i < count; ++i)
-            {
-                message.Write(Worlds[i]);
-            }
-            message.Write(SelectedWorld);
-            message.Write(RefreshRate);
-            message.Write(CurrentPage);
-            message.Write(NumberOfPages);
-            count = Math.Min(EntriesPerPage, Math.Min(Characters.Count, byte.MaxValue));
-            message.Write((byte)count);
-            for (var i = 0; i < count; ++i)
-            {
-                message.Write(Characters[i].CurrentRank);
-                message.Write(Characters[i].PreviousRank);
-                message.Write(Characters[i].Name);
-                message.Write(Characters[i].Vocation);
-                message.Write(Characters[i].Points);
-                message.Write(Characters[i].RankChangeDirection);
-                message.Write(Characters[i].IsRankChangeHighlighted);
-                message.Write(Characters[i].IsNameHighlighted);
-            }
-            message.Write(Unknown1);
-            message.Write(Rewards);
+            // TODO
+            // message.Write((byte)ServerPacketType.TournamentLeaderboard);
+            // //message.Write(Unknown);
+            // var count = Math.Min(Worlds.Count, byte.MaxValue);
+            // message.Write((byte)count);
+            // for (var i = 0; i < count; ++i)
+            // {
+            //     message.Write(Worlds[i]);
+            // }
+            // message.Write(SelectedWorld);
+            // message.Write(RefreshRate);
+            // message.Write(CurrentPage);
+            // message.Write(NumberOfPages);
+            // count = Math.Min(EntriesPerPage, Math.Min(Characters.Count, byte.MaxValue));
+            // message.Write((byte)count);
+            // for (var i = 0; i < count; ++i)
+            // {
+            //     message.Write(Characters[i].CurrentRank);
+            //     message.Write(Characters[i].PreviousRank);
+            //     message.Write(Characters[i].Name);
+            //     message.Write(Characters[i].Vocation);
+            //     message.Write(Characters[i].Points);
+            //     message.Write(Characters[i].RankChangeDirection);
+            //     message.Write(Characters[i].IsRankChangeHighlighted);
+            //     message.Write(Characters[i].IsNameHighlighted);
+            // }
+            // //message.Write(Unknown);
+            // message.Write(Rewards);
         }
     }
 }

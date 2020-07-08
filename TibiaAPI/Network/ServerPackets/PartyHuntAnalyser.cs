@@ -15,8 +15,6 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
         public uint LeaderId { get; set; }
         public uint SessionMinutes { get; set; }
 
-        public byte Unknown { get; set; }
-
         public bool HasNames { get; set; }
 
         public PartyHuntAnalyser(Client client)
@@ -29,7 +27,8 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
         {
             SessionMinutes = message.ReadUInt32();
             LeaderId = message.ReadUInt32(); // This is a player ID, but it may not be the leader.
-            Unknown = message.ReadByte();
+            // TODO
+            message.ReadByte();
             MemberInfo.Capacity = message.ReadByte();
             for (var i = 0; i < MemberInfo.Capacity; ++i)
             {
@@ -58,34 +57,35 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
 
         public override void AppendToNetworkMessage(NetworkMessage message)
         {
-            message.Write((byte)ServerPacketType.PartyHuntAnalyser);
-            message.Write(SessionMinutes);
-            message.Write(LeaderId);
-            message.Write(Unknown);
-            var count = Math.Min(byte.MaxValue, MemberInfo.Count);
-            message.Write((byte)count);
-            for (var i = 0; i < count; ++i)
-            {
-                var (PlayerId, Unknown, Loot, Supplies, Damage, Health) = MemberInfo[i];
-                message.Write(PlayerId);
-                message.Write(Unknown);
-                message.Write(Loot);
-                message.Write(Supplies);
-                message.Write(Damage);
-                message.Write(Health);
-            }
-            message.Write(HasNames);
-            if (HasNames)
-            {
-                count = Math.Min(byte.MaxValue, Members.Count);
-                message.Write((byte)count);
-                for (var i = 0; i < count; ++i)
-                {
-                    var (PlayerId, Name) = Members[i];
-                    message.Write(PlayerId);
-                    message.Write(Name);
-                }
-            }
+            // TODO
+            // message.Write((byte)ServerPacketType.PartyHuntAnalyser);
+            // message.Write(SessionMinutes);
+            // message.Write(LeaderId);
+            // //message.Write(Unknown);
+            // var count = Math.Min(byte.MaxValue, MemberInfo.Count);
+            // message.Write((byte)count);
+            // for (var i = 0; i < count; ++i)
+            // {
+            //     var (PlayerId, Unknown, Loot, Supplies, Damage, Health) = MemberInfo[i];
+            //     message.Write(PlayerId);
+            //     message.Write(Unknown);
+            //     message.Write(Loot);
+            //     message.Write(Supplies);
+            //     message.Write(Damage);
+            //     message.Write(Health);
+            // }
+            // message.Write(HasNames);
+            // if (HasNames)
+            // {
+            //     count = Math.Min(byte.MaxValue, Members.Count);
+            //     message.Write((byte)count);
+            //     for (var i = 0; i < count; ++i)
+            //     {
+            //         var (PlayerId, Name) = Members[i];
+            //         message.Write(PlayerId);
+            //         message.Write(Name);
+            //     }
+            // }
         }
     }
 }

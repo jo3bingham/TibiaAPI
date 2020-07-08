@@ -13,7 +13,7 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
 
         public override void AppendToNetworkMessage(NetworkMessage message)
         {
-            foreach (var (TilesToSkip, Objects, Position) in Fields)
+            foreach (var (TilesToSkip, Objects, _) in Fields)
             {
                 foreach (var obj in Objects)
                 {
