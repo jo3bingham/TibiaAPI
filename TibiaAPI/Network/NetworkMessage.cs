@@ -415,16 +415,17 @@ namespace OXGaming.TibiaAPI.Network
                         creature.Brightness = ReadByte();
                         creature.LightColor = ReadByte();
                         creature.Speed = ReadUInt16();
+
+                        if (_client.VersionNumber >= 12409997)
+                        {
+                            var unknown = ReadByte();
+                            _client.Logger.Error($"Unknown: {creature.Name}, {unknown}");
+                        }
+
                         creature.PkFlag = ReadByte();
                         creature.PartyFlag = ReadByte();
                         creature.GuildFlag = ReadByte();
 
-                        if (_client.VersionNumber >= 12409997)
-                        {
-                            var unknown = ReadByte(); // 0, 5
-                            _client.Logger.Error($"Unknown: {creature.Name}, {unknown}");
-                        }
-                        
                         creature.Type = (CreatureType)ReadByte();
                         if (creature.Type == CreatureType.Player && _client.VersionNumber >= 12200000)
                         {
@@ -462,14 +463,15 @@ namespace OXGaming.TibiaAPI.Network
                         creature.Brightness = ReadByte();
                         creature.LightColor = ReadByte();
                         creature.Speed = ReadUInt16();
-                        creature.PkFlag = ReadByte();
-                        creature.PartyFlag = ReadByte();
 
                         if (_client.VersionNumber >= 12409997)
                         {
-                            var unknown = ReadByte(); // 0, 11
+                            var unknown = ReadByte();
                             _client.Logger.Error($"Outdated: {creature.Name}, {unknown}");
                         }
+
+                        creature.PkFlag = ReadByte();
+                        creature.PartyFlag = ReadByte();
 
                         creature.Type = (CreatureType)ReadByte();
                         if (creature.Type == CreatureType.Player && _client.VersionNumber >= 12200000)
