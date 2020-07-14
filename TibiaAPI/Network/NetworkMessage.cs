@@ -419,9 +419,9 @@ namespace OXGaming.TibiaAPI.Network
                         creature.PartyFlag = ReadByte();
                         creature.GuildFlag = ReadByte();
 
-                        var unknown = ReadByte();
+                        var unknown = ReadByte(); // 0, 5
                         creature.Type = (CreatureType)ReadByte();
-                        _client.Logger.Info($"Unknown: {creature.Name}, {creature.Type}, {unknown}");
+                        _client.Logger.Error($"Unknown: {creature.Name}, {creature.Type}, {unknown}");
                         if (creature.Type == CreatureType.Player && _client.VersionNumber >= 12200000)
                         {
                             creature.Vocation = ReadByte();
@@ -461,9 +461,9 @@ namespace OXGaming.TibiaAPI.Network
                         creature.PkFlag = ReadByte();
                         creature.PartyFlag = ReadByte();
 
-                        var unknown = ReadByte();
+                        var unknown = ReadByte(); // 0, 11
                         creature.Type = (CreatureType)ReadByte();
-                        _client.Logger.Info($"Outdated: {creature.Name}, {creature.Type}, {unknown}");
+                        _client.Logger.Error($"Outdated: {creature.Name}, {creature.Type}, {unknown}");
                         if (creature.Type == CreatureType.Player && _client.VersionNumber >= 12200000)
                         {
                             creature.Vocation = ReadByte();
