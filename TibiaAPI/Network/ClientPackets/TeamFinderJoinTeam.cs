@@ -13,6 +13,9 @@ namespace OXGaming.TibiaAPI.Network.ClientPackets
         public override void ParseFromNetworkMessage(NetworkMessage message)
         {
             // TODO
+            // This is more than likely an action type, but I don't have premium to confirm.
+            var unknown = message.ReadByte(); // 00
+            Client.Logger.Error($"[TeamFinderJoinTeam] Unknown: {unknown}");
         }
 
         public override void AppendToNetworkMessage(NetworkMessage message)
