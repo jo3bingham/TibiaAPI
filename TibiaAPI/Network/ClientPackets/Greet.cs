@@ -4,6 +4,8 @@ namespace OXGaming.TibiaAPI.Network.ClientPackets
 {
     public class Greet : ClientPacket
     {
+        public uint NpcId { get; set; }
+
         public Greet(Client client)
         {
             Client = client;
@@ -12,13 +14,13 @@ namespace OXGaming.TibiaAPI.Network.ClientPackets
 
         public override void ParseFromNetworkMessage(NetworkMessage message)
         {
-            // TODO
+            NpcId = message.ReadUInt32();
         }
 
         public override void AppendToNetworkMessage(NetworkMessage message)
         {
-            // TODO
-            // message.Write((byte)ClientPacketType.Greet);
+            message.Write((byte)ClientPacketType.Greet);
+            message.Write(NpcId);
         }
     }
 }
