@@ -239,7 +239,7 @@ namespace Redact
             var p = (OXGaming.TibiaAPI.Network.ServerPackets.Message)packet;
             if (p.MessageMode == MessageModeType.Look)
             {
-                if (_lookPlayerRx.IsMatch(p.Text) || p.Text.Contains("You see yourself."))
+                if (_lookPlayerRx.IsMatch(p.Text) || p.Text.Contains("You see yourself.", StringComparison.OrdinalIgnoreCase))
                 {
                     p.Text = "Redacted";
                 }
@@ -255,6 +255,12 @@ namespace Redact
             {
                 p.SpeakerLevel = 100;
                 p.SpeakerName = "Redacted";
+            }
+            else if (creature is object && creature.Type == CreatureType.Npc)
+            {
+                // In case the NPC used the player's name in their message,
+                // we need to check and replace it.
+                p.Text = p.Text.Replace(p.Client.Player.Name, "Redacted", StringComparison.OrdinalIgnoreCase);
             }
             return true;
         }
