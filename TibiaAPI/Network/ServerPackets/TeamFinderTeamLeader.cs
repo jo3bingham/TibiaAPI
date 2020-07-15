@@ -1,9 +1,23 @@
-﻿using OXGaming.TibiaAPI.Constants;
+﻿using System.Collections.Generic;
+
+using OXGaming.TibiaAPI.Constants;
 
 namespace OXGaming.TibiaAPI.Network.ServerPackets
 {
     public class TeamFinderTeamLeader : ServerPacket
     {
+        public List<(uint Id, string Name, ushort Level, byte Vocation, byte Status)> Members { get; } =
+            new List<(uint Id, string Name, ushort Level, byte Vocation, byte Status)>();
+
+        public uint StartTime { get; set; }
+
+        public ushort FreeSlots { get; set; }
+        public ushort MaxLevel { get; set; }
+        public ushort MinLevel { get; set; }
+        public ushort TeamSize { get; set; }
+
+        public byte Vocations { get; set; } // Bit Flag
+
         public TeamFinderTeamLeader(Client client)
         {
             Client = client;
@@ -13,50 +27,34 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
         public override void ParseFromNetworkMessage(NetworkMessage message)
         {
             // TODO
-
-            // 01
-
-            // 00 00 00 00 00 00 FF FF FF FF 00 00 00 00 00 00 00
-
-            // 00
-            // 52 00
-            // 7B 00
-            // 02 //vocations
-            // 02 00
-            // 01 00
-            // 01 00 00 00
-            // 02 19 00 4B 00 01 00 16 CB DA 02
-            // 0C 00 <hidden> //player name
-            // 67 00 03 03
-
-            // 00
-            // 51 00 //min level
-            // 7A 00 //max level
-            // 1E //vocations
-            // 04 00 //max team size
-            // 03 00 //free slots
-            // 58 94 0E 5F //start time
-            // 02 //activity type?
-            // 19 00 47 00 //activity id?
-            // 01 00 //number of members
-            // 16 CB DA 02 //player id
-            // 0C 00 <hidden> // player name
-            // 66 00 //level
-            // 03 //vocation id
-            // 03 //status (3 = online)
-
-            // 00
-            // 51 00
-            // 7A 00
-            // 00
-            // 03 00
-            // 02 00
-            // 01 00 00 00
-            // 02 00 00 00 00 01 00
-            // 16 CB DA 02
-            // 0C 00 <hidden>
-            // 66 00 03 03
-
+            var unknown = message.ReadByte(); // Possibly a boolean flag; IsUpdated?
+            if (unknown == 1)
+            {
+            }
+            else if (unknown == 0)
+            {
+                MinLevel = message.ReadUInt16();
+                MaxLevel = message.ReadUInt16();
+                Vocations = message.ReadByte();
+                TeamSize = message.ReadUInt16();
+                FreeSlots = message.ReadUInt16();
+                StartTime = message.ReadUInt32();
+                var count = message.ReadByte();
+                for (var i = 0; i < count; i++)
+                {
+                    var _ = message.ReadUInt16(); // 19 00; 47 00
+                }
+                Members.Capacity = message.ReadUInt16();
+                for (var i = 0; i < Members.Capacity; i++)
+                {
+                    var id = message.ReadUInt32();
+                    var name = message.ReadString();
+                    var level = message.ReadUInt16();
+                    var vocation = message.ReadByte();
+                    var status = message.ReadByte();
+                    Members.Add((id, name, level, vocation, status));
+                }
+            }
         }
 
         public override void AppendToNetworkMessage(NetworkMessage message)

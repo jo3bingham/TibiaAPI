@@ -4,6 +4,10 @@ namespace OXGaming.TibiaAPI.Network.ClientPackets
 {
     public class PreyHuntingTaskAction : ClientPacket
     {
+        public ushort RaceId { get; set; }
+
+        public byte Index { get; set; }
+
         public PreyHuntingTaskAction(Client client)
         {
             Client = client;
@@ -13,14 +17,9 @@ namespace OXGaming.TibiaAPI.Network.ClientPackets
         public override void ParseFromNetworkMessage(NetworkMessage message)
         {
             // TODO
-
-            // 01 03 00 A2 05
-
-            // 00 03 00 1C 01
-
-            message.ReadByte(); //index
-            message.ReadUInt16(); //?
-            message.ReadUInt16(); //race id
+            Index = message.ReadByte();
+            message.ReadUInt16(); // 03 00
+            RaceId = message.ReadUInt16();
         }
 
         public override void AppendToNetworkMessage(NetworkMessage message)

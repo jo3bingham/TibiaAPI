@@ -418,8 +418,9 @@ namespace OXGaming.TibiaAPI.Network
 
                         if (_client.VersionNumber >= 12409997)
                         {
-                            var unknown = ReadByte();
-                            _client.Logger.Error($"Unknown: {creature.Name}, {unknown}");
+                            // Always 0. I tried changing it to a different value for players, monsters,
+                            // and NPCs (separately), but it would always crash the client.
+                            var _ = ReadByte();
                         }
 
                         creature.PkFlag = ReadByte();
@@ -466,8 +467,9 @@ namespace OXGaming.TibiaAPI.Network
 
                         if (_client.VersionNumber >= 12409997)
                         {
-                            var unknown = ReadByte();
-                            _client.Logger.Error($"Outdated: {creature.Name}, {unknown}");
+                            // Always 0. I tried changing it to a different value for players, monsters,
+                            // and NPCs (separately), but it would always crash the client.
+                            var _ = ReadByte();
                         }
 
                         creature.PkFlag = ReadByte();

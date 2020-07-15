@@ -4,6 +4,8 @@ namespace OXGaming.TibiaAPI.Network.ClientPackets
 {
     public class TeamFinderJoinTeam : ClientPacket
     {
+        public byte Type { get; set; }
+
         public TeamFinderJoinTeam(Client client)
         {
             Client = client;
@@ -13,12 +15,14 @@ namespace OXGaming.TibiaAPI.Network.ClientPackets
         public override void ParseFromNetworkMessage(NetworkMessage message)
         {
             // TODO
-
-            // 01 0E 00 00 00
-
-            // This is more than likely an action type, but I don't have premium to confirm.
-            var unknown = message.ReadByte(); // 00
-            Client.Logger.Error($"[TeamFinderJoinTeam] Unknown: {unknown}");
+            Type = message.ReadByte();
+            if (Type == 0)
+            {
+            }
+            else if (Type == 1)
+            {
+                message.ReadBytes(4); // 0E 00 00 00
+            }
         }
 
         public override void AppendToNetworkMessage(NetworkMessage message)
