@@ -42,7 +42,7 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
                 var count = message.ReadByte();
                 for (var i = 0; i < count; i++)
                 {
-                    var _ = message.ReadUInt16(); // 19 00; 47 00
+                    var _ = message.ReadUInt16(); // 19 00 47 00
                 }
                 Members.Capacity = message.ReadUInt16();
                 for (var i = 0; i < Members.Capacity; i++)

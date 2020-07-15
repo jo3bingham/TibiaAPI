@@ -36,7 +36,11 @@ namespace OXGaming.TibiaAPI.Network.ClientPackets
                 FreeSlots = message.ReadUInt16();
                 message.ReadByte(); // 00
                 StartTime = message.ReadUInt32();
-                message.ReadBytes(5); // 02 19 00 47 00; 02 19 00 4B 00; 02 00 00 00 00
+                var count = message.ReadByte();
+                for (var i = 0; i < count; i++)
+                {
+                    var _ = message.ReadUInt16(); // 19 00 47 00; 19 00 4B 00; 00 00 00 00
+                }
             }
         }
 
