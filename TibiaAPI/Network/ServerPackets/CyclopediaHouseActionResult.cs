@@ -13,6 +13,8 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
         public override void ParseFromNetworkMessage(NetworkMessage message)
         {
             // TODO
+
+            // 3D 28 00 00 01 11
         }
 
         public override void AppendToNetworkMessage(NetworkMessage message)

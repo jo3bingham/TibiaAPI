@@ -18,6 +18,18 @@ namespace OXGaming.TibiaAPI.Network.ClientPackets
 
             // FF FF FF FF may be vocation selection of `(all)`
             // 14 may be number of entries per page
+
+            // 00 06 02 00 00 00 04 00 5A 75 6E 61 01 00 14 //switch to paladin
+
+            // 00 05 02 00 00 00 04 00 5A 75 6E 61 01 00 14 //switch to distance
+
+            // 00 05 02 00 00 00 06 00 41 6E 74 69 63 61 01 00 14 //switch to antica
+
+            message.ReadByte(); //?
+            message.ReadByte(); //category id
+            message.ReadUInt32(); //vocation id
+            message.ReadString(); //world
+            message.ReadBytes(3); //?
         }
 
         public override void AppendToNetworkMessage(NetworkMessage message)
