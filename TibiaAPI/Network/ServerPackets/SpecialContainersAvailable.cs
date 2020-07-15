@@ -13,7 +13,7 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
         public override void ParseFromNetworkMessage(NetworkMessage message)
         {
             // TODO
-            message.ReadUInt32();
+            message.ReadUInt16(); // 01 01
         }
 
         public override void AppendToNetworkMessage(NetworkMessage message)
