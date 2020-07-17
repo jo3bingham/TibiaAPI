@@ -10,6 +10,7 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
         public List<(ushort Id, byte Data, string Name, uint Weight, uint BuyPrice, uint SellPrice)> Offers { get; } =
             new List<(ushort Id, byte Data, string Name, uint Weight, uint BuyPrice, uint SellPrice)>();
 
+        public string CurrencyName { get; set; }
         public string NpcName { get; set; }
 
         public ushort CurrencyItemId { get; set; }
@@ -26,6 +27,11 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
             if (Client.VersionNumber >= 12087995)
             {
                 CurrencyItemId = message.ReadUInt16();
+            }
+            if (Client.VersionNumber >= 12409997)
+            {
+                // If this is set, it will override `CurrencyItemId`.
+                CurrencyName = message.ReadString();
             }
             Offers.Capacity = message.ReadUInt16();
             for (var i = 0; i < Offers.Capacity; ++i)
@@ -47,6 +53,10 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
             if (Client.VersionNumber >= 12087995)
             {
                 message.Write(CurrencyItemId);
+            }
+            if (Client.VersionNumber >= 12409997)
+            {
+                message.Write(CurrencyName);
             }
             var count = Math.Min(Offers.Count, ushort.MaxValue);
             message.Write((ushort)count);
