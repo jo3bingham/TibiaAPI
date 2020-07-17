@@ -420,7 +420,7 @@ namespace OXGaming.TibiaAPI.Network
                         {
                             // Always 0. I tried changing it to a different value for players, monsters,
                             // and NPCs (separately), but it would always crash the client.
-                            var _ = ReadByte();
+                            creature.Unknown = ReadByte();
                         }
 
                         creature.PkFlag = ReadByte();
@@ -469,7 +469,7 @@ namespace OXGaming.TibiaAPI.Network
                         {
                             // Always 0. I tried changing it to a different value for players, monsters,
                             // and NPCs (separately), but it would always crash the client.
-                            var _ = ReadByte();
+                            creature.Unknown = ReadByte();
                         }
 
                         creature.PkFlag = ReadByte();
@@ -1040,6 +1040,12 @@ namespace OXGaming.TibiaAPI.Network
                         Write(value.Brightness);
                         Write(value.LightColor);
                         Write(value.Speed);
+
+                        if (_client.VersionNumber >= 12409997)
+                        {
+                            Write(value.Unknown);
+                        }
+
                         Write(value.PkFlag);
                         Write(value.PartyFlag);
                         Write(value.GuildFlag);
@@ -1084,6 +1090,12 @@ namespace OXGaming.TibiaAPI.Network
                         Write(value.Brightness);
                         Write(value.LightColor);
                         Write(value.Speed);
+
+                        if (_client.VersionNumber >= 12409997)
+                        {
+                            Write(value.Unknown);
+                        }
+
                         Write(value.PkFlag);
                         Write(value.PartyFlag);
 

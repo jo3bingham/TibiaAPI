@@ -13,6 +13,7 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
 
         public byte ManaPercent { get; set; }
         public byte Type { get; set; }
+
         // TODO
         public byte Unknown { get; set; }
 
@@ -57,6 +58,12 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
                     Creature.Brightness = message.ReadByte();
                     Creature.LightColor = message.ReadByte();
                     Creature.Speed = message.ReadUInt16();
+
+                    if (Client.VersionNumber >= 12409997)
+                    {
+                        Creature.Unknown = message.ReadByte();
+                    }
+
                     Creature.PkFlag = message.ReadByte();
                     Creature.PartyFlag = message.ReadByte();
                     Creature.GuildFlag = message.ReadByte();
@@ -93,6 +100,12 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
                     Creature.Brightness = message.ReadByte();
                     Creature.LightColor = message.ReadByte();
                     Creature.Speed = message.ReadUInt16();
+
+                    if (Client.VersionNumber >= 12409997)
+                    {
+                        Creature.Unknown = message.ReadByte();
+                    }
+
                     Creature.PkFlag = message.ReadByte();
                     Creature.PartyFlag = message.ReadByte();
 
@@ -159,6 +172,12 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
                     message.Write(Creature.Brightness);
                     message.Write(Creature.LightColor);
                     message.Write(Creature.Speed);
+
+                    if (Client.VersionNumber >= 12409997)
+                    {
+                        message.Write(Creature.Unknown);
+                    }
+
                     message.Write(Creature.PkFlag);
                     message.Write(Creature.PartyFlag);
                     message.Write(Creature.GuildFlag);
@@ -200,6 +219,12 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
                     message.Write(Creature.Brightness);
                     message.Write(Creature.LightColor);
                     message.Write(Creature.Speed);
+
+                    if (Client.VersionNumber >= 12409997)
+                    {
+                        message.Write(Creature.Unknown);
+                    }
+
                     message.Write(Creature.PkFlag);
                     message.Write(Creature.PartyFlag);
                     message.Write(Creature.GuildFlag);

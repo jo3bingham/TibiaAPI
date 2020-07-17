@@ -40,6 +40,9 @@ namespace OXGaming.TibiaAPI.Creatures
 
         public bool Visible { get; set; }
 
+        // TODO
+        public byte Unknown { get; set; }
+
         public bool IsSummon
         {
             get
