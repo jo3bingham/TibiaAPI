@@ -23,6 +23,8 @@ namespace OXGaming.TibiaAPI.Network
         public event ReceivedPacketEventHandler OnReceivedClientDepotSearchRetrievePacket;
         public event ReceivedPacketEventHandler OnReceivedClientTrackBestiaryRacePacket;
         public event ReceivedPacketEventHandler OnReceivedClientPartyHuntAnalyserPacket;
+        public event ReceivedPacketEventHandler OnReceivedClientTeamFinderAssembleTeamPacket;
+        public event ReceivedPacketEventHandler OnReceivedClientTeamFinderJoinTeamPacket;
         public event ReceivedPacketEventHandler OnReceivedClientClientCheckPacket;
         public event ReceivedPacketEventHandler OnReceivedClientGoPathPacket;
         public event ReceivedPacketEventHandler OnReceivedClientGoNorthPacket;
@@ -91,8 +93,10 @@ namespace OXGaming.TibiaAPI.Network
         public event ReceivedPacketEventHandler OnReceivedClientInviteToChannelPacket;
         public event ReceivedPacketEventHandler OnReceivedClientExcludeFromChannelPacket;
         public event ReceivedPacketEventHandler OnReceivedClientCyclopediaHouseActionPacket;
+        public event ReceivedPacketEventHandler OnReceivedClientHighscoresPacket;
         public event ReceivedPacketEventHandler OnReceivedClientPreyHuntingTaskActionPacket;
         public event ReceivedPacketEventHandler OnReceivedClientCancelPacket;
+        public event ReceivedPacketEventHandler OnReceivedClientClaimTournamentRewardPacket;
         public event ReceivedPacketEventHandler OnReceivedClientTournamentInformationPacket;
         public event ReceivedPacketEventHandler OnReceivedClientSubscribeToUpdatesPacket;
         public event ReceivedPacketEventHandler OnReceivedClientTournamentLeaderboardPacket;
@@ -169,6 +173,8 @@ namespace OXGaming.TibiaAPI.Network
         public event ReceivedPacketEventHandler OnReceivedServerDepotTileStatePacket;
         public event ReceivedPacketEventHandler OnReceivedServerPartyHuntAnalyserPacket;
         public event ReceivedPacketEventHandler OnReceivedServerSpecialContainersAvailablePacket;
+        public event ReceivedPacketEventHandler OnReceivedServerTeamFinderTeamLeaderPacket;
+        public event ReceivedPacketEventHandler OnReceivedServerTeamFinderTeamMemberPacket;
         public event ReceivedPacketEventHandler OnReceivedServerClientCheckPacket;
         public event ReceivedPacketEventHandler OnReceivedServerFullMapPacket;
         public event ReceivedPacketEventHandler OnReceivedServerTopRowPacket;
@@ -239,6 +245,7 @@ namespace OXGaming.TibiaAPI.Network
         public event ReceivedPacketEventHandler OnReceivedServerOpenChannelPacket;
         public event ReceivedPacketEventHandler OnReceivedServerPrivateChannelPacket;
         public event ReceivedPacketEventHandler OnReceivedServerEditGuildMessagePacket;
+        public event ReceivedPacketEventHandler OnReceivedServerHighscoresPacket;
         public event ReceivedPacketEventHandler OnReceivedServerOpenOwnChannelPacket;
         public event ReceivedPacketEventHandler OnReceivedServerCloseChannelPacket;
         public event ReceivedPacketEventHandler OnReceivedServerMessagePacket;
@@ -393,6 +400,12 @@ namespace OXGaming.TibiaAPI.Network
                             break;
                         case ClientPacketType.PartyHuntAnalyser:
                             packet.Forward = OnReceivedClientPartyHuntAnalyserPacket?.Invoke(packet) ?? true;
+                            break;
+                        case ClientPacketType.TeamFinderAssembleTeam:
+                            packet.Forward = OnReceivedClientTeamFinderAssembleTeamPacket?.Invoke(packet) ?? true;
+                            break;
+                        case ClientPacketType.TeamFinderJoinTeam:
+                            packet.Forward = OnReceivedClientTeamFinderJoinTeamPacket?.Invoke(packet) ?? true;
                             break;
                         case ClientPacketType.ClientCheck:
                             packet.Forward = OnReceivedClientClientCheckPacket?.Invoke(packet) ?? true;
@@ -598,11 +611,17 @@ namespace OXGaming.TibiaAPI.Network
                         case ClientPacketType.CyclopediaHouseAction:
                             packet.Forward = OnReceivedClientCyclopediaHouseActionPacket?.Invoke(packet) ?? true;
                             break;
+                        case ClientPacketType.Highscores:
+                            packet.Forward = OnReceivedClientHighscoresPacket?.Invoke(packet) ?? true;
+                            break;
                         case ClientPacketType.PreyHuntingTaskAction:
                             packet.Forward = OnReceivedClientPreyHuntingTaskActionPacket?.Invoke(packet) ?? true;
                             break;
                         case ClientPacketType.Cancel:
                             packet.Forward = OnReceivedClientCancelPacket?.Invoke(packet) ?? true;
+                            break;
+                        case ClientPacketType.ClaimTournamentReward:
+                            packet.Forward = OnReceivedClientClaimTournamentRewardPacket?.Invoke(packet) ?? true;
                             break;
                         case ClientPacketType.TournamentInformation:
                             packet.Forward = OnReceivedClientTournamentInformationPacket?.Invoke(packet) ?? true;
@@ -880,8 +899,8 @@ namespace OXGaming.TibiaAPI.Network
                         case ServerPacketType.Stash:
                             packet.Forward = OnReceivedServerStashPacket?.Invoke(packet) ?? true;
                             break;
-                        case ServerPacketType.DepotTileState:
-                            if (client.VersionNumber >= 1230000)
+                        case ServerPacketType.SpecialContainersAvailable:
+                            if (client.VersionNumber >= 12300000)
                             {
                                 packet.Forward = OnReceivedServerSpecialContainersAvailablePacket?.Invoke(packet) ?? true;
                             }
@@ -893,8 +912,18 @@ namespace OXGaming.TibiaAPI.Network
                         case ServerPacketType.PartyHuntAnalyser:
                             packet.Forward = OnReceivedServerPartyHuntAnalyserPacket?.Invoke(packet) ?? true;
                             break;
-                        case ServerPacketType.SpecialContainersAvailable:
-                            packet.Forward = OnReceivedServerSpecialContainersAvailablePacket?.Invoke(packet) ?? true;
+                        case ServerPacketType.TeamFinderTeamLeader:
+                            if (client.VersionNumber >= 12400000)
+                            {
+                                packet.Forward = OnReceivedServerTeamFinderTeamLeaderPacket?.Invoke(packet) ?? true;
+                            }
+                            else
+                            {
+                                packet.Forward = OnReceivedServerSpecialContainersAvailablePacket?.Invoke(packet) ?? true;
+                            }
+                            break;
+                        case ServerPacketType.TeamFinderTeamMember:
+                            packet.Forward = OnReceivedServerTeamFinderTeamMemberPacket?.Invoke(packet) ?? true;
                             break;
                         case ServerPacketType.ClientCheck:
                             packet.Forward = OnReceivedServerClientCheckPacket?.Invoke(packet) ?? true;
@@ -1109,6 +1138,9 @@ namespace OXGaming.TibiaAPI.Network
                             break;
                         case ServerPacketType.EditGuildMessage:
                             packet.Forward = OnReceivedServerEditGuildMessagePacket?.Invoke(packet) ?? true;
+                            break;
+                        case ServerPacketType.Highscores:
+                            packet.Forward = OnReceivedServerHighscoresPacket?.Invoke(packet) ?? true;
                             break;
                         case ServerPacketType.OpenOwnChannel:
                             packet.Forward = OnReceivedServerOpenOwnChannelPacket?.Invoke(packet) ?? true;

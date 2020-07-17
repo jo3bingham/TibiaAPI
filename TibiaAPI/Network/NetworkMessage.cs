@@ -415,6 +415,14 @@ namespace OXGaming.TibiaAPI.Network
                         creature.Brightness = ReadByte();
                         creature.LightColor = ReadByte();
                         creature.Speed = ReadUInt16();
+
+                        if (_client.VersionNumber >= 12409997)
+                        {
+                            // Always 0. I tried changing it to a different value for players, monsters,
+                            // and NPCs (separately), but it would always crash the client.
+                            creature.Unknown = ReadByte();
+                        }
+
                         creature.PkFlag = ReadByte();
                         creature.PartyFlag = ReadByte();
                         creature.GuildFlag = ReadByte();
@@ -456,6 +464,14 @@ namespace OXGaming.TibiaAPI.Network
                         creature.Brightness = ReadByte();
                         creature.LightColor = ReadByte();
                         creature.Speed = ReadUInt16();
+
+                        if (_client.VersionNumber >= 12409997)
+                        {
+                            // Always 0. I tried changing it to a different value for players, monsters,
+                            // and NPCs (separately), but it would always crash the client.
+                            creature.Unknown = ReadByte();
+                        }
+
                         creature.PkFlag = ReadByte();
                         creature.PartyFlag = ReadByte();
 
@@ -1024,6 +1040,12 @@ namespace OXGaming.TibiaAPI.Network
                         Write(value.Brightness);
                         Write(value.LightColor);
                         Write(value.Speed);
+
+                        if (_client.VersionNumber >= 12409997)
+                        {
+                            Write(value.Unknown);
+                        }
+
                         Write(value.PkFlag);
                         Write(value.PartyFlag);
                         Write(value.GuildFlag);
@@ -1068,6 +1090,12 @@ namespace OXGaming.TibiaAPI.Network
                         Write(value.Brightness);
                         Write(value.LightColor);
                         Write(value.Speed);
+
+                        if (_client.VersionNumber >= 12409997)
+                        {
+                            Write(value.Unknown);
+                        }
+
                         Write(value.PkFlag);
                         Write(value.PartyFlag);
 

@@ -28,7 +28,7 @@ namespace OXGaming.TibiaAPI.Network.ClientPackets
 
         public override void ParseFromNetworkMessage(NetworkMessage message)
         {
-            // TODO: Figure out Actions 0x0C, 0x0E, 0x0F (if they exist),
+            // TODO: Figure out Action 0x0E (if exists),
             // and others (if there are any).
             Action = message.ReadByte();
             if (Action == 0x00) // Open Window
@@ -78,10 +78,16 @@ namespace OXGaming.TibiaAPI.Network.ClientPackets
             {
                 PlayerName = message.ReadString();
             }
+            else if (Action == 0x0C) // Badges
+            {
+            }
             else if (Action == 0x0D) // Change Badge Display
             {
                 BadgeId = message.ReadUInt32();
                 DisplayBadge = message.ReadBool();
+            }
+            else if (Action == 0x0F) // Friends Config
+            {
             }
             else if (Action == 0x10) // Change Config
             {
@@ -147,10 +153,16 @@ namespace OXGaming.TibiaAPI.Network.ClientPackets
             {
                 message.Write(PlayerName);
             }
+            else if (Action == 0x0C) // Badges
+            {
+            }
             else if (Action == 0x0D) // Change Badge Display
             {
                 message.Write(BadgeId);
                 message.Write(DisplayBadge);
+            }
+            else if (Action == 0x0F) // Friends Config
+            {
             }
             else if (Action == 0x10) // Change Config
             {

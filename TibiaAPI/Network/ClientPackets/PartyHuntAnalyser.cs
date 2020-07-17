@@ -2,25 +2,23 @@
 
 namespace OXGaming.TibiaAPI.Network.ClientPackets
 {
-    public class Greet : ClientPacket
+    public class PartyHuntAnalyser : ClientPacket
     {
-        public uint NpcId { get; set; }
-
-        public Greet(Client client)
+        public PartyHuntAnalyser(Client client)
         {
             Client = client;
-            PacketType = ClientPacketType.Greet;
+            PacketType = ClientPacketType.PartyHuntAnalyser;
         }
 
         public override void ParseFromNetworkMessage(NetworkMessage message)
         {
-            NpcId = message.ReadUInt32();
+            // TODO
         }
 
         public override void AppendToNetworkMessage(NetworkMessage message)
         {
-            message.Write((byte)ClientPacketType.Greet);
-            message.Write(NpcId);
+            // TODO
+            // message.Write((byte)ClientPacketType.PartyHuntAnalyser);
         }
     }
 }

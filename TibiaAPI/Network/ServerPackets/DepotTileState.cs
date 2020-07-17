@@ -4,32 +4,32 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
 {
     public class DepotTileState : ServerPacket
     {
-        public byte State { get; set; }
+        public bool EnableShowInMarket { get; set; }
+        public bool EnableStow { get; set; }
 
         public DepotTileState(Client client)
         {
             Client = client;
-            PacketType = ServerPacketType.DepotTileState;
+            PacketType = ServerPacketType.SpecialContainersAvailable;
         }
 
         public override void ParseFromNetworkMessage(NetworkMessage message)
         {
-            State = message.ReadByte();
+            EnableStow = message.ReadBool();
             if (Client.VersionNumber >= 12087995)
             {
-                message.ReadByte();
+                EnableShowInMarket = message.ReadBool();
             }
         }
 
         public override void AppendToNetworkMessage(NetworkMessage message)
         {
-            // TODO
-            // message.Write((byte)ServerPacketType.DepotTileState);
-            // message.Write(State);
-            // if (Client.VersionNumber >= 12087995)
-            // {
-            //     //message.Write(Unknown);
-            // }
+            message.Write((byte)ServerPacketType.SpecialContainersAvailable);
+            message.Write(EnableStow);
+            if (Client.VersionNumber >= 12087995)
+            {
+                message.Write(EnableShowInMarket);
+            }
         }
     }
 }

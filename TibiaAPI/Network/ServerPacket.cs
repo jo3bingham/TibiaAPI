@@ -42,12 +42,21 @@ namespace OXGaming.TibiaAPI.Network
                     return new ServerPackets.Dead(client);
                 case ServerPacketType.Stash:
                     return new ServerPackets.Stash(client);
-                case ServerPacketType.DepotTileState:
-                    return new ServerPackets.DepotTileState(client);
+                case ServerPacketType.SpecialContainersAvailable:
+                    if (client.VersionNumber >= 12400000)
+                    {
+                        return new ServerPackets.SpecialContainersAvailable(client);
+                    }
+                    else
+                    {
+                        return new ServerPackets.DepotTileState(client);
+                    }
                 case ServerPacketType.PartyHuntAnalyser:
                     return new ServerPackets.PartyHuntAnalyser(client);
-                case ServerPacketType.SpecialContainersAvailable:
-                    return new ServerPackets.SpecialContainersAvailable(client);
+                case ServerPacketType.TeamFinderTeamLeader:
+                    return new ServerPackets.TeamFinderTeamLeader(client);
+                case ServerPacketType.TeamFinderTeamMember:
+                    return new ServerPackets.TeamFinderTeamMember(client);
                 case ServerPacketType.ClientCheck:
                     return new ServerPackets.ClientCheck(client);
                 case ServerPacketType.FullMap:
@@ -186,6 +195,8 @@ namespace OXGaming.TibiaAPI.Network
                     return new ServerPackets.PrivateChannel(client);
                 case ServerPacketType.EditGuildMessage:
                     return new ServerPackets.EditGuildMessage(client);
+                case ServerPacketType.Highscores:
+                    return new ServerPackets.Highscores(client);
                 case ServerPacketType.OpenOwnChannel:
                     return new ServerPackets.OpenOwnChannel(client);
                 case ServerPacketType.CloseChannel:
@@ -214,6 +225,8 @@ namespace OXGaming.TibiaAPI.Network
                     return new ServerPackets.UpdateLootContainers(client);
                 case ServerPacketType.PlayerDataTournament:
                     return new ServerPackets.PlayerDataTournament(client);
+                case ServerPacketType.CyclopediaHouseActionResult:
+                    return new ServerPackets.CyclopediaHouseActionResult(client);
                 case ServerPacketType.TournamentInformation:
                     return new ServerPackets.TournamentInformation(client);
                 case ServerPacketType.TournamentLeaderboard:
