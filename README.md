@@ -1,3 +1,5 @@
+![.NET Core](https://github.com/jo3bingham/TibiaAPI/workflows/.NET%20Core/badge.svg)
+
 # TibiaAPI
 TibiaAPI is an open-source, cross-platform proxy written in C#. You will need to install .NET Core 3.1 to take full advantage of the code in this repository.
 
