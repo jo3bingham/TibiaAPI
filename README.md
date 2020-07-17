@@ -77,6 +77,8 @@ You can specify a single recording, or a directory of recordings, with the `-r/-
 If specifying a directory of recordings, a new OTBM file will be created for reach recording. 
 The format of created OTBM files is (XYZ is login position and date is UTC time): `RecordingFilename__X_Y_Z__Day_Month_Year__Hour_Minute_Second.otbm`
 
+The Extract app uses the `ItemsIgnore.xml` and `ItemsReplace.xml` files in the `Content` directory for ignoring/replacing items when creating OTBM files. 
+
 By default, the `Extract` app outputs created OTBM files to the current directory. 
 You can override this by passing `-o/--outdirectory` on the command-line. 
 e.g., `-o=C:\ExtractedMaps\`.
