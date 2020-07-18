@@ -371,12 +371,22 @@ namespace Extract
 
                     if (serverId != 0 && clientId != 0)
                     {
-                        _clientToServerIds.Add(clientId, serverId);
+                        if (_clientToServerIds.ContainsKey(clientId))
+                        {
+                            var value = _clientToServerIds[clientId];
+                            Console.WriteLine($"Failed to map Server ID `{serverId}` to Client ID `{clientId}`. " +
+                                $"Client ID `{clientId}` is already mapped to Server ID `{value}`.");
+                        }
+                        else
+                        {
+                            _clientToServerIds[clientId] = serverId;
+                        }
                         serverId = 0;
                         clientId = 0;
                     }
                 }
             }
+            Console.WriteLine("Done");
         }
 
         static void LoadXML(string filename)
