@@ -24,6 +24,7 @@ namespace Extract
         private static readonly HashSet<uint> _ignoreIds = new HashSet<uint>();
 
         private static readonly Dictionary<uint, uint> _replaceIds = new Dictionary<uint, uint>();
+        private static readonly Dictionary<ushort, ushort> _clientToServerIds = new Dictionary<ushort, ushort>();
 
         private static Client _client;
 
@@ -41,6 +42,7 @@ namespace Extract
         private static Logger.LogOutput _logOutput = Logger.LogOutput.Console;
 
         private static string _currentFilename;
+        private static string _otbFilename;
         private static string _outDirectory;
         private static string _recording;
         private static string _tibiaDirectory = string.Empty;
@@ -104,6 +106,10 @@ namespace Extract
                                 Console.WriteLine("[optional] --time=<seconds> or --timestamp=<seconds>: " +
                                     "<seconds> is the number of seconds from the start of the recording to stop extraction." +
                                     "If this is not specified, extraction will run until the end of the recording.");
+                                Console.WriteLine("[optional] --otb=<path>: " +
+                                    "<path> is the path to your items.otb file. +" +
+                                    "By default, the OTBM file is created using client IDs for items. +" +
+                                    "By specifying an OTB file, the OTBM file will be created with server IDs.");
 
                                 Console.WriteLine("[optional] --loglevel=[debug,info,warning,error,disabled]: " +
                                     "Sets the log level within the API. Default: error");
@@ -155,6 +161,11 @@ namespace Extract
                                     Console.WriteLine($"{splitArg[1]} is not a valid timestamp!");
                                     return false;
                                 }
+                            }
+                            break;
+                        case "--otb":
+                            {
+                                _otbFilename = splitArg[1].Replace("\"", "");
                             }
                             break;
                         case "--loglevel":
@@ -235,6 +246,11 @@ namespace Extract
                     }
                 }
 
+                if (!string.IsNullOrEmpty(_otbFilename))
+                {
+                    LoadOtb();
+                }
+
                 if (_extractMapData)
                 {
                     LoadXML("ItemsIgnore.xml");
@@ -292,6 +308,118 @@ namespace Extract
             catch (Exception ex)
             {
                 Console.WriteLine(ex);
+            }
+        }
+
+        private static void LoadOtb()
+        {
+            Console.WriteLine("Loading OTB file...");
+            using var fileStream = new BinaryReader(File.OpenRead(_otbFilename));
+            while (fileStream.ReadByte() != 0xFE) { } // skip to root node
+            while (fileStream.ReadByte() != 0x01) { } // skip to version attribute
+            var skipBytes = fileStream.ReadUInt16();
+            fileStream.BaseStream.Seek(skipBytes, SeekOrigin.Current); // skip version info
+            while (fileStream.BaseStream.Position < fileStream.BaseStream.Length)
+            {
+                var serverId = ushort.MinValue;
+                var clientId = ushort.MinValue;
+
+                // We've reached the end of the file.
+                if (fileStream.ReadByte() == 0xFF)
+                {
+                    break;
+                }
+
+                // The OTB format is really, really stupid (no offense).
+                using var ms = new MemoryStream();
+                while (true)
+                {
+                    var value = fileStream.ReadByte();
+                    if (value == 0xFE || value == 0xFF)
+                    {
+                        break;
+                    }
+                    else if (value == 0xFD)
+                    {
+                        value = fileStream.ReadByte();
+                    }
+                    ms.WriteByte(value);
+                }
+
+                ms.Position = 0;
+                using var bs = new BinaryReader(ms);
+
+                bs.ReadByte(); // item group
+                bs.ReadUInt32(); // item flags
+
+                while (bs.BaseStream.Position < bs.BaseStream.Length)
+                {
+                    var attribute = bs.ReadByte();
+                    var dataLen = bs.ReadUInt16();
+                    if (attribute == 0x10)
+                    {
+                        serverId = bs.ReadUInt16();
+                    }
+                    else if (attribute == 0x11)
+                    {
+                        clientId = bs.ReadUInt16();
+                    }
+                    else
+                    {
+                        bs.BaseStream.Seek(dataLen, SeekOrigin.Current);
+                    }
+
+                    if (serverId != 0 && clientId != 0)
+                    {
+                        if (_clientToServerIds.ContainsKey(clientId))
+                        {
+                            var value = _clientToServerIds[clientId];
+                            Console.WriteLine($"Failed to map Server ID `{serverId}` to Client ID `{clientId}`. " +
+                                $"Client ID `{clientId}` is already mapped to Server ID `{value}`.");
+                        }
+                        else
+                        {
+                            _clientToServerIds[clientId] = serverId;
+                        }
+                        serverId = 0;
+                        clientId = 0;
+                    }
+                }
+            }
+            Console.WriteLine("Done");
+        }
+
+        static void LoadXML(string filename)
+        {
+            using (var file = File.OpenRead(filename))
+            {
+                Console.WriteLine($"Loading {filename}...");
+                using (var reader = XmlReader.Create(file))
+                {
+                    while (reader.Read())
+                    {
+                        if (!reader.IsStartElement())
+                        {
+                            continue;
+                        }
+
+                        if (!reader.Name.Equals("item", StringComparison.CurrentCultureIgnoreCase))
+                        {
+                            continue;
+                        }
+
+                        if (uint.TryParse(reader["id"], out var id))
+                        {
+                            _ignoreIds.Add(id);
+                        }
+                        else if (uint.TryParse(reader["fromid"], out var fromId) &&
+                            uint.TryParse(reader["toid"], out var toId))
+                        {
+                            _replaceIds.Add(fromId, toId);
+                        }
+                    }
+                }
+                Console.WriteLine("Done");
             }
         }
 
@@ -671,41 +799,6 @@ namespace Extract
             return true;
         }
 
-
-        static void LoadXML(string filename)
-        {
-            using (var file = File.OpenRead(filename))
-            {
-                Console.WriteLine($"Loading {filename}...");
-                using (var reader = XmlReader.Create(file))
-                {
-                    while (reader.Read())
-                    {
-                        if (!reader.IsStartElement())
-                        {
-                            continue;
-                        }
-
-                        if (!reader.Name.Equals("item", StringComparison.CurrentCultureIgnoreCase))
-                        {
-                            continue;
-                        }
-
-                        if (uint.TryParse(reader["id"], out var id))
-                        {
-                            _ignoreIds.Add(id);
-                        }
-                        else if (uint.TryParse(reader["fromid"], out var fromId) &&
-                            uint.TryParse(reader["toid"], out var toId))
-                        {
-                            _replaceIds.Add(fromId, toId);
-                        }
-                    }
-                }
-                Console.WriteLine("Done");
-            }
-        }
-
         static FileStream InitializeMapFile(string filename, string outputPath)
         {
             var file = new FileStream(outputPath, FileMode.CreateNew, FileAccess.ReadWrite, FileShare.ReadWrite, 4096, true);
@@ -817,6 +910,10 @@ namespace Extract
                     if (!_replaceIds.TryGetValue(item.Id, out uint id))
                     {
                         id = item.Id;
+                    }
+                    if (_clientToServerIds.TryGetValue((ushort)id, out var serverId))
+                    {
+                        id = serverId;
                     }
                     WriteData(_otbmFile, BitConverter.GetBytes((ushort)id));
 
