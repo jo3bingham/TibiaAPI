@@ -901,6 +901,10 @@ namespace Extract
                     {
                         id = item.Id;
                     }
+                    if (_clientToServerIds.TryGetValue((ushort)id, out var serverId))
+                    {
+                        id = serverId;
+                    }
                     WriteData(_otbmFile, BitConverter.GetBytes((ushort)id));
 
                     // item data
