@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 
 using OXGaming.TibiaAPI.Constants;
+using OXGaming.TibiaAPI.Utilities;
 
 namespace OXGaming.TibiaAPI.Network
 {
@@ -339,6 +340,7 @@ namespace OXGaming.TibiaAPI.Network
             var packetPosition = 0u;
             var currentPacket = ClientPacketType.Invalid;
             var lastKnownPacket = ClientPacketType.Invalid;
+            byte[] packetData = null;
 
             try
             {
@@ -353,12 +355,19 @@ namespace OXGaming.TibiaAPI.Network
                     }
                 }
 
+                if (client.Logger.Level == Logger.LogLevel.Debug)
+                {
+                    packetData = inMessage.GetData();
+                }
+
                 while (inMessage.Position < inMessage.Size)
                 {
                     packetPosition = inMessage.Position;
-                    currentPacket = (ClientPacketType)inMessage.ReadByte();
 
-                    client.Logger.Debug($"[CLIENT:{inMessage.SequenceNumber}] {currentPacket}");
+                    var opcode = inMessage.ReadByte();
+                    currentPacket = (ClientPacketType)opcode;
+
+                    client.Logger.Debug($"[CLIENT:{inMessage.SequenceNumber}] {opcode:X2} - {currentPacket}");
 
                     var packet = ClientPacket.CreateInstance(client, currentPacket);
                     packet.ParseFromNetworkMessage(inMessage);
@@ -811,6 +820,14 @@ namespace OXGaming.TibiaAPI.Network
 
                     packets.Add((currentPacket, packetPosition));
                     lastKnownPacket = currentPacket;
+
+                    if (client.Logger.Level == Logger.LogLevel.Debug && packetData != null)
+                    {
+                        var len = inMessage.Position - packetPosition;
+                        var data = new byte[len];
+                        Array.Copy(packetData, packetPosition, data, 0, len);
+                        client.Logger.Debug($"{BitConverter.ToString(data).Replace('-', ' ')}");
+                    }
                 }
             }
             catch (Exception ex)
@@ -842,15 +859,23 @@ namespace OXGaming.TibiaAPI.Network
             var packetPosition = 0u;
             var currentPacket = ServerPacketType.Invalid;
             var lastKnownPacket = ServerPacketType.Invalid;
+            byte[] packetData = null;
 
             try
             {
+                if (client.Logger.Level == Logger.LogLevel.Debug)
+                {
+                    packetData = inMessage.GetData();
+                }
+
                 while (inMessage.Position < inMessage.Size)
                 {
                     packetPosition = inMessage.Position;
-                    currentPacket = (ServerPacketType)inMessage.ReadByte();
 
-                    client.Logger.Debug($"[SERVER:{inMessage.SequenceNumber}] {currentPacket}");
+                    var opcode = inMessage.ReadByte();
+                    currentPacket = (ServerPacketType)opcode;
+
+                    client.Logger.Debug($"[SERVER:{inMessage.SequenceNumber}] {opcode:X2} - {currentPacket}");
 
                     var packet = ServerPacket.CreateInstance(client, currentPacket);
                     packet.ParseFromNetworkMessage(inMessage);
@@ -1396,6 +1421,14 @@ namespace OXGaming.TibiaAPI.Network
 
                     packets.Add((currentPacket, packetPosition));
                     lastKnownPacket = currentPacket;
+
+                    if (client.Logger.Level == Logger.LogLevel.Debug && packetData != null)
+                    {
+                        var len = inMessage.Position - packetPosition;
+                        var data = new byte[len];
+                        Array.Copy(packetData, packetPosition, data, 0, len);
+                        client.Logger.Debug($"{BitConverter.ToString(data).Replace('-', ' ')}");
+                    }
                 }
             }
             catch (Exception ex)
@@ -1405,7 +1438,7 @@ namespace OXGaming.TibiaAPI.Network
                 // possible and continue.
                 client.Logger.Error(ex.ToString());
                 client.Logger.Error($"Current position: {inMessage.Position}");
-                client.Logger.Error($"Current packet: [{((byte)currentPacket).ToString("X2")}:{packetPosition}]{currentPacket}");
+                client.Logger.Error($"Current packet: [{(byte)currentPacket:X2}:{packetPosition}]{currentPacket}");
                 client.Logger.Error($"Last known packets: {string.Join(" ", packets.Select(p => "[" + ((byte)p.PacketType).ToString("X2") + ":" + p.Position + "]" + p.PacketType).ToArray())}");
                 client.Logger.Error($"Data: {BitConverter.ToString(inMessage.GetData()).Replace('-', ' ')}");
             }

@@ -59,8 +59,7 @@ namespace OXGaming.TibiaAPI.Network.ClientPackets
             ChallengeRandom = message.ReadByte();
 
             // Skip the RSA encryption junk data.
-            var rsaEndPosition = message.Position;
-            message.Seek((int)(128 - (rsaStartPosition - rsaEndPosition)), SeekOrigin.Current);
+            message.Seek((int)message.Size, SeekOrigin.Begin);
         }
 
         public override void AppendToNetworkMessage(NetworkMessage message)
