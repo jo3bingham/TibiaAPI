@@ -37,7 +37,12 @@ namespace OXGaming.TibiaAPI.Network.ClientPackets
             ClientType = message.ReadUInt16();
             ProtocolVersion = message.ReadUInt16();
             ClientVersion = message.ReadUInt32();
-            Version = message.ReadString();
+
+            if (Client.VersionNumber >= 124010030)
+            {
+                Version = message.ReadString();
+            }
+
             DatRevision = message.ReadUInt16();
             ClientPreviewState = message.ReadByte();
 
@@ -69,7 +74,12 @@ namespace OXGaming.TibiaAPI.Network.ClientPackets
             message.Write(ClientType);
             message.Write(ProtocolVersion);
             message.Write(ClientVersion);
-            message.Write(Version);
+
+            if (Client.VersionNumber >= 124010030)
+            {
+                message.Write(Version);
+            }
+
             message.Write(DatRevision);
             message.Write(ClientPreviewState);
             message.Write((byte)0); // Start RSA block.
