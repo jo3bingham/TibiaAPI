@@ -12,6 +12,7 @@ namespace OXGaming.TibiaAPI.Network.ClientPackets
 
         public string CharacterName { get; set; }
         public string SessionKey { get; set; }
+        public string Version { get; set; }
 
         public uint ChallengeTimeStamp { get; set; }
         public uint ClientVersion { get; set; }
@@ -36,10 +37,10 @@ namespace OXGaming.TibiaAPI.Network.ClientPackets
             ClientType = message.ReadUInt16();
             ProtocolVersion = message.ReadUInt16();
             ClientVersion = message.ReadUInt32();
+            Version = message.ReadString();
             DatRevision = message.ReadUInt16();
             ClientPreviewState = message.ReadByte();
 
-            var rsaStartPosition = message.Position;
             if (message.ReadByte() != 0)
             {
                 throw new Exception("[ClientPackets.Login.ParseFromNetworkMessage] RSA decryption failed.");
@@ -68,6 +69,7 @@ namespace OXGaming.TibiaAPI.Network.ClientPackets
             message.Write(ClientType);
             message.Write(ProtocolVersion);
             message.Write(ClientVersion);
+            message.Write(Version);
             message.Write(DatRevision);
             message.Write(ClientPreviewState);
             message.Write((byte)0); // Start RSA block.

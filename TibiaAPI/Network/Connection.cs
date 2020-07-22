@@ -792,8 +792,10 @@ namespace OXGaming.TibiaAPI.Network
                 var protocol = (int)ar.AsyncState;
                 if (protocol == 0)
                 {
-                    _rsa.OpenTibiaDecrypt(_clientInMessage, 18);
-                    _clientInMessage.Seek(18, SeekOrigin.Begin);
+                    var rsaStartIndex = _client.VersionNumber >= 124010030 ? 31 : 18;
+
+                    _rsa.OpenTibiaDecrypt(_clientInMessage, rsaStartIndex);
+                    _clientInMessage.Seek(rsaStartIndex, SeekOrigin.Begin);
                     if (_clientInMessage.ReadByte() != 0)
                     {
                         throw new Exception("[Connection.BeginReceiveClientCallback] RSA decryption failed.");
@@ -817,13 +819,13 @@ namespace OXGaming.TibiaAPI.Network
 
                     if (string.IsNullOrEmpty(_loginWebService))
                     {
-                        _rsa.TibiaEncrypt(_clientInMessage, 18);
+                        _rsa.TibiaEncrypt(_clientInMessage, rsaStartIndex);
                     }
                     else
                     {
                         // If the user supplied a login web service address,
                         // it's safe to assume it's an Open-Tibia server.
-                        _rsa.OpenTibiaEncrypt(_clientInMessage, 18);
+                        _rsa.OpenTibiaEncrypt(_clientInMessage, rsaStartIndex);
                     }
 
                     SendToServer(_clientInMessage.GetData());
