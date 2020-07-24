@@ -5,7 +5,7 @@
     <RootNamespace>OXGaming.TibiaAPI</RootNamespace>
     <Authors>jo3bingham</Authors>
     <Company>OXGaming</Company>
-    <ReleaseVersion>0.1.0</ReleaseVersion>
+    <ReleaseVersion>0.1.1</ReleaseVersion>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
