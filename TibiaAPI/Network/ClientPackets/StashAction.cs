@@ -1,5 +1,4 @@
 ﻿using OXGaming.TibiaAPI.Constants;
-using OXGaming.TibiaAPI.Network.ServerPackets;
 using OXGaming.TibiaAPI.Utilities;
 
 namespace OXGaming.TibiaAPI.Network.ClientPackets

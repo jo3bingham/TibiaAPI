@@ -36,7 +36,7 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
                     }
                 }
 
-                message.Write((ushort)(TilesToSkip + 65280));
+                message.Write((ushort)(TilesToSkip + 0xFF00));
             }
         }
     }

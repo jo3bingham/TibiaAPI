@@ -4,6 +4,8 @@ namespace OXGaming.TibiaAPI.Network.ClientPackets
 {
     public class FeatureEvent : ClientPacket
     {
+        public uint UnknownUInt1 { get; set; }
+
         public byte EventType { get; set; }
 
         public bool ShowWindow { get; set; }
@@ -21,20 +23,19 @@ namespace OXGaming.TibiaAPI.Network.ClientPackets
             if (!ShowWindow)
             {
                 // TODO
-                message.ReadUInt32();
+                UnknownUInt1 = message.ReadUInt32();
             }
         }
 
         public override void AppendToNetworkMessage(NetworkMessage message)
         {
-            // TODO
-            // message.Write((byte)ClientPacketType.FeatureEvent);
-            // message.Write(EventType);
-            // message.Write(ShowWindow);
-            // if (!ShowWindow)
-            // {
-            //     //message.Write(Unknown);
-            // }
+            message.Write((byte)ClientPacketType.FeatureEvent);
+            message.Write(EventType);
+            message.Write(ShowWindow);
+            if (!ShowWindow)
+            {
+                message.Write(UnknownUInt1);
+            }
         }
     }
 }

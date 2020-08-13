@@ -656,9 +656,9 @@ namespace OXGaming.TibiaAPI.Network
             while (true)
             {
                 var thingId = ReadUInt16();
-                if (thingId >= 65280)
+                if (thingId >= 0xFF00)
                 {
-                    numberOfTilesToSkip = thingId - 65280;
+                    numberOfTilesToSkip = thingId - 0xFF00;
                     break;
                 }
 

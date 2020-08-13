@@ -7,6 +7,9 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
 {
     public class UpdateExivaOptions : ServerPacket
     {
+        public ushort UnknownUShort1 { get; set; }
+        public ushort UnknownUShort2 { get; set; }
+
         public List<string> WhitelistCharacters { get; } = new List<string>();
         public List<string> WhitelistGuilds { get; } = new List<string>();
 
@@ -39,7 +42,7 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
             }
 
             // TODO
-            message.ReadUInt16();
+            UnknownUShort1 = message.ReadUInt16();
 
             WhitelistGuilds.Capacity = message.ReadUInt16();
             for (var i = 0; i < WhitelistGuilds.Capacity; ++i)
@@ -48,37 +51,37 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
             }
 
             // TODO
-            message.ReadUInt16();
+            UnknownUShort2 = message.ReadUInt16();
         }
 
         public override void AppendToNetworkMessage(NetworkMessage message)
         {
             // TODO
-            // message.Write((byte)ServerPacketType.UpdateExivaOptions);
-            // message.Write(AllowAllCharacters);
-            // message.Write(AllowMyGuildMembers);
-            // message.Write(AllowMyPartyMembers);
-            // message.Write(AllowMyVips);
-            // message.Write(AllowCharacterWhitelist);
-            // message.Write(AllowGuildWhitelist);
+            message.Write((byte)ServerPacketType.UpdateExivaOptions);
+            message.Write(AllowAllCharacters);
+            message.Write(AllowMyGuildMembers);
+            message.Write(AllowMyPartyMembers);
+            message.Write(AllowMyVips);
+            message.Write(AllowCharacterWhitelist);
+            message.Write(AllowGuildWhitelist);
 
-            // var count = Math.Min(WhitelistCharacters.Count, ushort.MaxValue);
-            // message.Write((ushort)count);
-            // for (var i = 0; i < count; ++i)
-            // {
-            //     message.Write(WhitelistCharacters[i]);
-            // }
+            var count = Math.Min(WhitelistCharacters.Count, ushort.MaxValue);
+            message.Write((ushort)count);
+            for (var i = 0; i < count; ++i)
+            {
+                message.Write(WhitelistCharacters[i]);
+            }
 
-            // //message.Write(Unknown);
+            message.Write(UnknownUShort1);
 
-            // count = Math.Min(WhitelistGuilds.Count, ushort.MaxValue);
-            // message.Write((ushort)count);
-            // for (var i = 0; i < count; ++i)
-            // {
-            //     message.Write(WhitelistGuilds[i]);
-            // }
+            count = Math.Min(WhitelistGuilds.Count, ushort.MaxValue);
+            message.Write((ushort)count);
+            for (var i = 0; i < count; ++i)
+            {
+                message.Write(WhitelistGuilds[i]);
+            }
 
-            // //message.Write(Unknown);
+            message.Write(UnknownUShort2);
         }
     }
 }

@@ -7,15 +7,15 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
 {
     public class CreatureUpdate : ServerPacket
     {
+        // TODO
+        public byte UnknownByte1 { get; set; }
+
         public Creature Creature { get; set; }
 
         public uint CreatureId { get; set; }
 
         public byte ManaPercent { get; set; }
         public byte Type { get; set; }
-
-        // TODO
-        public byte Unknown { get; set; }
 
         public CreatureUpdate(Client client)
         {
@@ -132,7 +132,7 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
             // TODO
             else if (Type == 0x0C) // Unknown
             {
-                Unknown = message.ReadByte();
+                UnknownByte1 = message.ReadByte();
             }
         }
 
@@ -250,7 +250,7 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
             // TODO
             else if (Type == 0x0C) // Unknown
             {
-                message.Write(Unknown);
+                message.Write(UnknownByte1);
             }
         }
     }

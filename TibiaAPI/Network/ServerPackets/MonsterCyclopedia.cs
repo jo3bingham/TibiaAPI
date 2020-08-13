@@ -7,6 +7,8 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
 {
     public class MonsterCyclopedia : ServerPacket
     {
+        public byte UnknownByte1 { get; set; }
+
         public List<(byte Id, string Name, string Description, byte Type, ushort CharmPoints, bool IsPurchased, bool IsAssigned, ushort RaceId, uint RemovalCost)> Charms { get; } =
             new List<(byte Id, string Name, string Description, byte Type, ushort CharmPoints, bool IsPurchased, bool IsAssigned, ushort RaceId, uint RemovalCost)>();
         public List<ushort> CharmAssignableRaceIds { get; } = new List<ushort>();
@@ -35,7 +37,7 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
             }
 
             // TODO
-            message.ReadByte(); // Always 216?
+            UnknownByte1 = message.ReadByte(); // Always 216?
             CharmPoints = message.ReadUInt32();
 
             Charms.Capacity = message.ReadByte();
@@ -70,48 +72,48 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
         public override void AppendToNetworkMessage(NetworkMessage message)
         {
             // TODO
-            // message.Write((byte)ServerPacketType.MonsterCyclopedia);
+            message.Write((byte)ServerPacketType.MonsterCyclopedia);
 
-            // var count = Math.Min(RaceCollections.Count, ushort.MaxValue);
-            // message.Write((ushort)count);
-            // for (var i = 0; i < count; ++i)
-            // {
-            //     var (Name, Total, Known) = RaceCollections[i];
-            //     message.Write(Name);
-            //     message.Write(Total);
-            //     message.Write(Known);
-            // }
+            var count = Math.Min(RaceCollections.Count, ushort.MaxValue);
+            message.Write((ushort)count);
+            for (var i = 0; i < count; ++i)
+            {
+                var (Name, Total, Known) = RaceCollections[i];
+                message.Write(Name);
+                message.Write(Total);
+                message.Write(Known);
+            }
 
-            // //message.Write(Unknown);
-            // message.Write(CharmPoints);
+            message.Write(UnknownByte1);
+            message.Write(CharmPoints);
 
-            // count = Math.Min(Charms.Count, byte.MaxValue);
-            // message.Write((byte)count);
-            // for (var i = 0; i < count; ++i)
-            // {
-            //     var charm = Charms[i];
-            //     message.Write(charm.Id);
-            //     message.Write(charm.Name);
-            //     message.Write(charm.Description);
-            //     message.Write(charm.Type);
-            //     message.Write(charm.CharmPoints);
-            //     message.Write(charm.IsPurchased);
-            //     message.Write(charm.IsAssigned);
-            //     if (charm.IsAssigned)
-            //     {
-            //         message.Write(charm.RaceId);
-            //         message.Write(charm.RemovalCost);
-            //     }
-            // }
+            count = Math.Min(Charms.Count, byte.MaxValue);
+            message.Write((byte)count);
+            for (var i = 0; i < count; ++i)
+            {
+                var charm = Charms[i];
+                message.Write(charm.Id);
+                message.Write(charm.Name);
+                message.Write(charm.Description);
+                message.Write(charm.Type);
+                message.Write(charm.CharmPoints);
+                message.Write(charm.IsPurchased);
+                message.Write(charm.IsAssigned);
+                if (charm.IsAssigned)
+                {
+                    message.Write(charm.RaceId);
+                    message.Write(charm.RemovalCost);
+                }
+            }
 
-            // message.Write(UnassignedCharms);
+            message.Write(UnassignedCharms);
 
-            // count = Math.Min(CharmAssignableRaceIds.Count, ushort.MaxValue);
-            // message.Write((ushort)count);
-            // for (var i = 0; i < count; ++i)
-            // {
-            //     message.Write(CharmAssignableRaceIds[i]);
-            // }
+            count = Math.Min(CharmAssignableRaceIds.Count, ushort.MaxValue);
+            message.Write((ushort)count);
+            for (var i = 0; i < count; ++i)
+            {
+                message.Write(CharmAssignableRaceIds[i]);
+            }
         }
     }
 }

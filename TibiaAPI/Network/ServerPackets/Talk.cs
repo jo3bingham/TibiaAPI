@@ -77,7 +77,8 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
                     }
                     break;
                 default:
-                    throw new Exception("[ServerPackets.Talk.ParseFromNetworkMessage] Invalid MessageMode: " + MessageMode.ToString());
+                    Client.Logger.Warning("[ServerPackets.Talk.ParseFromNetworkMessage] Invalid MessageMode: " + MessageMode.ToString());
+                    break;
             }
             Text = message.ReadString();
         }
@@ -134,7 +135,8 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
                     }
                     break;
                 default:
-                    throw new Exception("[ServerPackets.Talk.AppendToNetworkMessage] Invalid MessageMode: " + MessageMode.ToString());
+                    Client.Logger.Warning("[ServerPackets.Talk.AppendToNetworkMessage] Invalid MessageMode: " + MessageMode.ToString());
+                    break;
             }
             message.Write(Text);
         }

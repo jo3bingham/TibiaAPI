@@ -16,6 +16,8 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
 
     public class TournamentInformation : ServerPacket
     {
+        public byte UnknownByte1 { get; set; }
+
         public List<(byte Type, uint Cost)> Worlds { get; } = new List<(byte Type, uint Cost)>();
 
         public List<string> RegularContinents { get; } = new List<string>();
@@ -191,141 +193,141 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
             else if (Type == 5)
             {
                 // TODO
-                message.ReadByte();
+                UnknownByte1 = message.ReadByte();
             }
         }
 
         public override void AppendToNetworkMessage(NetworkMessage message)
         {
-            // TODO
-            // message.Write((byte)ServerPacketType.TournamentInformation);
-            // message.Write(Type);
-            // if (Type == 0)
-            // {
-            //     message.Write(Worlds[0].Type);
-            //     message.Write(Worlds[0].Cost);
-            //     message.Write(Worlds[1].Type);
-            //     message.Write(Worlds[1].Cost);
-            //     message.Write(ShowOptionSelection);
-            //     if (ShowOptionSelection)
-            //     {
-            //         message.Write(OptionSelection);
-            //         message.Write(Tickets);
-            //         message.Write(MinimumRequiredLevel);
-            //     }
-            // }
-            // else if (Type == 1)
-            // {
-            //     message.Write(TimestampSignUp);
-            //     message.Write(TimestampRunning);
-            //     message.Write(TimestampFinished);
-            //     message.Write(HasStarted);
-            //     message.Write(Duration);
-            //     message.Write(TimeRemaining);
-            // }
-            // else if (Type == 2)
-            // {
-            //     message.Write(PvpType);
-            //     message.Write(DailyTournamentPlaytime);
-            //     message.Write(DeathPenaltyModifier);
-            //     message.Write(XpMultiplier);
-            //     message.Write(SkillMultiplier);
-            //     message.Write(SpawnRateMultiplier);
-            //     message.Write(LootProbability);
-            //     message.Write(RentPercentage);
-            //     message.Write(HouseAuctionDurations);
-            //     message.Write(Scores);
-            //     message.Write(Rewards);
-            // }
-            // else if (Type == 3)
-            // {
-            //     var count = Math.Min(RegularContinents.Count, byte.MaxValue);
-            //     message.Write((byte)count);
-            //     for (var i = 0; i < count; ++i)
-            //     {
-            //         message.Write(RegularContinents[i]);
-            //     }
-            //     count = Math.Min(RestrictedContinents.Count, byte.MaxValue);
-            //     message.Write((byte)count);
-            //     for (var i = 0; i < count; ++i)
-            //     {
-            //         message.Write(RestrictedContinents[i]);
-            //     }
-            //     count = Math.Min(StartingVocations.Count, byte.MaxValue);
-            //     message.Write((byte)count);
-            //     for (var i = 0; i < count; ++i)
-            //     {
-            //         message.Write(StartingVocations[i]);
-            //     }
-            //     count = Math.Min(StartingTowns.Count, byte.MaxValue);
-            //     message.Write((byte)count);
-            //     for (var i = 0; i < count; ++i)
-            //     {
-            //         message.Write(StartingTowns[i]);
-            //     }
-            //     message.Write(HasClaimedVoucher);
-            //     if (HasClaimedVoucher)
-            //     {
-            //         message.Write(SelectedContinent);
-            //         message.Write(SelectedVocation);
-            //         message.Write(SelectedTown);
-            //     }
-            // }
-            // else if (Type == 4)
-            // {
-            //     message.Write(HasRegularCharacter);
-            //     if (HasRegularCharacter)
-            //     {
-            //         message.Write(RegularCharacterId);
-            //         message.Write(RegularCharacterName);
-            //         message.Write(CompletedRegularTournaments);
-            //         message.Write(RegularHighestRank.Place);
-            //         message.Write(RegularHighestRank.Timestamp);
-            //         message.Write(RegularHighestRank.WorldName);
-            //         message.Write(RegularTibiaCoinRewards);
-            //         message.Write(RegularTournamentCoinRewards);
-            //         message.Write(RegularTournamentVoucherRewards);
-            //         if (RegularOutfit is OutfitInstance)
-            //         {
-            //             message.Write((OutfitInstance)RegularOutfit);
-            //         }
-            //         else
-            //         {
-            //             message.Write((ushort)0);
-            //             message.Write((ushort)RegularOutfit.Id);
-            //         }
-            //         message.Write(RegularPlaytime);
-            //         message.Write(RegularDeaths);
-            //     }
-            //     message.Write(HasRestrictedCharacter);
-            //     if (HasRestrictedCharacter)
-            //     {
-            //         message.Write(RestrictedCharacterId);
-            //         message.Write(RestrictedCharacterName);
-            //         message.Write(CompletedRestrictedTournaments);
-            //         message.Write(RestrictedHighestRank.Place);
-            //         message.Write(RestrictedHighestRank.Timestamp);
-            //         message.Write(RestrictedHighestRank.WorldName);
-            //         message.Write(RestrictedTibiaCoinRewards);
-            //         message.Write(RestrictedTournamentCoinRewards);
-            //         message.Write(RestrictedTournamentVoucherRewards);
-            //         if (RestrictedOutfit is OutfitInstance)
-            //         {
-            //             message.Write((OutfitInstance)RestrictedOutfit);
-            //         }
-            //         else
-            //         {
-            //             message.Write((ushort)0);
-            //             message.Write((ushort)RestrictedOutfit.Id);
-            //         }
-            //         message.Write(RestrictedPlaytime);
-            //         message.Write(RestrictedDeaths);
-            //     }
-            // }
-            // else if (Type == 5)
-            // {
-            //     //message.Write(Unknown);
-            // }
+            message.Write((byte)ServerPacketType.TournamentInformation);
+            message.Write(Type);
+            if (Type == 0)
+            {
+                message.Write(Worlds[0].Type);
+                message.Write(Worlds[0].Cost);
+                message.Write(Worlds[1].Type);
+                message.Write(Worlds[1].Cost);
+                message.Write(ShowOptionSelection);
+                if (ShowOptionSelection)
+                {
+                    message.Write(OptionSelection);
+                    message.Write(Tickets);
+                    message.Write(MinimumRequiredLevel);
+                }
+            }
+            else if (Type == 1)
+            {
+                message.Write(TimestampSignUp);
+                message.Write(TimestampRunning);
+                message.Write(TimestampFinished);
+                message.Write(HasStarted);
+                message.Write(Duration);
+                message.Write(TimeRemaining);
+            }
+            else if (Type == 2)
+            {
+                message.Write(PvpType);
+                message.Write(DailyTournamentPlaytime);
+                message.Write(DeathPenaltyModifier);
+                message.Write(XpMultiplier);
+                message.Write(SkillMultiplier);
+                message.Write(SpawnRateMultiplier);
+                message.Write(LootProbability);
+                message.Write(RentPercentage);
+                message.Write(HouseAuctionDurations);
+                message.Write(Scores);
+                message.Write(Rewards);
+            }
+            else if (Type == 3)
+            {
+                var count = Math.Min(RegularContinents.Count, byte.MaxValue);
+                message.Write((byte)count);
+                for (var i = 0; i < count; ++i)
+                {
+                    message.Write(RegularContinents[i]);
+                }
+                count = Math.Min(RestrictedContinents.Count, byte.MaxValue);
+                message.Write((byte)count);
+                for (var i = 0; i < count; ++i)
+                {
+                    message.Write(RestrictedContinents[i]);
+                }
+                count = Math.Min(StartingVocations.Count, byte.MaxValue);
+                message.Write((byte)count);
+                for (var i = 0; i < count; ++i)
+                {
+                    message.Write(StartingVocations[i]);
+                }
+                count = Math.Min(StartingTowns.Count, byte.MaxValue);
+                message.Write((byte)count);
+                for (var i = 0; i < count; ++i)
+                {
+                    message.Write(StartingTowns[i]);
+                }
+                message.Write(HasClaimedVoucher);
+                if (HasClaimedVoucher)
+                {
+                    message.Write(SelectedContinent);
+                    message.Write(SelectedVocation);
+                    message.Write(SelectedTown);
+                }
+            }
+            else if (Type == 4)
+            {
+                message.Write(HasRegularCharacter);
+                if (HasRegularCharacter)
+                {
+                    message.Write(RegularCharacterId);
+                    message.Write(RegularCharacterName);
+                    message.Write(CompletedRegularTournaments);
+                    message.Write(RegularHighestRank.Place);
+                    message.Write(RegularHighestRank.Timestamp);
+                    message.Write(RegularHighestRank.WorldName);
+                    message.Write(RegularTibiaCoinRewards);
+                    message.Write(RegularTournamentCoinRewards);
+                    message.Write(RegularTournamentVoucherRewards);
+                    if (RegularOutfit is OutfitInstance)
+                    {
+                        message.Write((OutfitInstance)RegularOutfit);
+                    }
+                    else
+                    {
+                        message.Write((ushort)0);
+                        message.Write((ushort)RegularOutfit.Id);
+                    }
+                    message.Write(RegularPlaytime);
+                    message.Write(RegularDeaths);
+                }
+                message.Write(HasRestrictedCharacter);
+                if (HasRestrictedCharacter)
+                {
+                    message.Write(RestrictedCharacterId);
+                    message.Write(RestrictedCharacterName);
+                    message.Write(CompletedRestrictedTournaments);
+                    message.Write(RestrictedHighestRank.Place);
+                    message.Write(RestrictedHighestRank.Timestamp);
+                    message.Write(RestrictedHighestRank.WorldName);
+                    message.Write(RestrictedTibiaCoinRewards);
+                    message.Write(RestrictedTournamentCoinRewards);
+                    message.Write(RestrictedTournamentVoucherRewards);
+                    if (RestrictedOutfit is OutfitInstance)
+                    {
+                        message.Write((OutfitInstance)RestrictedOutfit);
+                    }
+                    else
+                    {
+                        message.Write((ushort)0);
+                        message.Write((ushort)RestrictedOutfit.Id);
+                    }
+                    message.Write(RestrictedPlaytime);
+                    message.Write(RestrictedDeaths);
+                }
+            }
+            else if (Type == 5)
+            {
+                // TODO
+                message.Write(UnknownByte1);
+            }
         }
     }
 }

@@ -4,7 +4,10 @@ namespace OXGaming.TibiaAPI.Network.ClientPackets
 {
     public class TrackBestiaryRace : ClientPacket
     {
+        public byte UnknownByte1 { get; set; }
+
         public ushort RaceId { get; set; }
+
         public TrackBestiaryRace(Client client)
         {
             Client = client;
@@ -14,14 +17,15 @@ namespace OXGaming.TibiaAPI.Network.ClientPackets
         public override void ParseFromNetworkMessage(NetworkMessage message)
         {
             RaceId = message.ReadUInt16();
-            message.ReadByte(); // TODO
+            // TODO
+            UnknownByte1 = message.ReadByte();
         }
 
         public override void AppendToNetworkMessage(NetworkMessage message)
         {
-            // TODO
-            // message.Write((byte)ClientPacketType.TrackBestiaryRace);
-            // message.Write(RaceId);
+            message.Write((byte)ClientPacketType.TrackBestiaryRace);
+            message.Write(RaceId);
+            message.Write(UnknownByte1);
         }
     }
 }

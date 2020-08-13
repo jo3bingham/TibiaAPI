@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 using OXGaming.TibiaAPI.Constants;
 
@@ -6,6 +7,8 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
 {
     public class TeamFinderTeamLeader : ServerPacket
     {
+        public List<ushort> UnknownList1 { get; } = new List<ushort>();
+
         public List<(uint Id, string Name, ushort Level, byte Vocation, byte Status)> Members { get; } =
             new List<(uint Id, string Name, ushort Level, byte Vocation, byte Status)>();
 
@@ -18,6 +21,8 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
 
         public byte Vocations { get; set; } // Bit Flag
 
+        public bool IsUpToDate { get; set; }
+
         public TeamFinderTeamLeader(Client client)
         {
             Client = client;
@@ -27,11 +32,8 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
         public override void ParseFromNetworkMessage(NetworkMessage message)
         {
             // TODO
-            var unknown = message.ReadByte(); // Possibly a boolean flag; IsUpdated?
-            if (unknown == 1)
-            {
-            }
-            else if (unknown == 0)
+            IsUpToDate = message.ReadBool();
+            if (!IsUpToDate)
             {
                 MinLevel = message.ReadUInt16();
                 MaxLevel = message.ReadUInt16();
@@ -39,10 +41,11 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
                 TeamSize = message.ReadUInt16();
                 FreeSlots = message.ReadUInt16();
                 StartTime = message.ReadUInt32();
-                var count = message.ReadByte();
-                for (var i = 0; i < count; i++)
+                UnknownList1.Capacity = message.ReadByte();
+                for (var i = 0; i < UnknownList1.Capacity; i++)
                 {
-                    var _ = message.ReadUInt16(); // 19 00 47 00
+                    // TODO
+                    UnknownList1.Add(message.ReadUInt16()); // 19 00 47 00
                 }
                 Members.Capacity = message.ReadUInt16();
                 for (var i = 0; i < Members.Capacity; i++)
@@ -59,8 +62,35 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
 
         public override void AppendToNetworkMessage(NetworkMessage message)
         {
-            // TODO
-            // message.Write((byte)ServerPacketType.TeamFinderTeamLeader);
+            message.Write((byte)ServerPacketType.TeamFinderTeamLeader);
+            message.Write(IsUpToDate);
+            if (!IsUpToDate)
+            {
+                message.Write(MinLevel);
+                message.Write(MaxLevel);
+                message.Write(Vocations);
+                message.Write(TeamSize);
+                message.Write(FreeSlots);
+                message.Write(StartTime);
+                // TODO
+                var count = Math.Min(UnknownList1.Count, byte.MaxValue);
+                message.Write((byte)count);
+                for (var i = 0; i < count; ++i)
+                {
+                    message.Write(UnknownList1[i]);
+                }
+                count = Math.Min(Members.Count, ushort.MaxValue);
+                message.Write((ushort)count);
+                for (var i = 0; i < count; ++i)
+                {
+                    var (Id, Name, Level, Vocation, Status) = Members[i];
+                    message.Write(Id);
+                    message.Write(Name);
+                    message.Write(Level);
+                    message.Write(Vocation);
+                    message.Write(Status);
+                }
+            }
         }
     }
 }

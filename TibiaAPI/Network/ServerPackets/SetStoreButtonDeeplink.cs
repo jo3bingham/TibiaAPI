@@ -4,6 +4,8 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
 {
     public class SetStoreButtonDeeplink : ServerPacket
     {
+        public ushort UnknownUShort1 { get; set; }
+
         public byte StoreServiceType { get; set; }
 
         public SetStoreButtonDeeplink(Client client)
@@ -17,7 +19,7 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
             if (Client.VersionNumber >= 11887288)
             {
                 // TODO
-                message.ReadUInt16();
+                UnknownUShort1 = message.ReadUInt16();
             }
             StoreServiceType = message.ReadByte();
         }
@@ -25,12 +27,12 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
         public override void AppendToNetworkMessage(NetworkMessage message)
         {
             // TODO
-            // message.Write((byte)ServerPacketType.SetStoreButtonDeeplink);
-            // if (Client.VersionNumber >= 11887288)
-            // {
-            //     //message.Write(Unknown);
-            // }
-            // message.Write(StoreServiceType);
+            message.Write((byte)ServerPacketType.SetStoreButtonDeeplink);
+            if (Client.VersionNumber >= 11887288)
+            {
+                message.Write(UnknownUShort1);
+            }
+            message.Write(StoreServiceType);
         }
     }
 }

@@ -354,9 +354,11 @@ namespace Watch
                 message.Seek(0, SeekOrigin.Begin);
                 message.Write(_clientBuffer);
 
+                var rsaStartIndex = _client.VersionNumber >= 124010030 ? 31 : 18;
                 var rsa = new Rsa();
-                rsa.OpenTibiaDecrypt(message, 18);
-                message.Seek(18, SeekOrigin.Begin);
+                rsa.OpenTibiaDecrypt(message, rsaStartIndex);
+
+                message.Seek(rsaStartIndex, SeekOrigin.Begin);
                 if (message.ReadByte() != 0)
                 {
                     throw new Exception("RSA decryption failed.");

@@ -42,7 +42,7 @@ namespace OXGaming.TibiaAPI.Network.ClientPackets
             }
             else
             {
-                throw new System.Exception($"[LootContainer.ParseFromNetworkMessage] Invalid type: {Type}");
+                Client.Logger.Error($"[LootContainer.ParseFromNetworkMessage] Invalid type: {Type}");
             }
         }
 

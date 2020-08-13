@@ -4,6 +4,9 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
 {
     public class SpecialContainersAvailable : ServerPacket
     {
+        public bool IsMarketAvailable { get; set; }
+        public bool IsSupplyStashAvailable { get; set; }
+
         public SpecialContainersAvailable(Client client)
         {
             Client = client;
@@ -12,15 +15,15 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
 
         public override void ParseFromNetworkMessage(NetworkMessage message)
         {
-            // TODO
-            message.ReadUInt16(); // 01 01
+            IsSupplyStashAvailable = message.ReadBool();
+            IsMarketAvailable = message.ReadBool();
         }
 
         public override void AppendToNetworkMessage(NetworkMessage message)
         {
-            // TODO
-            // message.Write((byte)ServerPacketType.SpecialContainersAvailable);
-            // //message.Write(Unknown);
+            message.Write((byte)ServerPacketType.SpecialContainersAvailable);
+            message.Write(IsSupplyStashAvailable);
+            message.Write(IsMarketAvailable);
         }
     }
 }

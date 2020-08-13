@@ -4,6 +4,8 @@ namespace OXGaming.TibiaAPI.Network.ClientPackets
 {
     public class CyclopediaHouseAction : ClientPacket
     {
+        public byte UnknownByte1 { get; set; }
+
         public string Town { get; set; }
 
         public CyclopediaHouseAction(Client client)
@@ -15,16 +17,15 @@ namespace OXGaming.TibiaAPI.Network.ClientPackets
         public override void ParseFromNetworkMessage(NetworkMessage message)
         {
             // TODO
-            message.ReadByte(); //always 0x00?
+            UnknownByte1 = message.ReadByte(); //always 0x00?
             Town = message.ReadString();
         }
 
         public override void AppendToNetworkMessage(NetworkMessage message)
         {
-            // TODO
-            // message.Write((byte)ClientPacketType.CyclopediaHouseAction);
-            // //message.Write(Unknown);
-            // message.Write(Town);
+            message.Write((byte)ClientPacketType.CyclopediaHouseAction);
+            message.Write(UnknownByte1);
+            message.Write(Town);
         }
     }
 }

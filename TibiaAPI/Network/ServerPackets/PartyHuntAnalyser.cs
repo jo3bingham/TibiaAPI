@@ -7,6 +7,8 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
 {
     public class PartyHuntAnalyser : ServerPacket
     {
+        public byte UnknownByte1 { get; set; }
+
         public List<(uint PlayerId, string Name)> Members { get; } =
             new List<(uint PlayerId, string Name)>();
         public List<(uint PlayerId, byte unknown, ulong Loot, ulong Supplies, ulong Damage, ulong Health)> MemberInfo { get; } =
@@ -28,7 +30,7 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
             SessionMinutes = message.ReadUInt32();
             LeaderId = message.ReadUInt32(); // This is a player ID, but it may not be the leader.
             // TODO
-            message.ReadByte();
+            UnknownByte1 = message.ReadByte();
             MemberInfo.Capacity = message.ReadByte();
             for (var i = 0; i < MemberInfo.Capacity; ++i)
             {
@@ -58,34 +60,34 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
         public override void AppendToNetworkMessage(NetworkMessage message)
         {
             // TODO
-            // message.Write((byte)ServerPacketType.PartyHuntAnalyser);
-            // message.Write(SessionMinutes);
-            // message.Write(LeaderId);
-            // //message.Write(Unknown);
-            // var count = Math.Min(byte.MaxValue, MemberInfo.Count);
-            // message.Write((byte)count);
-            // for (var i = 0; i < count; ++i)
-            // {
-            //     var (PlayerId, Unknown, Loot, Supplies, Damage, Health) = MemberInfo[i];
-            //     message.Write(PlayerId);
-            //     message.Write(Unknown);
-            //     message.Write(Loot);
-            //     message.Write(Supplies);
-            //     message.Write(Damage);
-            //     message.Write(Health);
-            // }
-            // message.Write(HasNames);
-            // if (HasNames)
-            // {
-            //     count = Math.Min(byte.MaxValue, Members.Count);
-            //     message.Write((byte)count);
-            //     for (var i = 0; i < count; ++i)
-            //     {
-            //         var (PlayerId, Name) = Members[i];
-            //         message.Write(PlayerId);
-            //         message.Write(Name);
-            //     }
-            // }
+            message.Write((byte)ServerPacketType.PartyHuntAnalyser);
+            message.Write(SessionMinutes);
+            message.Write(LeaderId);
+            message.Write(UnknownByte1);
+            var count = Math.Min(byte.MaxValue, MemberInfo.Count);
+            message.Write((byte)count);
+            for (var i = 0; i < count; ++i)
+            {
+                var (PlayerId, Unknown, Loot, Supplies, Damage, Health) = MemberInfo[i];
+                message.Write(PlayerId);
+                message.Write(Unknown);
+                message.Write(Loot);
+                message.Write(Supplies);
+                message.Write(Damage);
+                message.Write(Health);
+            }
+            message.Write(HasNames);
+            if (HasNames)
+            {
+                count = Math.Min(byte.MaxValue, Members.Count);
+                message.Write((byte)count);
+                for (var i = 0; i < count; ++i)
+                {
+                    var (PlayerId, Name) = Members[i];
+                    message.Write(PlayerId);
+                    message.Write(Name);
+                }
+            }
         }
     }
 }

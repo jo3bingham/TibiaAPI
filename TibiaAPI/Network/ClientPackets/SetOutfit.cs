@@ -4,6 +4,8 @@ namespace OXGaming.TibiaAPI.Network.ClientPackets
 {
     public class SetOutfit : ClientPacket
     {
+        public byte UnknownByte1 { get; set; }
+
         public ushort MountId { get; set; }
         public ushort OutfitId { get; set; }
 
@@ -24,7 +26,7 @@ namespace OXGaming.TibiaAPI.Network.ClientPackets
             if (Client.VersionNumber >= 12209066)
             {
                 // TODO
-                message.ReadByte();
+                UnknownByte1 = message.ReadByte();
             }
             OutfitId = message.ReadUInt16();
             HeadColor = message.ReadByte();
@@ -37,18 +39,17 @@ namespace OXGaming.TibiaAPI.Network.ClientPackets
 
         public override void AppendToNetworkMessage(NetworkMessage message)
         {
-            // TODO
-            // message.Write((byte)ClientPacketType.SetOutfit);
-            // if (Client.VersionNumber >= 12209066)
-            // {
-            //     // message.Write(Unknown);
-            // }
-            // message.Write(OutfitId);
-            // message.Write(HeadColor);
-            // message.Write(TorsoColor);
-            // message.Write(LegsColor);
-            // message.Write(DetailColor);
-            // message.Write(MountId);
+            message.Write((byte)ClientPacketType.SetOutfit);
+            if (Client.VersionNumber >= 12209066)
+            {
+                message.Write(UnknownByte1);
+            }
+            message.Write(OutfitId);
+            message.Write(HeadColor);
+            message.Write(TorsoColor);
+            message.Write(LegsColor);
+            message.Write(DetailColor);
+            message.Write(MountId);
         }
     }
 }
