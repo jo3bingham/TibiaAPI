@@ -453,7 +453,12 @@ namespace OXGaming.TibiaAPI.Network
                         creature = _client.CreatureStorage.GetCreature(creatureId);
                         if (creature == null)
                         {
-                            throw new Exception("[NetworkMessage.ReadCreatureInstance] Outdated creature not found.");
+                            // This should never occur on official servers, but has been observed
+                            // on Open-Tibia servers via cast system. Log the error and create
+                            // a new Creature so that the parser can continue gracefully.
+                            _client.Logger.Error("[NetworkMessage.ReadCreatureInstance] Outdated creature not found.");
+                            creature = new Creature(creatureId);
+                            creature = _client.CreatureStorage.ReplaceCreature(creature);
                         }
 
                         creature.InstanceType = (CreatureInstanceType)id;
@@ -501,7 +506,12 @@ namespace OXGaming.TibiaAPI.Network
                         creature = _client.CreatureStorage.GetCreature(creatureId);
                         if (creature == null)
                         {
-                            throw new Exception("[NetworkMessage.ReadCreatureInstance] Known creature not found.");
+                            // This should never occur on official servers, but has been observed
+                            // on Open-Tibia servers via cast system. Log the error and create
+                            // a new Creature so that the parser can continue gracefully.
+                            _client.Logger.Error("[NetworkMessage.ReadCreatureInstance] Known creature not found.");
+                            creature = new Creature(creatureId);
+                            creature = _client.CreatureStorage.ReplaceCreature(creature);
                         }
 
                         creature.InstanceType = (CreatureInstanceType)id;
