@@ -446,14 +446,25 @@ namespace Extract
                     Console.WriteLine($"Client version: {version}");
                     if (int.TryParse(version.Replace(".", ""), out var versionNumber))
                     {
-                        var clientDataDirectory = $"ClientData/{versionNumber}";
-                        if (!Directory.Exists(clientDataDirectory))
+                        if (_tibiaDirectory != string.Empty)
                         {
-                            Console.WriteLine($"ClientData directory for version {version} doesn't exist. Falling back to default Tibia directory.");
+                            // directory was specified with -t arg
+                            if (!Directory.Exists(_tibiaDirectory))
+                            {
+                                Console.WriteLine($"-t arg client data directory doesn't exist.");
+                            }
                         }
                         else
                         {
-                            _tibiaDirectory = clientDataDirectory;
+                            var clientDataDirectory = $"ClientData/{versionNumber}";
+                            if (!Directory.Exists(clientDataDirectory))
+                            {
+                                Console.WriteLine($"ClientData directory for version {version} doesn't exist. Falling back to default Tibia directory.");
+                            }
+                            else
+                            {
+                                _tibiaDirectory = clientDataDirectory;
+                            }
                         }
                     }
                     else
