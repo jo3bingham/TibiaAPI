@@ -253,8 +253,15 @@ namespace Extract
 
                 if (_extractMapData)
                 {
-                    LoadXML("ItemsIgnore.xml");
-                    LoadXML("ItemsReplace.xml");
+                    try
+                    {
+                        LoadXML("ItemsIgnore.xml");
+                        LoadXML("ItemsReplace.xml");
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine(ex);
+                    }
                 }
 
                 if (_extractItemData)
