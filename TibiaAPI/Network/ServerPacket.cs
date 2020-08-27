@@ -16,6 +16,8 @@ namespace OXGaming.TibiaAPI.Network
                     return new ServerPacket();
                 case ServerPacketType.CreatureData:
                     return new ServerPackets.CreatureData(client);
+                case ServerPacketType.SessionDumpStart:
+                    return new ServerPackets.SessionDumpStart(client);
                 case ServerPacketType.PendingStateEntered:
                     return new ServerPackets.PendingStateEntered(client);
                 case ServerPacketType.ReadyForSecondaryConnection:
@@ -113,6 +115,8 @@ namespace OXGaming.TibiaAPI.Network
                     return new ServerPackets.CounterOffer(client);
                 case ServerPacketType.CloseTrade:
                     return new ServerPackets.CloseTrade(client);
+                case ServerPacketType.CharacterTradeConfiguration:
+                    return new ServerPackets.CharacterTradeConfiguration(client);
                 case ServerPacketType.Ambiente:
                     return new ServerPackets.Ambiente(client);
                 case ServerPacketType.GraphicalEffects:

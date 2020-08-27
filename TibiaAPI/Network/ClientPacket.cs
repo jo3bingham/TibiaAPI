@@ -74,6 +74,8 @@ namespace OXGaming.TibiaAPI.Network
                     return new ClientPackets.RotateWest(client);
                 case ClientPacketType.Teleport:
                     return new ClientPackets.Teleport(client);
+                case ClientPacketType.CharacterTradeConfigurationAction:
+                    return new ClientPackets.CharacterTradeConfigurationAction(client);
                 case ClientPacketType.EquipObject:
                     return new ClientPackets.EquipObject(client);
                 case ClientPacketType.MoveObject:
