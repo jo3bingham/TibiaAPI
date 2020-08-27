@@ -52,9 +52,13 @@ namespace OXGaming.TibiaAPI.Network.ClientPackets
             {
                 StartingBid = message.ReadUInt32();
                 AuctionEnd = message.ReadUInt32();
-                Unknown1 = message.ReadByte(); // 00
-                Unknown2 = message.ReadByte(); // 00
-                Unknown3 = message.ReadByte(); // 00
+                Unknown1 = message.ReadByte(); // 00, 01
+                Unknown2 = message.ReadByte(); // 00, 1B
+                Unknown3 = message.ReadByte(); // 00, 01
+                if (Unknown3 == 1)
+                {
+                    message.ReadBytes(4); // 00 01 0C 00
+                }
             }
         }
 

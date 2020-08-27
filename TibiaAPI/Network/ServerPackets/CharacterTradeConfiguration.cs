@@ -88,7 +88,9 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
             else if (Type == 4)
             {
                 AuctionFee = message.ReadUInt16();
-                Unknown1 = message.ReadByte();
+                // Changing this to 1 crashed the client, so it could be a boolean,
+                // or some other identifier, and the client expects more data if not 0.
+                Unknown1 = message.ReadByte(); // 00
             }
         }
 
