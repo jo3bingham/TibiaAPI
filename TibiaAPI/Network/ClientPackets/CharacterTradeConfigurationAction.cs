@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 using OXGaming.TibiaAPI.Constants;
 
@@ -61,6 +62,37 @@ namespace OXGaming.TibiaAPI.Network.ClientPackets
         {
             message.Write((byte)ClientPacketType.CharacterTradeConfigurationAction);
             message.Write(Type);
+            if (Type == 2) // Review
+            {
+                message.Write(StartingBid);
+                message.Write(AuctionEnd);
+                var count = Math.Min(DisplayItemIds.Count, byte.MaxValue);
+                message.Write((byte)count);
+                for (var i = 0; i < count; i++)
+                {
+                    message.Write(DisplayItemIds[i]);
+                }
+                count = Math.Min(SelectedStoreItemIds.Count, byte.MaxValue);
+                message.Write((byte)count);
+                for (var i = 0; i < count; i++)
+                {
+                    message.Write(SelectedStoreItemIds[i]);
+                }
+                count = Math.Min(SelectedSalesArgumentIds.Count, byte.MaxValue);
+                message.Write((byte)count);
+                for (var i = 0; i < count; i++)
+                {
+                    message.Write(SelectedSalesArgumentIds[i]);
+                }
+            }
+            else if (Type == 3) // Confirm
+            {
+                message.Write(StartingBid);
+                message.Write(AuctionEnd);
+                message.Write(Unknown1);
+                message.Write(Unknown2);
+                message.Write(Unknown3);
+            }
         }
     }
 }

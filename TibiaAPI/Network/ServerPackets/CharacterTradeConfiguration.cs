@@ -94,7 +94,6 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
 
         public override void AppendToNetworkMessage(NetworkMessage message)
         {
-            // TODO
             message.Write((byte)ServerPacketType.CharacterTradeConfiguration);
             message.Write(Type);
             if (Type == 0)
