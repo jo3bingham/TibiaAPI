@@ -42,6 +42,7 @@ namespace OXGaming.TibiaAPI.Network
         public event ReceivedPacketEventHandler OnReceivedClientRotateSouthPacket;
         public event ReceivedPacketEventHandler OnReceivedClientRotateWestPacket;
         public event ReceivedPacketEventHandler OnReceivedClientTeleportPacket;
+        public event ReceivedPacketEventHandler OnReceivedClientCharacterTradeConfigurationActionPacket;
         public event ReceivedPacketEventHandler OnReceivedClientEquipObjectPacket;
         public event ReceivedPacketEventHandler OnReceivedClientMoveObjectPacket;
         public event ReceivedPacketEventHandler OnReceivedClientLookNpcTradePacket;
@@ -158,6 +159,7 @@ namespace OXGaming.TibiaAPI.Network
         public event ReceivedPacketEventHandler OnReceivedClientGetTransactionHistoryPacket;
 
         public event ReceivedPacketEventHandler OnReceivedServerCreatureDataPacket;
+        public event ReceivedPacketEventHandler OnReceivedServerSessionDumpStartPacket;
         public event ReceivedPacketEventHandler OnReceivedServerPendingStateEnteredPacket;
         public event ReceivedPacketEventHandler OnReceivedServerReadyForSecondaryConnectionPacket;
         public event ReceivedPacketEventHandler OnReceivedServerWorldEnteredPacket;
@@ -204,6 +206,7 @@ namespace OXGaming.TibiaAPI.Network
         public event ReceivedPacketEventHandler OnReceivedServerOwnOfferPacket;
         public event ReceivedPacketEventHandler OnReceivedServerCounterOfferPacket;
         public event ReceivedPacketEventHandler OnReceivedServerCloseTradePacket;
+        public event ReceivedPacketEventHandler OnReceivedServerCharacterTradeConfigurationPacket;
         public event ReceivedPacketEventHandler OnReceivedServerAmbientePacket;
         public event ReceivedPacketEventHandler OnReceivedServerGraphicalEffectsPacket;
         public event ReceivedPacketEventHandler OnReceivedServerRemoveGraphicalEffectPacket;
@@ -463,6 +466,9 @@ namespace OXGaming.TibiaAPI.Network
                             break;
                         case ClientPacketType.Teleport:
                             packet.Forward = OnReceivedClientTeleportPacket?.Invoke(packet) ?? true;
+                            break;
+                        case ClientPacketType.CharacterTradeConfigurationAction:
+                            packet.Forward = OnReceivedClientCharacterTradeConfigurationActionPacket?.Invoke(packet) ?? true;
                             break;
                         case ClientPacketType.EquipObject:
                             packet.Forward = OnReceivedClientEquipObjectPacket?.Invoke(packet) ?? true;
@@ -885,6 +891,9 @@ namespace OXGaming.TibiaAPI.Network
                         case ServerPacketType.CreatureData:
                             packet.Forward = OnReceivedServerCreatureDataPacket?.Invoke(packet) ?? true;
                             break;
+                        case ServerPacketType.SessionDumpStart:
+                            packet.Forward = OnReceivedServerSessionDumpStartPacket?.Invoke(packet) ?? true;
+                            break;
                         case ServerPacketType.PendingStateEntered:
                             packet.Forward = OnReceivedServerPendingStateEnteredPacket?.Invoke(packet) ?? true;
                             break;
@@ -1033,6 +1042,9 @@ namespace OXGaming.TibiaAPI.Network
                             break;
                         case ServerPacketType.CloseTrade:
                             packet.Forward = OnReceivedServerCloseTradePacket?.Invoke(packet) ?? true;
+                            break;
+                        case ServerPacketType.CharacterTradeConfiguration:
+                            packet.Forward = OnReceivedServerCharacterTradeConfigurationPacket?.Invoke(packet) ?? true;
                             break;
                         case ServerPacketType.Ambiente:
                             packet.Forward = OnReceivedServerAmbientePacket?.Invoke(packet) ?? true;
