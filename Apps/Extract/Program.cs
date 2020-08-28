@@ -20,6 +20,7 @@ namespace Extract
         private static readonly HashSet<ulong> _knownPositions = new HashSet<ulong>();
         private static readonly HashSet<uint> _knownMonsterIds = new HashSet<uint>();
         private static readonly HashSet<uint> _knownNpcIds = new HashSet<uint>();
+        private static readonly HashSet<uint> _knownSpawnIds = new HashSet<uint>();
 
         private static readonly HashSet<uint> _ignoreIds = new HashSet<uint>();
 
@@ -36,6 +37,8 @@ namespace Extract
         private static StreamWriter _lookItemTextFile;
         private static StreamWriter _monsterFile;
         private static StreamWriter _npcFile;
+
+        private static XmlWriter _spawnsXml;
 
         private static Logger.LogLevel _logLevel = Logger.LogLevel.Error;
 
@@ -54,6 +57,7 @@ namespace Extract
         private static bool _extractMapData = false;
         private static bool _extractMonsterData = false;
         private static bool _extractNpcData = false;
+        private static bool _extractSpawns = false;
 
         static bool ParseArgs(string[] args)
         {
@@ -87,6 +91,11 @@ namespace Extract
                         case "--npcs":
                             {
                                 _extractNpcData = true;
+                            }
+                            break;
+                        case "--spawns":
+                            {
+                                _extractSpawns = true;
                             }
                             break;
                         case "-h":
@@ -124,6 +133,7 @@ namespace Extract
                                 Console.WriteLine("--map: Used for extracting map data to the OTBM format.\n");
                                 Console.WriteLine("--monsters: Used for extracting monster information to monsters.txt.\n");
                                 Console.WriteLine("--npcs: Used for extracting npc information to npcs.txt.\n");
+                                Console.WriteLine("--spawns: Used for extracting spawns to spawns.xml.\n");
                             }
                             return false;
                         default:
@@ -208,7 +218,8 @@ namespace Extract
                     return;
                 }
 
-                if (!_extractItemData && !_extractLookItemText && !_extractMapData && !_extractMonsterData && !_extractNpcData)
+                if (!_extractItemData && !_extractLookItemText && !_extractMapData &&
+                    !_extractMonsterData && !_extractNpcData && !_extractSpawns)
                 {
                     Console.WriteLine("You must specificy at least one extraction option.");
                     Console.WriteLine("Use -h, or --help, for help.");
@@ -288,6 +299,18 @@ namespace Extract
                     _npcFile = new StreamWriter("npcs.txt", true);
                 }
 
+                if (_extractSpawns)
+                {
+                    Console.WriteLine("Extracting spawns...");
+                    var settings = new XmlWriterSettings
+                    {
+                        Indent = true
+                    };
+                    _spawnsXml = XmlWriter.Create("spawns.xml", settings);
+                    _spawnsXml.WriteStartDocument();
+                    _spawnsXml.WriteStartElement("spawns");
+                }
+
                 ExtractRecordings(filenames);
 
                 if (_itemFile != null)
@@ -308,6 +331,12 @@ namespace Extract
                 if (_npcFile != null)
                 {
                     _npcFile.Close();
+                }
+
+                if (_spawnsXml != null)
+                {
+                    _spawnsXml.WriteEndDocument();
+                    _spawnsXml.Close();
                 }
 
                 Console.WriteLine("Extraction complete");
@@ -428,6 +457,32 @@ namespace Extract
                 }
                 Console.WriteLine("Done");
             }
+        }
+
+        private static void AddSpawnEntry(OXGaming.TibiaAPI.Creatures.Creature creature)
+        {
+            if ((creature.Type != OXGaming.TibiaAPI.Constants.CreatureType.Monster &&
+                creature.Type != OXGaming.TibiaAPI.Constants.CreatureType.Npc) ||
+                _knownSpawnIds.Contains(creature.Id))
+            {
+                return;
+            }
+
+            _knownSpawnIds.Add(creature.Id);
+
+            _spawnsXml.WriteStartElement("spawn");
+            _spawnsXml.WriteAttributeString("centerx", creature.Position.X.ToString());
+            _spawnsXml.WriteAttributeString("centery", creature.Position.Y.ToString());
+            _spawnsXml.WriteAttributeString("centerz", creature.Position.Z.ToString());
+            _spawnsXml.WriteAttributeString("radius", "5");
+            _spawnsXml.WriteStartElement(creature.Type == OXGaming.TibiaAPI.Constants.CreatureType.Monster ? "monster" : "npc");
+            _spawnsXml.WriteAttributeString("name", creature.Name);
+            _spawnsXml.WriteAttributeString("x", "0");
+            _spawnsXml.WriteAttributeString("y", "0");
+            _spawnsXml.WriteAttributeString("z", "0");
+            _spawnsXml.WriteAttributeString("spawntime", "60");
+            _spawnsXml.WriteEndElement();
+            _spawnsXml.WriteEndElement();
         }
 
         private static void ExtractRecordings(List<string> filenames)
@@ -685,6 +740,11 @@ namespace Extract
                                 continue;
                             }
 
+                            if (_extractSpawns)
+                            {
+                                AddSpawnEntry(creature);
+                            }
+
                             if (_extractMonsterData && creature.Type == OXGaming.TibiaAPI.Constants.CreatureType.Monster && !_knownMonsterIds.Contains(creature.Id))
                             {
                                 _monsterFile.WriteLine($"{creature.Name} {creature.Position}");
@@ -707,6 +767,11 @@ namespace Extract
             var p = (CreatureData)packet;
             if (p.Creature != null)
             {
+                if (_extractSpawns)
+                {
+                    AddSpawnEntry(p.Creature);
+                }
+
                 if (_extractMonsterData && p.Creature.Type == OXGaming.TibiaAPI.Constants.CreatureType.Monster && !_knownMonsterIds.Contains(p.Creature.Id))
                 {
                     _monsterFile.WriteLine($"{p.Creature.Name} {p.Creature.Position}");
@@ -730,6 +795,11 @@ namespace Extract
             }
             else if (p.Creature != null)
             {
+                if (_extractSpawns)
+                {
+                    AddSpawnEntry(p.Creature);
+                }
+
                 if (_extractMonsterData && p.Creature.Type == OXGaming.TibiaAPI.Constants.CreatureType.Monster && !_knownMonsterIds.Contains(p.Creature.Id))
                 {
                     _monsterFile.WriteLine($"{p.Creature.Name} {p.Creature.Position}");
@@ -753,6 +823,11 @@ namespace Extract
             }
             else if (p.Creature != null)
             {
+                if (_extractSpawns)
+                {
+                    AddSpawnEntry(p.Creature);
+                }
+
                 if (_extractMonsterData && p.Creature.Type == OXGaming.TibiaAPI.Constants.CreatureType.Monster && !_knownMonsterIds.Contains(p.Creature.Id))
                 {
                     _monsterFile.WriteLine($"{p.Creature.Name} {p.Creature.Position}");
@@ -798,6 +873,11 @@ namespace Extract
                             if (creature == null)
                             {
                                 continue;
+                            }
+
+                            if (_extractSpawns)
+                            {
+                                AddSpawnEntry(creature);
                             }
 
                             if (_extractMonsterData && creature.Type == OXGaming.TibiaAPI.Constants.CreatureType.Monster && !_knownMonsterIds.Contains(creature.Id))
