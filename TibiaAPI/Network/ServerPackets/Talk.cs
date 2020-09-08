@@ -19,6 +19,8 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
         public ushort ChannelId { get; set; }
         public ushort SpeakerLevel { get; set; }
 
+        public bool IsTraded { get; set; }
+
         public Talk(Client client)
         {
             Client = client;
@@ -29,6 +31,10 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
         {
             StatementId = message.ReadUInt32();
             SpeakerName = message.ReadString();
+            if (Client.VersionNumber >= 125010109)
+            {
+                IsTraded = message.ReadBool();
+            }
             SpeakerLevel = message.ReadUInt16();
             MessageMode = (MessageModeType)message.ReadByte();
             switch (MessageMode)
@@ -88,6 +94,10 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
             message.Write((byte)ServerPacketType.Talk);
             message.Write(StatementId);
             message.Write(SpeakerName);
+            if (Client.VersionNumber >= 125010109)
+            {
+                message.Write(IsTraded);
+            }
             message.Write(SpeakerLevel);
             message.Write((byte)MessageMode);
             switch (MessageMode)
