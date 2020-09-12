@@ -22,7 +22,11 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
 
         public override void ParseFromNetworkMessage(NetworkMessage message)
         {
-            AccountBalance = message.ReadInt64();
+            if (Client.VersionNumber < 125000000)
+            {
+                AccountBalance = message.ReadInt64();
+            }
+
             ActiveOffers = message.ReadByte();
 
             DepotObjects.Capacity = message.ReadUInt16();
@@ -37,7 +41,12 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
         public override void AppendToNetworkMessage(NetworkMessage message)
         {
             message.Write((byte)ServerPacketType.MarketEnter);
-            message.Write(AccountBalance);
+
+            if (Client.VersionNumber < 125000000)
+            {
+                message.Write(AccountBalance);
+            }
+
             message.Write(ActiveOffers);
 
             var count = Math.Min(DepotObjects.Count, ushort.MaxValue);

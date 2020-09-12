@@ -15,6 +15,8 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
 
         public ushort MaxTextLength { get; set; }
 
+        public byte Unknown { get; set; }
+
         public EditText(Client client)
         {
             Client = client;
@@ -28,6 +30,10 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
             MaxTextLength = message.ReadUInt16();
             Text = message.ReadString();
             Author = message.ReadString();
+            if (Client.VersionNumber >= 125010109)
+            {
+                Unknown = message.ReadByte();
+            }
             Date = message.ReadString();
         }
 
@@ -39,6 +45,10 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
             message.Write(MaxTextLength);
             message.Write(Text);
             message.Write(Author);
+            if (Client.VersionNumber >= 125010109)
+            {
+                message.Write(Unknown);
+            }
             message.Write(Date);
         }
     }
