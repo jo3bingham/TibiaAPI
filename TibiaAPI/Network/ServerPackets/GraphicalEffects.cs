@@ -66,6 +66,15 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
                         var distanceAxisX = message.ReadSByte();
                         Effects.Add((type, 0, 0, missileId, distanceAxisX, distanceAxisY));
                     }
+                    else if (type == GraphicalEffectsType.Unknown)
+                    {
+                        // This is "unknown" because a) it seems to have existed for a single
+                        // client update but no longer exist as of client update 12.51.10194
+                        // (or I can't reproduce it) and b) it seems to indicate a new
+                        // GraphicalEffects packet without the position at the beginning
+                        // (it jumps straight to the effect type). Either way, treating it
+                        // as a type without any data fixes any existing parser errors.
+                    }
                     else
                     {
                         throw new System.Exception($"[ServerPackets.GraphicalEffects] Unknown type: {type}");
@@ -110,6 +119,9 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
                         message.Write(Id);
                         message.Write(DistanceY);
                         message.Write(DistanceX);
+                    }
+                    else if (Type == GraphicalEffectsType.Unknown)
+                    {
                     }
                 }
                 message.Write((byte)GraphicalEffectsType.None);

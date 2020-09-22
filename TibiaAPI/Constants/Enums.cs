@@ -37,7 +37,8 @@
     {
         ListReroll = 0,
         BonusReroll = 1,
-        MonsterSelection = 2
+        MonsterSelection = 2,
+        Option = 5
     }
 
     public enum ReportType
@@ -119,7 +120,8 @@
         Delay = 2,
         Effect = 3,
         MissileXY = 4,
-        MissileYX = 5
+        MissileYX = 5,
+        Unknown = 0x83
     }
 
     public enum PreyDataState
