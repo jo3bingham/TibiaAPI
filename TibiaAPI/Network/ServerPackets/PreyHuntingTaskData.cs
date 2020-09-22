@@ -12,6 +12,8 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
         public List<(ushort RaceId, bool IsUnlocked)> ListSelection { get; } =
             new List<(ushort RaceId, bool IsUnlocked)>();
 
+        public uint TimeLeftUntilFreeReroll { get; set; }
+
         public ushort CurrentKills { get; set; }
         public ushort RaceId { get; set; }
         public ushort RequiredKills { get; set; }
@@ -85,6 +87,10 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
                     {
                         throw new Exception($"[PreyHuntingTaskData.ParseFromNetworkMessage] Unknown state: {State}");
                     }
+            }
+            if (Client.VersionNumber >= 125110194)
+            {
+                TimeLeftUntilFreeReroll = message.ReadUInt32();
             }
         }
 

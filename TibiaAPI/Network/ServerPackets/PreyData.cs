@@ -18,9 +18,10 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
 
         public string Name { get; set; }
 
+        public uint TimeLeftUntilFreeListReroll { get; set; }
+
         public ushort BonusPercentage { get; set; }
         public ushort TimeLeft { get; set; }
-        public ushort TimeLeftUntilFreeListReroll { get; set; }
 
         public byte BonusRarity { get; set; }
         public byte BonusType { get; set; }
@@ -37,7 +38,6 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
         public override void ParseFromNetworkMessage(NetworkMessage message)
         {
             Index = message.ReadByte();
-
             State = (PreyDataState)message.ReadByte();
             switch (State)
             {
@@ -111,8 +111,14 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
                         throw new Exception($"[PreyData.ParseFromNetworkMessage] Unknown state: {State}");
                     }
             }
-
-            TimeLeftUntilFreeListReroll = message.ReadUInt16();
+            if (Client.VersionNumber >= 125110194)
+            {
+                TimeLeftUntilFreeListReroll = message.ReadUInt32();
+            }
+            else
+            {
+                TimeLeftUntilFreeListReroll = message.ReadUInt16();
+            }
             if (Client.VersionNumber > 11606457)
             {
                 Option = message.ReadByte(); // 0 = none, 1 = automatic reroll, 2 = locked
@@ -224,7 +230,14 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
                         throw new Exception($"[PreyData.AppendToNetworkMessage] Unknown state: {State}");
                     }
             }
-            message.Write(TimeLeftUntilFreeListReroll);
+            if (Client.VersionNumber >= 125110194)
+            {
+                message.Write(TimeLeftUntilFreeListReroll);
+            }
+            else
+            {
+                message.Write((ushort)TimeLeftUntilFreeListReroll);
+            }
             if (Client.VersionNumber > 11606457)
             {
                 message.Write(Option);
