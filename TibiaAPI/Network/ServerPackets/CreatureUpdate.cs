@@ -134,6 +134,10 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
             {
                 UnknownByte1 = message.ReadByte();
             }
+            else if (Type == 0x0E) // Unknown
+            {
+                UnknownByte1 = message.ReadByte();
+            }
         }
 
         public override void AppendToNetworkMessage(NetworkMessage message)
@@ -249,6 +253,10 @@ namespace OXGaming.TibiaAPI.Network.ServerPackets
             }
             // TODO
             else if (Type == 0x0C) // Unknown
+            {
+                message.Write(UnknownByte1);
+            }
+            else if (Type == 0x0E) // Unknown
             {
                 message.Write(UnknownByte1);
             }
